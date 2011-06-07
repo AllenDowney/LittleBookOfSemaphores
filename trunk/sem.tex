@@ -27,7 +27,7 @@
 
 \author{Allen B. Downey}
 
-\newcommand{\theversion}{Version 2.1.6}
+\newcommand{\theversion}{Version 2.2.0}
 
 \sloppy
 
@@ -227,7 +227,6 @@ worked with the second edition.
 
 \item Se Won sent in a small but important correction in my presentation
 of Tanenbaum's solution to the Dining Philosophers Problem.
-% coolpint@yahoo.co.uk
 
 \item Daniel Zingaro punched a hole in the Dancer's problem, which
 provoked me to rewrite that section.  I can only hope that it makes more
@@ -252,69 +251,45 @@ philosophers.
 \item Krzysztof Ko\'{s}ciuszkiewicz sent in several corrections, including
 a missing line in the Fifo class definition.
 
-%<k.kosciuszkiewicz@gmail.com>
-
 \item Fritz Vaandrager at the Radboud University Nijmegen in the
 Netherlands and his students Marc Schoolderman, Manuel Stampe and Lars
 Lockefeer used a tool called UPPAAL to check several of the solutions
 in this book and found errors in my solutions to the Room Party problem
 and the Modus Hall problem.
 
-%Frits Vaandrager <F.Vaandrager@cs.ru.nl>
-
 \item Eric Gorr pointed out an explanation in Chapter 3 that was
 not exactly right.
 
-% Eric Gorr <mailist@ericgorr.net>
-
 \item Jouni Lepp\"{a}j\"{a}rvi helped clarify the origins of semaphores.
-
-%jleppaja@mail.student.oulu.fi
 
 \item Christoph Bartoschek found an error in a solution to
 the exclusive dance problem.
 
-%<bartoschek@or.uni-bonn.de>
-
 \item Eus found a typo in Chapter 3.
 
-%<eus@member.fsf.org>
-
 \item Tak-Shing Chan found an out-of-bounds error in {\tt counter\_mutex.c}.
-
-%<chan12@alumni.usc.edu>
 
 \item Roman V. Kiseliov made several suggestions for improving
 the appearance of the book, and helped me with some \LaTeX~issues.
 
-%<roman.kiseliov@gmail.com>
-
 \item Alejandro C\'{e}spedes is working on the Spanish translation of this
 book and found some typos.
-
-%<548017@unizar.es>
 
 \item Erich Nahum found a problem in my adaptation of Kenneth Reek's
   solution to the Sushi Bar Problem.
 
-%Erich Nahum <nahum@watson.ibm.com>
-
 \item Martin Storsj\"{o} sent a correction to the generalized smokers problem.
-
-%<mstorsjo@abo.fi>
 
 \item Cris Hawkins pointed out an unused variable.
 
-%crispin.hawkins@googlemail.com
-
 \item Adolfo Di Mare found the missing ``and''.
-
-%adolfo@di-mare.com
 
 \item Simon Ellis found a typo.
 
 \item Benjamin Nash found a typo, an error in one solution, and
 a malfeature in another.
+
+\item Alejandro Pulver found a problem with the Barbershop solution.
 
 \end{itemize}
 
@@ -1891,7 +1866,8 @@ semaphore is signaled, there is usually no way to tell which
 thread will be woken.  Some implementations wake threads up
 in a particular order, like first-in-first-out, but the semantics 
 of semaphores don't require any particular order.
-Even if your environment doesn't provide first-in-first-out
+
+If your environment doesn't provide first-in-first-out
 queueing, you can build it yourself.
 
 Puzzle: use semaphores to build a first-in-first-out queue.  Each time
@@ -1946,24 +1922,41 @@ class Fifo:
         self.queue = Queue()
         self.mutex = Semaphore(1)
 
-    def wait():
+    def add(sem):
 	self.mutex.wait()
-        self.queue.add(mySem)
+        self.queue.add(sem)
 	self.mutex.signal()
-        mySem.wait()
 
-    def signal():
+    def remove():
 	self.mutex.wait()
         sem = self.queue.remove()
 	self.mutex.signal()
-        sem.signal()
+        return sem
 \end{lstlisting}
 
 We use the {\tt mutex} to protect the Queue, but release it as
 soon as possible to minimize contention (and context switches).
 
-Note: this solution does not handle a signal when the queue is
-empty.  I will leave it up to you to fix that.
+Here's an example of a thread joining a Fifo:
+
+\begin{lstlisting}[title={Fifo waiter}]{}
+    fifo.add(mySem)
+    in_queue.signal()
+    mySem.wait()
+\end{lstlisting}
+
+\verb"in_queue" is used to signal that there is a thread in the
+queue.  Here's the code for the thread that signals the Fifo:
+
+\begin{lstlisting}[title={Fifo signaler}]{}
+    in_queue.wait()
+    sem = fifo.remove()
+    sem.signal()
+\end{lstlisting}
+
+Note: this solution fails if the signaler tries to signal while
+there are no threads in queue.
+
 
 \clearemptydoublepage
 \chapter{Classical synchronization problems}
@@ -3686,6 +3679,8 @@ customers = 0
 mutex = Semaphore(1)
 customer = Semaphore(0)
 barber = Semaphore(0)
+customerDone = Semaphore(0)
+barberDone = Semaphore(0)
 \end{lstlisting}
 
 {\tt customers} counts the number of customers in the shop;
@@ -3695,12 +3690,17 @@ The barber waits on {\tt customer} until a customer enters the
 shop, then the customer waits on {\tt barber} until the barber
 signals him to take a seat.
 
+After the haircut, the customer signals {\tt customerDone} and
+waits on {\tt barberDone}.
 
 \clearemptydoublepage
 \subsection{Barbershop solution}
 
-Again, my solution combines a scoreboard and a rendezvous.
-Here is the code for customers:
+This solution combines a scoreboard and two rendezvouses\footnote{The
+  plural of rendezvous is rare, and not all dictionaries agree about
+  what it is.  Another possibility is that the plural is also spelled
+  ``rendezvous,'' but the final ``s'' is pronounced.}.  Here is the
+code for customers:
 
 \begin{lstlisting}[title={Barbershop solution (customer)}]{}
 mutex.wait()
@@ -3712,7 +3712,11 @@ mutex.signal()
 
 customer.signal()
 barber.wait()        
+
 getHairCut()
+
+customerDone.signal()
+barberDone.wait()        
 
 mutex.wait()
     customers -= 1
@@ -3730,7 +3734,11 @@ Here is the code for barbers:
 \begin{lstlisting}[title={Barbershop solution (barber)}]{}
 customer.wait()
 barber.signal()
+
 cutHair()
+
+customerDone.wait()
+barberDone.signal()
 \end{lstlisting}
 
 Each time a customer signals,
@@ -3819,8 +3827,8 @@ Here are the variables I used in my solution:
 \begin{lstlisting}[title={Hilzer's barbershop hint}]{}
 customers = 0
 mutex = Semaphore(1)
-standingRoom = Fifo(16)
-sofa = Fifo(4)
+standingRoom = Fifo()
+sofa = Fifo()
 chair = Semaphore(3)
 barber = Semaphore(0)
 customer = Semaphore(0)
@@ -3843,8 +3851,8 @@ and waits on {\tt receipt}.
 \clearemptydoublepage
 \subsection {Hilzer's barbershop solution}
 
-There is nothing here that is new; it's just a combination of
-patterns we have seen before.
+There is nothing new here; it's a combination of
+patterns we've seen before.
 
 \begin{lstlisting}[title={Hilzer's barbershop solution (customer)}]{}
 mutex.wait()
@@ -3888,10 +3896,7 @@ from {\tt standingRoom} to {\tt sofa} to {\tt chair}; as each thread
 moves to the next stage, it signals the previous stage.
 
 The exchange with the barber is basically two consecutive
-rendezvouses\footnote{The plural of rendezvous is rare, and not
-all dictionaries agree about what it is.  Another possibility is
-that the plural is also spelled ``rendezvous,'' but the final
-``s'' is pronounced.}
+rendezvouses.
 
 The code for the barber is self-explanatory:
 
