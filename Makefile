@@ -11,7 +11,7 @@ all:	sem.tex
 	bibtex sem
 	makeindex sem
 	dvips -Ppdf -o downey08semaphores.ps sem
-	gv downey08semaphores.ps
+	evince downey08semaphores.ps
 
 FILES = sem.tex sem.bib table.eps
 
