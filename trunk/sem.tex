@@ -889,6 +889,15 @@ that indicates what it represents.  In this case a name like
 ``wait until a1 is done.''
 
 
+\section{Sync.py}
+\label{sync.py}
+
+TODO: write about using sync, starting with signal.py
+
+Why does Thread B signal {\tt initComplete}?
+
+
+
 \section{Rendezvous}
 \label{rendezvous}
 
@@ -923,6 +932,7 @@ This synchronization problem has a name; it's a
 rendezvous.  The idea is that two threads rendezvous
 at a point of execution, and neither is allowed to proceed
 until both have arrived.
+
 
 \clearemptydoublepage
 \subsection{Rendezvous hint}
@@ -3562,25 +3572,23 @@ following information:
 \item If a customer thread arrives when the shop is full, 
 it can invoke {\tt balk}, which does not return.
 
-\item Barber threads should invoke {\tt cutHair}.
+\item The barber thread should invoke {\tt cutHair}.
 
 \item When the barber invokes {\tt cutHair} there should
 be exactly one thread invoking {\tt getHairCut} concurrently.
 
 \end{itemize}
 
+Write a solution that guarantees these constraints.
+
 
 \clearemptydoublepage
 \subsection{Barbershop hint}
 
-\begin{lstlisting}[title={Barbershop hint}]{}
-customers = 0
-mutex = Semaphore(1)
-customer = Semaphore(0)
-barber = Semaphore(0)
-customerDone = Semaphore(0)
-barberDone = Semaphore(0)
-\end{lstlisting}
+\lstinputlisting[title=Barbershop hint]{book_code/barber.py.0}
+
+{\tt n} is the total number of customers that can be in the shop:
+three in the waiting room and one in the chair.
 
 {\tt customers} counts the number of customers in the shop;
 it is protected by {\tt mutex}.
@@ -3601,44 +3609,16 @@ This solution combines a scoreboard and two rendezvouses\footnote{The
   ``rendezvous,'' but the final ``s'' is pronounced.}.  Here is the
 code for customers:
 
-\begin{lstlisting}[title={Barbershop solution (customer)}]{}
-mutex.wait()
-    if customers == n+1:
-        mutex.signal()
-        balk()
-    customers += 1
-mutex.signal()
+\lstinputlisting[title=Barbershop solution (customer)]{book_code/barber.py.1}
 
-customer.signal()
-barber.wait()        
-
-getHairCut()
-
-customerDone.signal()
-barberDone.wait()        
-
-mutex.wait()
-    customers -= 1
-mutex.signal()
-\end{lstlisting}
-
-If there are $n$ customers in the waiting room and one in the
-barber chair, then the shop is full and any customers that
+If there are $n$ customers in the shop any customers that
 arrive immediately invoke {\tt balk}.
 Otherwise each customer signals {\tt customer} and waits on
 {\tt barber}.
 
 Here is the code for barbers:
 
-\begin{lstlisting}[title={Barbershop solution (barber)}]{}
-customer.wait()
-barber.signal()
-
-cutHair()
-
-customerDone.wait()
-barberDone.signal()
-\end{lstlisting}
+\lstinputlisting[title=Barbershop solution (barber)]{book_code/barber.py.2}
 
 Each time a customer signals,
 the barber wakes, signals {\tt barber}, and gives one
@@ -3649,6 +3629,61 @@ the {\tt customer} semaphore without sleeping.
 The names for {\tt customer} and {\tt barber} are based on
 the naming convention for a rendezvous, so {\tt customer.wait()}
 means ``wait for a customer,'' not ``customers wait here.''
+
+The second rendezvous, using {\tt customerDone} and {\tt barberDone},
+ensures that the hair cut is done before the barber loops around to
+let the next customer into the critical section.
+
+This solution is in \verb"sync_code/barber.py" (see~\ref{sync.py}).
+
+
+\clearemptydoublepage
+\section{The FIFO barbershop}
+
+In the previous solution there is no guarantee that customers are
+served in the order they arrive.  Up to {\tt n} customers can pass
+the turnstile, signal
+{\tt customer} and wait on {\tt barber}.  When the barber signal
+{\tt barber}, any of the customers might proceed.
+
+Modify this solution so that customers are served in the order they
+pass the turnstile.
+
+Hint: you can refer to the current thread as {\tt self}, so if you
+write {\tt self.sem = Semaphore(0)}, each thread gets its own
+semaphore.
+
+
+\clearemptydoublepage
+\subsection{FIFO barbershop hint}
+
+My solution uses a list of semaphores named {\tt queue}.
+
+\lstinputlisting[title=FIFO barbershop hint]{book_code/barber2.py.0}
+
+As each thread passes the turnstile, it creates a thread and puts it
+in the queue.
+
+Instead of waiting on {\tt barber}, each thread waits on its own
+semaphore.  When the barber wakes up, he removes a thread from the queue and
+signals it.
+
+
+\clearemptydoublepage
+\subsection{FIFO barbershop solution}
+
+Here is the modified code for customers:
+
+\lstinputlisting[title=FIFO barbershop solution (customer)]
+{book_code/barber2.py.1}
+
+And the code for barbers:
+
+\lstinputlisting[title=FIFO barbershop solution (barber)]
+{book_code/barber2.py.2}
+
+Notice that the barber has to get {\tt mutex} to access the
+queue.
 
 
 \clearemptydoublepage
@@ -3707,13 +3742,6 @@ chair invokes {\tt pay}.
 {\tt exitShop}.
 
 \end{itemize}
-
-One difficulty with this problem is that in each waiting area (the
-sofa and the standing room), customers have to be served in
-first-in-first-out (FIFO) order.  If our implementation of semaphores
-happens to enforce FIFO queueing, then we can use nested multiplexes
-to create the waiting areas.  Otherwise we can use Fifo objects
-as defined in Section~\ref{Fifo}.
 
 Puzzle: Write code that enforces the synchronization
 constraints for Hilzer's barbershop.
