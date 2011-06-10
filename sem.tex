@@ -3685,6 +3685,8 @@ And the code for barbers:
 Notice that the barber has to get {\tt mutex} to access the
 queue.
 
+This solution is in \verb"sync_code/barber2.py" (see~\ref{sync.py}).
+
 
 \clearemptydoublepage
 \section {Hilzer's Barbershop problem}
@@ -3712,15 +3714,13 @@ in their chair waiting for a customer.
 \end{quotation}
 
 
-In other words, the
-following synchronization constraints apply:
+In other words, the following synchronization constraints apply:
 
 \begin{itemize}
 
 \item Customers invoke the following functions in order:
 {\tt enterShop}, {\tt sitOnSofa},
-{\tt sitInBarberChair}, {\tt pay},
-{\tt exitShop}.
+{\tt getHairCut}, {\tt pay}.
 
 \item Barbers invoke {\tt cutHair} and {\tt acceptPayment}.
 
@@ -3728,18 +3728,21 @@ following synchronization constraints apply:
 is at capacity.
 
 \item If the sofa is full, an arriving customer cannot invoke 
-{\tt sitOnSofa} until one of the customers on the sofa invokes {\tt
-sitInBarberChair}.
+{\tt sitOnSofa}.
 
-\item If all three barber chairs are busy, an arriving customer
-cannot invoke {\tt sitInBarberChair} until one of the customers in a
-chair invokes {\tt pay}.
+\item When a customer invokes {\tt getHairCut} there should be
+a corresponding barber executing {\tt cutHair} concurrently,
+and vice versa.
+
+\item It should be possible for up to three customers to execute
+{\tt getHairCut} concurrently, and up to three barbers to execute
+{\tt cutHair} concurrently.
 
 \item The customer has to {\tt pay} before the barber can
 {\tt acceptPayment}.
 
 \item The barber must {\tt acceptPayment} before the customer can
-{\tt exitShop}.
+exit.
 
 \end{itemize}
 
@@ -3751,97 +3754,76 @@ constraints for Hilzer's barbershop.
 
 Here are the variables I used in my solution:
 
-\begin{lstlisting}[title={Hilzer's barbershop hint}]{}
-customers = 0
-mutex = Semaphore(1)
-standingRoom = Fifo()
-sofa = Fifo()
-chair = Semaphore(3)
-barber = Semaphore(0)
-customer = Semaphore(0)
-cash = Semaphore(0)
-receipt = Semaphore(0)
-\end{lstlisting}
+\lstinputlisting[title=Hilzer's barbershop hint]
+{book_code/barber3.py.0}
 
 {\tt mutex} protects {\tt customers}, which keeps track of the
-number of customers in the shop so that if a thread arrives
-when the shop is full, it can exit.  {\tt standingRoom} and
-{\tt sofa} are Fifos that represent the waiting areas.  {\tt chair}
-is a multiplex that limits the number of customers in the
-seating area.
+number of customers in the shop, and {\tt queue1} which is a list
+of semaphores for threads waiting for a seat on the sofa.
 
-The other semaphores are used for the rendezvous between the
-barber and the customers.  The customer signals {\tt barber} and
-then wait on {\tt customer}.  Then the customer signals {\tt cash}
-and waits on {\tt receipt}.
+{\tt mutex2} protects {\tt queue2}, which is a list
+of semaphores for threads waiting for a chair.
+
+{\tt sofa} is a multiplex that enforces the maximum number of customers
+on the sofa.
+
+{\tt customer1} signals that there is a customer in {\tt queue1}, and
+{\tt customer2} signals that there is a customer in {\tt queue2}.
+
+{\tt payment} signals that a customer has paid, and {\tt receipt}
+sigmals that a barber has accepted payment.
+
+
 
 \clearemptydoublepage
 \subsection {Hilzer's barbershop solution}
 
-There is nothing new here; it's a combination of
-patterns we've seen before.
+This solution is considerably more complex than I expected.  I
+am not if Hilzer had something simpler in mind, but here is the
+best I could do.
 
-\begin{lstlisting}[title={Hilzer's barbershop solution (customer)}]{}
-mutex.wait()
-    if customers == 20:
-        mutex.signal()
-        exitShop()
-    customers += 1
-mutex.signal()
+\lstinputlisting[title=Hilzer's barbershop solution (customer)]
+{book_code/barber3.py.1}
 
-standingRoom.wait()
-enterShop()
+The first paragraph is the same as in the previous solution.  When
+a customer arrives, it checks the counter and either balks or adds
+itself to the queue.  Then it signals a barber.
 
-sofa.wait()
-sitOnSofa()
-standingRoom.signal()
+When the customer gets out of queue, it enters the multiplex,
+sits on the couch and adds itself to the second queue.
 
-chair.wait()
-sitInBarberChair()
-sofa.signal()
+When it gets out of {\em that} queue, it gets a haircut, pays,
+and then exits.
 
-customer.signal()
-barber.wait()
-getHairCut()
+\lstinputlisting[title=Hilzer's barbershop solution (barber)]
+{book_code/barber3.py.2}
 
-pay()
-cash.signal()
-receipt.wait()
+Each barber waits for a customer to enter, signals the customer's
+semaphore to get it out of queue, then waits for it to claim a seat
+on the sofa.  This enforces the FIFO requirement.
 
-mutex.wait()
-    customers -= 1
-mutex.signal()
+The barber waits for the customer to join the second queue and then
+signals it, allowing the customer to claim a chair.
 
-exitShop()
-\end{lstlisting}
+Each barber admits one customer to the chair, so there can by up
+to three concurrent haircuts.  Because there is only one cash
+register, the customer has to get {\tt mutex}.  The customer
+and barber rendezvous at the cash register, then both exit.
 
-The mechanism that counts the number of customers and allows
-threads to exit is the same as in the previous problem.
+This solution satisfies the synchonization constraints, but it leaves
+the sofa underutilized.  Because there are only three barbers, there
+can never be more than three customers on the sofa, so the multiplex
+is unnecessary.
 
-In order to maintain FIFO order for the whole system, threads cascade
-from {\tt standingRoom} to {\tt sofa} to {\tt chair}; as each thread
-moves to the next stage, it signals the previous stage.
+This solution is in \verb"sync_code/barber3.py" (see~\ref{sync.py}).
 
-The exchange with the barber is basically two consecutive
-rendezvouses.
+The only way I can think of to solve this problem is to create a third
+kind of thread, which I can an usher.  The ushers manage {\tt queue1}
+and the barbers manage {\tt queue2}.  If there are 4 ushers and 3 barbers,
+the sofa can be fully utilized.
 
-The code for the barber is self-explanatory:
+This solution is in \verb"sync_code/barber4.py" (see~\ref{sync.py}).
 
-
-\begin{lstlisting}[title={Hilzer's barbershop solution (barber)}]{}
-customer.wait()
-barber.signal()
-cutHair()
-
-cash.wait()
-acceptPayment()
-receipt.signal()
-\end{lstlisting}
-
-If two customers signal {\tt cash} concurrently, there is no
-way to know which waiting barber will get which signal, but the
-problem specification says that's ok.  Any barber can take
-money from any customer.
 
 \clearemptydoublepage
 \section{The Santa Claus problem}
