@@ -138,6 +138,8 @@ class Sync(Gui):
         self.locals = SIM_LOCALS
         self.globals = SIM_GLOBALS
         
+        # views is a map from a variable name to the row that
+        # should be updated when the variable changes
         self.views = {}
         self.w = self
         self.threads = []
@@ -445,6 +447,11 @@ class Row(Widget):
         self.put(text)
 
     def update(self, val):
+        """Updates the text in the runnable widget.
+
+        val: value to display (can be anything that provides str)
+        """
+        # TODO: maybe config existing text rather than delete
         if self.tag:
             self.clear()
         text = str(val)
@@ -606,6 +613,10 @@ class QueueCanvas(GuiCanvas):
         self.delete(thread.tag)
 
     def display_text(self, text):
+        """Displays text on this canvas.
+
+        text: string
+        """
         tag = self.text([15, 15], text, font=COURIER)
         return tag
 
@@ -765,13 +776,12 @@ class Thread:
 
         # see if any variables were defined or changed
         after = self.sync.locals
-        defined, changed = diff_dict(after, before)
+        defined = subtract(after, before)
 
         for key in defined:
             self.sync.views[key] = self.row
 
-        if defined or changed:
-            self.sync.update_views()
+        self.sync.update_views()
 
         # either skip to the next line or to the end of a false conditional
         if flag:
