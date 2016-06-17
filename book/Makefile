@@ -6,17 +6,17 @@ PDFFLAGS = -dCompatibilityLevel=1.4 \
            -dCompressPages=true -dUseFlateCompression=true  \
            -dEmbedAllFonts=true -dSubsetFonts=true -dMaxSubsetPct=100
 
-all:	sem.tex
-	latex sem
-	bibtex sem
-	makeindex sem
-	dvips -Ppdf -o downey08semaphores.ps sem
-	evince downey08semaphores.ps
+NAME = LittleBookOfSemaphores
 
-FILES = sem.tex sem.bib table.eps
+all:	book.tex
+	latex book
+	bibtex book
+	makeindex book
+	dvips -Ppdf -o $(NAME).ps book
+	evince $(NAME).ps
+
+FILES = book.tex book.bib table.eps
 
 distrib: 
-	ps2pdf $(PDFFLAGS) downey08semaphores.ps downey08semaphores.pdf
-	tar -cf downey08semaphores.tar $(FILES)
-	tar -czf downey08semaphores.tgz $(FILES)
-	cp downey08semaphores.* /home/downey/public_html/greent/semaphores
+	ps2pdf $(PDFFLAGS) $(NAME).ps $(NAME).pdf
+	cp $(NAME).* /home/downey/public_html/greent/semaphores

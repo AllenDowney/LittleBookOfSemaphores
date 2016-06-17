@@ -1,0 +1,20 @@
+customer1.wait()
+mutex.wait()
+    sem = queue1.pop(0)
+    sem.signal()
+    sem.wait()
+mutex.signal()
+sem.signal()
+
+customer2.wait()
+mutex.wait()
+    sem = queue2.pop(0)
+mutex.signal()
+sem.signal()
+
+barber.signal()
+# cutHair()
+
+payment.wait()
+# acceptPayment()
+receipt.signal()

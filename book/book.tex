@@ -1,18 +1,11 @@
 % LaTeX source for textbook ``The Little Book of Semaphores, 2nd edition''
-% Copyright 2008 Allen B. Downey.
+% Copyright 2016 Allen B. Downey.
 
 % Permission is granted to copy, distribute and/or modify this
-% document under the terms of the GNU Free Documentation License,
-% Version 1.1  or any later version published by the Free Software
-% Foundation; with the Invariant Sections being "Contributor List",
-% with no Front-Cover Texts, and with no Back-Cover Texts. A copy of
-% the license is included in the section entitled "GNU Free
-% Documentation License".
+% document under the terms of the Creative Commons
+% Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
+% http://creativecommons.org/licenses/by-nc-sa/4.0/
 
-% You can obtain a copy of the GNU Free Documentation License
-% from www.gnu.org or by writing to the Free Software Foundation,
-% Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-%
 \documentclass{book}
 \usepackage{fancyhdr}
 \usepackage{listings}
@@ -27,7 +20,7 @@
 
 \author{Allen B. Downey}
 
-\newcommand{\theversion}{Version 2.2.0}
+\newcommand{\theversion}{Version 2.2.1}
 
 \sloppy
 
@@ -71,19 +64,14 @@ Second Edition
 \theversion
 \vspace{0.25in}
 
-Copyright 2011 Allen B. Downey
+Copyright 2016 Allen B. Downey
 \end{center}
 \vspace{0.25in}
 
 Permission is granted to copy, distribute and/or modify this
-document under the terms of the GNU Free Documentation License,
-Version 1.1  or any later version published by the Free Software
-Foundation; this book contains no Invariant Sections,
-no Front-Cover Texts, and no Back-Cover Texts.
-
-You can obtain a copy of the GNU Free Documentation License
-from www.gnu.org or by writing to the Free Software Foundation,
-Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+document under the terms of the Creative Commons
+Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
+at \url{http://creativecommons.org/licenses/by-nc-sa/4.0}.
 
 The original form of this book is LaTeX source code.
 Compiling this LaTeX source has the effect of generating
@@ -197,7 +185,7 @@ works.
 
 This is a Free Book, which means that anyone is welcome to read,
 copy, modify and redistribute it, subject to the restrictions of the
-license, which is the GNU Free Documentation License.  I hope that people
+license.  I hope that people
 will find this book useful, but I also hope they will help continue
 to develop it by sending in corrections, suggestions, and additional
 material.  Thanks!
@@ -3585,7 +3573,7 @@ Write a solution that guarantees these constraints.
 \clearemptydoublepage
 \subsection{Barbershop hint}
 
-\lstinputlisting[title=Barbershop hint]{book_code/barber.py.0}
+\lstinputlisting[title=Barbershop hint]{../code/barber.py.0}
 
 {\tt n} is the total number of customers that can be in the shop:
 three in the waiting room and one in the chair.
@@ -3609,7 +3597,7 @@ This solution combines a scoreboard and two rendezvouses\footnote{The
   ``rendezvous,'' but the final ``s'' is pronounced.}.  Here is the
 code for customers:
 
-\lstinputlisting[title=Barbershop solution (customer)]{book_code/barber.py.1}
+\lstinputlisting[title=Barbershop solution (customer)]{../code/barber.py.1}
 
 If there are $n$ customers in the shop any customers that
 arrive immediately invoke {\tt balk}.
@@ -3618,7 +3606,7 @@ Otherwise each customer signals {\tt customer} and waits on
 
 Here is the code for barbers:
 
-\lstinputlisting[title=Barbershop solution (barber)]{book_code/barber.py.2}
+\lstinputlisting[title=Barbershop solution (barber)]{../code/barber.py.2}
 
 Each time a customer signals,
 the barber wakes, signals {\tt barber}, and gives one
@@ -3659,7 +3647,7 @@ semaphore.
 
 My solution uses a list of semaphores named {\tt queue}.
 
-\lstinputlisting[title=FIFO barbershop hint]{book_code/barber2.py.0}
+\lstinputlisting[title=FIFO barbershop hint]{../code/barber2.py.0}
 
 As each thread passes the turnstile, it creates a thread and puts it
 in the queue.
@@ -3675,12 +3663,12 @@ signals it.
 Here is the modified code for customers:
 
 \lstinputlisting[title=FIFO barbershop solution (customer)]
-{book_code/barber2.py.1}
+{../code/barber2.py.1}
 
 And the code for barbers:
 
 \lstinputlisting[title=FIFO barbershop solution (barber)]
-{book_code/barber2.py.2}
+{../code/barber2.py.2}
 
 Notice that the barber has to get {\tt mutex} to access the
 queue.
@@ -3755,7 +3743,7 @@ constraints for Hilzer's barbershop.
 Here are the variables I used in my solution:
 
 \lstinputlisting[title=Hilzer's barbershop hint]
-{book_code/barber3.py.0}
+{../code/barber3.py.0}
 
 {\tt mutex} protects {\tt customers}, which keeps track of the
 number of customers in the shop, and {\tt queue1} which is a list
@@ -3783,7 +3771,7 @@ am not if Hilzer had something simpler in mind, but here is the
 best I could do.
 
 \lstinputlisting[title=Hilzer's barbershop solution (customer)]
-{book_code/barber3.py.1}
+{../code/barber3.py.1}
 
 The first paragraph is the same as in the previous solution.  When
 a customer arrives, it checks the counter and either balks or adds
@@ -3796,7 +3784,7 @@ When it gets out of {\em that} queue, it gets a haircut, pays,
 and then exits.
 
 \lstinputlisting[title=Hilzer's barbershop solution (barber)]
-{book_code/barber3.py.2}
+{../code/barber3.py.2}
 
 Each barber waits for a customer to enter, signals the customer's
 semaphore to get it out of queue, then waits for it to claim a seat
@@ -6773,7 +6761,7 @@ Line~\ref{sementer} before one of the waiting threads resumes.
 
 
 \bibliographystyle{plain}
-\bibliography{sem}
+\bibliography{book}
 
 \appendix
 

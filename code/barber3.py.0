@@ -1,0 +1,11 @@
+n = 20
+customers = 0
+mutex = Semaphore(1)
+sofa = Semaphore(4)
+customer1 = Semaphore(0)
+customer2 = Semaphore(0)
+barber = Semaphore(0)
+payment = Semaphore(0)
+receipt = Semaphore(0)
+queue1 = []
+queue2 = []
