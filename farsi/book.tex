@@ -1595,48 +1595,37 @@ should be done in between.
 
 
 
-\section{Queue}
+\section{صف}
 \label{dancers}
 
-Semaphores can also be used to represent a queue.  In this
-case, the initial value is 0, and usually the code is written
-so that it is not possible
-to signal unless there is a thread waiting, so the value of the
-semaphore is never positive.
-
-For example, imagine that threads represent ballroom dancers
-and that two kinds of dancers, leaders and followers, wait
-in two queues before entering the dance floor.  When a leader
-arrives, it checks to see if there is a follower waiting.
-If so, they can both proceed.  Otherwise it waits.
-
-Similarly, when a follower arrives, it checks for a leader and
-either proceeds or waits, accordingly.
-
-Puzzle: write code for leaders and followers that enforces these
-constraints.
-
+سمافور‌ها می توانند به عنوان یک صف نیز استفاده شوند. {MASHKOOK}در این مورد مقدار اولیه ۰ و کد مربوطه از قبل نوشته شده است، بنابرین سیگنال دادن به نخ دیگر عملا غیر ممکن است مگر اینکه یک ترد دیگر در حال انتظار باشد در نتیجه مقدار سمافور هرگز مثبت نخواهد شد.
+به عنوان مثال، تصور کنید که نخ‌ها نمایش دهنده اتاق رقص باشند و دو نوع رقاص، به شکل جلودار و دنباله‌رو باشد، که قبل از ورود به صحن در دو صف مجزا قرار خواهند گرفت. زمانی که یک جلودار می‌رسد، چک می کند که آیا هیچ دنباله‌رو‌ای در حالت انتظار است یا خیر. اگر چنین باشد، هر دو می توانند عمل کنند(به رقصند!) در غیر اینصورت می بایست منتظر باشند.
+به شکل مشابهی، زمانی که یک دنباله‌رو می‌رسد، او ابتدا چک می‌کند که آیا هیچ جلو‌داری فعال یا منتظر شده است یا خیر، او نیز چنین خواهد کرد.
+معما: یک کدی بنویسید برای جلو‌دارها و دنباله‌رو‌ها که این شرایط در آن صدق کند.
 
 
 \clearemptydoublepage
-\subsection {Queue hint}
+\subsection {راهنمایی برای معما}
 
-Here are the variables I used in my solution:
+اینجا یک متغیر
+\lr{I}
+هست که در راه حل ما استفاده شده است:
 
 \begin{lstlisting}[title={Queue hint}]{}
 leaderQueue = Semaphore(0)
 followerQueue = Semaphore(0)
 \end{lstlisting}
 
-{\tt leaderQueue} is the queue where leaders wait 
-and {\tt followerQueue} is the queue where followers wait.
+{\tt leaderQueue} صف حاوی جلو‌دارهای منتظر هست!
+و
+ {\tt followerQueue} صف حاوی دنباله‌رو‌های منتظر هست!
 
 
 
 \clearemptydoublepage
-\subsection {Queue solution}
+\subsection {راه حل صف}
 
-Here is the code for leaders:
+کد مربوط به جلو‌دارها را در اینجا مشاهده می کند:
 
 \begin{lstlisting}[title={Queue solution (leaders)}]{}
 followerQueue.signal()
@@ -1644,36 +1633,21 @@ leaderQueue.wait()
 dance()
 \end{lstlisting}
 
-And here is the code for followers:
+و در این قسمت کد مربوط به دنباله‌روها گذاشته شده است:
 
 \begin{lstlisting}[title={Queue solution (followers)}]{}
 leaderQueue.signal()
 followerQueue.wait()
 dance()
 \end{lstlisting}
-
-This solution is about as simple as it gets; it is just a Rendezvous.
-Each leader signals exactly one follower, and each follower signals
-one leader, so it is guaranteed that leaders and followers are
-allowed to proceed in pairs.  But whether they actually proceed in
-pairs is not clear.  It is possible for any number of threads to
-accumulate before executing {\tt dance}, and so it is possible for
-any number of leaders to {\tt dance} before any followers do.
-Depending on the semantics of {\tt dance}, that behavior may or
-may not be problematic.
-
-To make things more interesting, let's add the additional constraint
-that each leader can invoke {\tt dance} concurrently with only
-one follower, and vice versa.  In other words, you got to dance
-with the one that brought you\footnote{Song lyric performed by Shania
-Twain}.
-
-Puzzle: write a solution to this ``exclusive queue'' problem.
+این راه حل ساده تر از آن است که آن را بگیرید! صرفا یک کلید است. هر سیگنال از جلودار دقیقا یک دنباله‌رو دارد و هر سیگنال دنباله‌رو یک جلو‌دار دارد، لذا این ضمانت می کند که جلو‌دار و دنباله‌رو هر دو به شکل همزمان وارد عملیات می شوند(می‌رقصند!!!). اگرچه  آنها هر دو وارد عملیات شده اند اما این ممکن است که نخ‌ها قبل از اجرای {\tt dance} انباشته شوند، و در نتیجه امکان دارد که تعدادی از جلو‌دارهای {\tt dance} قبل از دنباله‌رو ها وارد عمل شوند. بر اساس مفهوم {\tt dance} که ممکن است گیج کننده باشد!
+برای اینکه جالب تر باشد، فرض کنید یک شرط اضافه را به هر کدام از جلودار‌ها که می توانند {\tt dance} را به شکل همزمان صدا بزنند با تنها یک دنباله‌رو و برعکس، اضافه کنیم. به معنی دیگر شما می توانید برقصید با کسی که شما را آورده است\footnote{ترانه توسط شاینا تیواین}.
+معما: یک راه حل برای این مساله صف انحصاری ارائه کنید.
 
 \clearemptydoublepage
-\subsection {Exclusive queue hint}
+\subsection {راهنمای صف انحصاری}
 
-Here are the variables I used in my solution:
+متغیرهای راهنمایی را در زیر می بیند:
 
 \begin{lstlisting}[title={Queue hint}]{}
 leaders = followers = 0
@@ -1683,20 +1657,18 @@ followerQueue = Semaphore(0)
 rendezvous = Semaphore(0)
 \end{lstlisting}
 
-{\tt leaders} and {\tt followers} are counters that
-keep track of the number of dancers of each kinds that are
-waiting.  The mutex guarantees exclusive access to the counters.
+{\tt leaders} و {\tt followers} 
+شمارنده هایی هستند که تعداد رقاص‌ها را از هر نوع که در حال انتظار هستند، نگه می دارند. موتکس دسترسی انحصاری به شمارنده ها را ضمانت می کند.
 
-{\tt leaderQueue} and {\tt followerQueue} are the queues where
-dancers wait.  {\tt rendezvous} is used to check that both threads
-are done dancing.
+{\tt leaderQueue} و {\tt followerQueue}
+صف‌هایی هستند که رقاص‌های منتظر شده را نگه داری می کند. {\tt rendezvous} نیز برای چک کردن اینکه هر دو نخ در حال رقصیدن هستند می باشد.
 
 
 
 \clearemptydoublepage
-\subsection {Exclusive queue solution}
+\subsection {راه‌حل صف انحصاری}
 
-Here is the code for leaders:
+قطعه کد مربوط به رقاص جلو‌دار:
 
 \begin{lstlisting}[title={Queue solution (leaders)}]{}
 mutex.wait()
@@ -1713,17 +1685,10 @@ rendezvous.wait()
 mutex.signal()
 \end{lstlisting}
 
-When a leader arrives, it gets the mutex that protects {\tt leaders}
-and {\tt followers}.  If there is a follower waiting, the leader
-decrements {\tt followers}, signals a follower, and then invokes
-{\tt dance}, all before releasing {\tt mutex}.  That guarantees that
-there can be only one follower thread running {\tt dance}
-concurrently.
+زمانی که یک جلو‌دار می‌رسد، یک میوتکس می گیرد تا {\tt leaders} و{\tt followers} محافظت شود.اگر یک دنباله‌رو منتظر باشد، جلو‌دار مقدار {\tt followers}, را کاهش می‌دهد،  به یک جلو‌دار سیگنال می‌دهد و سپس {\tt dance} را فراخوانی می‌کند، تمامی قبلی‌ها {\tt mutex} را آزاد می‌کنند. این ضمانت می‌کند که تنها یک نخ دنباله‌رو را {\tt dance} به شکل همزمان اجرا می کند.
+اگر هیچ دنباله‌روی در حالت انتظار نباشد، جلو‌دار موتکس را قبل از تغیر به حالت انتظار، بر روی {\tt leaderQueue} فعال می‌کند.
 
-If there are no followers waiting, the leader has to give up the mutex
-before waiting on {\tt leaderQueue}.
-
-The code for followers is similar:
+کدمربوط به دنباله‌رو به این شکل است:
 
 \begin{lstlisting}[title={Queue solution (followers)}]{}
 mutex.wait()
@@ -1738,25 +1703,11 @@ else:
 dance()
 rendezvous.signal()
 \end{lstlisting}
-
-When a follower arrives, it checks for a waiting leader.  If there
-is one, the follower decrements {\tt leaders}, signals a leader, and
-executes {\tt dance}, all without releasing {\tt mutex}.  Actually,
-in this case the follower {\em never} releases {\tt mutex};
-the leader does.  We don't have to keep track of which thread has the
-mutex because we know that one of them does, and either one of them can
-release it.  In my solution it's always the leader.
-
-When a semaphore is used as a queue\footnote{A semaphore used as a
-queue is very similar to a condition variable.  The primary difference
-is that threads have to release the mutex explicitly before waiting,
-and reacquire it explicitly afterwards (but only if they need it).},
-I find it useful to read ``wait'' as ``wait for this queue'' and
-signal as ``let someone from this queue go.''
-
-In this code we never signal a queue unless someone is waiting,
-so the values of the queue semaphores are seldom positive.
-It is possible, though.  See if you can figure out how.
+زمانی که یک دنباله‌رو می‌رسد، آن چک می کند که جلو‌دار در حالت انتظار هست. اگر یکی دیگر وجود داشته باشد، دنباله‌رو مقدار {\tt leaders} را کاهش می‌دهد، به جلودار سیگنال می‌دهد، و {\tt dance} را اجرا می کند، و {\tt mutex} بقیه را آزاد می کند. در حقیقت در این مورد دنباله‌رو {\em هرگز} {\tt mutex} را رها نمی‌کند. جلو‌دار اینکار را می‌کرد. ما نمی توانیم از چنین نخ موتکسی، پرهیز کنیم چرا که ما می‌دانیم که یکی از آنها می توانند وارد عمل شوند و هر یک از آن دو می توانند رها کنند. البته در این راه حل آن همیشه جلو‌دار است!
+زمانی که یک سمافور به عنوان یک صف استفاده می‌شود
+\footnote{استفاده از سمافور به عنوان یک صف بسیار شبیه به متغیر شرطی است. تفاوت اصلی در این است که نخ‌ها مجبور به رها کردن موتکس هستند قبل از ورود به حالت انتظار و لازم است تا مجددا بدست آورده شود(اما تنها زمانی که به آن نیاز است)}،
+من آنرا سودمند یافتم برای بررسی وضعیت ``انتظار'' مانند ``انتظار برای صف'' و سیگنال می‌دهد مانند ``یک فرد وارد صف می شود.''
+در این کد ما هرگز سیگنال به صف نمی دهیم، مگر چنین فردی در حالت انتظار می باشد، در نتیجه مقدار صف سمافور‌ به ندرت مثبت می‌باشد. این ممکن است، لذا ببینید چطور انجام می شود.
 
 
 \clearemptydoublepage
