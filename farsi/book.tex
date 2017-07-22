@@ -716,27 +716,34 @@ efficient.
 
 \end{itemize}
 
+% \clearemptydoublepage
+% \chapter{Basic synchronization patterns}
 \clearemptydoublepage
-\chapter{Basic synchronization patterns}
+\chapter{الگوهای همگام سازی پایه}
 
-This chapter presents a series of basic synchronization problems and
-shows ways of using semaphores to solve them.  These problems include
-serialization and mutual exclusion, which we have already seen, along
-with others.
+% This chapter presents a series of basic synchronization problems and
+% shows ways of using semaphores to solve them.  These problems include
+% serialization and mutual exclusion, which we have already seen, along
+% with others.
+در این فصل تعدادی از مسائل همگام سازی پایه ارائه شده است و نشان داده می شود چگونه با استفاده از سمافورها آن ها را حل کنیم. این مسائل شامل تسلسل و موچوال اکسکلوژن - که قبلا با آن ها آشنا شده ایم - به همراه سایر موضوعات می شوند.
 
-\section{Signaling}
+% \section{Signaling}
+\section{علامت دهی}
 
-Possibly the simplest use for a semaphore is {\bf signaling},
-which means that one thread sends a signal to another
-thread to indicate that something has happened.
+% Possibly the simplest use for a semaphore is {\bf signaling},
+% which means that one thread sends a signal to another
+% thread to indicate that something has happened.
+احتمالا علامت دهی ساده ترین استفاده از یک سمافور است، و به این معناست که یک نخ پیامی به نخ دیگر می فرستد تا اعلام کند چیزی اتفاق افتاده است.
 
-Signaling makes it possible to guarantee
-that a section of code in one thread will run before a section of
-code in another thread; in other words, it solves the serialization
-problem.
+% Signaling makes it possible to guarantee
+% that a section of code in one thread will run before a section of
+% code in another thread; in other words, it solves the serialization
+% problem.
+با علامت دهی این امکان فراهم می شود تا مطمئن شویم که یک قطعه کد از یک نخ حتما قبل از قطعه کدی دیگر در نخی دیگر اجرا خواهد شد؛ به عبارت دیگر، مسئله ی تسلسل را حل می کند.
 
-Assume that we have a semaphore named {\tt sem} with initial value
-0, and that Threads A and B have shared access to it.
+% Assume that we have a semaphore named {\tt sem} with initial value
+% 0, and that Threads A and B have shared access to it.
+فرض کنید یک سمافور با نام sem و مقدار اولیه ی 0 داریم، و نیز فرض کنید نخ های A و B هر دو به آن دسترسی دارند.
 
 \begin{minipage}[t]{2in}
 \begin{lstlisting}[title={Thread A}]{}
@@ -752,26 +759,31 @@ statement b1
 \end{lstlisting}
 \end{minipage}
 
-The word {\tt statement} represents an arbitrary program statement.
-To make the example concrete, imagine that {\tt a1} reads a line
-from a file, and {\tt b1} displays the line on the screen.
-The semaphore in this program guarantees that Thread A
-has completed {\tt a1} before Thread B begins {\tt b1}.
+% The word {\tt statement} represents an arbitrary program statement.
+% To make the example concrete, imagine that {\tt a1} reads a line
+% from a file, and {\tt b1} displays the line on the screen.
+% The semaphore in this program guarantees that Thread A
+% has completed {\tt a1} before Thread B begins {\tt b1}.
+کلمه ی statement نشان دهنده ی یک عبارت دلخواه در برنامه است. برای اینکه مثال مشخص تر شود، فرض کنید a1 یک خط از یک فایل را می خواند، و b1 آن خط را در صفحه نمایش نشان می دهد. سمافور در این برنامه تضمین می کند که نخ A عملیات a1 را، قبل از آنکه نخ B عملیات b1 را شروع کند، به طور کامل انجام داده است.
 
-Here's how it works: if thread B gets to the
-{\tt wait} statement first, it will find the initial
-value, zero, and it will block.  Then when Thread A signals,
-Thread B proceeds.
+% Here's how it works: if thread B gets to the
+% {\tt wait} statement first, it will find the initial
+% value, zero, and it will block.  Then when Thread A signals,
+% Thread B proceeds.
+روش کار به این صورت است: اگر اول نخ B به عبارت wait برسد، با مقدار اولیه، یعنی صفر، مواجه می شود و بلاک [مسدود] خواهد شد. سپس هر زمان نخ A علامت دهد، نخ B ادامه خواهد داد.
 
-Similarly, if Thread A gets to the signal first then the
-value of the semaphore will be incremented, and when Thread
-B gets to the wait, it will proceed immediately.
-Either way, the order of {\tt a1} and {\tt b1} is guaranteed.
+% Similarly, if Thread A gets to the signal first then the
+% value of the semaphore will be incremented, and when Thread
+% B gets to the wait, it will proceed immediately.
+% Either way, the order of {\tt a1} and {\tt b1} is guaranteed.
+به طور مشابه، اگر اول نخ A به عبارت signal برسد، مقدار سمافور افزایش می یابد، و هنگامی که نخ B به wait برسد، بدون وقفه ادامه می یابد. 
+در هر صورت، ترتیب a1 و b1 تضمین می شود.
 
-This use of semaphores is the basis of the names {\tt signal}
-and {\tt wait}, and in this case the names are conveniently
-mnemonic.  Unfortunately, we will see other cases where the
-names are less helpful.
+% This use of semaphores is the basis of the names {\tt signal}
+% and {\tt wait}, and in this case the names are conveniently
+% mnemonic.  Unfortunately, we will see other cases where the
+% names are less helpful.
+این شیوه ی استفاده از سمافورها، پایه و اساس نام های signal و wait است، و در این مورد، این اسامی به راحتی به خاطر سپرده می شوند. اما متأسفانه، موارد دیگری را خواهیم دید که این اسم ها کمتر به ما کمک می کنند.
 
 Speaking of meaningful names, {\tt sem} isn't one.  When
 possible, it is a good idea to give a semaphore a name
@@ -779,23 +791,28 @@ that indicates what it represents.  In this case a name like
 {\tt a1Done} might be good, so that {\tt a1done.signal()} means
 ``signal that a1 is done,'' and {\tt a1done.wait()} means
 ``wait until a1 is done.''
+حالا که از اسامی بامعنی صحبت می کنیم، باید بدانیم که sem دارای این شرایط نیست. اگر امکان داشته باشد، ایده ی خوب این است که به یک سمافور نامی دهیم که مشخص کند به چه دلالت دارد. در این مثال نام a1done می تواند خوب باشد، چرا که a1done.signal() به این معنی است که «علامت بده a1 انجام شده است»، و a1done.wait() به این معنی است که «صبر کن تا اینکه a1 انجام شود».
 
 
 \section{Sync.py}
 \label{sync.py}
 
-TODO: write about using sync, starting with signal.py
+% TODO: write about using sync, starting with signal.py
+تمرین: درباره ی استفاده از sync بنویسید، از signal.py شروع کنید.
 
-Why does Thread B signal {\tt initComplete}?
+% Why does Thread B signal {\tt initComplete}?
+چرا نخ B به initComplete علامت می دهد؟
 
 
+%\section{Rendezvous}
+%\label{rendezvous}
+\section{قرار ملاقات}
+\label{قرار ملاقات}
 
-\section{Rendezvous}
-\label{rendezvous}
-
-Puzzle: Generalize the signal pattern so that it works both
-ways.  Thread A has to wait for Thread B and vice versa.  In other
-words, given this code
+% Puzzle: Generalize the signal pattern so that it works both
+% ways.  Thread A has to wait for Thread B and vice versa.  In other
+% words, given this code
+: الگوی علامت دهی را طوری تعمیم دهید که بتواند در دو جهت کار کند. نخ A باید منتظر نخ B بماند و بالعکس. به عبارت دیگر اگر کد زیر را داشته باشیم
 
 \begin{minipage}[t]{2in}
 \begin{lstlisting}[title={Thread A}]{}
@@ -811,30 +828,37 @@ statement b2
 \end{lstlisting}
 \end{minipage}
 %
-we want to guarantee that {\tt a1} happens before {\tt b2} and
-{\tt b1} happens before {\tt a2}.  In writing your solution, be sure
-to specify the names and initial values of your semaphores
-(little hint there).
+% we want to guarantee that {\tt a1} happens before {\tt b2} and
+% {\tt b1} happens before {\tt a2}.  In writing your solution, be sure
+% to specify the names and initial values of your semaphores
+% (little hint there).
+می خواهیم مطمئن شویم که a1 پیش از b2 رخ می دهد و نیز b1 قبل از a2 اتفاق می افتد. هنگام نوشتن راه حل خود، نام و مقدار اولیه ی سمافورها را حتما مشخص نمایید (اشاره کوچکی وجود دارد).
 
-Your solution should not enforce too many constraints.  For example,
-we don't care about the order of {\tt a1} and {\tt b1}.  In your
-solution, either order should be possible.
+% Your solution should not enforce too many constraints.  For example,
+% we don't care about the order of {\tt a1} and {\tt b1}.  In your
+% solution, either order should be possible.
+راه حل شما نباید قید و بندهای زیادی داشته باشد. مثلا، ترتیب a1 و b1 برای ما اهمیتی ندارد. در راه حل شما، باید امکان هر ترتیبی وجود داشته باشد.
 
-This synchronization problem has a name; it's a
-rendezvous.  The idea is that two threads rendezvous
-at a point of execution, and neither is allowed to proceed
-until both have arrived.
+% This synchronization problem has a name; it's a
+% rendezvous.  The idea is that two threads rendezvous
+% at a point of execution, and neither is allowed to proceed
+% until both have arrived.
+نام این مسئله ی همگام سازی، قرار ملاقات است. ایده ی آن به این صورت است که دو نخ در یک نقطه از اجرا با یکدیگر قرار ملاقات می گذارند، و تا زمانی که هر دو نرسیده باشند، دیگری حق ادامه ندارد.
 
 
+% \clearemptydoublepage
+% \subsection{Rendezvous hint}
 \clearemptydoublepage
-\subsection{Rendezvous hint}
+\subsection{اشاره ای در خصوص قرار ملاقات}
 
-The chances are good that you were able to figure out a solution,
-but if not, here is a hint.  Create two semaphores, named {\tt aArrived}
-and {\tt bArrived}, and initialize them both to zero.
 
-As the names suggest, {\tt aArrived} indicates whether Thread A
-has arrived at the rendezvous, and {\tt bArrived} likewise.
+% The chances are good that you were able to figure out a solution,
+% but if not, here is a hint.  Create two semaphores, named {\tt aArrived}
+% and {\tt bArrived}, and initialize them both to zero.
+
+% As the names suggest, {\tt aArrived} indicates whether Thread A
+% has arrived at the rendezvous, and {\tt bArrived} likewise.
+اگر خوش شانس باشید می توانید به یک راه حل برسید، ولی اگر هم نرسیدید، این اشاره برای شماست. دو سمافور به نام های aArrived و bArrived ایجاد کنید، و به هر دو مقدار اولیه صفر بدهید. همان طور که از نام ها مشخص است، aArrived نشان می دهد که آیا نخ A به محل ملاقات رسیده است، و به همین صورت bArrived نیز در مورد نخ B می باشد.
 
 \clearemptydoublepage
 \subsection{Rendezvous solution}
