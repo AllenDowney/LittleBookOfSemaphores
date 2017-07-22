@@ -13,7 +13,7 @@ all:	book.tex
 	bibtex book
 	makeindex book
 	#dvips -Ppdf -o $(NAME).ps book
-	evince book.pdf #$(NAME).ps
+	evince book.pdf & #$(NAME).ps 
 
 FILES = book.tex book.bib table.eps
 

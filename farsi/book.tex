@@ -17,16 +17,18 @@
 
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue]{hyperref}
 
-\usepackage{xepersian}
+\usepackage[computeautoilg]{xepersian}
 \settextfont{XB Niloofar}
 \setdigitfont{Yas}
 \setlatintextfont{Linux Libertine}[Scale=0.94]
 
-\title{The Little Book of Semaphores}
+%\title{The Little Book of Semaphores}
+\title{کتاب کوچک سمافورها}
 
-\author{Allen B. Downey}
+%\author{Allen B. Downey}
+\author{آلن بی.دونی}
 
-\newcommand{\theversion}{Version 2.2.1}
+\newcommand{\theversion}{نسخه $2.2.1$}
 
 \sloppy
 
@@ -54,64 +56,74 @@ numbers=left, numberstyle=\tiny, numbersep=10pt}
 \makeindex
 
 \begin{document}
-\title {The Little Book of Semaphores}
-\author {Allen B. Downey}
+%\title {The Little Book of Semaphores}
+%\author {Allen B. Downey}
 
 \date {\theversion}
 \maketitle
 
 \vspace{2in}
 \begin{center}
-{\Large The Little Book of Semaphores}
+%{\Large The Little Book of Semaphores}
+{\Large کتاب کوچک سمافورها}
 
-Second Edition
+%Second Edition
+ویرایش دوم
 \vspace{0.25in}
 
 \theversion
 \vspace{0.25in}
 
-Copyright 2016 Allen B. Downey
+%Copyright 2016 Allen B. Downey
+حق نشر $2016$ آلن بی.دونی
 \end{center}
 \vspace{0.25in}
 
-Permission is granted to copy, distribute and/or modify this
-document under the terms of the Creative Commons
-Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
-at \url{http://creativecommons.org/licenses/by-nc-sa/4.0}.
+%Permission is granted to copy, distribute and/or modify this
+%document under the terms of the Creative Commons
+%Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
+%at \url{http://creativecommons.org/licenses/by-nc-sa/4.0}.
+کپی، توزیع و/یا تغییر این سند تحت لایسنس زیر مجاز است: \\
+\leftline{\lr{Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International}}
+\leftline{\lr{ (CC BY-NC-SA 4.0) \url{http://creativecommons.org/licenses/by-nc-sa/4.0}}}
+%The original form of this book is LaTeX source code.
+%Compiling this LaTeX source has the effect of generating
+%a device-independent representation of a book, which
+%can be converted to other formats and printed.
+فرم اصلی این کتاب یک سورس کد لاتک است. کامپایل این سورس لاتک سبب تولید یک نمایش کتاب بدون وابستگی به دستگاه خواهد شد 
+که می‌تواند به دیگر فرمت‌ها تبدیل و چاپ گردد. 
 
-The original form of this book is LaTeX source code.
-Compiling this LaTeX source has the effect of generating
-a device-independent representation of a book, which
-can be converted to other formats and printed.
+%This book was typeset by the author using latex, dvips and ps2pdf,
+%among other free, open-source programs.
+%The LaTeX source for this book is available from
+%\url{http://greenteapress.com/semaphores}.
+این کتاب توسط نویسنده با کمک لاتک، \lr{dvips} و \lr{ps2pdf} که همگی برنامه‌های کدباز هستند تایپ شده است. 
+سورس لاتک این کتاب در آدرس \url{http://greenteapress.com/semaphores} موجود است. 
 
-This book was typeset by the author using latex, dvips and ps2pdf,
-among other free, open-source programs.
-The LaTeX source for this book is available from
-\url{http://greenteapress.com/semaphores}.
 
 \frontmatter
 
 \chapter{پیشگفتار}
 
-غالب کتاب های درسی سیستم های عامل در دوره کارشناسی بخشی در همگام سازی دارند که به طور معمول شامل معرفی اجزای اولیه‌ای (موتکس، سمافور، ناظر و متغیر‌های شرطی) و مسائل کلاسیک مثل خواننده نویسنده و تولیدکننده مصرف کننده.
+غالب کتاب‌های درسی سیستم‌های عامل در دوره کارشناسی بخشی در همگام سازی دارند که به طور معمول شامل معرفی اجزای اولیه‌ای (موتکس، سمافور، ناظر و متغیر‌های شرطی) و مسائل کلاسیک مثل خواننده نویسنده و تولیدکننده مصرف کننده.
 وقتی که من در برکلی کلاسی سیستم عامل را داشتم، و در کالج کالبی این درس را تدریس کردم، به این نتیجه رسیدم که بیشتر دانشجویان قادر به درک راه حل ارائه شده برای اینگونه مسائل هستند، اما تنها برخی از این دانشجویان توانایی [ارئه چنین راه حل‌هایی][ارئه همان راه‌حل‌ها] و  حل مسائل مشابه را دارند.
 
-یکی از دلایلی که دانشجویان نمی توانند به طور عمیق این قبیل مسایل را بفهمند، این است که وقت و تلاش بیشتری می برند از آنچیزی که کلاس ها در اختیارشان می گذارد.همگام‌سازی یکی از ماژول‌هایی است که نسبت به دیگر ماژول‌ها وقت بیشتری نیاز دارد. و من مطمئن نیستم که بتوانم برای این منظور دلایلی را شرح دهم، منتها من فکر می کنم که سمافور‌ها یکی از چالشی‌ترین، جالب‌ترین و سرگرمی‌ترین بخش‌های سیستم عامل می باشد.
+یکی از دلایلی که دانشجویان نمی توانند به طور عمیق این قبیل مسایل را بفهمند، این است که وقت و تلاش بیشتری می برند از آنچیزی که کلاس‌ها در اختیارشان می گذارد.همگام‌سازی یکی از ماژول‌هایی است که نسبت به دیگر ماژول‌ها وقت بیشتری نیاز دارد. و من مطمئن نیستم که بتوانم برای این منظور دلایلی را شرح دهم، منتها من فکر می کنم که سمافور‌ها یکی از چالشی‌ترین، جالب‌ترین و سرگرمی‌ترین بخش‌های سیستم عامل می باشد.
 با هدف شناساندن  اصطلاحات والگوهای همگام‌سازی به گونه ای که به صورت مستقل قابل درک باشد و بتوان از آنها برای حل مسائل پیچیده استفاده نمود، اولین ویرایش این کتاب نوشتم.
 نوشتن کدهمگام‌سازی چالش‌های مختص به خود را دارد زیرا که با افزایش تعداد اجزا و تعداد تعاملات به طور غیر قابل کنترلی افزایش می یابد.
 
 
-با این وجود در بین راه حل هایی که دیدم، الگوهایی یافتم و حداقل برخی  ره‌یافت های روشمند درست برای ترکیب راه حل‌ها رسیدم.
+با این وجود در بین راه حل هایی که دیدم، الگوهایی یافتم و حداقل برخی  ره‌یافت‌های روشمند درست برای ترکیب راه حل‌ها رسیدم.
 شانسی این را داشتم که در زمانی که در کالج ویلسلی بودم، این کتاب را به همراه کتاب درسی استاندارد استفاده کردم و در زمان تدریس درس مبحث همگام سازی را به شکل موازی با درس تدریس می کردم. هر هفته به دانشجویان چند صفحه از کتاب را می دادم که با یک معما تمام می شد و گاهی اوقات یه راهنمایی مختصر. و به آنها توصیه می کردم که به راهنمایی نگاه نکننده مگر اینکه گیر افتاده باشند.
 و همچنین ابزارهایی برای تست راه حل‌ها دادم، یه تخته مغناطیسی کوچک که می تونستن کدهاشون رو بنویسند و یک بسته آهنربا برای نمایش تردهای در حال اجرا.
 
-نتیجه بسیار چشمگیر بود، هر چه زمان بیشتری در اختیار داشنجویان می گذاشتم، عمق فهمشون بیشتر می شد، مهمتر اینکه غالبشون قادر به حل بیشتر معماها بودند، و در برخی حالات همان راه حل های کلاسیک را می یافتند و یا راه حل جدیدی را ایجاد می کردند.
+نتیجه بسیار چشمگیر بود، هر چه زمان بیشتری در اختیار داشنجویان می گذاشتم، عمق فهمشون بیشتر می شد، مهمتر اینکه غالبشون قادر به حل بیشتر معماها بودند، و در برخی حالات همان راه حل‌های کلاسیک را می یافتند و یا راه حل جدیدی را ایجاد می کردند.
 وقتی که رفتم کالج گام بعدی را با ایجاد کلاس فوق‌برنامه همگام سازی برداشتم، که در آن کلاس این کتاب تدریس می شد و همچنین پیاده سازی دستورات اولیه همگام‌سازی در زبان اسمبلی x86 و پاسیکس و پیتون.
-دانشجویانی که این درس را گرفتند در یافتن خطاهای نسخه نخست کمک کردند و چندتا از آنها راه‌حل‌هایی بهتر از راه حل های من ارائه داند در پایان ترم از هر کدام انها خواستم که یک مسائله جدید با ترجیحا با یک راه‌حل بنویسند. از این مشارکت ها در نسخه دوم استفاده کردم.
+دانشجویانی که این درس را گرفتند در یافتن خطاهای نسخه نخست کمک کردند و چندتا از آنها راه‌حل‌هایی بهتر از راه حل‌های من ارائه داند در پایان ترم از هر کدام انها خواستم که یک مسائله جدید با ترجیحا با یک راه‌حل بنویسند. از این مشارکت‌ها در نسخه دوم استفاده کردم.
 
 بخش باقی مانده از پیشگفتار:
-همچنین، پس از عرضه ی ویرایش اول، کنث ریک (Kenneth Reek) مقاله ی «الگوهای طراحی سمافورها» را در «گروه ویژه ی علاقمند به آموزش علوم کامپیوتر در ACM» ارائه داد. او در این مقاله مسأله ای را که من به آن «مسئله ی سوشی بار» می گویم معرفی و دو راه حل برای اثبات الگوهایی که وی آن ها را «دست به دست کردن باتوم» و «این کار را برای تو می کنم» نامید مطرح کرد. هنگامی که با این الگوها آشنا شدم، توانستم آن ها را در مسائل ویرایش اول کتاب به کار برم و راه حل هایی تولید کنم که به نظرم بهتر هستند.
-تغییر دیگر در نسخه دوم، نوع نگارش یا نحو آن است. بعد از آنی که نسخه اول را نوشتم، من زبان برنامه نویسی پی‌تون را که نتنها یکی از عالیترین زبان های برنامه نویسی است بلکه یک زبان بسیار شبیه به شبه‌کد است را یاد گرفتم. در نتیجه من از یک شبه کد شبیه به c در ویرایش نخست به یک شبه کد شبیه به زبان پی‌تون تغیر دادم. در حقیقت، من یک شبیه ساز نوشتم که بسیاری از راه حل های ارائه شده در این کتاب را می تواند اجرا کند. خواننده هایی هم که با زبان پی‌تون آشنا نیستند نیز (ان‌شالله) می توانند آن را درک کنند.در مواردی که از ویژگی‌های زبان پی‌تون استفاده کردم، نحو زبان پی‌تون و نحوه‌ی کار کد را شرح داده‌ام. امیدوارم این تغیر زمینه خوانا تر کردن کتاب را بوجود آورده باشد. صفحه بندی این کتاب ممکن است کمی عجیب به نظر برسد! اما صفحات خالی نیز خود یک روش سودمند است، بعد از هر معما، یک فضای خالی را تا شبه‌راهنمایی که در صفحه بعد است، گذاشته ام و بعد از آن یک صفحه خالی دیگر برای حل مساله تا صفحه نمایش راه حل نهایی. زمانی که من از این کتاب در کلاسم استفاده می کنم، برخی از صفحات را از کتاب جدا می کنم و دانشجواینم آنها را بعدا صحافی می کنند! این سیستم صفحه بندی امکان جداکردن معما را بدون صفحات مربوط به راهنمایی ها، محقق می‌کند. بعضی اوقات بخش مربوط به راهنمایی را تا می کنم و از دیده شدن آن جلوگیری می کنم تا دانشجویان خود به حل مساله پرداخته و در زمان مناسب راه حل را ببینند. اگر کتاب را به شکل تک صفحه چاپ کنید(به شکل یک رو سفید! زمانی که پولتان زیادی کرده باشد!مترجم) می توانید از چاپ صفحه های سفید خودداری کنید(ظاهرا نویسنده برای ایالت‌های اصفهان نشین آمریکا هستند!مترجم). 
+همچنین، پس از عرضه ی ویرایش اول، کنث ریک (Kenneth Reek) مقاله ی «الگوهای طراحی سمافورها» را در «گروه ویژه ی علاقمند به آموزش علوم کامپیوتر در ACM» ارائه داد. او در این مقاله مسأله ای را که من به آن «مسئله ی سوشی بار» می گویم معرفی و دو راه حل برای اثبات الگوهایی که وی آن‌ها را «دست به دست کردن باتوم» و «این کار را برای تو می کنم» نامید مطرح کرد. هنگامی که با این الگوها آشنا شدم، توانستم آن‌ها را در مسائل ویرایش اول کتاب به کار برم و راه حل هایی تولید کنم که به نظرم بهتر هستند.
+تغییر دیگر در نسخه دوم، نوع نگارش یا نحو آن است. بعد از آنی که نسخه اول را نوشتم، من زبان برنامه نویسی پی‌تون را که نتنها یکی از عالیترین زبان‌های برنامه نویسی است بلکه یک زبان بسیار شبیه به شبه‌کد است را یاد گرفتم. در نتیجه من از یک شبه کد شبیه به c در ویرایش نخست به یک شبه کد شبیه به زبان پی‌تون تغیر دادم. در حقیقت، من یک شبیه ساز نوشتم که بسیاری از راه حل‌های ارائه شده در این کتاب را می تواند اجرا کند. خواننده هایی هم که با زبان پی‌تون آشنا نیستند نیز (ان‌شالله) می توانند آن را درک کنند.در مواردی که از ویژگی‌های زبان پی‌تون استفاده کردم، نحو زبان پی‌تون و نحوه‌ی کار کد را شرح داده‌ام. امیدوارم این تغیر زمینه خوانا تر کردن کتاب را بوجود آورده باشد. صفحه بندی این کتاب ممکن است کمی عجیب به نظر برسد! اما صفحات خالی نیز خود یک روش سودمند است، بعد از هر معما، یک فضای خالی را تا شبه‌راهنمایی که در صفحه بعد است، گذاشته ام و بعد از آن یک صفحه خالی دیگر برای حل مساله تا صفحه نمایش راه حل نهایی. زمانی که من از این کتاب در کلاسم استفاده می کنم، برخی از صفحات را از کتاب جدا می کنم و دانشجواینم آنها را بعدا صحافی می کنند! این سیستم صفحه بندی امکان جداکردن معما را بدون صفحات مربوط به راهنمایی ها، محقق می‌کند. بعضی اوقات بخش مربوط به راهنمایی را تا می کنم و از دیده شدن آن جلوگیری می کنم تا دانشجویان خود به حل مساله پرداخته و در زمان مناسب راه حل را ببینند. اگر کتاب را به شکل تک صفحه چاپ کنید(به شکل یک رو سفید! زمانی که پولتان زیادی کرده باشد!مترجم) می توانید از چاپ صفحه‌های سفید خودداری کنید(ظاهرا نویسنده برای ایالت‌های اصفهان نشین آمریکا هستند!مترجم). 
 این کتاب یک کتاب رایگان است، این بدین معنی است که هر شخصی می تواند آنرا بخواند، رونوشت برداری کند، اصلاح کند و حتی بازپخش کند و اینها به دلیل نوع لیسانس مورد استفاده برای این کتاب است.امیدوارم افراد این کتاب را مناسب و کارا ببینند، اما بیشتر از آن امیدوارم که آنها برای ادامه فرایند توسعه ایرادات و پیشنهادات خود و همینطور مطالب بیشتر خود را برایم ارسال کنند.
 با تشکر
 \vspace{0.3in}
@@ -122,22 +134,33 @@ The LaTeX source for this book is available from
 
 \section*{لیست همکاران}
 
-The following are some of the people who have contributed to this
-book:
+%The following are some of the people who have contributed to this
+%book:
+در ادامه لیست برخی افرادی که در این کتاب مشارکت داشته‌اند آمده است:
 
 \begin{itemize}
 
-\item Many of the problems in this book are variations of classical
-problems that appeared first in technical articles and then in textbooks.
-Whenever I know the origin of a problem or solution, I acknowledge it
-in the text.
+%\item Many of the problems in this book are variations of classical
+%problems that appeared first in technical articles and then in textbooks.
+%Whenever I know the origin of a problem or solution, I acknowledge it
+%in the text.
+\item    
+    بسیاری از مسائل این کتاب گونه‌ٔ دیگری از مسائل کلاسیکی است که ابتدا در مقالات تخصصی آمده‌اند و سپس در کتب مرجع. 
+    هر کجا که منبع یک مسأله یا راه حل را بدانم در متن به آن اشاره خواهم داشت. 
 
-\item I also thank the students at Wellesley College who worked with
-the first edition of the book, and the students at Olin College who
-worked with the second edition.
+%\item I also thank the students at Wellesley College who worked with
+%the first edition of the book, and the students at Olin College who
+%worked with the second edition.
+\item 
+    همچنین از دانشجویان \lr{Wellesley College} که با ویرایش اول این کتاب کار کرده‌اند تشکر می‌نمانم و نیز دانشجویان 
+    \lr{Olin College} 
+    که با ویرایش دوم کتاب سر و کار داشتند. 
 
-\item Se Won sent in a small but important correction in my presentation
-of Tanenbaum's solution to the Dining Philosophers Problem.
+%\item Se Won sent in a small but important correction in my presentation
+%of Tanenbaum's solution to the Dining Philosophers Problem.
+\item 
+    \lr{Se Won} 
+    تصحیح کوچکی --لکن مهم-- را در ارائه راه حل \lr{Tanenbaum} نسب به مسالهٔ فیلسوف‌های در حال غذا خوردن ارسال نموده است. 
 
 \item Daniel Zingaro punched a hole in the Dancer's problem, which
 provoked me to rewrite that section.  I can only hope that it makes more
@@ -217,7 +240,7 @@ a malfeature in another.
 \section{به‌هنگام سازی}
 \label{synch}
 
-اصطلاحا همگام‌سازی به معنی وقوع همزمان دو چیز است. در سسیتم های کامپیوتری همگام‌سازی کلی‌تر است. این به معنی رابطه مابین رویدادهاست، در هر تعداد از رویدادها و هر نوع رابطه(قبل، حین، بعد).
+اصطلاحا همگام‌سازی به معنی وقوع همزمان دو چیز است. در سسیتم‌های کامپیوتری همگام‌سازی کلی‌تر است. این به معنی رابطه مابین رویدادهاست، در هر تعداد از رویدادها و هر نوع رابطه(قبل، حین، بعد).
 غالبا برنامه‌نویسان با محدودی‌ت‌های همگام‌سازی مواجه‌اند، که این محدودیت‌ها الزاماتی در ارتباط با ترتیب این رخدادها می باشد.
 
 \begin{description}
@@ -227,9 +250,9 @@ a malfeature in another.
 \item[موتوال اکسکوژن:] رخداد الف و ب نباید در یک زمان رخ دهد.
 
 \end{description}
-در زندگی واقعی عالبت محدودیت های همگامی سازی را با کمک یک ساعت بررسی و اعمال می کنیم. چگونه می فهمیم که رخداد الف قبل از رخداد ب رخ داده است؟ با دانستن زمان رخداد هر دو واقعه را بدانیم، می توانیم زمان ها را با هم مقایسه کنیم.
-در سیستم های کامپیوتری غالبا نمی توانیم از ساعت در محدودیت های همگام سازی های کامپیوتری را برآورده کنیم، زیر را که هیچ ساعت جهانی به دلیل اینکه زمان دقیق وقوع رویدادها را نمی دانیم.
-این کتاب درباره تکنیکهای نرم افزار برای اعمال های مجدودیت های همگام‌سازی در کامپیوتر است.
+در زندگی واقعی عالبت محدودیت‌های همگامی سازی را با کمک یک ساعت بررسی و اعمال می کنیم. چگونه می فهمیم که رخداد الف قبل از رخداد ب رخ داده است؟ با دانستن زمان رخداد هر دو واقعه را بدانیم، می توانیم زمان‌ها را با هم مقایسه کنیم.
+در سیستم‌های کامپیوتری غالبا نمی توانیم از ساعت در محدودیت‌های همگام سازی‌های کامپیوتری را برآورده کنیم، زیر را که هیچ ساعت جهانی به دلیل اینکه زمان دقیق وقوع رویدادها را نمی دانیم.
+این کتاب درباره تکنیکهای نرم افزار برای اعمال‌های مجدودیت‌های همگام‌سازی در کامپیوتر است.
 
 
 
@@ -295,22 +318,28 @@ seem trivial, but the underlying idea, message passing, is a real
 solution for many synchronization problems.
 At the risk of belaboring the obvious, consider this timeline.
 %
+\begin{latin}
 \begin{minipage}[t]{2in}
+\begin{latin}
 \begin{lstlisting}[title={Thread A (You)}]{}
 Eat breakfast 
 Work          
 Eat lunch     
 Call Bob
 \end{lstlisting}
+\end{latin}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{2in}
+\begin{latin}
 \begin{lstlisting}[title={Thread B (Bob)}]{}
 Eat breakfast
 Wait for a call
 Eat lunch
 \end{lstlisting}
+\end{latin}
 \end{minipage}
+\end{latin}
 %
 The first column is a list of actions you perform; in other words,
 your thread of execution.  The second column is Bob's thread of
@@ -366,17 +395,23 @@ is not possible to tell, by looking at the program, what will happen
 when it executes.  Here is a simple example of a
 non-deterministic program:
 
+\begin{latin}
 \begin{minipage}[t]{2in}
+\begin{latin}
 \begin{lstlisting}[title={Thread A}]{}
 print "yes"
 \end{lstlisting}
+\end{latin}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{2in}
+\begin{latin}
 \begin{lstlisting}[title={Thread B}]{}
 print "no"
 \end{lstlisting}
+\end{latin}
 \end{minipage}
+\end{latin}
 
 Because the two threads run concurrently, the order of
 execution depends on the scheduler.  During any given run
@@ -424,18 +459,24 @@ reads, does not generally create a synchronization problem.
 In the following example, {\tt x} is a shared variable accessed
 by two writers.
 
+\begin{latin}
 \begin{minipage}[t]{2in}
+\begin{latin}
 \begin{lstlisting}[title={Thread A}]{}
 x = 5
 print x
 \end{lstlisting}
+\end{latin}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{2in}
+\begin{latin}
 \begin{lstlisting}[title={Thread B}]{}
 x = 7
 \end{lstlisting}
+\end{latin}
 \end{minipage}
+\end{latin}
 
 What value of {\tt x} gets printed?  What is the final value of {\tt
 x} when all these statements have executed?  It depends on the order
@@ -467,17 +508,23 @@ new value is the old value plus one.  The following example
 shows a shared variable, {\tt count}, being updated concurrently
 by two threads.
 
+\begin{latin}
 \begin{minipage}[t]{2in}
+\begin{latin}
 \begin{lstlisting}[title={Thread A}]{}
 count = count + 1
 \end{lstlisting}
+\end{latin}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{2in}
+\begin{latin}
 \begin{lstlisting}[title={Thread B}]{}
 count = count + 1
 \end{lstlisting}
+\end{latin}
 \end{minipage}
+\end{latin}
 
 At first glance, it is not obvious that there is a synchronization
 problem here.  There are only two execution paths, and they
@@ -489,19 +536,25 @@ the update takes two steps, a read and a write.
 The problem is more obvious if we rewrite the code with a temporary
 variable, {\tt temp}.
 
+\begin{latin}
 \begin{minipage}[t]{2in}
+\begin{latin}
 \begin{lstlisting}[title={Thread A}]{}
 temp = count
 count = temp + 1
 \end{lstlisting}
+\end{latin}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{2in}
+\begin{latin}
 \begin{lstlisting}[title={Thread B}]{}
 temp = count
 count = temp + 1
 \end{lstlisting}
+\end{latin}
 \end{minipage}
+\end{latin}
 
 Now consider the following execution path 
 
@@ -541,11 +594,15 @@ Puzzle: Suppose that 100 threads run the following program concurrently
 (if you are not familiar with Python, the {\tt for} loop runs the update
 100 times.):
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[]{}
 for i in range(100):
     temp = count
     count = temp + 1
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 What is the largest possible value of {\tt count} after all threads
 have completed?  What is the smallest possible value?
@@ -645,9 +702,13 @@ In this book I will use a simple pseudo-language to demonstrate
 how semaphores work.  The syntax for creating a new semaphore
 and initializing it is
 %
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Semaphore initialization syntax}]{}
 fred = Semaphore(1)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 %
 The function {\tt Semaphore} is a constructor; it creates and
 returns a new Semaphore.  The initial value of the semaphore
@@ -656,24 +717,36 @@ is passed as a parameter to the constructor.
 The semaphore operations go by different names in different environments.
 The most common alternatives are 
 %
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Semaphore operations}]{}
 fred.increment()
 fred.decrement()	
 \end{lstlisting}
+\end{latin}
+\end{latin}
 %
 and
 %
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Semaphore operations}]{}
 fred.signal()
 fred.wait()	
 \end{lstlisting}
+\end{latin}
+\end{latin}
 %
 and
 %
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Semaphore operations}]{}
 fred.V()
 fred.P()	
 \end{lstlisting}
+\end{latin}
+\end{latin}
 %
 It may be surprising that there are so many names, but there is a
 reason.  {\tt increment} and {\tt decrement}
@@ -690,10 +763,14 @@ and semaphores are often used in ways that have nothing to do with
 
 If you insist on meaningful names, then I would suggest these:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Semaphore operations}]{}
 fred.increment_and_wake_a_waiting_process_if_any()
 fred.decrement_and_block_if_the_result_is_negative()	
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 I don't think the world is likely to embrace either of these names
 soon.  In the meantime, I choose (more or less arbitrarily) to use
@@ -730,9 +807,9 @@ efficient.
 % shows ways of using semaphores to solve them.  These problems include
 % serialization and mutual exclusion, which we have already seen, along
 % with others.
-در این فصل تعدادی از مسائل همگام سازی پایه ارائه شده است و نشان داده می‌شود چگونه با استفاده از سمافورها آن ها را حل کنیم. این مسائل شامل موضوعات مختلفی می‌شود از جمله تسلسل و انحصار متقابل --که قبلاً با آن ها آشنا شده ایم--.
+در این فصل تعدادی از مسائل همگام سازی پایه ارائه شده است و نشان داده می‌شود چگونه با استفاده از سمافورها آن‌ها را حل کنیم. این مسائل شامل موضوعات مختلفی می‌شود از جمله تسلسل و انحصار متقابل --که قبلاً با آن‌ها آشنا شده ایم--.
 %به همراه مسائلی دیگر. 
-%سایر موضوعات می شوند.
+%سایر موضوعات می‌شوند.
 
 % \section{Signaling}
 \section{علامت‌دهی}
@@ -753,21 +830,25 @@ efficient.
 
 % Assume that we have a semaphore named {\tt sem} with initial value
 % 0, and that Threads A and B have shared access to it.
-فرض کنید یک سمافور با نام \texttt{sem} و مقدار اولیهٔ  $0$ داریم، و نخ های \lr{A} و \lr{B} هر دو به آن دسترسی دارند.
+فرض کنید یک سمافور با نام \texttt{sem} و مقدار اولیهٔ  $0$ داریم، و نخ‌های \lr{A} و \lr{B} هر دو به آن دسترسی دارند.
 
 \begin{latin}
 \begin{minipage}[t]{2in}
+\begin{latin}
 \begin{lstlisting}[title={Thread A}]{}
 statement a1
 sem.signal()
 \end{lstlisting}
+\end{latin}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{2in}
+\begin{latin}
 \begin{lstlisting}[title={Thread B}]{}
 sem.wait()
 statement b1
 \end{lstlisting}
+\end{latin}
 \end{minipage}
 \end{latin}
 
@@ -784,22 +865,25 @@ statement b1
 % {\tt wait} statement first, it will find the initial
 % value, zero, and it will block.  Then when Thread A signals,
 % Thread B proceeds.
-روش کار به این صورت است: اگر اول نخ B به عبارت wait برسد، با مقدار اولیه، یعنی صفر، مواجه می‌شود و بلاک [مسدود] خواهد شد. سپس هر زمان نخ A علامت دهد، نخ B ادامه خواهد داد.
+روش کار به این صورت است: اگر اول نخ \lr{B} به عبارت \texttt{wait} برسد، با مقدار اولیه، یعنی صفر، مواجه می‌شود 
+و بلاک [مسدود] خواهد شد. سپس هر زمان نخ \lr{A} علامت دهد، نخ \lr{B} ادامه خواهد داد.
 
 % Similarly, if Thread A gets to the signal first then the
 % value of the semaphore will be incremented, and when Thread
 % B gets to the wait, it will proceed immediately.
 % Either way, the order of {\tt a1} and {\tt b1} is guaranteed.
-به طور مشابه، اگر اول نخ A به عبارت signal برسد، مقدار سمافور افزایش می یابد، و هنگامی که نخ B به wait برسد، بدون وقفه ادامه 
+به طور مشابه، اگر اول نخ \lr{A} به عبارت \texttt{signal} برسد، مقدار سمافور افزایش می یابد، و هنگامی که نخ \lr{B} 
+به \texttt{wait} برسد، بدون وقفه ادامه 
 می‌یابد. بهرحال 
 %در هر صورت، 
-ترتیب a1 و b1 تضمین می‌شود.
+ترتیب \texttt{a1} و \texttt{b1} تضمین می‌شود.
 
 % This use of semaphores is the basis of the names {\tt signal}
 % and {\tt wait}, and in this case the names are conveniently
 % mnemonic.  Unfortunately, we will see other cases where the
 % names are less helpful.
-این شیوه ی استفاده از سمافورها، پایه و اساس نام های signal و wait است، و در این مورد، این اسامی به راحتی به خاطر سپرده می شوند. اما متأسفانه، موارد دیگری را خواهیم دید که این اسم ها کمتر به ما کمک می کنند.
+این شیوهٔ استفاده از سمافورها، پایه و اساس نام‌های \texttt{signal} و \texttt{wait} است، 
+و در این مورد، این اسامی به راحتی به خاطر سپرده می‌شوند. اما متأسفانه، موارد دیگری را خواهیم دید که این اسم‌ها کمتر به ما کمک می‌کنند.
 
 %Speaking of meaningful names, {\tt sem} isn't one.  When
 %possible, it is a good idea to give a semaphore a name
@@ -807,7 +891,11 @@ statement b1
 %{\tt a1Done} might be good, so that {\tt a1done.signal()} means
 %``signal that a1 is done,'' and {\tt a1done.wait()} means
 %``wait until a1 is done.''
-حالا که از اسامی بامعنی صحبت می کنیم، باید بدانیم که sem دارای این شرایط نیست. اگر امکان داشته باشد، ایده ی خوب این است که به یک سمافور نامی دهیم که مشخص کند به چه دلالت دارد. در این مثال نام a1done می تواند خوب باشد، چرا که a1done.signal() به این معنی است که «علامت بده a1 انجام شده است»، و a1done.wait() به این معنی است که «صبر کن تا اینکه a1 انجام شود».
+حالا که از اسامی بامعنی صحبت می کنیم، باید بدانیم که \texttt{sem} دارای این شرایط نیست. 
+اگر امکان داشته باشد، ایده ی خوب این است که به یک سمافور نامی دهیم که مشخص کند به چه دلالت دارد. 
+در این مثال نام \texttt{a1done} می تواند خوب باشد، چرا که \texttt{ a1done.signal()} 
+به این معنی است که «علامت بده \texttt{a1} انجام شده است»، و \texttt{a1done.wait()} 
+به این معنی است که «صبر کن تا اینکه \texttt{a1} انجام شود».
 %Sat 22 Jul 2017 06:43:56 PM +0430
 
 \section{Sync.py}
@@ -817,32 +905,36 @@ statement b1
 تمرین: درباره ی استفاده از sync بنویسید، از signal.py شروع کنید.
 
 % Why does Thread B signal {\tt initComplete}?
-چرا نخ B به initComplete علامت می دهد؟
+چرا نخ \lr{B} به \texttt{initComplete} علامت می دهد؟
 
 
 %\section{Rendezvous}
-%\label{rendezvous}
 \section{قرار ملاقات}
-\label{قرار ملاقات}
+\label{rendezvous}
 
 % Puzzle: Generalize the signal pattern so that it works both
 % ways.  Thread A has to wait for Thread B and vice versa.  In other
 % words, given this code
-: الگوی علامت دهی را طوری تعمیم دهید که بتواند در دو جهت کار کند. نخ A باید منتظر نخ B بماند و بالعکس. به عبارت دیگر اگر کد زیر را داشته باشیم
+معمّا: الگوی علامت دهی را طوری تعمیم دهید که بتواند در دو جهت کار کند. 
+نخ \lr{A} باید منتظر نخ \lr{B} بماند و بالعکس. به عبارت دیگر اگر کد زیر را داشته باشیم
 
 \begin{latin}
 \begin{minipage}[t]{2in}
+\begin{latin}
 \begin{lstlisting}[title={Thread A}]{}
 statement a1
 statement a2
 \end{lstlisting}
+\end{latin}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{2in}
+\begin{latin}
 \begin{lstlisting}[title={Thread B}]{}
 statement b1
 statement b2
 \end{lstlisting}
+\end{latin}
 \end{minipage}
 \end{latin}
 
@@ -851,23 +943,24 @@ statement b2
 % {\tt b1} happens before {\tt a2}.  In writing your solution, be sure
 % to specify the names and initial values of your semaphores
 % (little hint there).
-می خواهیم مطمئن شویم که a1 پیش از b2 رخ می دهد و نیز b1 قبل از a2 اتفاق می افتد. هنگام نوشتن راه حل خود، نام و مقدار اولیه ی سمافورها را حتماً مشخص نمایید (اشاره کوچکی وجود دارد).
+می‌خواهیم مطمئن شویم که \texttt{a1} پیش از \texttt{b2} رخ می‌دهد و نیز \texttt{b1} قبل از \texttt{a2} اتفاق می‌افتد. هنگام نوشتن راه حل خود، نام و مقدار اولیهٔ سمافورها را حتماً مشخص نمایید (اشاره کوچکی وجود دارد).
 
 % Your solution should not enforce too many constraints.  For example,
 % we don't care about the order of {\tt a1} and {\tt b1}.  In your
 % solution, either order should be possible.
-راه حل شما نباید قید و بندهای زیادی داشته باشد. مثلا، ترتیب a1 و b1 برای ما اهمیتی ندارد. در راه حل شما، باید امکان هر ترتیبی وجود داشته باشد.
+راه حل شما نباید قید و بندهای زیادی داشته باشد. مثلاً، ترتیب \texttt{a1} و \texttt{b1} برای ما اهمیتی ندارد. 
+در راه حل شما، باید امکان هر ترتیبی وجود داشته باشد.
 
 % This synchronization problem has a name; it's a
 % rendezvous.  The idea is that two threads rendezvous
 % at a point of execution, and neither is allowed to proceed
 % until both have arrived.
-نام این مسئله ی همگام سازی، قرار ملاقات است. ایده ی آن به این صورت است که دو نخ در یک نقطه از اجرا با یکدیگر قرار ملاقات می گذارند، و تا زمانی که هر دو نرسیده باشند، دیگری حق ادامه ندارد.
+نام این مسئلهٔ همگام سازی، قرار ملاقات است. ایدهٔ آن به این صورت است که دو نخ در یک نقطه از اجرا با یکدیگر قرار ملاقات می‌گذارند، 
+و تا زمانی که هر دو نرسیده باشند، دیگری حق ادامه ندارد.
 
 
-% \clearemptydoublepage
+ \clearemptydoublepage
 % \subsection{Rendezvous hint}
-\clearemptydoublepage
 \subsection{اشاره ای در خصوص قرار ملاقات}
 
 
@@ -877,7 +970,9 @@ statement b2
 
 % As the names suggest, {\tt aArrived} indicates whether Thread A
 % has arrived at the rendezvous, and {\tt bArrived} likewise.
-اگر خوش شانس باشید می توانید به یک راه حل برسید، ولی اگر هم نرسیدید، این اشاره برای شماست. دو سمافور به نام های aArrived و bArrived ایجاد کنید، و به هر دو مقدار اولیه صفر بدهید. همان طور که از نام ها مشخص است، aArrived نشان می دهد که آیا نخ A به محل ملاقات رسیده است، و به همین صورت bArrived نیز در مورد نخ B می باشد.
+اگر خوش شانس باشید می‌توانید به یک راه حل برسید، ولی اگر هم نرسیدید، این اشاره برای شماست. دو سمافور به 
+نام‌های \texttt{aArrived} و \texttt{bArrived} ایجاد کنید، و به هر دو مقدار اولیه صفر بدهید. همان طور که از نام‌ها مشخص است، \texttt{aArrived} نشان می دهد که آیا نخ \lr{A} به محل ملاقات رسیده است، و به همین صورت \texttt{bArrived} 
+نیز در مورد نخ \lr{B} می‌باشد.
 
 \clearemptydoublepage
 \subsection{Rendezvous solution}
@@ -886,44 +981,54 @@ Here is my solution, based on the previous hint:
 
 \begin{latin}
 \begin{minipage}[t]{2in}
+\begin{latin}
 \begin{lstlisting}[title={Thread A}]{}
 statement a1
 aArrived.signal()
 bArrived.wait()
 statement a2
 \end{lstlisting}
+\end{latin}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{2in}
+\begin{latin}
 \begin{lstlisting}[title={Thread B}]{}
 statement b1
 bArrived.signal()
 aArrived.wait()
 statement b2
 \end{lstlisting}
+\end{latin}
 \end{minipage}
 \end{latin}
 
 While working on the previous problem, you might have
 tried something like this:
 
+\begin{latin}
 \begin{minipage}[t]{2in}
+\begin{latin}
 \begin{lstlisting}[title={Thread A}]{}
 statement a1
 bArrived.wait()
 aArrived.signal()
 statement a2
 \end{lstlisting}
+\end{latin}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{2in}
+\begin{latin}
 \begin{lstlisting}[title={Thread B}]{}
 statement b1
 bArrived.signal()
 aArrived.wait()
 statement b2
 \end{lstlisting}
+\end{latin}
 \end{minipage}
+\end{latin}
 
 This solution also works, although it is probably less
 efficient, since it might have to switch between A and B
@@ -943,23 +1048,29 @@ proceed until both have arrived.
 Again, while working on the previous problem, you might have
 tried something like this:
 
+\begin{latin}
 \begin{minipage}[t]{2in}
+\begin{latin}
 \begin{lstlisting}[title={Thread A}]{}
 statement a1
 bArrived.wait()
 aArrived.signal()
 statement a2
 \end{lstlisting}
+\end{latin}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{2in}
+\begin{latin}
 \begin{lstlisting}[title={Thread B}]{}
 statement b1
 aArrived.wait()
 bArrived.signal()
 statement b2
 \end{lstlisting}
+\end{latin}
 \end{minipage}
+\end{latin}
 
 If so, I hope you rejected it quickly, because it has a serious
 problem.  Assuming that A arrives first, it will block at its
@@ -995,18 +1106,23 @@ the mutex.  Only one thread can hold the mutex at a time.
 Puzzle: Add semaphores to the following example to
 enforce mutual exclusion to the shared variable {\tt count}.
 
+\begin{latin}
 \begin{minipage}[t]{2in}
+\begin{latin}
 \begin{lstlisting}[title={Thread A}]{}
 count = count + 1
 \end{lstlisting}
+\end{latin}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{2in}
+\begin{latin}
 \begin{lstlisting}[title={Thread B}]{}
 count = count + 1
 \end{lstlisting}
+\end{latin}
 \end{minipage}
-
+\end{latin}
 
 \clearemptydoublepage
 \subsection{Mutual exclusion hint}
@@ -1022,23 +1138,29 @@ has to wait for another thread to release the mutex.
 
 Here is a solution:
 
+\begin{latin}
 \begin{minipage}[t]{2in}
+\begin{latin}
 \begin{lstlisting}[title={Thread A}]{}
 mutex.wait()
     # critical section
     count = count + 1
 mutex.signal()
 \end{lstlisting}
+\end{latin}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{2in}
+\begin{latin}
 \begin{lstlisting}[title={Thread B}]{}
 mutex.wait()
     # critical section
     count = count + 1
 mutex.signal()
 \end{lstlisting}
+\end{latin}
 \end{minipage}
+\end{latin}
 
 Since {\tt mutex} is initially 1, whichever thread gets to
 the {\tt wait} first will be able to proceed immediately.
@@ -1120,11 +1242,15 @@ Since the solution is symmetric, it's conventional to show only one
 copy of the code, but you should imagine multiple copies of the code
 running concurrently in multiple threads.
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Multiplex solution}]{}
 multiplex.wait()
     critical section 
 multiplex.signal()      
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 What happens if the critical section is occupied and more than one
 thread arrives?  Of course, what we want is for all the arrivals to
@@ -1160,10 +1286,14 @@ not work with more than two threads.
 Puzzle: Generalize the rendezvous solution.  Every thread should
 run the following code:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Barrier code}]{}
 rendezvous
 critical point
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 The synchronization requirement is that
 no thread executes {\tt critical point} until after all
@@ -1184,12 +1314,16 @@ For many of the problems in this book I will provide hints
 by presenting the variables I used in my solution and
 explaining their roles.
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Barrier hint}]{}
 n = the number of threads
 count = 0
 mutex = Semaphore(1)
 barrier = Semaphore(0)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 {\tt count} keeps track of how many threads have arrived.
 {\tt mutex} provides exclusive access to {\tt count} so that
@@ -1207,6 +1341,8 @@ First I will present a solution that is not quite right, because
 it is useful to examine incorrect solutions and figure out what
 is wrong.
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Barrier non-solution}]{}
 rendezvous
 
@@ -1220,6 +1356,8 @@ barrier.wait()
 
 critical point
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 Since {\tt count} is protected by a mutex, it counts the number of
 threads that pass.  The first $n-1$ threads wait when they get to the
@@ -1259,6 +1397,8 @@ Puzzle: Fix the problem.
 
 Finally, here is a working barrier:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Barrier solution}]{}
 rendezvous
 
@@ -1273,6 +1413,8 @@ barrier.signal()
 
 critical point
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 The only change is another {\tt signal} after waiting
 at the barrier.  Now as each thread passes, it signals the
@@ -1302,6 +1444,8 @@ mutex, and only one thread at a time can pass through
 the turnstile, it might seen reasonable to put the
 turnstile inside the mutex, like this:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Bad barrier solution}]{}
 rendezvous
 
@@ -1315,6 +1459,8 @@ mutex.signal()
 
 critical point
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 This turns out to be a bad idea because it can cause a
 deadlock.
@@ -1349,6 +1495,8 @@ have passed through, the turnstile is locked again.
 Once again, we will start with a simple attempt at a solution
 and gradually improve it:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Reusable barrier non-solution}]{}
 rendezvous
 
@@ -1369,6 +1517,8 @@ mutex.signal()
 
 if count == 0: turnstile.wait()         (*\label{problem2}*)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 Notice that the code after the turnstile is pretty much the same as
 the code before it.  Again, we have to use the mutex to protect access
@@ -1400,6 +1550,8 @@ Puzzle: Fix the problem.
 This attempt fixes the previous error, but a subtle problem
 remains.
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Reusable barrier non-solution}]{}
 rendezvous
 
@@ -1418,6 +1570,8 @@ mutex.wait()
     if count == 0: turnstile.wait()
 mutex.signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 In both cases the check is inside the mutex so that
 a thread cannot be interrupted after changing the counter
@@ -1442,11 +1596,15 @@ a lap.
 
 To solve this problem we can use two turnstiles.
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Reusable barrier hint}]{}
 turnstile = Semaphore(0)
 turnstile2 = Semaphore(1)
 mutex = Semaphore(1)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 Initially the first is locked and the second is open.  When all the
 threads arrive at the first, we lock the second and unlock the first.
@@ -1459,6 +1617,8 @@ and then open the second.
 \clearemptydoublepage
 \subsection {Reusable barrier solution}
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Reusable barrier solution}]{}
 # rendezvous
 
@@ -1484,6 +1644,8 @@ mutex.signal()
 turnstile2.wait()                # second turnstile
 turnstile2.signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 This solution is sometimes called a {\bf two-phase barrier} because
 it forces all the threads to wait twice: once for all the threads
@@ -1549,6 +1711,8 @@ The only thing to keep in mind is that the multiple signals are not
 atomic; that is, the signaling thread might be interrupted in the
 loop.  But in this case that is not a problem.
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Reusable barrier solution}]{}
 # rendezvous
 
@@ -1570,6 +1734,8 @@ mutex.signal()
 
 turnstile2.wait()                # second turnstile
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 When the $n$th thread arrives, it preloads the first turnstile with
 one signal for each thread.  When the $n$th thread passes the
@@ -1586,6 +1752,8 @@ unlocked when the last thread goes through the mutex.
 It is natural to encapsulate a barrier in an object.  I will
 borrow the Python syntax for defining a class:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Barrier class}]{}
 class Barrier:
     def __init__(self, n):
@@ -1615,6 +1783,8 @@ class Barrier:
         self.phase1()
         self.phase2()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 The {\tt \_\_init\_\_} method runs when we create a new
 {\tt Barrier} object, and initializes the instance variables.
@@ -1629,10 +1799,14 @@ mutex of the current object.
 Here is an example that creates a {\tt Barrier}
 object and waits on it:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Barrier interface}]{}
 barrier = Barrier(n)        # initialize a new barrier
 barrier.wait()              # wait at a barrier
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 Optionally, code that uses a barrier can call {\tt phase1} and
 {\tt phase2} separately, if there is something else that
@@ -1656,10 +1830,14 @@ should be done in between.
 \lr{I}
 هست که در راه حل ما استفاده شده است:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Queue hint}]{}
 leaderQueue = Semaphore(0)
 followerQueue = Semaphore(0)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 {\tt leaderQueue} صف حاوی جلو‌دارهای منتظر هست!
 و
@@ -1672,20 +1850,28 @@ followerQueue = Semaphore(0)
 
 کد مربوط به جلو‌دارها را در اینجا مشاهده می‌کند:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Queue solution (leaders)}]{}
 followerQueue.signal()
 leaderQueue.wait()
 dance()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 و در این قسمت کد مربوط به دنباله‌روها گذاشته شده است:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Queue solution (followers)}]{}
 leaderQueue.signal()
 followerQueue.wait()
 dance()
 \end{lstlisting}
-این راه حل ساده تر از آن است که آن را بگیرید! صرفا یک کلید است. هر سیگنال از جلودار دقیقا یک دنباله‌رو دارد و هر سیگنال دنباله‌رو یک جلو‌دار دارد، لذا این ضمانت می‌کند که جلو‌دار و دنباله‌رو هر دو به شکل همزمان وارد عملیات می شوند(می‌رقصند!!!). اگرچه  آنها هر دو وارد عملیات شده اند اما این ممکن است که نخ‌ها قبل از اجرای {\tt dance} انباشته شوند، و در نتیجه امکان دارد که تعدادی از جلو‌دارهای {\tt dance} قبل از دنباله‌رو ها وارد عمل شوند. بر اساس مفهوم {\tt dance} که ممکن است گیج کننده باشد!
+\end{latin}
+\end{latin}
+این راه حل ساده تر از آن است که آن را بگیرید! صرفا یک کلید است. هر سیگنال از جلودار دقیقا یک دنباله‌رو دارد و هر سیگنال دنباله‌رو یک جلو‌دار دارد، لذا این ضمانت می‌کند که جلو‌دار و دنباله‌رو هر دو به شکل همزمان وارد عملیات می‌شوند(می‌رقصند!!!). اگرچه  آنها هر دو وارد عملیات شده اند اما این ممکن است که نخ‌ها قبل از اجرای {\tt dance} انباشته شوند، و در نتیجه امکان دارد که تعدادی از جلو‌دارهای {\tt dance} قبل از دنباله‌رو‌ها وارد عمل شوند. بر اساس مفهوم {\tt dance} که ممکن است گیج کننده باشد!
 برای اینکه جالب تر باشد، فرض کنید یک شرط اضافه را به هر کدام از جلودار‌ها که می توانند {\tt dance} را به شکل همزمان صدا بزنند با تنها یک دنباله‌رو و برعکس، اضافه کنیم. به معنی دیگر شما می توانید برقصید با کسی که شما را آورده است\footnote{ترانه توسط شاینا تیواین}.
 معما: یک راه حل برای این مساله صف انحصاری ارائه کنید.
 
@@ -1694,6 +1880,8 @@ dance()
 
 متغیرهای راهنمایی را در زیر می بیند:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Queue hint}]{}
 leaders = followers = 0
 mutex = Semaphore(1)
@@ -1701,9 +1889,11 @@ leaderQueue = Semaphore(0)
 followerQueue = Semaphore(0)
 rendezvous = Semaphore(0)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 {\tt leaders} و {\tt followers} 
-شمارنده هایی هستند که تعداد رقاص‌ها را از هر نوع که در حال انتظار هستند، نگه می دارند. موتکس دسترسی انحصاری به شمارنده ها را ضمانت می‌کند.
+شمارنده هایی هستند که تعداد رقاص‌ها را از هر نوع که در حال انتظار هستند، نگه می دارند. موتکس دسترسی انحصاری به شمارنده‌ها را ضمانت می‌کند.
 
 {\tt leaderQueue} و {\tt followerQueue}
 صف‌هایی هستند که رقاص‌های منتظر شده را نگه داری می‌کند. {\tt rendezvous} نیز برای چک کردن اینکه هر دو نخ در حال رقصیدن هستند می باشد.
@@ -1715,6 +1905,8 @@ rendezvous = Semaphore(0)
 
 قطعه کد مربوط به رقاص جلو‌دار:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Queue solution (leaders)}]{}
 mutex.wait()
 if followers > 0:
@@ -1729,12 +1921,16 @@ dance()
 rendezvous.wait()
 mutex.signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 زمانی که یک جلو‌دار می‌رسد، یک میوتکس می گیرد تا {\tt leaders} و{\tt followers} محافظت شود.اگر یک دنباله‌رو منتظر باشد، جلو‌دار مقدار {\tt followers}, را کاهش می‌دهد،  به یک جلو‌دار سیگنال می‌دهد و سپس {\tt dance} را فراخوانی می‌کند، تمامی قبلی‌ها {\tt mutex} را آزاد می‌کنند. این ضمانت می‌کند که تنها یک نخ دنباله‌رو را {\tt dance} به شکل همزمان اجرا می‌کند.
 اگر هیچ دنباله‌روی در حالت انتظار نباشد، جلو‌دار موتکس را قبل از تغیر به حالت انتظار، بر روی {\tt leaderQueue} فعال می‌کند.
 
 کدمربوط به دنباله‌رو به این شکل است:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Queue solution (followers)}]{}
 mutex.wait()
 if leaders > 0:
@@ -1748,6 +1944,8 @@ else:
 dance()
 rendezvous.signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 زمانی که یک دنباله‌رو می‌رسد، آن چک می‌کند که جلو‌دار در حالت انتظار هست. اگر یکی دیگر وجود داشته باشد، دنباله‌رو مقدار {\tt leaders} را کاهش می‌دهد، به جلودار سیگنال می‌دهد، و {\tt dance} را اجرا می‌کند، و {\tt mutex} بقیه را آزاد می‌کند. در حقیقت در این مورد دنباله‌رو {\em هرگز} {\tt mutex} را رها نمی‌کند. جلو‌دار اینکار را می‌کرد. ما نمی توانیم از چنین نخ موتکسی، پرهیز کنیم چرا که ما می‌دانیم که یکی از آنها می توانند وارد عمل شوند و هر یک از آن دو می توانند رها کنند. البته در این راه حل آن همیشه جلو‌دار است!
 زمانی که یک سمافور به عنوان یک صف استفاده می‌شود
 \footnote{استفاده از سمافور به عنوان یک صف بسیار شبیه به متغیر شرطی است. تفاوت اصلی در این است که نخ‌ها مجبور به رها کردن موتکس هستند قبل از ورود به حالت انتظار و لازم است تا مجددا بدست آورده شود(اما تنها زمانی که به آن نیاز است)}،
@@ -1809,17 +2007,25 @@ blocks until a producer adds a new item.
 Assume that producers perform the following operations over and
 over:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Basic producer code}]{}
 event = waitForEvent()
 buffer.add(event)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 Also, assume that consumers perform the following operations:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Basic consumer code}]{}
 event = buffer.get()
 event.process()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 As specified above, access to the buffer has to be exclusive,
 but {\tt waitForEvent} and {\tt event.process}
@@ -1833,11 +2039,15 @@ consumer code to enforce the synchronization constraints.
 
 Here are the variables you might want to use:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Producer-consumer initialization}]{}
 mutex = Semaphore(1)
 items = Semaphore(0)
 local event
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 Not surprisingly, {\tt mutex} provides exclusive access to
 the buffer.  When {\tt items} is positive, it indicates the
@@ -1878,6 +2088,8 @@ local}.
 
 Here is the producer code from my solution.
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Producer solution}]{}
 event = waitForEvent()
 mutex.wait()
@@ -1885,6 +2097,8 @@ mutex.wait()
     items.signal()
 mutex.signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 The producer doesn't have to get exclusive access to the buffer
 until it gets an event.  Several threads can run {\tt waitForEvent}
@@ -1896,6 +2110,8 @@ item, it signals {\tt items}, incrementing it by one.
 
 The consumer code is similar.
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Consumer solution}]{}
 items.wait()
 mutex.wait()
@@ -1903,6 +2119,8 @@ mutex.wait()
 mutex.signal()
 event.process()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 Again, the buffer operation is protected by a mutex,
 but before the consumer gets to it, it has to decrement
@@ -1921,6 +2139,8 @@ performing them unnecessarily can impair the performance of
 a program.  So it would probably be better to rearrange the
 producer like this:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Improved producer solution}]{}
 event = waitForEvent()
 mutex.wait()
@@ -1928,6 +2148,8 @@ mutex.wait()
 mutex.signal()
 items.signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 Now we don't bother unblocking a consumer until we know it can proceed
 (except in the rare case that another producer beats it to the mutex).
@@ -1943,6 +2165,8 @@ and removes an item from the buffer.  At least for a little while,
 We might try to address that by checking the buffer inside the
 mutex:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Broken consumer solution}]{}
 mutex.wait()
     items.wait()
@@ -1950,6 +2174,8 @@ mutex.wait()
 mutex.signal()
 event.process()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 This is a bad idea.
 
@@ -1961,6 +2187,8 @@ Puzzle: why?
 
 If the consumer is running this code
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Broken consumer solution}]{}
 mutex.wait()
     items.wait()
@@ -1969,6 +2197,8 @@ mutex.signal()
 
 event.process()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 %
 it can cause a deadlock.  Imagine that the buffer is empty.
 A consumer arrives, gets the mutex, and then blocks on
@@ -2007,10 +2237,14 @@ Assume that we know the size of the buffer.  Call it
 track of the number of items, it is tempting to write something
 like 
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Broken finite buffer solution}]{}
 if items >= bufferSize:
     block()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 But we can't.  Remember that we can't check the current
 value of a semaphore; the only operations are {\tt wait}
@@ -2025,11 +2259,15 @@ constraint.
 Add a second semaphore to keep track of the number of
 available spaces in the buffer.
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Finite-buffer producer-consumer initialization}]{}
 mutex = Semaphore(1)
 items = Semaphore(0)
 spaces = Semaphore(buffer.size())
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 When a consumer removes an item it should signal {\tt spaces}.
 When a producer arrives it should decrement {\tt spaces}, at
@@ -2041,6 +2279,8 @@ which point it might block until the next consumer signals.
 
 Here is a solution.
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Finite buffer consumer solution}]{}
 items.wait()
 mutex.wait()
@@ -2050,9 +2290,13 @@ spaces.signal()
 
 event.process()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 The producer code is symmetric, in a way:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Finite buffer producer solution}]{}
 event = waitForEvent()
 
@@ -2062,6 +2306,8 @@ mutex.wait()
 mutex.signal()
 items.signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 In order to avoid deadlock, producers and consumers check
 availability before getting the mutex.  For best performance,
@@ -2111,11 +2357,15 @@ the possibility of deadlock.
 Here is a set of variables that is sufficient to solve the
 problem.
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Readers-writers initialization}]{}
 int readers = 0
 mutex = Semaphore(1)
 roomEmpty = Semaphore(1)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 The counter {\tt readers} keeps track of how many readers
 are in the room.  {\tt mutex} protects the shared counter.
@@ -2134,11 +2384,15 @@ The code for writers is simple.  If the critical section
 is empty, a writer may enter, but entering has the effect
 of excluding all other threads:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Writers solution}]{}
 roomEmpty.wait()
     critical section for writers
 roomEmpty.signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 When the writer exits, can it be sure that the room is
 now empty?  Yes, because it knows that no other thread can
@@ -2158,6 +2412,8 @@ If a reader arrives while there is a writer in the room,
 it waits on {\tt roomEmpty}.  Since it holds the mutex, any
 subsequent readers queue on {\tt mutex}.
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Readers solution}]{}
 mutex.wait()
     readers += 1
@@ -2173,6 +2429,8 @@ mutex.wait()
         roomEmpty.signal()   # last out unlocks
 mutex.signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 The code after the critical section is similar.  The last reader
 to leave the room turns out the lights---that is, it signals
@@ -2203,6 +2461,8 @@ pattern where the first person into a room turns on the light (locks
 the mutex) and the last one out turns it off (unlocks the mutex).
 Here is a class definition for a Lightswitch:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Lightswitch definition}]{}
 class Lightswitch:
     def __init__(self):
@@ -2223,6 +2483,8 @@ class Lightswitch:
                 semaphore.signal()
         self.mutex.signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 {\tt lock} takes one parameter, a semaphore that it will check and
 possibly hold.  If the semaphore is locked, the calling thread blocks
@@ -2241,19 +2503,27 @@ unlocks the semaphore.
 Using these functions, we can rewrite the reader code
 more simply:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Readers-writers initialization}]{}
 readLightswitch = Lightswitch()
 roomEmpty = Semaphore(1)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 {\tt readLightswitch} is a shared {\tt Lightswitch} object whose counter
 is initially zero.
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Readers-writers solution (reader)}]{}
 readLightswitch.lock(roomEmpty)
 # critical section
 readLightswitch.unlock(roomEmpty)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 The code for writers is unchanged.
 
@@ -2304,11 +2574,15 @@ leaves the critical section, we are guaranteed that at least
 one writer enters next (before any of the queued readers can
 proceed).
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={No-starve readers-writers initialization}]{}
 readSwitch = Lightswitch()
 roomEmpty = Semaphore(1)
 turnstile = Semaphore(1)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 {\tt readSwitch} keeps track of how many readers are in the room;
 it locks {\tt roomEmpty} when the first reader
@@ -2323,6 +2597,8 @@ mutex for writers.
 
 Here is the writer code:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={No-starve writer solution}]{}
 turnstile.wait()
     roomEmpty.wait()           (* \label{stuck} *)
@@ -2331,12 +2607,16 @@ turnstile.signal()
 
 roomEmpty.signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 If a writer arrives while there are readers in the room, it
 will block at Line~\ref{stuck}, which means that the turnstile will
 be locked.  This will bar readers from entering while a writer
 is queued.  Here is the reader code:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={No-starve reader solution}]{}
 turnstile.wait()
 turnstile.signal()
@@ -2345,6 +2625,8 @@ readSwitch.lock(roomEmpty)
     # critical section for readers
 readSwitch.unlock(roomEmpty)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 When the last reader leaves, it signals {\tt roomEmpty},
 unblocking the waiting writer.  The writer immediately
@@ -2387,12 +2669,16 @@ should be allowed to enter until all writers have left the system.
 As usual, the hint is in the form of variables
 used in the solution.
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Writer-priority readers-writers initialization}]{}
 readSwitch = Lightswitch()
 writeSwitch = Lightswitch()
 noReaders = Semaphore(1)
 noWriters = Semaphore(1)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 
 \clearemptydoublepage
@@ -2400,6 +2686,8 @@ noWriters = Semaphore(1)
 
 Here is the reader code:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Writer-priority reader solution}]{}
 noReaders.wait()
     readSwitch.lock(noWriters)
@@ -2409,6 +2697,8 @@ noReaders.signal()
 
 readSwitch.unlock(noWriters)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 If a reader is in the critical section, it holds
 {\tt noWriters}, but it doesn't hold {\tt noReaders}.
@@ -2420,6 +2710,8 @@ allowing any queued writers to proceed.
 
 The writer code:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Writer-priority writer solution}]{}
 writeSwitch.lock(noReaders)
     noWriters.wait()
@@ -2427,6 +2719,8 @@ writeSwitch.lock(noReaders)
     noWriters.signal()
 writeSwitch.unlock(noReaders)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 When a writer is in the critical section it holds both
 {\tt noReaders} and {\tt noWriters}.  This has the
@@ -2530,12 +2824,16 @@ even for something as simple as a mutex, it is not easy.
 For example, imagine three threads
 running the following code:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Mutex loop}]{}
 while True:
     mutex.wait()
     # critical section 
     mutex.signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 The {\tt while} statement is an infinite loop; in other words,
 as soon as a thread leaves the critical section, it loops to the
@@ -2603,12 +2901,16 @@ future arrivals.
 Here are the variables I used in the solution (I changed the
 names Morris used, trying to make the structure clearer).
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={No-starve mutex hint}]{}
 room1 = room2 = 0
 mutex = Semaphore(1)
 t1 = Semaphore(1)
 t2 = Semaphore(0)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 {\tt room1} and {\tt room2} keep track of how many threads are in the
 waiting rooms.  {\tt mutex} helps protect the counters.  {\tt t1} and
@@ -2620,6 +2922,8 @@ waiting rooms.  {\tt mutex} helps protect the counters.  {\tt t1} and
 
 Here is Morris's solution.
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Morris's algorithm}]{}
 mutex.wait()
     room1 += 1            (*\label{room1begin}*)
@@ -2647,6 +2951,8 @@ t2.wait()                  (*\label{wait2}*)
     else:
         t2.signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 Before entering the critical section, a thread has to pass two
 turnstiles.  These turnstiles divide the code into three ``rooms''.
@@ -2732,6 +3038,8 @@ a big bowl of spaghetti.  Five philosophers, who represent
 interacting threads, come to the table and execute the
 following loop:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Basic philosopher loop}]{}
 while True:
    think()
@@ -2739,6 +3047,8 @@ while True:
    eat()
    put_forks()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 The forks represent resources that the threads have to hold
 exclusively in order to make progress.  The thing that makes the
@@ -2784,10 +3094,14 @@ forks forever, nothing can prevent the neighbors from starving.
 To make it easy for philosophers to refer to their forks,
 we can use the functions {\tt left} and {\tt right}:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Which fork?}]{}
 def left(i): return i
 def right(i): return (i + 1) % 5
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 The {\tt \%} operator wraps around when it gets to 5, so
 {\tt (4 + 1) \% 5 = 0}.
@@ -2796,9 +3110,13 @@ Since we have to enforce exclusive access to the forks,
 it is natural to use a list of Semaphores, one for
 each fork.  Initially, all the forks are available.
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Variables for dining philosophers}]{}
 forks = [Semaphore(1) for i in range(5)]
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 This notation for initializing a list might be unfamiliar to
 readers who don't use Python.  The {\tt range} function returns
@@ -2808,6 +3126,8 @@ result in a list named {\tt forks}.
 
 Here is an initial attempt at {\tt get\_fork} and {\tt put\_fork}:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Dining philosophers non-solution}]{}
 def get_forks(i):
     fork[right(i)].wait()
@@ -2817,6 +3137,8 @@ def put_forks(i):
     fork[right(i)].signal()
     fork[left(i)].signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 It's clear that this solution satisfies the first constraint, but
 we can be pretty sure it doesn't satisfy the other two, because
@@ -2862,6 +3184,8 @@ We can control the number of philosophers at the table with
 a Multiplex named {\tt footman} that is initialized to 4.
 Then the solution looks like this:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Dining philosophers solution \#1}]{}
 def get_forks(i):
     footman.wait()
@@ -2873,6 +3197,8 @@ def put_forks(i):
     fork[left(i)].signal()
     footman.signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 In addition to avoiding deadlock, this solution also guarantees that
 no philosopher starves.
@@ -2944,16 +3270,22 @@ indicates whether the philosopher is thinking, eating, or waiting to
 eat (``hungry'') and a semaphore that indicates whether the
 philosopher can start eating.  Here are the variables:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Variables for Tanenbaum's solution}]{}
 state = ['thinking'] * 5
 sem = [Semaphore(0) for i in range(5)]
 mutex = Semaphore(1)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 The initial value of {\tt state} is a list of 5 copies of {\tt
 'thinking'}.  {\tt sem} is a list of 5 semaphores with the initial
 value 0.  Here is the code:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Tanenbaum's solution}]{}
 def get_fork(i):
     mutex.wait()
@@ -2976,6 +3308,8 @@ def test(i):
         state[i] = 'eating'
         sem[i].signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 % NOTE: need to fix this; see email from David Furcy.
 
@@ -3101,12 +3435,16 @@ Naturally, we will focus on the interesting version.  To complete
 the statement of the problem, we need to specify the agent code.
 The agent uses the following semaphores:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Agent semaphores}]{}
 agentSem = Semaphore(1)
 tobacco = Semaphore(0)
 paper = Semaphore(0)
 match = Semaphore(0)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 The agent is actually made up of three concurrent
 threads, Agent A, Agent B and Agent C.  Each waits on
@@ -3114,44 +3452,61 @@ threads, Agent A, Agent B and Agent C.  Each waits on
 one of the Agents wakes up and provides ingredients by
 signaling two semaphores.
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Agent A code}]{}
 agentSem.wait()
 tobacco.signal()
 paper.signal()
 \end{lstlisting}
+\end{latin}
 
+
+\begin{latin}
 \begin{lstlisting}[title={Agent B code}]{}
 agentSem.wait()
 paper.signal()
 match.signal()
 \end{lstlisting}
+\end{latin}
 
+\begin{latin}
 \begin{lstlisting}[title={Agent C code}]{}
 agentSem.wait()
 tobacco.signal()
 match.signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 This problem is hard because the natural solution does not
 work.  It is tempting to write something like:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Smoker with matches}]{}
 tobacco.wait()
 paper.wait()
 agentSem.signal()
 \end{lstlisting}
+\end{latin}
 
+\begin{latin}
 \begin{lstlisting}[title={Smoker with tobacco}]{}
 paper.wait()
 match.wait()
 agentSem.signal()
 \end{lstlisting}
+\end{latin}
 
+\begin{latin}
 \begin{lstlisting}[title={Smoker with paper}]{}
 tobacco.wait()
 match.wait()
 agentSem.signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 What's wrong with this solution?
 
@@ -3177,12 +3532,16 @@ appropriate smoker.
 
 The additional variables and semaphores are
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Smokers problem hint}]{}
 isTobacco = isPaper = isMatch = False
 tobaccoSem = Semaphore(0)
 paperSem = Semaphore(0)
 matchSem = Semaphore(0)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 The boolean variables indicate whether or not an ingredient
 is on the table.  The pushers use {\tt tobaccoSem} to signal
@@ -3194,6 +3553,8 @@ the smoker with tobacco, and the other semaphores likewise.
 
 Here is the code for one of the pushers:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Pusher A}]{}
 tobacco.wait()
 mutex.wait()
@@ -3207,6 +3568,8 @@ mutex.wait()
         isTobacco = True
 mutex.signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 This pusher wakes up any time there is tobacco on the
 table.  If it finds {\tt isPaper} true, it knows that
@@ -3221,12 +3584,16 @@ any of the smokers, so it sets {\tt isTobacco}.
 The other pushers are similar.  Since the pushers do all
 the real work, the smoker code is trivial:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Smoker with tobacco}]{}
 tobaccoSem.wait()
 makeCigarette()
 agentSem.signal()
 smoke()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 Parnas presents a similar solution that assembles the
 boolean variables, bitwise, into an integer, and then
@@ -3254,9 +3621,13 @@ If the agents don't wait for the smokers, ingredients might
 accumulate on the table.  Instead of using boolean values to
 keep track of ingredients, we need integers to count them.
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Generalized Smokers problem hint}]{}
 numTobacco = numPaper = numMatch = 0
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 
 \clearemptydoublepage
@@ -3265,6 +3636,8 @@ numTobacco = numPaper = numMatch = 0
 
 Here is the modified code for Pusher A:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Pusher A}]{}
 tobacco.wait()
 mutex.wait()
@@ -3278,6 +3651,8 @@ mutex.wait()
         numTobacco += 1
 mutex.signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 One way to visualize this problem is to imagine that when an
 Agent runs, it creates two pushers, gives each of them one ingredient,
@@ -3325,18 +3700,26 @@ refilled the pot.
 
 Any number of savage threads run the following code:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Unsynchronized savage code}]{}
 while True:
     getServingFromPot()
     eat()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 And one cook thread runs this code:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Unsynchronized cook code}]{}
 while True:
     putServingsInPot(M)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 The synchronization constraints are:
 
@@ -3368,12 +3751,16 @@ keep track of the number of servings.  If a savage finds
 the counter at zero, he wakes the cook and waits for a signal
 that the pot is full.  Here are the variables I used:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Dining Savages hint}]{}
 servings = 0
 mutex = Semaphore(1)
 emptyPot = Semaphore(0)
 fullPot = Semaphore(0)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 Not surprisingly, {\tt emptyPot} indicates that the pot is empty and
 {\tt fullPot} indicates that the pot is full.
@@ -3385,18 +3772,24 @@ My solution is a combination of the scoreboard pattern
 with a rendezvous.
 Here is the code for the cook:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Dining Savages solution (cook)}]{}
 while True:
     emptyPot.wait()
     putServingsInPot(M)
     fullPot.signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 The code for the savages is only a little more complicated.
 As each savage passes through the mutex, he checks the pot.
 If it is empty, he signals the cook and waits.  Otherwise,
 he decrements {\tt servings} and gets a serving from the pot.
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Dining Savages solution (savage)}]{}
 while True:
     mutex.wait()
@@ -3410,6 +3803,8 @@ while True:
 
     eat()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 It might seem odd that the savage, rather than the cook, sets
 {\tt servings = M}.  That's not really necessary; when the cook
@@ -3761,6 +4156,8 @@ be any number of elves.
 \clearemptydoublepage
 \subsection {Santa problem hint}
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Santa problem hint}]{}
 elves = 0
 reindeer = 0
@@ -3769,6 +4166,8 @@ reindeerSem = Semaphore(0)
 elfTex = Semaphore(1)
 mutex = Semaphore(1)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 {\tt elves} and {\tt reindeer} are counters, both protected
 by {\tt mutex}.  Elves and reindeer get {\tt mutex} to modify the
@@ -3790,6 +4189,8 @@ entering while three elves are being helped.
 Santa's code is pretty straightforward.  Remember that it
 runs in a loop.
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Santa problem solution (Santa)}]{}
 santaSem.wait()
 mutex.wait()
@@ -3801,6 +4202,8 @@ mutex.wait()
         helpElves()
 mutex.signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 When Santa wakes up, he checks which of the two conditions
 holds and either deals with the reindeer or the waiting elves.
@@ -3818,6 +4221,8 @@ out.
 
 Here is the code for reindeer:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Santa problem solution (reindeer)}]{}
 mutex.wait()
     reindeer += 1
@@ -3828,6 +4233,8 @@ mutex.signal()
 reindeerSem.wait()
 getHitched()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 The ninth reindeer signals Santa and then joins the other
 reindeer waiting on {\tt reindeerSem}.  When Santa signals, the
@@ -3838,6 +4245,8 @@ it has to bar subsequent arrivals until the first three have
 executed {\tt getHelp}.
 
 \newpage
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Santa problem solution (elves)}]{}
 elfTex.wait()
 mutex.wait()
@@ -3856,6 +4265,8 @@ mutex.wait()
        elfTex.signal()
 mutex.signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 The first two elves release {\tt elfTex} at the same time they release
 the {\tt mutex}, but the last elf holds {\tt elfTex}, barring other
@@ -3912,6 +4323,8 @@ molecules that enforces these constraints.
 
 Here are the variables I used in my solution:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Water building hint}]{}
 mutex = Semaphore(1)
 oxygen = 0
@@ -3920,6 +4333,8 @@ barrier = Barrier(3)
 oxyQueue = Semaphore(0)
 hydroQueue = Semaphore(0)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 {\tt oxygen} and {\tt hydrogen} are counters, protected by {\tt mutex}.
 {\tt barrier} is where each set of three threads meets after
@@ -3942,6 +4357,8 @@ an oxygen thread arrives it signals {\tt hydroQueue} twice,
 allowing two hydrogens to proceed.  Then the oxygen thread waits
 for the hydrogen threads to arrive.
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Oxygen code}]{}
 mutex.wait()
 oxygen += 1
@@ -3959,6 +4376,8 @@ bond()
 barrier.wait()
 mutex.signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 As each oxygen thread enters, it gets the mutex and checks the scoreboard.
 If there are at least two hydrogen threads waiting, it signals two of
@@ -3972,6 +4391,8 @@ to signal {\tt mutex} once.
 
 The code for hydrogen is similar:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Hydrogen code}]{}
 mutex.wait()
 hydrogen += 1
@@ -3988,6 +4409,8 @@ bond()
 
 barrier.wait()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 An unusual feature of this solution is that
 the exit point of the mutex is ambiguous.  In
@@ -4044,6 +4467,8 @@ only interested in traffic going in one of the directions.
 
 Here are the variables I used in my solution:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={River crossing hint}]{}
 barrier = Barrier(4)
 mutex = Semaphore(1)
@@ -4053,6 +4478,8 @@ hackerQueue = Semaphore(0)
 serfQueue = Semaphore(0)
 local isCaptain = False
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 {\tt hackers} and {\tt serfs} count the number of hackers
 and serfs waiting to board.  Since they are both protected by
@@ -4080,6 +4507,8 @@ I'll present the code for hackers; the serf code is
 symmetric (except, of course, that it is 1000 times bigger,
 full of bugs, and it contains an embedded web browser):
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={River crossing solution}]{}
 mutex.wait()
     hackers += 1
@@ -4105,6 +4534,8 @@ if isCaptain:
     rowBoat()
     mutex.signal()          # captain releases the mutex
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 As each thread files through the mutual exclusion section, it
 checks whether a complete crew is ready to board.  If so, it
@@ -4154,6 +4585,8 @@ constraints.
 \clearemptydoublepage
 \subsection{Roller Coaster hint}
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Roller Coaster hint}]{}
 mutex = Semaphore(1)
 mutex2 = Semaphore(1)
@@ -4164,6 +4597,8 @@ unboardQueue = Semaphore(0)
 allAboard = Semaphore(0)
 allAshore = Semaphore(0)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 {\tt mutex} protects {\tt passengers}, which counts the number of
 passengers that have invoked {\tt boardCar}.  
@@ -4178,6 +4613,8 @@ indicates that the car is full.
 
 Here is my code for the car thread:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Roller Coaster solution (car)}]{}
 load()
 boardQueue.signal(C)
@@ -4189,12 +4626,16 @@ unload()
 unboardQueue.signal(C)
 allAshore.wait()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 When the car arrives, it signals $C$ passengers,
 then waits for the last one to signal {\tt allAboard}.
 After it departs, it allows $C$ passengers to disembark,
 then waits for {\tt allAshore}.
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Roller Coaster solution (passenger)}]{}
 boardQueue.wait()
 board()
@@ -4216,6 +4657,8 @@ mutex2.wait()
        unboarders = 0
 mutex2.signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 Passengers wait for the car before boarding, naturally, and wait for
 the car to stop before leaving.  The last passenger to board signals
@@ -4264,20 +4707,28 @@ As each car enters the
 loading (or unloading) it waits on its own semaphore; as it leaves it
 signals the next car in line.
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Multi-car Roller Coaster hint}]{}
 loadingArea = [Semaphore(0) for i in range(m)]
 loadingArea[1].signal()
 unloadingArea = [Semaphore(0) for i in range(m)]
 unloadingArea[1].signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 The function {\tt next} computes the identifier of the next
 car in the sequence (wrapping around from $m-1$ to 0):
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Implementation of {\tt next}}]{}
 def next(i):
     return (i + 1) % m
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 
 
@@ -4286,6 +4737,8 @@ def next(i):
 
 Here is the modified code for the cars:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Multi-car Roller Coaster solution (car)}]{}
 loadingArea[i].wait()
 load()
@@ -4301,6 +4754,8 @@ unboardQueue.signal(C)
 allAshore.wait()
 unloadingArea[next(i)].signal()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 The code for the passengers is unchanged.
 
@@ -4332,6 +4787,8 @@ enforces this kind of three-way categorical mutual exclusion.
 \clearemptydoublepage
 \subsection{Search-Insert-Delete hint}
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Search-Insert-Delete hint}]{}
 insertMutex = Semaphore(1)
 noSearcher = Semaphore(1)
@@ -4339,6 +4796,8 @@ noInserter = Semaphore(1)
 searchSwitch = Lightswitch()
 insertSwitch = Lightswitch()
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 {\tt insertMutex} ensures that only one inserter is in its critical
 section at a time.  {\tt noSearcher} and {\tt noInserter} indicate
@@ -4354,16 +4813,22 @@ inserters to exclude deleters.
 
 Here is my solution:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Search-Insert-Delete solution (searcher)}]{}
 searchSwitch.wait(noSearcher)
 # critical section
 searchSwitch.signal(noSearcher)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 The only thing a searcher needs to worry about is a deleter.
 The first searcher in takes {\tt noSearcher}; the last one out
 releases it.
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Search-Insert-Delete solution (inserter)}]{}
 insertSwitch.wait(noInserter)
 insertMutex.wait()
@@ -4371,6 +4836,8 @@ insertMutex.wait()
 insertMutex.signal()
 insertSwitch.signal(noInserter)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 Similarly, the first inserter takes {\tt noInserter} and the last one
 out releases it.  Since searchers and inserters compete for different
@@ -4378,6 +4845,8 @@ semaphores, they can be in their critical section concurrently.
 But {\tt insertMutex} ensures that only one inserter is in the room
 at a time.
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Search-Insert-Delete solution (deleter)}]{}
 noSearcher.wait()
 noInserter.wait()
@@ -4386,6 +4855,8 @@ noInserter.signal()
 noSearcher.signal()
 
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 Since the deleter holds both {\tt noSearcher} and {\tt noInserter},
 it is guaranteed exclusive access.  Of course, any time we see
@@ -4439,6 +4910,8 @@ with all the semaphores you need.
 
 Here are the variables I used in my solution:
 
+\begin{latin}
+\begin{latin}
 \begin{lstlisting}[title={Unisex bathroom hint}]{}
 empty = Semaphore(1)
 maleSwitch = Lightswitch()
@@ -4446,6 +4919,8 @@ femaleSwitch = Lightswitch()
 maleMultiplex = Semaphore(3)
 femaleMultiplex = Semaphore(3)
 \end{lstlisting}
+\end{latin}
+\end{latin}
 
 {\tt empty} is 1 if the room is empty and 0 otherwise.
 
@@ -4463,6 +4938,7 @@ more than three men and three women in the system at a time.
 
 Here is the female code:
 
+\begin{latin}
 \begin{lstlisting}[title={Unisex bathroom solution (female)}]{}
 femaleSwitch.lock(empty)
     femaleMultiplex.wait()
@@ -4470,6 +4946,7 @@ femaleSwitch.lock(empty)
     femaleMultiplex.signal()
 female Switch.unlock(empty)
 \end{lstlisting}
+\end{latin}
 
 The male code is similar.
 
@@ -4492,6 +4969,7 @@ As we have seen before, we can use a turnstile to allow one
 kind of thread to stop the flow of the other kind of thread.
 This time we'll look at the male code:
 
+\begin{latin}
 \begin{lstlisting}[title={No-starve unisex bathroom solution (male)}]{}
 turnstile.wait()
     maleSwitch.lock(empty)
@@ -4503,6 +4981,7 @@ turnstile.signal()
 
 maleSwitch.unlock (empty)
 \end{lstlisting}
+\end{latin}
 
 As long as there are men in the room, new arrivals will pass
 through the turnstile and enter.  If there are women in the room
@@ -4609,6 +5088,7 @@ majority rule.
 
 Here are the variables I used in my solution.
 
+\begin{latin}
 \begin{lstlisting}[title={Modus problem hint}]{}
 heathens = 0
 prudes = 0
@@ -4619,6 +5099,7 @@ prudeTurn = Semaphore(1)
 heathenQueue = Semaphore(0)
 prudeQueue = Semaphore(0)
 \end{lstlisting}
+\end{latin}
 
 {\tt heathens} and {\tt prudes} are counters, and {\tt status} records
 the status of the field, which can be `neutral', `heathens rule',
@@ -4638,6 +5119,7 @@ checking in and before taking the field.
 
 Here is the code for heathens:
 
+\begin{latin}
 \begin{lstlisting}[title={Modus problem solution}]{}
 heathenTurn.wait()
 heathenTurn.signal()
@@ -4681,6 +5163,7 @@ if status == 'heathens rule':
 
 mutex.signal()
 \end{lstlisting}
+\end{latin}
 
 As each student checks in, he has to
 consider the following cases:
@@ -4768,12 +5251,14 @@ leaving the sushi bar that enforces these requirements.
 
 Here are the variables I used:
 
+\begin{latin}
 \begin{lstlisting}[title={Sushi bar hint}]{}
 eating = waiting = 0
 mutex = Semaphore(1)
 block = Semaphore(0)
 must_wait = False
 \end{lstlisting}
+\end{latin}
 
 {\tt eating} and {\tt waiting} keep track of the number of
 threads sitting at the bar and waiting.  {\tt mutex} protects
@@ -4788,6 +5273,7 @@ on {\tt block}.
 Here is an incorrect solution Reek uses to illustrate one
 of the difficulties of this problem.
 
+\begin{latin}
 \begin{lstlisting}[title={Sushi bar non-solution}]{}
 mutex.wait()
 if must_wait:
@@ -4812,6 +5298,7 @@ if eating == 0:
     must_wait = False
 mutex.signal()
 \end{lstlisting}
+\end{latin}
 
 Puzzle: what's wrong with this solution?
 
@@ -4848,6 +5335,7 @@ is to update the state of {\tt eating} and {\tt waiting}, so
 one way to solve the problem is to make the departing customer,
 who already has the mutex, do the updating.
 
+\begin{latin}
 \begin{lstlisting}[title={Sushi bar solution \#1}]{}
 mutex.wait()
 if must_wait:
@@ -4871,6 +5359,7 @@ if eating == 0:
     block.signal(n)
 mutex.signal()
 \end{lstlisting}
+\end{latin}
 
 When the last departing customer releases the mutex, 
 {\tt eating} has already been updated, so newly arriving customers
@@ -4893,6 +5382,7 @@ thread can release it.  As long as both threads understand
 that the lock has been transferred, there is nothing wrong with
 this.
 
+\begin{latin}
 \begin{lstlisting}[title={Sushi bar solution \#2}]{}
 mutex.wait()
 if must_wait:
@@ -4919,6 +5409,7 @@ if waiting and not must_wait:
 else:
     mutex.signal()
 \end{lstlisting}
+\end{latin}
 
 If there are fewer than 5 customers at the bar and no one waiting, an
 entering customer just increments {\tt eating} and releases the
@@ -4967,9 +5458,11 @@ this constraint in a critical section.
 Hailperin suggests that you can {\em almost} solve this problem
 with one semaphore.
 
+\begin{latin}
 \begin{lstlisting}[title={Child care hint}]{}
 multiplex = Semaphore(0)
 \end{lstlisting}
+\end{latin}
 
 {\tt multiplex} counts the number of tokens available, where each token
 allows a child thread to enter.  As adults enter, they signal {\tt
@@ -4984,6 +5477,7 @@ Puzzle: what is the problem?
 
 Here is what the adult code looks like in Hailperin's non-solution:
 
+\begin{latin}
 \begin{lstlisting}[title={Child care non-solution (adult)}]{}
 multiplex.signal(3)
 
@@ -4993,6 +5487,7 @@ multiplex.wait()
 multiplex.wait()
 multiplex.wait()
 \end{lstlisting}
+\end{latin}
 
 The problem is a potential deadlock.  Imagine that there are
 three children and two adults in the child care center.  The
@@ -5009,6 +5504,7 @@ Puzzle: solve this problem with a minimal change.
 
 Adding a mutex solves the problem:
 
+\begin{latin}
 \begin{lstlisting}[title={Child care solution (adult)}]{}
 multiplex.signal(3)
 
@@ -5020,6 +5516,7 @@ mutex.wait()
     multiplex.wait()
 mutex.signal()
 \end{lstlisting}
+\end{latin}
 
 Now the three {\tt wait} operations are atomic.  If there
 are three tokens available, the thread that gets the mutex
@@ -5052,12 +5549,14 @@ Hint: think about the dancers in Section~\ref{dancers}.
 
 Here are the variables I used in my solution:
 
+\begin{latin}
 \begin{lstlisting}[title={Extended child care hint}]{}
 children = adults = waiting = leaving = 0
 mutex = Semaphore(1)
 childQueue = Semaphore(0)
 adultQueue = Semaphore(0)
 \end{lstlisting}
+\end{latin}
 
 {\tt children}, {\tt adults}, {\tt waiting} and {\tt leaving}
 keep track of the number of children, adults, children waiting
@@ -5079,6 +5578,7 @@ and ``I'll do it for you''.
 
 Here is the child code:
 
+\begin{latin}
 \begin{lstlisting}[title={Extended child care solution (child)}]{}
 mutex.wait()
     if children < 3 * adults:
@@ -5099,6 +5599,7 @@ mutex.wait()
         adultQueue.signal() 
 mutex.signal()
 \end{lstlisting}
+\end{latin}
 
 As children enter, they check whether there are enough adults
 and either (1) increment {\tt children} and enter or (2) increment
@@ -5109,6 +5610,7 @@ signal it if possible.
 \newpage
 Here is the code for adults:
 
+\begin{latin}
 \begin{lstlisting}[title={Extended child care solution (adult)}]{}
 mutex.wait()
     adults++
@@ -5130,6 +5632,7 @@ mutex.wait()
         mutex.signal()
         adultQueue.wait() 
 \end{lstlisting}
+\end{latin}
 
 As adults enter, they signal waiting children, if any.  Before they
 leave, they check whether there are enough adults left.  If so, they
@@ -5184,6 +5687,7 @@ Dean of Students that enforces all of these constraints.
 \clearemptydoublepage
 \subsection {Room party hint}
 
+\begin{latin}
 \begin{lstlisting}[title={Room party hint}]{}
 students = 0                
 dean = 'not here'           
@@ -5192,6 +5696,7 @@ turn = Semaphore(1)
 clear = Semaphore(0)
 lieIn = Semaphore(0)
 \end{lstlisting}
+\end{latin}
 
 {\tt students} counts the number of students in the room,
 and {\tt dean} is the state of the Dean, which can also be
@@ -5220,6 +5725,7 @@ result was complicated enough that we had a hard time convincing
 ourselves that it was correct.  But that solution led me to this one,
 which is a bit more readable.
 
+\begin{latin}
 \begin{lstlisting}[title={Room party solution (dean)}]{}
 mutex.wait()
     if students > 0 and students < 50:
@@ -5243,6 +5749,7 @@ mutex.wait()
 dean = 'not here'
 mutex.signal() 
 \end{lstlisting}
+\end{latin}
 
 When the Dean arrives, there are three cases: if there are students in
 the room, but not 50 or more, the Dean has to wait.  If there are 50
@@ -5256,6 +5763,7 @@ the mutex back.  This is similar to the situation we saw in the Sushi
 Bar problem.  The solution I chose is the ``Pass the baton'' pattern.
 
 \newpage
+\begin{latin}
 \begin{lstlisting}[title={Room party solution (student)}]{}
 mutex.wait()
     if dean == 'in the room':
@@ -5283,6 +5791,7 @@ mutex.wait()
     else:
         mutex.signal()
 \end{lstlisting}
+\end{latin}
 
 There are three cases where a student might have to signal the Dean.
 If the Dean is waiting, then the 50th student in or the last one out
@@ -5323,6 +5832,7 @@ constraints.
 
 Here are the variables I used in my solution:
 
+\begin{latin}
 \begin{lstlisting}[title={Bus problem hint}]{}
 riders = 0
 mutex = Semaphore(1)
@@ -5330,6 +5840,7 @@ multiplex = Semaphore(50)
 bus = Semaphore(0)
 allAboard = Semaphore(0)
 \end{lstlisting}
+\end{latin}
 
 {\tt mutex} protects {\tt riders}, which keeps track of
 how many riders are waiting;
@@ -5348,6 +5859,7 @@ student to board.
 Here is the code for the bus.  Again, we are using the
 ``Pass the baton'' pattern.
 
+\begin{latin}
 \begin{lstlisting}[title={Bus problem solution (bus)}]{}
 mutex.wait()
 if riders > 0:
@@ -5357,6 +5869,7 @@ mutex.signal()
 
 depart()
 \end{lstlisting}
+\end{latin}
 
 When the bus arrives, it gets {\tt mutex}, which
 prevents late arrivals from entering the boarding area.  If there
@@ -5365,6 +5878,7 @@ and waits for the riders to board.
 
 Here is the code for the riders:
 
+\begin{latin}
 \begin{lstlisting}[title={Bus problem solution (riders)}]{}
 multiplex.wait()
     mutex.wait()
@@ -5382,6 +5896,7 @@ if riders == 0:
 else:
     bus.signal()            # and pass the mutex
 \end{lstlisting}
+\end{latin}
 
 The multiplex controls the number of riders in the waiting area,
 although strictly speaking, a rider doesn't enter the waiting
@@ -5407,12 +5922,14 @@ Grant Hutchins came up with this solution, which uses fewer
 variables than the previous one, and doesn't involve passing
 around any mutexes.  Here are the variables:
 
+\begin{latin}
 \begin{lstlisting}[title={Bus problem solution \#2 (initialization)}]{}
 waiting = 0
 mutex = new Semaphore(1)
 bus = new Semaphore(0)
 boarded = new Semaphore(0)
 \end{lstlisting}
+\end{latin}
 
 {\tt waiting} is the number of riders in the boarding area,
 which is protected by {\tt mutex}.  {\tt bus} signals when the
@@ -5420,6 +5937,7 @@ bus has arrived; {\tt boarded} signals that a rider has boarded.
 
 Here is the code for the bus.
 
+\begin{latin}
 \begin{lstlisting}[title={Bus problem solution (bus)}]{}
 mutex.wait()
 n = min(waiting, 50)
@@ -5432,6 +5950,7 @@ mutex.signal()
 
 depart()
 \end{lstlisting}
+\end{latin}
 
 The bus gets the {\tt mutex} and holds it throughout the boarding
 process.  The loop signals each rider in turn and waits for her to
@@ -5444,6 +5963,7 @@ waiting}, which is an example of the ``I'll do it for you'' pattern.
 The code for the riders uses two
 simple patterns: a mutex and a rendezvous.
 
+\begin{latin}
 \begin{lstlisting}[title={Bus problem solution (riders)}]{}
 mutex.wait()
      waiting += 1
@@ -5453,6 +5973,7 @@ bus.wait()
 board()
 boarded.signal()
 \end{lstlisting}
+\end{latin}
 
 Challenge: if riders arrive while the bus is boarding, they
 might be annoyed if you make them wait for the next one.  Can you
@@ -5503,6 +6024,7 @@ has executed {\tt confirm}.
 \clearemptydoublepage
 \subsection {Faneuil Hall Problem Hint}
 
+\begin{latin}
 \begin{lstlisting}[title={Faneuil Hall problem hint}]{}
 noJudge = Semaphore(1)
 entered = 0
@@ -5510,6 +6032,7 @@ checked = 0
 mutex = Semaphore(1)
 confirmed = Semaphore(0)
 \end{lstlisting}
+\end{latin}
 
 {\tt noJudge} acts as a turnstile for incoming immigrants and
 spectators; it also protects {\tt entered}, which counts the
@@ -5525,6 +6048,7 @@ number of immigrants who have checked in; it is protected by
 
 Here is the code for immigrants:
 
+\begin{latin}
 \begin{lstlisting}[title={Faneuil Hall problem solution (immigrant)}]{}
 noJudge.wait()
 enter()
@@ -5550,6 +6074,7 @@ noJudge.wait()
 leave()
 noJudge.signal()
 \end{lstlisting}
+\end{latin}
 
 Immigrants pass through a turnstile when they enter; while the
 judge is in the room, the turnstile is locked.
@@ -5561,6 +6086,7 @@ the mutex to the judge.
 
 Here is the code for the judge:
 
+\begin{latin}
 \begin{lstlisting}[title={Faneuil Hall problem solution (judge)}]{}
 noJudge.wait()
 mutex.wait()
@@ -5582,6 +6108,7 @@ judge = 0
 mutex.signal()
 noJudge.signal()
 \end{lstlisting}
+\end{latin}
 
 The judge holds {\tt noJudge} to bar immigrants and spectators
 from entering, and {\tt mutex} so he can access {\tt entered}
@@ -5605,6 +6132,7 @@ wait for the {\tt noJudge} turnstile to open before leaving.
 The code for spectators is easy; the only constraint they have
 to obey is the {\tt noJudge} turnstile.
 
+\begin{latin}
 \begin{lstlisting}[title={Faneuil Hall problem solution (spectator)}]{}
 noJudge.wait()
 enter()
@@ -5614,6 +6142,7 @@ spectate()
 
 leave()
 \end{lstlisting}
+\end{latin}
 
 Note: in this solution it is possible for immigrants to get stuck,
 after they get their certificate, by another judge coming to swear
@@ -5630,10 +6159,12 @@ in must leave before the judge can enter again.
 
 My solution uses the following additional variables:
 
+\begin{latin}
 \begin{lstlisting}[title={Faneuil Hall problem hint}]{}
 exit = Semaphore(0)
 allGone = Semaphore(0)
 \end{lstlisting}
+\end{latin}
 
 Since the extended problem involves an additional rendezvous,
 we can solve it with two semaphores.
@@ -5649,6 +6180,7 @@ The top half of this solution is the same as before.  The
 difference starts at Line~\ref{fanexit}.  Immigrants wait
 here for the judge to leave.
 
+\begin{latin}
 \begin{lstlisting}[title={Faneuil Hall problem solution (immigrant)}]{}
 noJudge.wait()
 enter()
@@ -5678,6 +6210,7 @@ if checked == 0:
 else:
     exit.signal()                    # and pass the mutex
 \end{lstlisting}
+\end{latin}
 
 For the judge, the difference starts at Line~\ref{fanjudge}.
 When the judge is ready to leave, she can't release {\tt noJudge},
@@ -5693,6 +6226,7 @@ the nice feature that the judge releases both {\tt mutex}
 and {\tt noJudge} to end the phase cleanly.
 
 \newpage
+\begin{latin}
 \begin{lstlisting}[title={Faneuil Hall problem solution (judge)}]{}
 noJudge.wait()
 mutex.wait()
@@ -5716,6 +6250,7 @@ allGone.wait()                      # and get it back
 mutex.signal()
 noJudge.signal()
 \end{lstlisting}
+\end{latin}
 
 The spectator code for the extended problem is unchanged.
 
@@ -5742,12 +6277,14 @@ Puzzle: write code that enforces this constraint.
 \clearemptydoublepage
 \subsection {Dining Hall problem hint}
 
+\begin{latin}
 \begin{lstlisting}[title={Dining Hall problem hint}]{}
 eating = 0
 readyToLeave = 0
 mutex = Semaphore(1)
 okToLeave = Semaphore(0)
 \end{lstlisting}
+\end{latin}
 
 {\tt eating} and {\tt readyToLeave} are
 counters protected by {\tt mutex}, so this is the usual
@@ -5774,6 +6311,7 @@ updates the counters, so the waiting student doesn't have
 to get the mutex back.  This is another example of the
 the ``I'll do it for you'' pattern.
 
+\begin{latin}
 \begin{lstlisting}[title={Dining Hall problem solution}]{}
 getFood()
 
@@ -5803,6 +6341,7 @@ else:
 
 leave()
 \end{lstlisting}
+\end{latin}
 
 When is student is checking in, if she sees one student
 eating and one waiting to leave, she lets the waiter off the
@@ -5855,6 +6394,7 @@ Puzzle: write code that enforces these constraints.
 
 Here are the variables I used in my solution:
 
+\begin{latin}
 \begin{lstlisting}[title={Extended Dining Hall problem hint}]{}
 readyToEat = 0
 eating = 0
@@ -5863,6 +6403,7 @@ mutex = Semaphore(1)
 okToSit = Semaphore(0)
 okToLeave = Semaphore(0)
 \end{lstlisting}
+\end{latin}
 
 {\tt readyToEat}, {\tt eating} and {\tt readyToLeave} are
 counters, all protected by {\tt mutex}.
@@ -5885,6 +6426,7 @@ to wait, if there is no one eating and no one else ready to
 eat.  And the only way out is if someone else arrives who
 is ready to eat.
 
+\begin{latin}
 \begin{lstlisting}[title={Extended Dining Hall problem solution}]{}
 getFood()
 
@@ -5924,6 +6466,7 @@ else:
 
 leave()
 \end{lstlisting}
+\end{latin}
 
 As in the previous solution, I used the ``I'll do it for you''
 pattern so that a waiting student doesn't have to get the mutex
@@ -5972,6 +6515,7 @@ that makes things a little better.
 
 Here is a simple example:
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 from threading_cleanup import *
 
@@ -5989,6 +6533,7 @@ shared = Shared()
 children = [Thread(child_code, shared) for i in range(2)]
 for child in children: child.join()
 \end{lstlisting}
+\end{latin}
 
 The first line runs the cleanup code from Appendix~\ref{cleanup};
 I will leave this line out of the other examples.
@@ -6018,6 +6563,7 @@ To detect errors, it is often necessary to automate the search.
 In this case, we can detect errors by keeping track of the values
 of {\tt counter}.
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 class Shared:
     def __init__(self, end=10):
@@ -6036,6 +6582,7 @@ children = [Thread(child_code, shared) for i in range(2)]
 for child in children: child.join()
 print shared.array
 \end{lstlisting}
+\end{latin}
 
 In this example, {\tt shared} contains a list (misleadingly
 named {\tt array}) that keeps track of the number of times
@@ -6062,6 +6609,7 @@ to check the result.
 We can automate the checker by making
 a histogram of the results in the array:
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 class Histogram(dict):
     def __init__(self, seq=[]):
@@ -6070,6 +6618,7 @@ class Histogram(dict):
 
 print Histogram(shared.array)
 \end{lstlisting}
+\end{latin}
 
 Now when I run the program, I get
 
@@ -6109,6 +6658,7 @@ code in this section from \url{greenteapress.com/semaphores/counter.py}
 
 Here is the version of {\tt Shared} I used:
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 class Shared:
     def __init__(self, end=10):
@@ -6117,6 +6667,7 @@ class Shared:
         self.array = [0]* self.end
         self.mutex = Semaphore(1)
 \end{lstlisting}
+\end{latin}
 
 The only change is the Semaphore named {\tt mutex}, which should
 come as no surprise.
@@ -6126,6 +6677,7 @@ come as no surprise.
 
 Here is my solution:
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 def child_code(shared):
     while True:
@@ -6138,6 +6690,7 @@ def child_code(shared):
             shared.mutex.signal()
             break
 \end{lstlisting}
+\end{latin}
 
 Although this is not the most difficult synchronization problem
 in this book, you might have found it tricky to get the details
@@ -6161,6 +6714,7 @@ off to a good start.
 The following program simulates producers and consumers
 adding and removing cokes from a coke machine:
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 import random
 
@@ -6187,6 +6741,7 @@ fs = [consume]*2 + [produce]*2
 threads = [Thread(loop, shared, f) for f in fs]
 for thread in threads: thread.join()
 \end{lstlisting}
+\end{latin}
 
 The capacity is 10 cokes, and that the machine is initially
 half full.  So the shared variable {\tt cokes} is 5.
@@ -6231,6 +6786,7 @@ You can download the program from
 
 Here are the shared variables I used in my solution:
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 class Shared:
     def __init__(self, start=5, capacity=10):
@@ -6238,6 +6794,7 @@ class Shared:
         self.slots = Semaphore(capacity-start)
         self.mutex = Semaphore(1)
 \end{lstlisting}
+\end{latin}
 
 {\tt cokes} is a Semaphore now (rather than a simple integer), 
 which makes it tricky to print its value.  Of course, you
@@ -6261,6 +6818,7 @@ Ahem.
 If you've read the rest of this book, you should have had no
 trouble coming up with something at least as good as this:
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 def consume(shared):
     shared.cokes.wait()
@@ -6276,6 +6834,7 @@ def produce(shared):
     shared.mutex.signal()
     shared.cokes.signal()
 \end{lstlisting}
+\end{latin}
 
 If you run this program for a while, you should be able to confirm
 that the number of cokes in the machine is never negative or greater
@@ -6297,6 +6856,7 @@ examples in this section depend on that code.
 We'll start by defining a structure that contains shared
 variables:
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 typedef struct {
   int counter;
@@ -6319,6 +6879,7 @@ Shared *make_shared (int end)
   return shared;
 }
 \end{lstlisting}
+\end{latin}
 
 {\tt counter} is a shared variable that will be incremented by
 concurrent threads until it reaches {\tt end}.  We will use
@@ -6330,6 +6891,7 @@ of the value of {\tt counter} after each increment.
 Here is the code the parent thread uses to create threads
 and wait for them to complete:
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 int main ()
 {
@@ -6350,6 +6912,7 @@ int main ()
   return 0;
 }
 \end{lstlisting}
+\end{latin}
 
 The first loop creates the child threads; the second loop waits
 for them to complete.  When the last child has finished, the parent
@@ -6361,6 +6924,7 @@ Appendix~\ref{ccleanup}.
 
 Here is the code that is executed by each of the children:
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 void child_code (Shared *shared)
 {
@@ -6373,6 +6937,7 @@ void child_code (Shared *shared)
   }
 }
 \end{lstlisting}
+\end{latin}
 
 Each time through the loop, the child threads use {\tt counter}
 as an index into {\tt array} and increment the corresponding element.
@@ -6384,6 +6949,7 @@ If everything works correctly, each element of the array should be
 incremented once.  So to check for errors, we can just count the
 number of elements that are not 1:
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 void check_array (Shared *shared)
 {
@@ -6395,6 +6961,7 @@ void check_array (Shared *shared)
   printf ("%d errors.\n", errors);
 }
 \end{lstlisting}
+\end{latin}
 
 You can download this program (including the cleanup code) from
 \url{greenteapress.com/semaphores/counter.c}
@@ -6438,6 +7005,7 @@ no errors.
 
 Here is the version of {\tt Shared} I used in my solution:
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 typedef struct {
   int counter;
@@ -6462,6 +7030,7 @@ Shared *make_shared (int end)
   return shared;
 }
 \end{lstlisting}
+\end{latin}
 
 Line~\ref{declaremutex} declares {\tt mutex} as a Semaphore;
 Line~\ref{initmutex} initializes the mutex with the value 1.
@@ -6472,6 +7041,7 @@ Line~\ref{initmutex} initializes the mutex with the value 1.
 
 Here is the synchronized version of the child code:
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 void child_code (Shared *shared)
 {
@@ -6488,6 +7058,7 @@ void child_code (Shared *shared)
   }
 }
 \end{lstlisting}
+\end{latin}
 
 There is nothing too surprising here; the only tricky thing
 is to remember to release the mutex before the {\tt return}
@@ -6512,6 +7083,7 @@ use them to write an implementation of semaphores.
 You might want to use the following utility code in your solutions.
 Here is my wrapper for Pthreads mutexes:
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 typedef pthread_mutex_t Mutex;
 
@@ -6535,10 +7107,12 @@ void mutex_unlock (Mutex *mutex)
   if (n != 0) perror_exit ("unlock failed");
 }
 \end{lstlisting}
+\end{latin}
 
 \newpage
 And my wrapper for Pthread condition variables:
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 typedef pthread_cond_t Cond;
 
@@ -6562,6 +7136,7 @@ void cond_signal (Cond *cond)
   if (n != 0) perror_exit ("cond_signal failed");
 }
 \end{lstlisting}
+\end{latin}
 
 
 
@@ -6570,6 +7145,7 @@ void cond_signal (Cond *cond)
 
 Here is the structure definition I used for my semaphores:
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 typedef struct {
   int value, wakeups;
@@ -6577,6 +7153,7 @@ typedef struct {
   Cond *cond;
 } Semaphore;
 \end{lstlisting}
+\end{latin}
 
 {\tt value} is the value of the semaphore.  {\tt wakeups} counts
 the number of pending signals; that is, the number of threads
@@ -6590,6 +7167,7 @@ wait on if they wait on the semaphore.
 
 Here is the initialization code for this structure:
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 Semaphore *make_semaphore (int value)
 {
@@ -6601,6 +7179,7 @@ Semaphore *make_semaphore (int value)
   return semaphore;
 }
 \end{lstlisting}
+\end{latin}
 
 
 \clearemptydoublepage
@@ -6609,6 +7188,7 @@ Semaphore *make_semaphore (int value)
 Here is my implementation of semaphores using Pthread's mutexes
 and condition variables:
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 void sem_wait (Semaphore *semaphore)
 {
@@ -6636,6 +7216,7 @@ void sem_signal (Semaphore *semaphore)
   mutex_unlock (semaphore->mutex);
 }
 \end{lstlisting}
+\end{latin}
 
 Most of this is straightforward; the only thing that might be 
 tricky is the {\tt do...while} loop at Line~\ref{dowhile}.
@@ -6681,6 +7262,7 @@ to {\tt signal} and {\tt wait}.  Fortunately, I can have it
 my way by subclassing the version of Semaphore in the
 {\tt threading} module:
 
+\begin{latin}
 \begin{lstlisting}[title={Semaphore name change}]{}
 import threading
  
@@ -6688,15 +7270,18 @@ class Semaphore(threading._Semaphore):
     wait = threading._Semaphore.acquire
     signal = threading._Semaphore.release
 \end{lstlisting}
+\end{latin}
 
 Once this class is defined, you can create and manipulate Semaphores
 using the syntax in this book.
 
+\begin{latin}
 \begin{lstlisting}[title={Semaphore example}]{}
 mutex = Semaphore()
 mutex.wait()
 mutex.signal()
 \end{lstlisting}
+\end{latin}
 
 \section{Creating threads}
 
@@ -6704,6 +7289,7 @@ The other feature of the {\tt threading} module that annoys
 me is the interface for creating and starting threads.  The
 usual way requires keyword arguments and two steps:
 
+\begin{latin}
 \begin{lstlisting}[title={Thread example (standard way)}]{}
 import threading
 
@@ -6713,6 +7299,7 @@ def function(x, y, z):
 thread = threading.Thread(target=function, args=[1, 2, 3])
 thread.start()
 \end{lstlisting}
+\end{latin}
 
 In this example, creating the thread has no immediate effect.
 But when you invoke {\tt start}, the new thread executes
@@ -6725,26 +7312,32 @@ are awkward.
 Fortunately, we can solve both of these problems with four
 lines of code.
 
+\begin{latin}
 \begin{lstlisting}[title={Cleaned-up Thread class}]{}
 class Thread(threading.Thread):
     def __init__(self, t, *args):
         threading.Thread.__init__(self, target=t, args=args)
         self.start()
 \end{lstlisting}
+\end{latin}
 
 Now we can create threads with a nicer interface, and they
 start automatically:
 
+\begin{latin}
 \begin{lstlisting}[title={Thread example (my way)}]{}
 thread = Thread(function, 1, 2, 3)
 \end{lstlisting}
+\end{latin}
 
 This also lends itself to an idiom I like, which is to create
 multiple Threads with a list comprehension:
 
+\begin{latin}
 \begin{lstlisting}[title={Multiple thread example}]{}
 threads = [Thread(function, i, i, i) for i in range(10)]
 \end{lstlisting}
+\end{latin}
 
 \section{Handling keyboard interrupts}
 
@@ -6756,6 +7349,7 @@ into a KeyboardInterrupt.
 \newpage
 So, if you write the following program:
 
+\begin{latin}
 \begin{lstlisting}[title={Unstoppable program}]{}
 import threading, time
 
@@ -6775,6 +7369,7 @@ def child_code(n=10):
     
 parent_code()
 \end{lstlisting}
+\end{latin}
 
 You will find that it cannot be interrupted with Ctrl-C or
 a {\tt SIGINT}\footnote{At the time of this writing, this
@@ -6788,6 +7383,7 @@ which forks a new process.  The new process returns and executes
 the rest of the program.  The original process waits for the
 child process to complete, hence the name {\tt watcher}:
 
+\begin{latin}
 \begin{lstlisting}[title={The watcher}]{}
 import threading, time, os, signal, sys
 
@@ -6818,6 +7414,7 @@ def watcher():
 watcher()
 parent_code()
 \end{lstlisting}
+\end{latin}
 
 If you run this version of the program, you should be able
 to interrupt it with Ctrl-C.  I am not sure, but I think it
@@ -6865,12 +7462,14 @@ Pthread library.
 
 For my examples, I include the following headers:
 
+\begin{latin}
 \begin{lstlisting}[title={Headers}]{}
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
 #include <semaphore.h>
 \end{lstlisting}
+\end{latin}
 
 The first two are standard; the third is for Pthreads and
 the fourth is for semaphores.
@@ -6878,9 +7477,11 @@ To compile with the Pthread library in {\tt gcc}, you
 can use the {\tt -l}
 option on the command line:
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 gcc -g -O2 -o array array.c -lpthread
 \end{lstlisting}
+\end{latin}
 
 This compiles {\tt array.c} with debugging info and optimization,
 links with the Pthread library, and generates an executable
@@ -6894,6 +7495,7 @@ together with their error-checking code inside my own functions.
 For example, here is a version of {\tt malloc}
 that checks the return value.
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 void *check_malloc(int size)
 {
@@ -6905,6 +7507,7 @@ void *check_malloc(int size)
   return p;
 }
 \end{lstlisting}
+\end{latin}
 
 
 \section{Creating threads}
@@ -6912,6 +7515,7 @@ void *check_malloc(int size)
 I've done the same thing with the Pthread functions I'm going to use;
 here's my wrapper for {\tt pthread\_create}.
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 pthread_t make_thread(void *(*entry)(void *), Shared *shared)
 {
@@ -6926,6 +7530,7 @@ pthread_t make_thread(void *(*entry)(void *), Shared *shared)
   return thread;
 }
 \end{lstlisting}
+\end{latin}
 
 The return type from {\tt pthread\_create} is {\tt pthread\_t},
 which you can think of as a handle for the new thread.  You
@@ -6950,16 +7555,19 @@ explaining.  Starting with the second,
 is a user-defined structure that contains shared variables.
 The following {\tt typedef} statement creates the new type:
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 typedef struct {
   int counter;
 } Shared;
 \end{lstlisting}
+\end{latin}
 
 In this case, the only shared variable is {\tt counter}.
 {\tt make\_shared} allocates
 space for a {\tt Shared} structure and initializes the contents:
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 Shared *make_shared ()
 {
@@ -6969,6 +7577,7 @@ Shared *make_shared ()
   return shared;
 }
 \end{lstlisting}
+\end{latin}
 
 Now that we have a shared data structure, let's get back to
 {\tt pthread\_create}.
@@ -6979,6 +7588,7 @@ Anyway, the purpose of this parameter is to specify the function where
 the execution of the new thread will begin.  By convention, this
 function is named {\tt entry}:
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 void *entry (void *arg)
 {
@@ -6987,6 +7597,7 @@ void *entry (void *arg)
   pthread_exit (NULL);
 }
 \end{lstlisting}
+\end{latin}
 
 The parameter of {\tt entry} has to be declared as a {\tt void}
 pointer, but in this program we know that it is really a pointer to a
@@ -7005,6 +7616,7 @@ When one thread want to wait for another thread to complete,
 it invokes {\tt pthread\_join}.
 Here is my wrapper for {\tt pthread\_join}:
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 void join_thread (pthread_t thread)
 {
@@ -7015,6 +7627,7 @@ void join_thread (pthread_t thread)
   }
 }
 \end{lstlisting}
+\end{latin}
 
 The parameter is the handle of the thread you want to wait for.
 All my function does is call {\tt pthread\_join} and check the
@@ -7043,6 +7656,7 @@ to make it behave like a proper object.  Here is the
 {\tt typedef} and the wrapper that creates and initializes
 semaphores:
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 typedef sem_t Semaphore;
 
@@ -7057,6 +7671,7 @@ Semaphore *make_semaphore (int n)
   return sem;
 }
 \end{lstlisting}
+\end{latin}
 
 {\tt make\_semaphore} takes the initial value of the semaphore
 as a parameter.  It allocates space for a Semaphore, initializes
@@ -7070,21 +7685,25 @@ which functions use which reporting style.
 With these definitions, we can write C code that almost looks
 like a real programming language:
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 Semaphore *mutex = make_semaphore(1);
 sem_wait(mutex);
 sem_post(mutex);
 \end{lstlisting}
+\end{latin}
 
 Annoyingly, POSIX semaphores use {\tt post} instead of
 {\tt signal}, but we can fix that:
 
+\begin{latin}
 \begin{lstlisting}[title={}]{}
 int sem_signal(Semaphore *sem)
 {
   return sem_post(sem);
 }
 \end{lstlisting}
+\end{latin}
 
 That's enough cleanup for now.
 
