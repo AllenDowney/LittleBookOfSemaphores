@@ -135,6 +135,7 @@ numbers=left, numberstyle=\tiny, numbersep=10pt}
 \noindent سه شنبه، ۱۲ خرداد ۱۳۸۳\\
 
 
+%\section*{Contributor's list}
 \section*{لیست همکاران}
 
 %The following are some of the people who have contributed to this
@@ -316,72 +317,107 @@ numbers=left, numberstyle=\tiny, numbersep=10pt}
 
 
 
-\section {Execution model}
+%\section {Execution model}
+\section {مدل اجرایی}
 
-In order to understand software synchronization, you have to
-have a model of how computer programs run.  In the simplest
-model, computers execute one instruction after another in
-sequence.  In this model, synchronization is trivial; we can
-tell the order of events by looking at the program.  If Statement
-A comes before Statement B, it will be executed first.
+%In order to understand software synchronization, you have to
+%have a model of how computer programs run.  In the simplest
+%model, computers execute one instruction after another in
+%sequence.  In this model, synchronization is trivial; we can
+%tell the order of events by looking at the program.  If Statement
+%A comes before Statement B, it will be executed first.
 
-There are two ways things get more complicated.  One possibility
-is that the computer is parallel, meaning that it has multiple
-processors running at the same time.  In that case it is not easy
-to know if a statement on one processor is executed before a
-statement on another.
+    به منظور درک همگام‌سازی نرم‌افزاری، باید مدلی از چگونگی اجرای برنامه‌های کامپیوتری داشته باشید.
+    در ساده‌ترین مدل، کامپیوترها دستورات را به ترتیب یکی پس از دیگری اجرا می‌نمایند. 
+    در این مدل، همگام‌سازی بدیهی است؛‌ ترتیب وقایع را با نگاه به  برنامه می‌توان بیان نمود. 
+    اگر دستور \lr{A} قبل از دستور \lr{B} آمده باشد، اوّل اجرا می‌گردد. 
 
-Another possibility is that a single processor is running multiple
-threads of execution.  A thread is a sequence of instructions
-that execute sequentially.  If there are multiple threads, then
-the processor can work on one for a while, then switch to
-another, and so on.
+%There are two ways things get more complicated.  One possibility
+%is that the computer is parallel, meaning that it has multiple
+%processors running at the same time.  In that case it is not easy
+%to know if a statement on one processor is executed before a
+%statement on another.
+%    دو طریق کار را پیچیده خواهد کرد. 
+    در دو صورت همگام‌سازی پیچیده خواهد شد. 
+    ممکن است کامپیوتر موازی باشد بدین معنی که چندین پردازنده در یک زمان در حال اجرا باشد. در این حالت نمی‌توان به سادگی فهمید که 
+    دستوری در یک پردازنده قبل از دستور دیگری در پردازنده دیگر اجرا شده است. 
 
-In general the programmer has no control over when each thread runs;
-the operating system (specifically, the scheduler) makes those
-decisions.  As a result, again, the programmer can't tell when
-statements in different threads will be executed.
+%Another possibility is that a single processor is running multiple
+%threads of execution.  A thread is a sequence of instructions
+%that execute sequentially.  If there are multiple threads, then
+%the processor can work on one for a while, then switch to
+%another, and so on.
+    و یا ممکن است یک پردازنده چندین نخ اجرایی داشته باشد. نخ دنباله‌ای از دستورات است که به به ترتیب اجرا می‌شوند. 
+    اگر چندین نخ وجود داشته باشد آنگاه پردازنده می‌تواند برای مدتی بر روی یکی  از نخ‌ها کار کند و سپس به نخی دیگر منتقل شود و به همین 
+    ترتیب ادامه دهد. 
 
-For purposes of synchronization, there is no difference between the
-parallel model and the multithread model.  The issue is the
-same---within one processor (or one thread) we know the order of
-execution, but between processors (or threads) it is impossible to
-tell.
+%In general the programmer has no control over when each thread runs;
+%the operating system (specifically, the scheduler) makes those
+%decisions.  As a result, again, the programmer can't tell when
+%statements in different threads will be executed.
+    به طور کلی برنامه‌نویس هیچ کنترلی روی اجرای نخ‌ها ندارد؛ در واقع سیستم عامل (بخصوص زمان‌بند) در این باره تصمیم‌ می‌گیرد. 
+    در نتیجه برنامه‌نویس نمی‌تواند بگوید که دستورات چه زمانی در نخ‌های مختلف اجرا خواهد شد.
+    
+%For purposes of synchronization, there is no difference between the
+%parallel model and the multithread model.  The issue is the
+%same---within one processor (or one thread) we know the order of
+%execution, but between processors (or threads) it is impossible to
+%tell.
 
-A real world example might make this clearer.  Imagine that you and
-your friend Bob live in different cities, and one day, around dinner
-time, you start to wonder who ate lunch first that day, you or Bob.
-How would you find out?
+    در همگام‌سازی، تفاوتی بین مدل موازی و مدل چند نخی وجود ندارد. 
+    مساله یکی است--در یک پردازنده (یا یک نخ) ترتیب اجرا مشخص است امّا بین پردازنده‌ها (یا نخ‌ها) بیان این ترتیب غیر ممکن است. 
+    
+%A real world example might make this clearer.  Imagine that you and
+%your friend Bob live in different cities, and one day, around dinner
+%time, you start to wonder who ate lunch first that day, you or Bob.
+%How would you find out?
+    یک مثال واقعی این مساله را روشن‌تر می‌نمایند. 
+    تصور کنید که شما و دوستتان \lr{Bob} در شهرهای متفاوتی زندگی می‌کنید. یک روز نزدیک وقت ناهار، شما به این فکر می‌افتید که 
+    چه کسی امروز زودتر ناهار خواهد خورد، شما یا \lr{Bob}. چگونه این را در می‌یابید؟ 
+    
 
-Obviously you could call him and ask what time he ate lunch.  But what
-if you started lunch at 11:59 by your clock and Bob started lunch at
-12:01 by his clock?  Can you be sure who started first?  Unless you
-are both very careful to keep accurate clocks, you can't.
+%Obviously you could call him and ask what time he ate lunch.  But what
+%if you started lunch at 11:59 by your clock and Bob started lunch at
+%12:01 by his clock?  Can you be sure who started first?  Unless you
+%are both very careful to keep accurate clocks, you can't.
+    به سادگی می‌توانید به او زنگ بزنید و بپرسید که چه زمانی ناهار خورده است. امّا اگر شما با ساعت خودتان در ۱۱/۵۹ غذا را شروع نموده باشید 
+    و \lr{Bob} با ساعت خودش در ۱۲/۰۱، آن وقت چه؟ آیا می‌توانید مطمئن باشید که چه کسی زودتر شروع نموده است؟ 
+    تنها در صورتی ممکن است که هر دوی شما نسبت به دقیق بودن ساعت‌هایتان حساس بوده باشید.
 
-Computer systems face the same problem because, even though their
-clocks are usually accurate, there is always a limit to their
-precision.  In addition, most of the time the computer does not keep
-track of what time things happen.  There are just too many things
-happening, too fast, to record the exact time of everything.
+%Computer systems face the same problem because, even though their
+%clocks are usually accurate, there is always a limit to their
+%precision.  In addition, most of the time the computer does not keep
+%track of what time things happen.  There are just too many things
+%happening, too fast, to record the exact time of everything.
 
-Puzzle: Assuming that Bob is willing to follow simple instructions, is
-there any way you can {\em guarantee} that tomorrow you will eat lunch
-before Bob?
-
+    سیستم‌های کامپیوتری با مشکل مشابهی مواجه هستند زیرا با وجود اینکه معمولاً ساعت‌هایشان دقیق است امّا همیشه 
+    در میزان دقت ساعت‌ها محدودیت وجود دارد. به علاوه، در بیشتر وقت‌ها کامپیوتر زمان وقوع رخدادها را دنبال نمی‌نماید. 
+    چرا که تعداد بسیار زیادی رخداد آن هم با سرعتی بسیار در حال وقوع است که ذخیره  زمان دقیق همه آن‌ها ممکن نیست. 
+    
+%Puzzle: Assuming that Bob is willing to follow simple instructions, is
+%there any way you can {\em guarantee} that tomorrow you will eat lunch
+%before Bob?
+    معمّا: با فرض اینکه \lr{Bob} می‌خواهد دستورات ساده‌ای را دنبال نماید آیا راهی وجود دارد که تضمین نمایید فردا شما زودتر از او ناهار خواهید خورد؟
+    
 \clearemptydoublepage
-\section {Serialization with messages}
+%\section {Serialization with messages}
+\section {تسلل به کمک پیام‌دهی}
 \label{serialization}
 
-One solution is to instruct Bob not to eat lunch until you call.
-Then, make sure you don't call until after lunch.  This approach may
-seem trivial, but the underlying idea, message passing, is a real
-solution for many synchronization problems.
-At the risk of belaboring the obvious, consider this timeline.
+%One solution is to instruct Bob not to eat lunch until you call.
+%Then, make sure you don't call until after lunch.  This approach may
+%seem trivial, but the underlying idea, message passing, is a real
+%solution for many synchronization problems.
+%At the risk of belaboring the obvious, consider this timeline.
+    یک راه آن است که به \lr{Bob} بگویید تا شما به او زنگ نزده‌اید ناهار نخورد. شما نیز  اطمینان دهید پس از ناهار زنگ می‌زنید. 
+    اگر چه این راهکار بدیهی به نظر می‌رسد لکن ایدهٔ پایهٔ آن، تبادل پیام\LTRfootnote{message passing}، راه حل واقعی برای بسیاری
+    از مسائل همگام‌سازی می‌باشد.  جدول زمانی زیر را در نظر بگیرید. 
+    
 %
 \begin{latin}
 \begin{minipage}[t]{2in}
 \begin{latin}
-\begin{lstlisting}[title={Thread A (You)}]{}
+\begin{lstlisting}[title=\rl{نخ \lr{A} (شما)}]{}
 Eat breakfast 
 Work          
 Eat lunch     
@@ -392,7 +428,7 @@ Call Bob
 \hfill
 \begin{minipage}[t]{2in}
 \begin{latin}
-\begin{lstlisting}[title={Thread B (Bob)}]{}
+\begin{lstlisting}[title=\rl{نخ \lr{B} (‌Bob)}]{}
 Eat breakfast
 Wait for a call
 Eat lunch
@@ -401,52 +437,71 @@ Eat lunch
 \end{minipage}
 \end{latin}
 %
-The first column is a list of actions you perform; in other words,
-your thread of execution.  The second column is Bob's thread of
-execution.  Within a thread, we can always tell what order things
-happen.  We can denote the order of events
+%The first column is a list of actions you perform; in other words,
+%your thread of execution.  The second column is Bob's thread of
+%execution.  Within a thread, we can always tell what order things
+%happen.  We can denote the order of events
+    اولین ستون لیست اعمالی است که شما انجام می‌دهید؛ به عبارت دیگر نخ اجرای شما. 
+    ستون دوم نیز نخ اجرای \lr{Bob} است. درون یک نخ همیشه می‌توانیم ترتیب اجرای وقایع را بگوییم. 
+    ترتیب وقایع را به این صورت می‌توانیم نشان دهیم
 %
 \begin{eqnarray*}
 a1 < a2 < a3 < a4  \\
 b1 < b2 < b3
 \end{eqnarray*}
 %
-where the relation $a1 < a2$ means that a1 happened before a2.
+%where the relation $a1 < a2$ means that a1 happened before a2.
+    که رابطه  $a1 < a2$ به معنای وقوع  $a1$ پیش از  $a2$ است. 
 
-In general, though, there is no way to compare events from different
-threads; for example, we have no idea who ate breakfast first (is $a1
-< b1$?).
-
-But with message passing (the phone call) we {\em can} tell who ate
-lunch first ($a3 < b3$).  Assuming that Bob has no other friends, he
-won't get a call until you call, so $b2 > a4$ .  Combining all the
-relations, we get
+%In general, though, there is no way to compare events from different
+%threads; for example, we have no idea who ate breakfast first (is $a1
+%< b1$?).
+    ولی در کل هیچ راهی برای مقایسه رخدادهای نخ‌های مختلف نداریم؛ برای مثال ایده‌ای از اینکه چه کسی ابتدا صبحانه می‌خورد نداریم 
+    (آیا $a1 < b1$  است؟).
+    
+%But with message passing (the phone call) we {\em can} tell who ate
+%lunch first ($a3 < b3$).  Assuming that Bob has no other friends, he
+%won't get a call until you call, so $b2 > a4$ .  Combining all the
+%relations, we get
+    امّا با کمک تبادل پیام (تماس تلفنی) می‌توانیم بگوییم چه کسی زودتر ناهار خورده است ($a3 < b3$).
+    با فرض اینکه باب هیچ دوست دیگری نداشته باشد هیچ تماسی جز از شما دریافت نخواهد کرد بنابراین  ($b2 > a4$).
+    با ترکیب تمامی روابط، داریم 
 %
 \begin{eqnarray*}
 b3 > b2 > a4 > a3
 \end{eqnarray*}
 %
-which proves that you had lunch before Bob.
+%which proves that you had lunch before Bob.
+    که ثابت می‌کند شما قبل از باب ناهار خورده‌اید. 
 
-In this case, we would say that you and Bob ate lunch
-{\bf sequentially}, because we know the order of events, and you
-ate breakfast {\bf concurrently}, because we don't.
+%In this case, we would say that you and Bob ate lunch
+%{\bf sequentially}, because we know the order of events, and you
+%ate breakfast {\bf concurrently}, because we don't.
 
-When we talk about concurrent events, it is tempting to say
-that they happen at the same time, or simultaneously.  As a
-shorthand, that's fine, as long as you remember the strict
-definition:
+    در این حالت، می‌گوییم شما و باب به صورت \textbf{متوالی}\LTRfootnote{sequential} ناهار خورده‌اید زیرا 
+    ترتیب وقایع را می‌دانیم. از طرف دیگر صبحانه را به صورت  \textbf{همروند}\LTRfootnote{concurrent} خورده‌اید 
+    زیرا که ترتیب مشخص نیست. 
+    
+%When we talk about concurrent events, it is tempting to say
+%that they happen at the same time, or simultaneously.  As a
+%shorthand, that's fine, as long as you remember the strict
+%definition:
+    مواقعی که درباره رخدادهای همروند صحبت می‌کنیم، اینکه بگوییم آن‌ها در یک زمان یا به صورت همزمان رخ می‌دهد بی‌راه نیست هر چند که دقیق هم نیست. 
+%    مواقعی که در.... ، معمولاً منظورمان این است که آن‌ها با هم یا همزمان اتفاق افتاده‌اند که می‌تواند دقیق هم نباشد. 
+    تعبیر فوق تا زمانی که تعریف دقیق زیر را در خاطر دارید بلامانع است:
 
 \begin{quote}
-Two events are concurrent if we cannot tell by looking at
-the program which will happen first.
+%Two events are concurrent if we cannot tell by looking at
+%the program which will happen first.
+    دو واقعه، همروند هستند اگر با نگاه به برنامه نتوانیم بگوییم کدامیک زودتر رخ می‌دهد. 
 \end{quote}
 
-Sometimes we can tell, after the program runs, which happened first,
-but often not, and even if we can, there is no guarantee that we will
-get the same result the next time.
-
-
+%Sometimes we can tell, after the program runs, which happened first,
+%but often not, and even if we can, there is no guarantee that we will
+%get the same result the next time.
+    گاهی اوقات پس از اجرای برنامه می‌‌توانیم بگوییم که کدامیک ابتدا رخ داده است امّا غالباً ممکن نیست و حتی اگر هم بتوانیم 
+    باز هم تضمینی نیست که مرتبه بعد نتیجه‌ای یکسان بگیریم. 
+%%Sun 20 Aug 2017 06:48:49 PM +0430
 \newpage
 \section {Non-determinism}
 
