@@ -661,7 +661,7 @@ by two threads.
 \begin{latin}
 \begin{minipage}[t]{2in}
 \begin{latin}
-\begin{lstlisting}[title={Thread A}]{}
+\begin{lstlisting}[title=\rl{نخ \lr{A}}]{}
 count = count + 1
 \end{lstlisting}
 \end{latin}
@@ -669,7 +669,7 @@ count = count + 1
 \hfill
 \begin{minipage}[t]{2in}
 \begin{latin}
-\begin{lstlisting}[title={Thread B}]{}
+\begin{lstlisting}[title=\rl{نخ \lr{B}}]{}
 count = count + 1
 \end{lstlisting}
 \end{latin}
@@ -689,7 +689,7 @@ variable, {\tt temp}.
 \begin{latin}
 \begin{minipage}[t]{2in}
 \begin{latin}
-\begin{lstlisting}[title={Thread A}]{}
+\begin{lstlisting}[title=\rl{نخ \lr{A}}]{}
 temp = count
 count = temp + 1
 \end{lstlisting}
@@ -698,7 +698,7 @@ count = temp + 1
 \hfill
 \begin{minipage}[t]{2in}
 \begin{latin}
-\begin{lstlisting}[title={Thread B}]{}
+\begin{lstlisting}[title=\rl{نخ \lr{B}}]{}
 temp = count
 count = temp + 1
 \end{lstlisting}
@@ -985,7 +985,7 @@ efficient.
 \begin{latin}
 \begin{minipage}[t]{2in}
 \begin{latin}
-\begin{lstlisting}[title={Thread A}]{}
+\begin{lstlisting}[title=\rl{نخ \lr{A}}]{}
 statement a1
 sem.signal()
 \end{lstlisting}
@@ -994,7 +994,7 @@ sem.signal()
 \hfill
 \begin{minipage}[t]{2in}
 \begin{latin}
-\begin{lstlisting}[title={Thread B}]{}
+\begin{lstlisting}[title=\rl{نخ \lr{B}}]{}
 sem.wait()
 statement b1
 \end{lstlisting}
@@ -1071,7 +1071,7 @@ statement b1
 \begin{latin}
 \begin{minipage}[t]{2in}
 \begin{latin}
-\begin{lstlisting}[title={Thread A}]{}
+\begin{lstlisting}[title=\rl{نخ \lr{A}}]{}
 statement a1
 statement a2
 \end{lstlisting}
@@ -1080,7 +1080,7 @@ statement a2
 \hfill
 \begin{minipage}[t]{2in}
 \begin{latin}
-\begin{lstlisting}[title={Thread B}]{}
+\begin{lstlisting}[title=\rl{نخ \lr{B}}]{}
 statement b1
 statement b2
 \end{lstlisting}
@@ -1132,7 +1132,7 @@ Here is my solution, based on the previous hint:
 \begin{latin}
 \begin{minipage}[t]{2in}
 \begin{latin}
-\begin{lstlisting}[title={Thread A}]{}
+\begin{lstlisting}[title=\rl{نخ \lr{A}}]{}
 statement a1
 aArrived.signal()
 bArrived.wait()
@@ -1143,7 +1143,7 @@ statement a2
 \hfill
 \begin{minipage}[t]{2in}
 \begin{latin}
-\begin{lstlisting}[title={Thread B}]{}
+\begin{lstlisting}[title=\rl{نخ \lr{B}}]{}
 statement b1
 bArrived.signal()
 aArrived.wait()
@@ -1159,7 +1159,7 @@ tried something like this:
 \begin{latin}
 \begin{minipage}[t]{2in}
 \begin{latin}
-\begin{lstlisting}[title={Thread A}]{}
+\begin{lstlisting}[title=\rl{نخ \lr{A}}]{}
 statement a1
 bArrived.wait()
 aArrived.signal()
@@ -1170,7 +1170,7 @@ statement a2
 \hfill
 \begin{minipage}[t]{2in}
 \begin{latin}
-\begin{lstlisting}[title={Thread B}]{}
+\begin{lstlisting}[title=\rl{نخ \lr{B}}]{}
 statement b1
 bArrived.signal()
 aArrived.wait()
@@ -1201,7 +1201,7 @@ tried something like this:
 \begin{latin}
 \begin{minipage}[t]{2in}
 \begin{latin}
-\begin{lstlisting}[title={Thread A}]{}
+\begin{lstlisting}[title=\rl{نخ \lr{A}}]{}
 statement a1
 bArrived.wait()
 aArrived.signal()
@@ -1212,7 +1212,7 @@ statement a2
 \hfill
 \begin{minipage}[t]{2in}
 \begin{latin}
-\begin{lstlisting}[title={Thread B}]{}
+\begin{lstlisting}[title=\rl{نخ \lr{B}}]{}
 statement b1
 aArrived.wait()
 bArrived.signal()
@@ -1259,7 +1259,7 @@ enforce mutual exclusion to the shared variable {\tt count}.
 \begin{latin}
 \begin{minipage}[t]{2in}
 \begin{latin}
-\begin{lstlisting}[title={Thread A}]{}
+\begin{lstlisting}[title=\rl{نخ \lr{A}}]{}
 count = count + 1
 \end{lstlisting}
 \end{latin}
@@ -1267,7 +1267,7 @@ count = count + 1
 \hfill
 \begin{minipage}[t]{2in}
 \begin{latin}
-\begin{lstlisting}[title={Thread B}]{}
+\begin{lstlisting}[title=\rl{نخ \lr{B}}]{}
 count = count + 1
 \end{lstlisting}
 \end{latin}
@@ -1291,7 +1291,7 @@ Here is a solution:
 \begin{latin}
 \begin{minipage}[t]{2in}
 \begin{latin}
-\begin{lstlisting}[title={Thread A}]{}
+\begin{lstlisting}[title=\rl{نخ \lr{A}}]{}
 mutex.wait()
     # critical section
     count = count + 1
@@ -1302,7 +1302,7 @@ mutex.signal()
 \hfill
 \begin{minipage}[t]{2in}
 \begin{latin}
-\begin{lstlisting}[title={Thread B}]{}
+\begin{lstlisting}[title=\rl{نخ \lr{B}}]{}
 mutex.wait()
     # critical section
     count = count + 1
