@@ -503,17 +503,20 @@ b3 > b2 > a4 > a3
     باز هم تضمینی نیست که مرتبه بعد نتیجه‌ای یکسان بگیریم. 
 %%Sun 20 Aug 2017 06:48:49 PM +0430
 \newpage
-\section {Non-determinism}
+%\section {Non-determinism}
+\section{عدم قطعیت}
 
-Concurrent programs are often {\bf non-deterministic}, which means it
-is not possible to tell, by looking at the program, what will happen
-when it executes.  Here is a simple example of a
-non-deterministic program:
+%Concurrent programs are often {\bf non-deterministic}, which means it
+%is not possible to tell, by looking at the program, what will happen
+%when it executes.  Here is a simple example of a
+%non-deterministic program:
+    برنامه‌های همروند اغلب \textbf{غیر قطعی}\LTRfootnote{non-determinism} هستند به این معنی که با نگاه به برنامه 
+    امکان اینکه بگوییم با اجرای آن چه چیزی رخ خواهد داد، وجود ندارد. در ادامه یک برنامه سادهٔ غیر قطعی آمده است:
 
 \begin{latin}
 \begin{minipage}[t]{2in}
 \begin{latin}
-\begin{lstlisting}[title={Thread A}]{}
+\begin{lstlisting}[title=\rl{نخ \lr{A}}]{}
 print "yes"
 \end{lstlisting}
 \end{latin}
@@ -521,63 +524,81 @@ print "yes"
 \hfill
 \begin{minipage}[t]{2in}
 \begin{latin}
-\begin{lstlisting}[title={Thread B}]{}
+\begin{lstlisting}[title=\rl{نخ \lr{‌B}}]{}
 print "no"
 \end{lstlisting}
 \end{latin}
 \end{minipage}
 \end{latin}
 
-Because the two threads run concurrently, the order of
-execution depends on the scheduler.  During any given run
-of this program, the output might be ``yes no'' or ``no yes''.
+%Because the two threads run concurrently, the order of
+%execution depends on the scheduler.  During any given run
+%of this program, the output might be ``yes no'' or ``no yes''.
+    از آنجایی که دو نخ به صورت همروند اجرا می‌شوند، ترتیب اجرا بستگی به زمان‌بند دارد. در هر اجرای این برنامه، خروجی ممکن است 
+    \lr{`yes no''}  یا \lr{``no yes''}
+     باشد. 
+     
+%Non-determinism is one of the things that makes concurrent
+%programs hard to debug.  A program might work correctly
+%1000 times in a row, and then crash on the 1001st run, depending
+%on the particular decisions of the scheduler.
+    عدم قطعیت یکی از مواردی است که اشکال‌زدایی برنامه‌های همروند را مشکل می‌سازد. برنامه‌ای ممکن است $1000$ بار بر روی یک سطر به درستی 
+    کار کرده و سپس در اجرای $1001$ام بسته به تصمیمات خاص زمان‌بند با مشکل مواجه شده و اجرای برنامه متوقف شود. 
+    
+%These kinds of bugs are almost impossible to find by testing;
+%they can only be avoided by careful programming.
+    تقریبا پیدا کردن این نوع خطاها با بررسی کد ناممکن است؛  این نوع  خطاها تنها از طریق دقت در برنامه‌نویسی قابل اجتناب هستند. 
 
-Non-determinism is one of the things that makes concurrent
-programs hard to debug.  A program might work correctly
-1000 times in a row, and then crash on the 1001st run, depending
-on the particular decisions of the scheduler.
 
-These kinds of bugs are almost impossible to find by testing;
-they can only be avoided by careful programming.
-
-
-\section {Shared variables}
+%\section {Shared variables}
+\section {متغیرهای اشتراکی}
 \label{shared}
 
-Most of the time, most variables in most threads are {\bf local},
-meaning that they belong to a single thread and no other threads
-can access them.  As long as that's true, there tend to be few
-synchronization problems, because threads just don't interact.
+%Most of the time, most variables in most threads are {\bf local},
+%meaning that they belong to a single thread and no other threads
+%can access them.  As long as that's true, there tend to be few
+%synchronization problems, because threads just don't interact.
+    بیشتر مواقع، غالب متغیرها در اکثر نخ‌ها \textbf{محلی}\LTRfootnote{local} هستند، بدین معنی که تنها به یک نخ تعلق دارند و 
+    سایر نخ‌ها نمی‌توانند به آن‌ها دسترسی داشته باشند. تا زمانیکه این نکته برقرار است، مشکلات همگام‌سازی کمی وجود خواهد داشت زیرا که 
+    نخ‌ها دخالتی در آن متغیرها ندارند. 
 
-But usually some variables are {\bf shared} among two or more
-threads; this is one of the ways threads interact with each other.
-For example, one way to communicate information between threads is
-for one thread to read a value written by another thread.
+%But usually some variables are {\bf shared} among two or more
+%threads; this is one of the ways threads interact with each other.
+%For example, one way to communicate information between threads is
+%for one thread to read a value written by another thread.
+    امّا گاهی اوقات برخی متغیرها بین دو یا چند نخ به صورت \textbf{اشتراکی}\LTRfootnote{shared} هستند؛ این 
+    یکی از شیوه‌های تعامل نخ‌ها با یکدیگر است. برای مثال، یک راهِ  تبادل اطلاعات بین نخ‌ها، این است که نخی مقداری را بخواند و نخ دیگر آن را بنویسد. 
+    
+%If the threads are unsynchronized, then we cannot tell by looking at
+%the program whether the reader will see the value the writer writes
+%or an old value that was already there.
+%Thus many applications enforce the constraint that the reader
+%should not read until after the writer writes.  This is exactly
+%the serialization problem in Section~\ref{serialization}.
+    اگر نخ‌ها ناهمگام باشند آنگاه با نگاه کردن به کد نمی‌توانیم بگوییم که آیا نخ خواننده مقداری را که نویسنده نوشته است می‌بیند یا همان مقدار قبلی را خواهد دید. 
+    لذا بسیاری از برنامه‌ها محدودیت‌هایی را بر روی خواننده‌ها اعمال می‌نمایند تا زمانیکه نویسنده مقدار را ننوشته است چیزی را نخواند. 
+    این دقیقا همان مساله تسلسل است که در بخش~\ref{serialization} آمده است. 
+%Other ways that threads interact are
+%concurrent writes (two or more writers) and concurrent updates
+%(two or more threads performing a read followed by a write).
+%The next two sections deal with these interactions.  The other
+%possible use of a shared variable, concurrent
+%reads, does not generally create a synchronization problem.
+    نوشتن همروند (دو یا بیشتر نویسنده) و بروزرسانی همروند (دو یا بیشتر نخ که خواندنی پس از نوشتن دارند)، شیوه‌های دیگری از تعامل 
+    نخ‌ها با یکدیگر است. دو بخش بعدی با این تعاملات سر و کار خواهد داشت. خواندن همروند متغیرهای اشتراکی که گونه دیگری از این تعامل است 
+    عموماً مشکل همگام‌سازی تولید نمی‌نماید. 
 
-If the threads are unsynchronized, then we cannot tell by looking at
-the program whether the reader will see the value the writer writes
-or an old value that was already there.
-Thus many applications enforce the constraint that the reader
-should not read until after the writer writes.  This is exactly
-the serialization problem in Section~\ref{serialization}.
 
-Other ways that threads interact are
-concurrent writes (two or more writers) and concurrent updates
-(two or more threads performing a read followed by a write).
-The next two sections deal with these interactions.  The other
-possible use of a shared variable, concurrent
-reads, does not generally create a synchronization problem.
-
-
-\subsection {Concurrent writes}
-
-In the following example, {\tt x} is a shared variable accessed
-by two writers.
+%\subsection {Concurrent writes}
+\subsection {نوستن‌های همروند}
+%In the following example, {\tt x} is a shared variable accessed
+%by two writers.
+در این مثال، \texttt{x} یک متغیر اشتراکی است که دو خواننده به آن دسترسی دارند. 
 
 \begin{latin}
 \begin{minipage}[t]{2in}
 \begin{latin}
-\begin{lstlisting}[title={Thread A}]{}
+\begin{lstlisting}[title=\rl{نخ \lr{A}}]{}
 x = 5
 print x
 \end{lstlisting}
@@ -586,32 +607,46 @@ print x
 \hfill
 \begin{minipage}[t]{2in}
 \begin{latin}
-\begin{lstlisting}[title={Thread B}]{}
+\begin{lstlisting}[title=\rl{نخ \lr{B}}]{}
 x = 7
 \end{lstlisting}
 \end{latin}
 \end{minipage}
 \end{latin}
 
-What value of {\tt x} gets printed?  What is the final value of {\tt
-x} when all these statements have executed?  It depends on the order
-in which the statements are executed, called the {\bf execution path}.
-One possible path is $a1 < a2 < b1$, in which case the output of the
-program is {\tt 5}, but the final value is {\tt 7}.
 
-Puzzle: What path yields output {\tt 5} and final
-value {\tt 5}?
+%What value of {\tt x} gets printed?  What is the final value of {\tt
+%x} when all these statements have executed?  It depends on the order
+%in which the statements are executed, called the {\bf execution path}.
+%One possible path is $a1 < a2 < b1$, in which case the output of the
+%program is {\tt 5}, but the final value is {\tt 7}.
+کدام مقدار \texttt{x} چاپ خواهد شد؟ در پایان اجرای تمام این دستورات، مقدار \texttt{x} چیست؟ 
+این بستگی به ترتیب اجرای هر یک از دستورات، که به آن \textbf{مسیر اجرا}\LTRfootnote{execution path} گفته می‌شود، دارد. 
+$a1 < a2 < b1$ یکی از مسیرهای ممکن است که در آن خروجی برنامه 
+\texttt{$5$} است، درحالی‌که مقدار نهایی \texttt{$7$} خواهد بود. 
 
-Puzzle: What path yields output {\tt 7} and final
-value {\tt 7}?
 
-Puzzle: Is there a path that yields output {\tt 7} and final
-value {\tt 5}?  Can you prove it?
+%Puzzle: What path yields output {\tt 5} and final
+%value {\tt 5}? 
+معما: چه مسیری منجر به خروجی و مقدار نهایی \texttt{$5$} می‌شود؟
 
-Answering questions like these is an important part of concurrent
-programming:  What paths are possible and what are the
-possible effects?  Can we prove that a given (desirable) effect is
-necessary or that an (undesirable) effect is impossible?
+
+%Puzzle: What path yields output {\tt 7} and final
+%value {\tt 7}?
+معما: چه مسیری منجر به خروجی و مقدار نهایی \texttt{$7$} می‌شود؟
+
+%Puzzle: Is there a path that yields output {\tt 7} and final
+%value {\tt 5}?  Can you prove it?
+معما: آیا مسیری وجود دارد که منجر به خروجی \texttt{$7$} و مقدار نهایی \texttt{$5$} شود؟ می توانید جواب خود را ثابت کنید؟
+
+%Answering questions like these is an important part of concurrent
+%programming:  What paths are possible and what are the
+%possible effects?  Can we prove that a given (desirable) effect is
+%necessary or that an (undesirable) effect is impossible?
+پاسخ به چنین سوالاتی یکی از بخش‌های مهم برنامه‌نویسی همروند است: مسیرهای ممکن کدام‌ها هستد و هر یک از این مسیرها چه تاثیراتی دارند؟ 
+    آیا می‌توان ثابت نمود که اثری (خواسته) ضروری است و یا اینکه اثری (ناخواسته) غیر ممکن است. 
+%%    Wed 23 Aug 2017 06:55:53 PM +0430
+
 
 
 \subsection {Concurrent updates}
