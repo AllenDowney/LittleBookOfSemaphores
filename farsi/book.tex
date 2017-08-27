@@ -593,7 +593,7 @@ print "no"
 \subsection {نوستن‌های همروند}
 %In the following example, {\tt x} is a shared variable accessed
 %by two writers.
-در این مثال، \texttt{x} یک متغیر اشتراکی است که دو خواننده به آن دسترسی دارند. 
+در این مثال، \lr{\texttt{x}} یک متغیر اشتراکی است که دو خواننده به آن دسترسی دارند. 
 
 \begin{latin}
 \begin{minipage}[t]{2in}
@@ -620,7 +620,7 @@ x = 7
 %in which the statements are executed, called the {\bf execution path}.
 %One possible path is $a1 < a2 < b1$, in which case the output of the
 %program is {\tt 5}, but the final value is {\tt 7}.
-کدام مقدار \texttt{x} چاپ خواهد شد؟ در پایان اجرای تمام این دستورات، مقدار \texttt{x} چیست؟ 
+کدام مقدار \lr{\texttt{x}} چاپ خواهد شد؟ در پایان اجرای تمام این دستورات، مقدار \lr{\texttt{x}} چیست؟ 
 این بستگی به ترتیب اجرای هر یک از دستورات، که به آن \textbf{مسیر اجرا}\LTRfootnote{execution path} گفته می‌شود، دارد. 
 $a1 < a2 < b1$ یکی از مسیرهای ممکن است که در آن خروجی برنامه 
 \texttt{$5$} است، درحالی‌که مقدار نهایی \texttt{$7$} خواهد بود. 
@@ -648,15 +648,18 @@ $a1 < a2 < b1$ یکی از مسیرهای ممکن است که در آن خرو�
 %%    Wed 23 Aug 2017 06:55:53 PM +0430
 
 
+%\subsection {Concurrent updates}
+\subsection {بروزرسانی‌های همروند}
 
-\subsection {Concurrent updates}
-
-An update is an operation that reads the value of a variable, computes
-a new value based on the old value, and writes the new value.
-The most common kind of update is an increment, in which the
-new value is the old value plus one.  The following example
-shows a shared variable, {\tt count}, being updated concurrently
-by two threads.
+%An update is an operation that reads the value of a variable, computes
+%a new value based on the old value, and writes the new value.
+%The most common kind of update is an increment, in which the
+%new value is the old value plus one.  The following example
+%shows a shared variable, {\tt count}, being updated concurrently
+%by two threads.
+    بروزرسانی عملی است که مقدار متغیری را خوانده، یک مقدار جدید را بر مبنای مقدار قبلی محاسبه نموده و سپس مقدار جدید را می‌نویسد. 
+    رایج‌ترین نوع بروزرسانی، یک افزایش\LTRfootnote{increment}  است که مقدار جدید، مقدار قبلی به اضافه یک واحد است. 
+    مثال بعد متغیر اشتراکی \texttt{count} را نشان می‌دهد که بوسیله دو نخ به صورت همزمان بروزرسانی می‌گردد. 
 
 \begin{latin}
 \begin{minipage}[t]{2in}
@@ -676,15 +679,19 @@ count = count + 1
 \end{minipage}
 \end{latin}
 
-At first glance, it is not obvious that there is a synchronization
-problem here.  There are only two execution paths, and they
-yield the same result.
-
-The problem is that these operations are translated into
-machine language before execution, and in machine language
-the update takes two steps, a read and a write.
-The problem is more obvious if we rewrite the code with a temporary
-variable, {\tt temp}.
+%At first glance, it is not obvious that there is a synchronization
+%problem here.  There are only two execution paths, and they
+%yield the same result.
+    در نگاه اول، اینکه یک مشکل همگام‌سازی در اینجا وجود دارد اینقدر واضح نیست. 
+    تنها دو مسیر اجرا وجود دارد و هر دو، نتیجه‌ای یکسان تولید می‌نمایند. 
+    
+%The problem is that these operations are translated into
+%machine language before execution, and in machine language
+%the update takes two steps, a read and a write.
+%The problem is more obvious if we rewrite the code with a temporary
+%variable, {\tt temp}.
+    مشکل این است که این دستورات قبل از اجرا به زبان ماشین ترجمه می‌شوند و در زبان ماشین، یک بروزرسانی شامل دو گام است: یک خواندن 
+    و یک نوشتن. اگر کد را، با یک متغیر موقتی \lr{\texttt{temp}} بازنویسی نماییم، این مشکل واضح‌تر خواهد شد. 
 
 \begin{latin}
 \begin{minipage}[t]{2in}
@@ -706,43 +713,62 @@ count = temp + 1
 \end{minipage}
 \end{latin}
 
-Now consider the following execution path 
-
+%Now consider the following execution path 
+    اکنون مسیر اجرای زیر را در نظر بگیرید
+    
 \[  a1 < b1 < b2 < a2  \]
 
-Assuming that the
-initial value of {\tt x} is {\tt 0},
-what is its final value?  Because
-both threads read the same initial value, they write
-the same value.  The variable is only incremented once, which
-is probably not what the programmer had in mind.
+%Assuming that the
+%initial value of {\tt x} is {\tt 0},
+%what is its final value?  Because
+%both threads read the same initial value, they write
+%the same value.  The variable is only incremented once, which
+%is probably not what the programmer had in mind.
+    اگر مقدار اولیه \lr{\texttt{x}} برابر \texttt{$0$} باشد، مقدار نهایی چند است؟
+    از آنجایی که هر دو نخ مقدار اولیه یکسانی را می‌خوانند، هر دو مقدار یکسانی را می‌نویسند. 
+    این متغیر تنها یک مرتبه افزایش می‌یابد که احتمالاً آن چیزی نیست که برنامه‌نویس در ذهن خود داشته است. 
 
-This kind of problem is subtle because it is not always possible to
-tell, looking at a high-level program, which operations are
-performed in a single step and which can be interrupted.
-In fact, some computers provide an increment instruction that
-is implemented in hardware and cannot be interrupted.
-An operation that cannot be interrupted is said to be
-{\bf atomic}.
+%This kind of problem is subtle because it is not always possible to
+%tell, looking at a high-level program, which operations are
+%performed in a single step and which can be interrupted.
+%In fact, some computers provide an increment instruction that
+%is implemented in hardware and cannot be interrupted.
+%An operation that cannot be interrupted is said to be
+%{\bf atomic}.
+    چنین مسائلی از ظرافت بالایی برخودار هستند 
+    زیرا که     همیشه این امکان وجود ندارد که با نگاه کردن به یک برنامه سطح‌بالا 
+    بگوییم کدام عملیات در یک گام انجام شده و کدام‌ها وقفه‌پذیر هستند. 
+    در واقع،‌ برخی کامپیوترها دستور افزایشی را فراهم می‌آورند که به صورت سخت‌افزاری پیاده‌سازی شده است و وقفه‌پذیر نیست. 
+    عملی که وقفه‌پذیر نباشید \textbf{اتمی}\LTRfootnote{atomic} گفته می‌شود. 
 
-So how can we write concurrent programs if we don't know which
-operations are atomic?  One possibility is to collect specific
-information about each operation on each hardware platform.
-The drawbacks of this approach are obvious.
+%So how can we write concurrent programs if we don't know which
+%operations are atomic?  One possibility is to collect specific
+%information about each operation on each hardware platform.
+%The drawbacks of this approach are obvious.
+    خوب اگر ندانیم چه اعمالی اتمی هستند چگونه می توانیم برنامه‌هایی همروند بنویسیم؟
+    یک روش، جمع‌آوری اطلاعات مشخصی درباره در عمل بر روی هر سکوی سخت‌افزاری است. 
+    ایرادات این رهیافت  واضح است. 
 
-The most common alternative is to make the conservative
-assumption that all updates and all writes are not atomic,
-and to use synchronization constraints to control concurrent
-access to shared variables.
+%The most common alternative is to make the conservative
+%assumption that all updates and all writes are not atomic,
+%and to use synchronization constraints to control concurrent
+%access to shared variables.
+    رایج‌ترین جایگزین این است که محتاطانه فرض کنیم تمامی بروزرسانی‌ها و نوشتن‌ها اتمی نیستند و 
+    از محدودیت‌های همگام‌سازی به منظور کنترل دسترسی همروند به متغیرهای اشتراکی استفاده نماییم. 
 
-The most common constraint is mutual exclusion, or mutex,
-which I mentioned in Section~\ref{synch}.  Mutual exclusion guarantees
-that only one thread accesses a shared variable at a time,
-eliminating the kinds of synchronization errors in this section.
-
-Puzzle: Suppose that 100 threads run the following program concurrently
-(if you are not familiar with Python, the {\tt for} loop runs the update
-100 times.):
+%The most common constraint is mutual exclusion, or mutex,
+%which I mentioned in Section~\ref{synch}.  Mutual exclusion guarantees
+%that only one thread accesses a shared variable at a time,
+%eliminating the kinds of synchronization errors in this section.
+    معمول‌ترین محدودیت انحصار متقابل\LTRfootnote{mutual exclusion} یا \lr{mutex} است که 
+    در بخش~\ref{synch}  اشاره شد. انحصار متقابل تضمین می‌نماید در یک زمان خاص  فقط یک نخ به متغیر اشتراکی دسترسی دارد 
+    که موجب برطرف شدن این نوع خطاهای همگام‌سازی مطرح شده در این بخش می‌گردد. 
+    
+%Puzzle: Suppose that 100 threads run the following program concurrently
+%(if you are not familiar with Python, the {\tt for} loop runs the update
+%100 times.):
+    معمّا: فرض کنید $100$ تا نخ برنامه زیر را به صورت همزمان اجرا می‌نمایند (اگر با زبان پایتون آشنا نیستند حلقهٔ \texttt{for} یکصد مرتبه 
+    بروزرسانی انجام می‌دهد.):
 
 \begin{latin}
 \begin{latin}
@@ -754,27 +780,39 @@ for i in range(100):
 \end{latin}
 \end{latin}
 
-What is the largest possible value of {\tt count} after all threads
-have completed?  What is the smallest possible value?
+%What is the largest possible value of {\tt count} after all threads
+%have completed?  What is the smallest possible value?
+    بزرگترین مقدار ممکن \lr{\texttt{count}} پس از اجرای تمام نخ‌ها چقدر است؟ کوچکترین مقدار ممکن چقدر است؟ 
+    
 
-Hint: the first question is easy; the second is not.
+%Hint: the first question is easy; the second is not.
+    راهنمایی: سوال اول ساده ولی دومی به آن سادگی نیست. 
 
-\subsection {Mutual exclusion with messages}
-
-Like serialization, mutual exclusion
-can be implemented using message passing.  For example, imagine that
-you and Bob operate a nuclear reactor that you monitor from remote
-stations.  Most of the time, both of you are watching for warning
-lights, but you are both allowed to take a break for lunch.  It
-doesn't matter who eats lunch first, but it is very important that
-you don't eat lunch at the same time, leaving the reactor unwatched!
-
-Puzzle: Figure out a system of message passing (phone calls) that
-enforces these restraints.  Assume there are no clocks, and you
-cannot predict when lunch will start or how long it will last.  What
-is the minimum number of messages that is required?
+%\subsection {Mutual exclusion with messages}
+\subsection {انحصار متقابل با تبادل پیام}
 
 
+%Like serialization, mutual exclusion
+%can be implemented using message passing.  For example, imagine that
+%you and Bob operate a nuclear reactor that you monitor from remote
+%stations.  Most of the time, both of you are watching for warning
+%lights, but you are both allowed to take a break for lunch.  It
+%doesn't matter who eats lunch first, but it is very important that
+%you don't eat lunch at the same time, leaving the reactor unwatched!
+    همانند تسلل، انحصار متقابل می‌تواند با استفاده از تبادل پیام پیاده‌سازی شود. برای مثال، فرض کنید شما و باب 
+    با یک راکتور هسته‌ای سر و کار دارد و آن را از راه دور کنترل می‌نمایید. غالب زمان‌ها، هر دو شما چراغ‌های اخطار را مشاهده می‌نمایید 
+    امّا هر دو اجازه دارید برای ناهار  دست از کار بکشید. 
+    اینکه چه کسی اول ناهار می‌خورد اهمیتی ندارد امّا مهم است که ناهار هر دوی شما همزمان نباشد تا راکتور بدون نظارات باقی نماند!
+
+%Puzzle: Figure out a system of message passing (phone calls) that
+%enforces these restraints.  Assume there are no clocks, and you
+%cannot predict when lunch will start or how long it will last.  What
+%is the minimum number of messages that is required?
+    معمّا: فرض کنید از یک سیستم تبادل پیام (تماس‌های تلفنی) برای اعمال این محدودیت‌ها استفاده می‌کنید. 
+    هیچ ساعتی وجود ندرد و شما نمی‌توانید زمان شروع ناهار یا مدت زمان صرف ناهار را پیش‌بینی کنید. 
+    حداقل تعداد تماس‌های لازم چقدر است؟
+    %%Sun 27 Aug 2017 06:10:15 PM +0430   
+    
 \clearemptydoublepage
 \chapter{Semaphores}
 
