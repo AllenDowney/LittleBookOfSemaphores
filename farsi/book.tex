@@ -101,7 +101,8 @@ numbers=left, numberstyle=\tiny, numbersep=10pt}
 %The LaTeX source for this book is available from
 %\url{http://greenteapress.com/semaphores}.
 این کتاب توسط نویسنده با کمک لاتک، \lr{dvips} و \lr{ps2pdf} که همگی برنامه‌های کدباز هستند تایپ شده است. 
-سورس لاتک این کتاب در آدرس \url{http://greenteapress.com/semaphores} موجود است. 
+سورس لاتک این کتاب در آدرس \url{http://greenteapress.com/semaphores} موجود است.\footnote{در ترجمه این کتاب از زی‌لاتک و بسته 
+زی‌پرشین استفاده شده است.}
 
 
 \frontmatter
@@ -814,81 +815,121 @@ for i in range(100):
     %%Sun 27 Aug 2017 06:10:15 PM +0430   
     
 \clearemptydoublepage
-\chapter{Semaphores}
+%\chapter{Semaphores}
+\chapter{سمافورها}
 
-In real life a semaphore is a system of signals used to communicate
-visually, usually with flags, lights, or some other mechanism.  In
-software, a semaphore is a data structure that is useful for solving a
-variety of synchronization problems.
+%In real life a semaphore is a system of signals used to communicate
+%visually, usually with flags, lights, or some other mechanism.  In
+%software, a semaphore is a data structure that is useful for solving a
+%variety of synchronization problems.
+    در دنیای واقعی، سمافور یک سیستم از سیگنال‌هایی است که به منظور ارتباط بصری بکار می‌رود این سیگنال‌ها معمولا پرچم،‌ نور یا مکانیزم دیگری است. 
+    در نرم‌افزار، سمافور ساختمان داده‌ای است که برای حل انوع گوناگونی از مسائل همگام‌سازی مفید است.
 
-Semaphores were invented by Edsger Dijkstra, a famously eccentric
-computer scientist.  Some of the details have changed since the
-original design, but the basic idea is the same.
+%Semaphores were invented by Edsger Dijkstra, a famously eccentric
+%computer scientist.  Some of the details have changed since the
+%original design, but the basic idea is the same.
+    سمافورها توسط \lr{Edsger Dijkstra} --دانشمند مشهور و اعجوبه کامپیوتر-- ابداع گردیده است. 
+    از زمان طراحی اولیه برخی از جزئیات تغییر کرده است ولی ایدهٔ اصلی یکسان است. 
 
-\section{Definition}
+%\section{Definition}
+\section{تعریف}
 
-A semaphore is like an integer, with three differences:
+%A semaphore is like an integer, with three differences:
+    سمافور شبیه یک عدد صحیح منتهی با سه تفاوت است: 
 
 \begin{enumerate}
 
-\item When you create the semaphore, you can initialize its value to
-any integer, but after that the only operations you are allowed to
-perform are increment (increase by one) and decrement (decrease by
-one).  You cannot read the current value of the semaphore.
+\item 
+%When you create the semaphore, you can initialize its value to
+%any integer, but after that the only operations you are allowed to
+%perform are increment (increase by one) and decrement (decrease by
+%one).  You cannot read the current value of the semaphore.
+    زمانیکه سمافوری را ایجاد می‌نمایید مقدار اولیه آن را می‌توانید هر عدد صحیحی قرار دهید، امّا پس از آن تنها اعمال مجاز، افزایش و کاهش آن هم 
+    به اندازه یک واحد است و مقدار جاری سمافور را نمی‌تواند بخوانید. 
 
-\item When a thread decrements the semaphore, if the result is
-negative, the thread blocks itself and cannot continue until another
-thread increments the semaphore.
-
-\item When a thread increments the semaphore, if there are other
-threads waiting, one of the waiting threads gets unblocked.
+\item 
+%When a thread decrements the semaphore, if the result is
+%negative, the thread blocks itself and cannot continue until another
+%thread increments the semaphore.
+    زمانیکه نخی سمافوری را کاهش می‌دهد اگر نتیجه  مقداری منفی باشد، نخ خودش را مسدود\LTRfootnote{block} نموده 
+    و تا زمانیکه نخ دیگری آن سمافور را افزایش ندهد نمی‌تواند ادامه دهد. 
+\item 
+%When a thread increments the semaphore, if there are other
+%threads waiting, one of the waiting threads gets unblocked.
+    زمانیکه یک نخ مقدار سمافور را افزایش می‌دهد، اگر نخ‌های دیگری در انتظار باشند آنگاه یکی از نخ‌های در حال انتظار،‌ از حالت انسداد خارج می‌شود. 
 
 \end{enumerate}
 
-To say that a thread blocks itself (or simply ``blocks'') is to say
-that it notifies the scheduler that it cannot proceed.  The scheduler
-will prevent the thread from running until an event occurs that causes
-the thread to become unblocked.  In the tradition of mixed metaphors
-in computer science, unblocking is often called ``waking''.
+%To say that a thread blocks itself (or simply ``blocks'') is to say
+%that it notifies the scheduler that it cannot proceed.  The scheduler
+%will prevent the thread from running until an event occurs that causes
+%the thread to become unblocked.  In the tradition of mixed metaphors
+%in computer science, unblocking is often called ``waking''.
+    وقتی می‌گوییم یک نخ خود را مسدود کرده است %(یا ساده‌تر ''مسدوده شده``) 
+    منظور این است که به زمان‌بند اعلام می‌نماید که دیگر نمی‌تواند ادامه دهد. 
+    تا زمانیکه واقع‌ای سبب رفع انسداد نخ نگردد زمان‌بند مانع اجرای نخ می‌گردد. 
+    در استعارات رایج علم کامپیوتر رفع انسداد اغلب بیدار شدن\LTRfootnote{waking} گفته می‌شود.
 
-That's all there is to the definition, but there are some
-consequences of the definition you might want to think about.
+%That's all there is to the definition, but there are some
+%consequences of the definition you might want to think about.
+    تمام تعریف همین است،‌  
+    امّا این تعریف پی‌آمدهای در پی دارد که ممکن است بخواهید درباره آن‌ها بیندیشید. 
 
 \begin{itemize}
 
-\item In general, there is no way to know before a thread decrements a
-semaphore whether it will block or not (in specific cases you might
-be able to prove that it will or will not).
+\item 
+%In general, there is no way to know before a thread decrements a
+%semaphore whether it will block or not (in specific cases you might
+%be able to prove that it will or will not).
+    به طور کلی، نمی‌توان از قبل گفت که کاهش سمافور توسط یک نخ منجر به مسدود شدن آن می‌شود یا نه 
+%     پیش از اینکه سمافوری توسط یک نخ کاهش داده شود هیچ راهی نداریم که پیشاپیش بدانیم این کاهش سبب انسداد خواهد شد یا خیر 
+    (در حال‌ت‌های خاص ممکن است بتوانید ثابت کنید که مسدود می‌شود یا خیر).
 
-\item After a thread increments a semaphore and another thread gets
-woken up, both threads continue running concurrently.  There is no way
-to know which thread, if either, will continue immediately.
 
-\item When you signal a semaphore, you don't necessarily know whether
-another thread is waiting, so the number of unblocked threads may
-be zero or one.
+\item 
+%After a thread increments a semaphore and another thread gets
+%woken up, both threads continue running concurrently.  There is no way
+%to know which thread, if either, will continue immediately.
+    پس از اینکه نخی یک سمافور را افزایش داد و نخ دیگری بیدار شد، هر دو نخ به صورت همروند اجرای خود را ادامه می‌دهند. 
+    هیچ راهی وجود ندارد که بدانیم کدام نخ بلافاصله ادامه می‌یابد. 
+
+\item 
+%When you signal a semaphore, you don't necessarily know whether
+%another thread is waiting, so the number of unblocked threads may
+%be zero or one.
+    زمانیکه به یک سمافور سیگنال می‌دهید ضرورتاً نمی‌دانید که آیا نخی در حالت انتظار هست یا نه؟ لذا تعداد نخ‌های رفع انسداد شده ممکن است 
+    صفر یا یک باشد. 
 
 \end{itemize}
 
-Finally, you might want to think about what the value of the
-semaphore means.  If the value is positive, then it represents the
-number of threads that can decrement without blocking.  If it
-is negative, then it represents the number of threads that have
-blocked and are waiting.  If the value is zero, it means there
-are no threads waiting, but if a thread tries to decrement, it
-will block.
+%Finally, you might want to think about what the value of the
+%semaphore means.  If the value is positive, then it represents the
+%number of threads that can decrement without blocking.  If it
+%is negative, then it represents the number of threads that have
+%blocked and are waiting.  If the value is zero, it means there
+%are no threads waiting, but if a thread tries to decrement, it
+%will block.
+    نهایتاً، ممکن است فکر کنید مقدار سمافور چه معنایی دارد؟ %بخواهید درباره معنای مقدار سمافور بیندیشید. 
+    اگر مقدار مثبت باشد نشانگر تعداد نخ‌هایی است که می‌توانند بدون بلاک شدن کاهش یابند. 
+    اگر مقدار منفی باشد نشانگر تعداد نخ‌هایی است که مسدوده شده و در حالت انتظار هستند. 
+    اگر مقدار صفر باشد به این معنی است که نخ در حالت انتظار نیست امّا اگر نخی سمافور را کاهش دهد، مسدود خواهد شد.
+    
 
+%\section{Syntax}
+\section{نحو}
 
-\section{Syntax}
+%In most programming environments, an implementation of semaphores is
+%available as part of the programming language or the operating system.
+%Different implementations sometimes offer slightly different
+%capabilities, and usually require different syntax.
+    در بیشتر محیط‌های برنامه‌نویسی، پیاده‌سازی سمافور به صورت بخشی از زبان برنامه‌نویسی یا سیستم عامل موجود است. 
+    گاهی اوقات پیاده‌سازی‌های مختلف،‌ اندک توانایی‌های متفاوتی را فراهم آورده و نحو متفاوتی را نیاز دارند.
 
-In most programming environments, an implementation of semaphores is
-available as part of the programming language or the operating system.
-Different implementations sometimes offer slightly different
-capabilities, and usually require different syntax.
-
-In this book I will use a simple pseudo-language to demonstrate
-how semaphores work.  The syntax for creating a new semaphore
-and initializing it is
+%In this book I will use a simple pseudo-language to demonstrate
+%how semaphores work.  The syntax for creating a new semaphore
+%and initializing it is
+    در این کتاب از یک شبه زبان\LTRfootnote{pseudo-language} ساده به منظور نمایش نحوهٔ‌ عملکرد سمافورها استفاده می‌کنم. 
+    نحو ایجاد یک سمافور و مقداردهی اولیه آن در ادامه آمده است. 
 %
 \begin{latin}
 \begin{latin}
