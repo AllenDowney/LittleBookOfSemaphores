@@ -891,7 +891,7 @@ for i in range(100):
 %woken up, both threads continue running concurrently.  There is no way
 %to know which thread, if either, will continue immediately.
     پس از اینکه نخی یک سمافور را افزایش داد و نخ دیگری بیدار شد، هر دو نخ به صورت همروند اجرای خود را ادامه می‌دهند. 
-    هیچ راهی وجود ندارد که بدانیم کدام نخ بلافاصله ادامه می‌یابد. 
+    هیچ راهی وجود ندارد که بدانیم کدام از این دو نخ، بلافاصله ادامه می‌یابد. 
 
 \item 
 %When you signal a semaphore, you don't necessarily know whether
@@ -928,103 +928,139 @@ for i in range(100):
 %In this book I will use a simple pseudo-language to demonstrate
 %how semaphores work.  The syntax for creating a new semaphore
 %and initializing it is
-    در این کتاب از یک شبه زبان\LTRfootnote{pseudo-language} ساده به منظور نمایش نحوهٔ‌ عملکرد سمافورها استفاده می‌کنم. 
-    نحو ایجاد یک سمافور و مقداردهی اولیه آن در ادامه آمده است. 
+    در این کتاب از یک شبه زبان\LTRfootnote{pseudo-language} ساده به منظور نمایش شیوهٔ عملکرد سمافورها استفاده می‌کنیم. 
+    نحوِ ایجاد یک سمافور و مقداردهی اولیه آن در ادامه آمده است.
 %
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Semaphore initialization syntax}]{}
+%\begin{lstlisting}[title={Semaphore initialization syntax}]{}
+\begin{lstlisting}[title=\rl{نحوِ مقداردهی اولیه سمافور}]{}
 fred = Semaphore(1)
 \end{lstlisting}
 \end{latin}
 \end{latin}
 %
-The function {\tt Semaphore} is a constructor; it creates and
-returns a new Semaphore.  The initial value of the semaphore
-is passed as a parameter to the constructor.
+%The function {\tt Semaphore} is a constructor; it creates and
+%returns a new Semaphore.  The initial value of the semaphore
+%is passed as a parameter to the constructor.
+    تابع \lr{\texttt{Semaphore}} سازنده‌ای\LTRfootnote{constructor} است که یک سمافور را ایجاد نموده 
+    و آن را بر می‌گرداند. مقدار اولیه سمافور به عنوان یک پارامتر به سازنده ارسال می‌گردد. 
 
-The semaphore operations go by different names in different environments.
-The most common alternatives are 
+%The semaphore operations go by different names in different environments.
+%The most common alternatives are 
+    اعمال سمافور در محیط‌های مختلف نام‌های گوناگونی دارند. رایج‌ترین آن‌ها عبارت است از:
 %
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Semaphore operations}]{}
+%\begin{lstlisting}[title={Semaphore operations}]{}
+\begin{lstlisting}[title=\rl{اعمال سمافور}]{}
 fred.increment()
 fred.decrement()	
 \end{lstlisting}
 \end{latin}
 \end{latin}
 %
-and
+%and
+و
 %
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Semaphore operations}]{}
+%\begin{lstlisting}[title={Semaphore operations}]{}
+\begin{lstlisting}[title=\rl{اعمال سمافور}]{}
 fred.signal()
 fred.wait()	
 \end{lstlisting}
 \end{latin}
 \end{latin}
 %
-and
+%and
+و
 %
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Semaphore operations}]{}
+%\begin{lstlisting}[title={Semaphore operations}]{}
+\begin{lstlisting}[title=\rl{اعمال سمافور}]{}
 fred.V()
 fred.P()	
 \end{lstlisting}
 \end{latin}
 \end{latin}
 %
-It may be surprising that there are so many names, but there is a
-reason.  {\tt increment} and {\tt decrement}
-describe what the operations {\em do}.  {\tt signal} and {\tt wait}
-describe what they are often {\em used for}.  And {\tt V} and {\tt P} were
-the original names proposed by Dijkstra, who wisely realized that a
-meaningless name is better than a misleading name\footnote{If you speak
-Dutch, {\tt V} and {\tt P} aren't completely meaningless.}.
+%It may be surprising that there are so many names, but there is a
+%reason.  {\tt increment} and {\tt decrement}
+%describe what the operations {\em do}.  {\tt signal} and {\tt wait}
+%describe what they are often {\em used for}.  And {\tt V} and {\tt P} were
+%the original names proposed by Dijkstra, who wisely realized that a
+%meaningless name is better than a misleading name\footnote{If you speak
+%Dutch, {\tt V} and {\tt P} aren't completely meaningless.}.
+    وجود این همه نام ممکن تعجب بر انگیز باشد امّا بی‌دلیل نیست. 
+    \lr{\texttt{increment}} و \lr{\texttt{decrement}}
+    بیان می‌نمایند که این اعمال چه انجام می‌دهند. 
+    \lr{\texttt{signal}} و \lr{\texttt{wait}}
+    شرح می‌دهند که به اغلب به چه هدفی به کار می‌روند. و
+    \lr{\texttt{V}} و \lr{\texttt{P}}
+    نام‌های پیشنهادی \lr{Dijkstra} هستند و او به خوبی می‌دانست که یک نام بی‌معنی بهتر از نامی گمراه کننده است\footnote{
+    اگر زبان شما هلندی باشد \lr{\texttt{V}} و \lr{\texttt{P}} آنقدرها هم بی‌معنی نیستند.}. 
 
-I consider the other pairs misleading because {\tt increment} and {\tt
-decrement} neglect to mention the possibility of blocking and waking,
-and semaphores are often used in ways that have nothing to do with
-{\tt signal} and {\tt wait}.
-
-If you insist on meaningful names, then I would suggest these:
+%I consider the other pairs misleading because {\tt increment} and {\tt
+%decrement} neglect to mention the possibility of blocking and waking,
+%and semaphores are often used in ways that have nothing to do with
+%{\tt signal} and {\tt wait}.
+    بقیه‌ٔ اسامی را گمراه کننده می‌دانم زیرا که  \lr{\texttt{increment}} و \lr{\texttt{decrement}} 
+    هیچ اشاره‌ای به امکان انسداد و رفع انسداد ندارند و سمافورها اغلب به گونه‌ای استفاده می‌شوند که کاری با 
+    \lr{\texttt{signal}} و \lr{\texttt{wait}}
+    ندارند. 
+    
+%If you insist on meaningful names, then I would suggest these:
+    اگر اصرار به نام‌هایی با معنی دارید، نام‌های زیر را به شما پیشنهاد می‌کنم:
+    
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Semaphore operations}]{}
+%\begin{lstlisting}[title={Semaphore operations}]{}
+\begin{lstlisting}[title=\rl{اعمال سمافور}]{}
 fred.increment_and_wake_a_waiting_process_if_any()
 fred.decrement_and_block_if_the_result_is_negative()	
 \end{lstlisting}
 \end{latin}
 \end{latin}
 
-I don't think the world is likely to embrace either of these names
-soon.  In the meantime, I choose (more or less arbitrarily) to use
-{\tt signal} and {\tt wait}.
+%I don't think the world is likely to embrace either of these names
+%soon.  In the meantime, I choose (more or less arbitrarily) to use
+%{\tt signal} and {\tt wait}.
+    گمان نمی‌کنم کسی به این زود‌ی این اسامی را بپذیرد. با این وجود، به منظور استفاده، 
+    \lr{\texttt{signal}} و \lr{\texttt{wait}} را انتخاب می‌کنم.
+    
 
 
-\section{Why semaphores?}
+%\section{Why semaphores?}
+\section{چرا سمافورها؟}
 
-Looking at the definition of semaphores, it is not at all obvious why
-they are useful.  It's true that we don't {\em need} semaphores to
-solve synchronization problems, but there are some advantages to using
-them:
+%Looking at the definition of semaphores, it is not at all obvious why
+%they are useful.  It's true that we don't {\em need} semaphores to
+%solve synchronization problems, but there are some advantages to using
+%them:
+    با نگاه به تعریف سمافورها، اینکه چرا سمافورها مفید هستند واضح نیست. 
+    درست است که برای حل مسائل همگام‌سازی به سمافورها نیازی نداریم، امّا استفاده از آن‌ها مزایایی دارد:
 
 \begin{itemize}
 
-\item Semaphores impose deliberate constraints that help
-programmers avoid errors.
+\item 
+%Semaphores impose deliberate constraints that help
+%programmers avoid errors.
+    سمافورها محدودیت‌هایی تعمّدی تحمیل می‌نمایند که به برنامه‌نویس‌ها کمک می‌کند تا از خطاها بدور باشند. 
 
-\item Solutions using semaphores are often clean and organized,
-making it easy to demonstrate their correctness.
+\item 
+%Solutions using semaphores are often clean and organized,
+%making it easy to demonstrate their correctness.
+    راه‌حل‌هایی که از سمافورها استفاده می‌نمایند اغلب تمیز و سازمان‌یافته است به گونه‌ای که اثبات درستی آن‌ها را ساده می‌سازد. 
 
-\item Semaphores can be implemented efficiently on many systems,
-so solutions that use semaphores are portable and usually
-efficient.
-
+\item 
+%Semaphores can be implemented efficiently on many systems,
+%so solutions that use semaphores are portable and usually
+%efficient.
+    سمافورها می‌توانند به صورتی کارا در بسیاری از سیستم‌ها پیاده‌سازی شوند، لذا راه‌حل‌هایی که از سمافورها استفاده نموده‌اند معمولاً قابل حمل 
+    و کارا هستند. 
 \end{itemize}
 
 \clearemptydoublepage
@@ -1204,9 +1240,11 @@ statement b2
 نیز در مورد نخ \lr{B} می‌باشد.
 
 \clearemptydoublepage
-\subsection{Rendezvous solution}
+%\subsection{Rendezvous solution}
+\subsection{راه حل قرار ملاقات }
 
-Here is my solution, based on the previous hint:
+%Here is my solution, based on the previous hint:
+    راه حلی برای مبنای راهنمایی قبل آمده است: 
 
 \begin{latin}
 \begin{minipage}[t]{2in}
@@ -1232,8 +1270,9 @@ statement b2
 \end{minipage}
 \end{latin}
 
-While working on the previous problem, you might have
-tried something like this:
+%While working on the previous problem, you might have
+%tried something like this:
+    هنگام کار بر روی مساله قبلی، ممکن است کدی مانند زیرا را امتحان کرده باشید:
 
 \begin{latin}
 \begin{minipage}[t]{2in}
@@ -1259,23 +1298,31 @@ statement b2
 \end{minipage}
 \end{latin}
 
-This solution also works, although it is probably less
-efficient, since it might have to switch between A and B
-one time more than necessary.
+%This solution also works, although it is probably less
+%efficient, since it might have to switch between A and B
+%one time more than necessary.
+    اگرچه این راه حل کار می‌کند امّا احتمالاً  بهینگی کمتری دارد زیرا که ممکن است بین  \lr{A} و \lr{B} یک بار بیش از آن چیزی که لازم است 
+    جابجایی داشته باشد. 
 
-If A arrives first, it waits for B.  When B arrives, it wakes
-A and might proceed immediately to its {\tt wait} in which
-case it blocks, allowing A to reach its {\tt signal}, after
-which both threads can proceed.
+%If A arrives first, it waits for B.  When B arrives, it wakes
+%A and might proceed immediately to its {\tt wait} in which
+%case it blocks, allowing A to reach its {\tt signal}, after
+%which both threads can proceed.
+    اگر اول   \lr{A}  برسد باید منتظر   \lr{B} بماند. زمانیکه   \lr{B}  رسید   \lr{A}   را بیدار نموده و ممکن است بلافاصله 
+    ادامه یافته و به   \lr{\texttt{wait}} برسد و مسدود شود تا اجازه دهد که  \lr{A}    به  \lr{\texttt{signal}} برسد که پس از آن 
+    هر دو نخ بتواند ادامه یابد. 
 
-Think about the other possible paths through this code and
-convince yourself that in all cases neither thread can
-proceed until both have arrived.
+%Think about the other possible paths through this code and
+%convince yourself that in all cases neither thread can
+%proceed until both have arrived.
+    درباره سایر مسیرهای ممکن از طریق این کد بیندیشید و متقاعد شوید که در تمامی حالات هیچ نخی نمی‌تواند ادامه یابد مگر اینکه هر دو رسیده باشد. 
 
-\subsection {Deadlock \#1}
+%\subsection {Deadlock \#1}
+\subsection {بن‌بست \#1}
 
-Again, while working on the previous problem, you might have
-tried something like this:
+%Again, while working on the previous problem, you might have
+%tried something like this:
+      دوباره هنگام کار بر روی مساله قبلی، ممکن است کدی مانند زیرا را امتحان کرده باشید:
 
 \begin{latin}
 \begin{minipage}[t]{2in}
@@ -1301,18 +1348,22 @@ statement b2
 \end{minipage}
 \end{latin}
 
-If so, I hope you rejected it quickly, because it has a serious
-problem.  Assuming that A arrives first, it will block at its
-{\tt wait}.  When B arrives, it will also block, since A wasn't
-able to signal {\tt aArrived}.  At this point, neither thread
-can proceed, and never will.
+%If so, I hope you rejected it quickly, because it has a serious
+%problem.  Assuming that A arrives first, it will block at its
+%{\tt wait}.  When B arrives, it will also block, since A wasn't
+%able to signal {\tt aArrived}.  At this point, neither thread
+%can proceed, and never will.
+    اگر چنین است، امیدوارم خیلی سریع آن را رد کنید، زیرا که این طراحی مشکلی جدی دارد. فرض کنید ابتدا \lr{A} برسد 
+    در خط \lr{\texttt{wait}} مسدود می‌شود. وقتیکه \lr{B}  برسد، آن نیز مسدود خواهد شد زیرا که \lr{A} نمی‌تواند به \lr{\texttt{aArrived}} 
+    پیام دهد. این این نقطه، هیچکدام از نخ‌ها ادامه نیافته و هرگز نیز ادامه نمی‌یابند. 
 
-This situation is called a {\bf deadlock} and, obviously, it is
-not a successful solution of the synchronization problem.  In
-this case, the error is obvious, but often the possibility of
-deadlock is more subtle.  We will see more examples later.
-
-
+%This situation is called a {\bf deadlock} and, obviously, it is
+%not a successful solution of the synchronization problem.  In
+%this case, the error is obvious, but often the possibility of
+%deadlock is more subtle.  We will see more examples later.
+    این وضعیت بن‌بست\LTRfootnote{deadlock} نامیده می‌شود و بوضوح یک راه حل ناموفق برای مساله همگام‌سازی است. 
+    در این حالت، خطا واضح است امّا درک امکان رخداد بن‌بست اغلب همیشه به این روشنی نیست. 
+    مثال‌های بیشتری را بعدا خواهیم دید. 
 \section{Mutex}
 
 A second common use for semaphores is to enforce mutual exclusion.
