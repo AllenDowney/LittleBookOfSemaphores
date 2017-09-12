@@ -1366,26 +1366,38 @@ statement b2
     مثال‌های بیشتری را بعدا خواهیم دید. 
 \section{Mutex}
 
-A second common use for semaphores is to enforce mutual exclusion.
-We have already seen one use for mutual exclusion, controlling
-concurrent access to shared variables.  The mutex guarantees
-that only one thread accesses the shared variable at a time.
+%A second common use for semaphores is to enforce mutual exclusion.
+%We have already seen one use for mutual exclusion, controlling
+%concurrent access to shared variables.  The mutex guarantees
+%that only one thread accesses the shared variable at a time.
+    دومین کاربرد رایج سمافورها اعمال انحصار متقابل است. 
+    پیش از این یکی از کاربردهای انحصار متقابل در کنترل دسترسی همروند به متغییرهای اشتراکی را دیده‌ایم.
+    \lr{mutex}
+    تضمین می‌نماید که در هر زمان تنها یک نخ به متغیر اشتراکی دسترسی دارد. 
 
-A mutex is like a token that passes from one thread to another,
-allowing one thread at a time to proceed.  For example, in {\em The
-Lord of the Flies} a group of children use a conch as a mutex.  In
-order to speak, you have to hold the conch.  As long as only one child
-holds the conch, only one can speak\footnote{Although this metaphor
-is helpful for now, it can also be misleading, as you will see in
-Section~\ref{water}}.
+%A mutex is like a token that passes from one thread to another,
+%allowing one thread at a time to proceed.  For example, in {\em The
+%Lord of the Flies} a group of children use a conch as a mutex.  In
+%order to speak, you have to hold the conch.  As long as only one child
+%holds the conch, only one can speak\footnote{Although this metaphor
+%is helpful for now, it can also be misleading, as you will see in
+%Section~\ref{water}}.
+    \lr{mutex}
+    شبیه یک توکن\LTRfootnote{token} است از نخی به نخ دیگر منتقل می‌شود و در هر زمان به یک نخ اجازه ادامه فعالیت می‌دهد. 
+    برای نمونه، در رمان \emph{سالار مگس‌ها}\LTRfootnote{The Lord of the Flies} یک گروه از بچه‌ها از یک صدف به عنوان  \lr{mutex}
+    بهره می‌برند. برای صحبت کردن شما باید صدف را در اختیار داشته باشید. از آنجایی که تنها یک کودک صدف را در اختیار دارد، لذا تنها یک نفر می‌تواند 
+    صحبت کند. \footnote{اگرچه  این تعبیر در اینجا مفید است ولی می‌تواند گمراه کننده نیز  باشد، همانطوری که در بخش~\ref{water} خواهید دید. }
 
-Similarly, in order for a thread to access a shared variable,
-it has to ``get'' the mutex; when it is done, it ``releases''
-the mutex.  Only one thread can hold the mutex at a time.
-
-Puzzle: Add semaphores to the following example to
-enforce mutual exclusion to the shared variable {\tt count}.
-
+%Similarly, in order for a thread to access a shared variable,
+%it has to ``get'' the mutex; when it is done, it ``releases''
+%the mutex.  Only one thread can hold the mutex at a time.
+    به طور مشابه، به منظور دسترسی یک نخ به متغیر اشتراکی، باید که  \lr{mutex} را بگیرد و زمانی که کارش تمام شد آن را رها کند. 
+    در هر زمان تنها یک نخ می‌تواند  \lr{mutex} را در اختیار داشته باشد. 
+    
+%Puzzle: Add semaphores to the following example to
+%enforce mutual exclusion to the shared variable {\tt count}.
+    معما: سمافورهایی به مثال زیر بیفزایید تا انحصار متقابل متغیر اشتراکی \lr{\texttt{count}} را اعمال نمایند. 
+    
 \begin{latin}
 \begin{minipage}[t]{2in}
 \begin{latin}
@@ -1405,18 +1417,24 @@ count = count + 1
 \end{latin}
 
 \clearemptydoublepage
-\subsection{Mutual exclusion hint}
+%\subsection{Mutual exclusion hint}
+\subsection{راهنمایی انحصار متقابل}
 
-Create a semaphore named {\tt mutex} that is initialized
-to 1.  A value of one means that a thread may proceed and
-access the shared variable; a value of zero means that it
-has to wait for another thread to release the mutex.
+%Create a semaphore named {\tt mutex} that is initialized
+%to 1.  A value of one means that a thread may proceed and
+%access the shared variable; a value of zero means that it
+%has to wait for another thread to release the mutex.
+    سمافوری با نام \lr{mutex} و مقدار اولیه \lr{\texttt{1}} ایجاد نمایید. 
+    این مقدار به این معنی است که یک نخ می‌تواند ادامه یافته و به متغیر اشتراکی دسترسی داشته باشد؛ مقدار صفر به معنی این است که 
+    باید منتظر نخ دیگری بماند تا \lr{mutex} را آزاد نماید. 
 
 
 \clearemptydoublepage
-\subsection{Mutual exclusion solution}
+%\subsection{Mutual exclusion solution}
+\subsection{  راه حل انحصار متقابل}
 
-Here is a solution:
+%Here is a solution:
+    راه حلی را در ادامه می‌بینیم:
 
 \begin{latin}
 \begin{minipage}[t]{2in}
@@ -1442,45 +1460,65 @@ mutex.signal()
 \end{minipage}
 \end{latin}
 
-Since {\tt mutex} is initially 1, whichever thread gets to
-the {\tt wait} first will be able to proceed immediately.
-Of course, the act of waiting on the semaphore has the effect
-of decrementing it, so the second thread to
-arrive will have to wait until the first signals.
+%Since {\tt mutex} is initially 1, whichever thread gets to
+%the {\tt wait} first will be able to proceed immediately.
+%Of course, the act of waiting on the semaphore has the effect
+%of decrementing it, so the second thread to
+%arrive will have to wait until the first signals.
+    از آنجایی که مقدار اولیه  \lr{mutex}  $1$ است، اولین نخی که \lr{\texttt{wait}} در کد خود می‌رسد می‌تواند بلافاصله ادامه یابد.
+    البته عمل انتظار روی سمافور موجب کاهش مقدار آن می‌گردد لذا دومین نخ به  \lr{\texttt{wait}} می‌رسد باید منتظر پیام‌دهی نخ اول بماند. 
 
-I have indented the update operation to show that it is contained
-within the mutex.
+%I have indented the update operation to show that it is contained
+%within the mutex.
+    عملیات بروزرسانی متغیر حاشیه‌دار شده است تا نشان دهد که درون یک \lr{mutex}  قرار دارد. 
+    
+%In this example, both threads are running the same code.  This is
+%sometimes called a {\bf symmetric} solution.  If the threads have to
+%run different code, the solution is {\bf asymmetric}.  Symmetric
+%solutions are often easier to generalize.  In this case, the mutex
+%solution can handle any number of concurrent threads without
+%modification.  As long as every thread waits before 
+%performing an update and signals after, then no two threads
+%will access {\tt count} concurrently.
+    در این مثال، هر دو نخ کد یکسانی را اجرا می‌نمایند. گاهی اوقات این نوع راه حل را 
+    \textbf{متقارن}\LTRfootnote{symmetric} ‌می‌نامیم. اگر نخ‌ها کدهای مختلفی را اجرا می‌نمایند این راه حل 
+    \textbf{نامتقارن}\LTRfootnote{asymmetric}
+    گفته می‌شود. راه حل‌های متقارن اغلب راحت‌تر تعمیم‌داده می‌شوند. در این حالت، راه حل  \lr{mutex} می‌تواند هر تعداد نخ همروند را بدون 
+    نیاز به هیچگونه تغییری مدیریت نماید. تا زمانی که هر نخ پیش از بروزرسانی متغیر  \lr{wait}،  و پس از آن نیز  \lr{signal}  
+    را فرا می‌خواند هیچ دو نخی به صورت همزمان به متغیر \lr{\texttt{count}} دسترسی نخواهند داشت.
 
-In this example, both threads are running the same code.  This is
-sometimes called a {\bf symmetric} solution.  If the threads have to
-run different code, the solution is {\bf asymmetric}.  Symmetric
-solutions are often easier to generalize.  In this case, the mutex
-solution can handle any number of concurrent threads without
-modification.  As long as every thread waits before 
-performing an update and signals after, then no two threads
-will access {\tt count} concurrently.
+%Often the code that needs to be protected is called the
+%{\bf critical section}, I suppose because it is critically
+%important to prevent concurrent access.
+    اغلب کدی که به حفاظت نیاز دارد \textbf{ناحیه بحرانی}\LTRfootnote{critical section} نامیده می‌شود، 
+    زیرا که جلوگیری از دسترسی همزمان، اهمیتی حیاتی دارد. 
 
-Often the code that needs to be protected is called the
-{\bf critical section}, I suppose because it is critically
-important to prevent concurrent access.
+%In the tradition of computer science and mixed metaphors, there
+%are several other ways people sometimes talk about mutexes.  In
+%the metaphor we have been using so far, the mutex is a token
+%that is passed from one thread to another.
+    در استعارات رایج علم کامپیوتر، گاهی اوقات به طرق دیگری درباره  \lr{mutex}ها صحبت می‌شود. 
+    در تعبیری که تاکنون استفاده نمودیم،  \lr{mutex}  توکنی است که از یک نخ به نخ دیگر انتقال داده می‌شود. 
 
-In the tradition of computer science and mixed metaphors, there
-are several other ways people sometimes talk about mutexes.  In
-the metaphor we have been using so far, the mutex is a token
-that is passed from one thread to another.
+%In an alternative
+%metaphor, we think of the critical section as a room, and
+%only one thread is allowed to be in the room at a time.
+%In this metaphor, mutexes are called locks, and a thread
+%is said to lock the mutex before entering and unlock it while
+%exiting.  Occasionally, though, people mix the metaphors and
+%talk about ``getting'' or ``releasing'' a lock, which doesn't
+%make much sense.
+    در تعبیر دیگر، از ناحیه بحرانی به عنوان اتاقی یاد می‌شود و در هر زمان تنها یک نخ اجازه دارد که داخل آن باشد. 
+    در این تعبیر،  \lr{mutex}ها قفل\LTRfootnote{lock} نامیده می‌شوند و گفته می‌شود یک نخ پیش از ورود،  \lr{mutex}  را قفل نموده 
+    و هنگام خروج آ» را باز می‌نماید. گرچه گهگاهی، کاربران تعابیر را خلط نموده و صحبت از  گرفتن\LTRfootnote{getting} 
+    و رهانمودن\LTRfootnote{releasing} یک قفل می‌نمایند که این تعبیر، به آن اندازه با معنی نیست. 
 
-In an alternative
-metaphor, we think of the critical section as a room, and
-only one thread is allowed to be in the room at a time.
-In this metaphor, mutexes are called locks, and a thread
-is said to lock the mutex before entering and unlock it while
-exiting.  Occasionally, though, people mix the metaphors and
-talk about ``getting'' or ``releasing'' a lock, which doesn't
-make much sense.
-
-Both metaphors are potentially useful and potentially misleading.
-As you work on the next problem, try out both ways of thinking
-and see which one leads you to a solution.
+%Both metaphors are potentially useful and potentially misleading.
+%As you work on the next problem, try out both ways of thinking
+%and see which one leads you to a solution.
+    هر دو تعبیر، بالقوه مفید و بالقوه گمراه کننده هستند. 
+    هنگام کار بر روی مساله بعدی،‌ هر دو شیوه تفکر را امتحان نموده و ببینید کدام یک شماره به راه حل می‌رساند. 
+%%    Tue 12 Sep 2017 05:59:11 PM +0430
 
 
 \section{Multiplex}
