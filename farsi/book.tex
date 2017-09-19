@@ -1740,38 +1740,48 @@ critical point
     
 %%%    Sun 17 Sep 2017 06:47:32 PM +0430
 \clearemptydoublepage
-\subsection{Deadlock \#2}
+%\subsection{Deadlock \#2}
+\subsection{بن‌بست \#2}
 
-The problem is a deadlock.
-
-An an example, imagine that $n=5$
-and that 4 threads are waiting at the barrier.  The value
-of the semaphore is the number of threads in queue, negated, 
-which is -4.
-
-When the 5th thread signals the barrier, one of the waiting
-threads is allowed to proceed, and the semaphore is incremented
-to -3.
-
-But then no one signals the semaphore again and none of the
-other threads can pass the barrier.
-This is a second example of a deadlock.
-
-Puzzle: Does this code always create a deadlock?  Can you find an
-execution path through this code that does {\em not} cause a deadlock?
-
-Puzzle: Fix the problem.
+%The problem is a deadlock.
+    مشکل راه حل قبلی، بن‌بست است
+%%%typo     as an example
+%An an example, imagine that $n=5$
+%and that 4 threads are waiting at the barrier.  The value
+%of the semaphore is the number of threads in queue, negated, 
+%which is -4.
+    به عنوان مثال، تصور کنید $n=5$ و چهار نخ منتظر حصار هستند. مقدار سمافور، منفیِ تعداد نخ‌های در صف است که در اینجا $-4$ می‌باشد. 
+    
+%When the 5th thread signals the barrier, one of the waiting
+%threads is allowed to proceed, and the semaphore is incremented
+%to -3.
+    زمانی که پنجمین نخ به حصار، پیام می‌دهد، یکی از نخ‌های در حال انتظار اجازه ادامه کار می‌یابد و سمافور به $-3$ افزایش می‌یابد. 
+    
+%But then no one signals the semaphore again and none of the
+%other threads can pass the barrier.
+%This is a second example of a deadlock.
+    امّا پس از آن دیگر هیچ نخی به سمافور پیام نداده و هیچ کدام از دیگر نخ‌ها نمی‌تواند از مانع عبور نماید. این دومین مثال از بن‌بست است. 
+    
+%Puzzle: Does this code always create a deadlock?  Can you find an
+%execution path through this code that does {\em not} cause a deadlock?
+    معمّا: آیا این کد همیشه یک بن‌بست تولید می‌نماید؟ آیا می‌توانید یک مسیر اجرایی از طریق این کد بیاید که منجر به بن‌بست نشود؟ 
+    
+%Puzzle: Fix the problem.
+    معمّا: این مشکل را حل کنید. 
 
 
 \clearemptydoublepage
-\subsection{Barrier solution}
+%\subsection{Barrier solution}
+\subsection{راه حل حصار}
 \label{barrier}
 
-Finally, here is a working barrier:
+%Finally, here is a working barrier:
+    بالاخره، کد راه حل صحیح مساله حصار در ادامه آمده است. 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Barrier solution}]{}
+%\begin{lstlisting}[title={Barrier solution}]{}
+\begin{lstlisting}[title=\rl{راه حل حصار}}]{}
 rendezvous
 
 mutex.wait()
@@ -1788,37 +1798,48 @@ critical point
 \end{latin}
 \end{latin}
 
-The only change is another {\tt signal} after waiting
-at the barrier.  Now as each thread passes, it signals the
-semaphore so that the next thread can pass.
+%The only change is another {\tt signal} after waiting
+%at the barrier.  Now as each thread passes, it signals the
+%semaphore so that the next thread can pass.
+    تنها تغییر، یک \lr{\texttt{signal}} دیگر پس از انتظار برای حصار است. 
+    اکنون، پس از اینکه هر نخ عبور کرد، به سمافور پیام می‌دهد که نخ بعدی می‌تواند عبور کند. 
 
-This pattern, a {\tt wait} and a {\tt signal} in rapid
-succession, occurs often enough that it has a name;
-it's called a {\bf turnstile}, because it allows one thread to pass
-at a time, and it can be locked to bar all threads.
+%This pattern, a {\tt wait} and a {\tt signal} in rapid
+%succession, occurs often enough that it has a name;
+%it's called a {\bf turnstile}, because it allows one thread to pass
+%at a time, and it can be locked to bar all threads.
+    این الگو --یک \lr{\texttt{wait}} و یک \lr{\texttt{signal}} بلافاصله پشت سر هم-- آنقدر رایج است که یک نام دارد: \lr{turnstile}
+    \LTRfootnote{turnstile}، 
+    زیرا که در یک زمان به تنها یک نخ اجازه عبور می‌دهد و می‌تواند قفل شود تا تمام نخ‌ها را نگه دارد. 
+    
+%In its initial state (zero), the turnstile is locked.  The $n$th
+%thread unlocks it and then all $n$ threads go through.
+    در وضعیت آغازین (صفر)، ترن‌استایل قفل است. نخ  $n$ام آن را بار نموده و سپس تمام  $n$ از آن عبور می‌کنند. 
 
-In its initial state (zero), the turnstile is locked.  The $n$th
-thread unlocks it and then all $n$ threads go through.
-
-It might seem dangerous to read the value of {\tt count} outside the
-mutex.  In this case it is not a problem, but in general it is
-probably not a good idea.  We will clean this up in a few pages, but
-in the meantime, you might want to consider these questions: After the
-$n$th thread, what state is the turnstile in?  Is there any way the
-barrier might be signaled more than once?
-
+%It might seem dangerous to read the value of {\tt count} outside the
+%mutex.  In this case it is not a problem, but in general it is
+%probably not a good idea.  We will clean this up in a few pages, but
+%in the meantime, you might want to consider these questions: After the
+%$n$th thread, what state is the turnstile in?  Is there any way the
+%barrier might be signaled more than once?
+    ممکن است خواندن مقدار \lr{\texttt{count}} بیرون از \lr{mutex} مخاطره‌ آمیز به نظر رسد. در اینجا، مشکلی وجود ندارد 
+    امّا به طور کلی احتمالاً ایده خوبی هم نیست. چند صفحه بعد کد تمیزتری ارائه می‌دهیم امّا فعلاً ممکن است بخواهید این سوالات را در نظر بگیرید:
+    پس از $n$امین نخ، ترن‌استایل در چه وضعیتی است؟ آیا راهی وجود دارد که ممکن باشد حصار بیش از یکبار پیام دهی شود؟
 
 \clearemptydoublepage
-\subsection {Deadlock \#3}
+%\subsection {Deadlock \#3}
+\subsection {بن‌بست \#3}
 
-Since only one thread at a time can pass through the
-mutex, and only one thread at a time can pass through
-the turnstile, it might seen reasonable to put the
-turnstile inside the mutex, like this:
-
+%Since only one thread at a time can pass through the
+%mutex, and only one thread at a time can pass through
+%the turnstile, it might seen reasonable to put the
+%turnstile inside the mutex, like this:
+    از آنجایی که در هر زمان تنها یک نخ می‌تواند از \lr{mutex} عبور کند و نیز در هر زمان تنها یک نخ می‌تواند از \lr{turnstile} عبور کند، 
+    ممکن است که قرار دادن \lr{turnstile} درون \lr{mutex} منطقی به نظر آید، مانند زیر: 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Bad barrier solution}]{}
+%\begin{lstlisting}[title={Bad barrier solution}]{}
+\begin{lstlisting}[title=\rl{راه حل بدِ حصار}]{}
 rendezvous
 
 mutex.wait()
@@ -1834,21 +1855,27 @@ critical point
 \end{latin}
 \end{latin}
 
-This turns out to be a bad idea because it can cause a
-deadlock.
+%This turns out to be a bad idea because it can cause a
+%deadlock.
+    این ایدهٔ بدی است زیرا که می‌تواند سبب بن‌بست گردد. 
 
-Imagine that the first thread enters the
-mutex and then blocks when it reaches the turnstile.
-Since the mutex is locked, no other threads can enter,
-so the condition, {\tt count==n}, will never be true and
-no one will ever unlock the turnstile.
+%Imagine that the first thread enters the
+%mutex and then blocks when it reaches the turnstile.
+%Since the mutex is locked, no other threads can enter,
+%so the condition, {\tt count==n}, will never be true and
+%no one will ever unlock the turnstile.
+    تصور کنید اولین نخ وارد \lr{\texttt{mutex}} شده و پس از رسیدن به تر‌ن‌استایل مسدود می‌گردد. 
+    از آنجایی که \lr{\texttt{mutex}} قفل شده است، هیچ نخ دیگری نمی‌تواند وارد گردد، لذا شرط \lr{\texttt{condition==n}}
+     هرگز درست نبوده و هیچ نخی ترن‌استایل را باز نخواهد کرد. 
 
-In this case the deadlock is fairly obvious, but it
-demonstrates a
-common source of deadlocks: blocking on a semaphore while
-holding a mutex.
+%In this case the deadlock is fairly obvious, but it
+%demonstrates a
+%common source of deadlocks: blocking on a semaphore while
+%holding a mutex.
+    در اینجا، بن‌بست کاملاً واضح است، امّا یک منبع رایجِ بن‌بست‌ها را نشان می‌دهد: مسدود شدن روی یک سمافور در حالیکه یک 
+     \lr{\texttt{mutex}} در اختیار دارد. 
 
-
+%%    Tue 19 Sep 2017 05:46:43 PM +0430
 \section {Reusable barrier}
 \label{rebar}
 
