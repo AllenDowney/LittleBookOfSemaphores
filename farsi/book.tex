@@ -1781,7 +1781,7 @@ critical point
 \begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Barrier solution}]{}
-\begin{lstlisting}[title=\rl{راه حل حصار}}]{}
+\begin{lstlisting}[title=\rl{راه حل حصار}]{}
 rendezvous
 
 mutex.wait()
@@ -1876,27 +1876,34 @@ critical point
      \lr{\texttt{mutex}} در اختیار دارد. 
 
 %%    Tue 19 Sep 2017 05:46:43 PM +0430
-\section {Reusable barrier}
+%\section {Reusable barrier}
+\section {حصار با قابلیت استفاده مجدد}
 \label{rebar}
 
-Often a set of cooperating threads will perform a series of steps
-in a loop and synchronize at a barrier after each step.  For this
-application we need a reusable barrier that locks itself after
-all the threads have passed through.
+%Often a set of cooperating threads will perform a series of steps
+%in a loop and synchronize at a barrier after each step.  For this
+%application we need a reusable barrier that locks itself after
+%all the threads have passed through.
+    اغلب، مجموعهٔ نخ‌های همکار، یک سری از گام‌های یک حلقه را اجرا نموده و پس از هر گام نزد یک حصار همگام‌سازی می‌شوند.
+    برای این کاربرد، به یک حصار با قابلیت استفاده مجدد نیاز داریم که پس از عبور تمامی نخ‌ها از آن، خود را قفل نماید.  
 
-Puzzle: Rewrite the barrier solution so that after all the threads
-have passed through, the turnstile is locked again.
-
+%Puzzle: Rewrite the barrier solution so that after all the threads
+%have passed through, the turnstile is locked again.
+    معمّا: راه حل حصار را چنان بازنویسی کنید که پس از عبور تمام نخ‌ها، ترن‌استایل دوباره قفل شود.
 
 \clearemptydoublepage
-\subsection {Reusable barrier non-solution \#1}
+%\subsection {Reusable barrier non-solution \#1}
+\subsection { \#1 نا راه حل حصار با قابلیت استفاده مجدد}
 
-Once again, we will start with a simple attempt at a solution
-and gradually improve it:
+%Once again, we will start with a simple attempt at a solution
+%and gradually improve it:
+    دوباره با یک تلاش ساده برای رسیدن به راه حل شروع نموده و به تدریج آن را بهبود می‌دهیم:
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Reusable barrier non-solution}]{}
+%\begin{lstlisting}[title={Reusable barrier non-solution}]{} 
+\begin{lstlisting}[title=\rl{{  نا راه حل حصار با قابلیت استفاده مجدد}}]{} 
+
 rendezvous
 
 mutex.wait()
@@ -1919,39 +1926,51 @@ if count == 0: turnstile.wait()         (*\label{problem2}*)
 \end{latin}
 \end{latin}
 
-Notice that the code after the turnstile is pretty much the same as
-the code before it.  Again, we have to use the mutex to protect access
-to the shared variable {\tt count}.
-Tragically, though, this code is not quite correct.
+%Notice that the code after the turnstile is pretty much the same as
+%the code before it.  Again, we have to use the mutex to protect access
+%to the shared variable {\tt count}.
+%Tragically, though, this code is not quite correct.
+    توجه کنید که کد پس از تر‌ن‌استایل بسیار شبیه کد قبل از آن است. دوباره لازم است که دسترسی به متغیر اشتراکی \lr{\texttt{count}} را 
+    با استفاده از \lr{mutex} محافظت کنیم. با اینحال متاسفانه این کد به طور کامل صحیح نیست. 
 
-Puzzle: What is the problem?
+%Puzzle: What is the problem?
+    معمّا: مشکل چیست؟
 
-
-\clearemptydoublepage
-\subsection {Reusable barrier problem \#1}
-
-There is a problem spot at Line~\ref{problem} of the previous code.
-
-If the $n-1$th thread is interrupted at this point,
-and then the $n$th thread comes through the mutex,
-both threads will find that {\tt count==n} and both
-threads will signal the turnstile.  In fact, it is even
-possible that {\em all} the threads will signal the turnstile.
-
-Similarly, at Line~\ref{problem2} it is possible for multiple
-threads to {\tt wait}, which will cause a deadlock.
-
-Puzzle: Fix the problem.
 
 \clearemptydoublepage
-\subsection {Reusable barrier non-solution \#2}
+%\subsection {Reusable barrier problem \#1}
+\subsection { \#1 مساله حصار با قابلیت استفاده مجدد}
 
-This attempt fixes the previous error, but a subtle problem
-remains.
+%There is a problem spot at Line~\ref{problem} of the previous code.
+    یک مشکلی در خط ~\ref{problem} کد قبل وجود دارد. 
+
+%If the $n-1$th thread is interrupted at this point,
+%and then the $n$th thread comes through the mutex,
+%both threads will find that {\tt count==n} and both
+%threads will signal the turnstile.  In fact, it is even
+%possible that {\em all} the threads will signal the turnstile.
+    اگر $n-1$امین نخ در این نقطه با یک وقفه مواجه شود، و سپس $n$امین نخ وارد \lr{mutex} شود، هر دو نخ  \lr{\texttt{count=n}}
+    را صحیح یافته و هر دو به ترن‌استایل پیام خواهند داد. در حقیقت حتی این امکان وجود دارد که تمام نخ‌ها به ترن‌استایل پیام دهند. 
+
+%Similarly, at Line~\ref{problem2} it is possible for multiple
+%threads to {\tt wait}, which will cause a deadlock.
+    به طور مشابه در خط ~\ref{problem2} ممکن است چندین نخ \lr{\texttt{wait}}  را اجرا نماید که منجر به بن‌بست خواهد شد. 
+
+%Puzzle: Fix the problem.
+    معمّا: مشکل را حل نمایید. 
+
+\clearemptydoublepage
+%\subsection {Reusable barrier non-solution \#2}
+\subsection { \#2 نا راه حل حصار با قابلیت استفاده مجدد}
+
+%This attempt fixes the previous error, but a subtle problem
+%remains.
+    این تلاش خطای قبل را حل نموده ولی یک مشکل ظریف باقی می‌ماند. 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Reusable barrier non-solution}]{}
+%\begin{lstlisting}[title={Reusable barrier non-solution}]{}
+\begin{lstlisting}[title=\rl{{  نا راه حل حصار با قابلیت استفاده مجدد}}]{} 
 rendezvous
 
 mutex.wait()
@@ -1972,32 +1991,42 @@ mutex.signal()
 \end{latin}
 \end{latin}
 
-In both cases the check is inside the mutex so that
-a thread cannot be interrupted after changing the counter
-and before checking it.
+%In both cases the check is inside the mutex so that
+%a thread cannot be interrupted after changing the counter
+%and before checking it.
+    در هر دو حالت بررسی درون \lr{mutex} صورت می‌گیرد لذا یک نخ نمی‌تواند بعد از تغییر شمارنده و قبل از بررسی آن با وقفه مواجه شود. 
 
-Tragically, this code is {\em still} not correct.
-Remember that this barrier will be inside a loop.  So, after
-executing the last line, each thread will go back
-to the rendezvous.
+%Tragically, this code is {\em still} not correct.
+%Remember that this barrier will be inside a loop.  So, after
+%executing the last line, each thread will go back
+%to the rendezvous.
+    متاسفانه این کد هنوز صحیح نیست. فراموش نکنید که این کد حصار درون یک حلقه قرار دارد. لذا پس از اجرای آخرین خط 
+    هر نخ به \lr{rendezvous} باز می‌گردد. 
 
-Puzzle: Identify and fix the problem.
+%Puzzle: Identify and fix the problem.
+    معمّا: مشکل را بیابید و آن را رفع نمایید. 
 
 
 \clearemptydoublepage
-\subsection {Reusable barrier hint}
+%\subsection {Reusable barrier hint}
+\subsection {راهنمای حصار با قابلیت استفاده مجدد}
 
-As it is currently written, this code
-allows a precocious thread to pass through the second mutex,
-then loop around and pass through the first mutex and the
-turnstile, effectively getting ahead of the other threads by
-a lap.
+%As it is currently written, this code
+%allows a precocious thread to pass through the second mutex,
+%then loop around and pass through the first mutex and the
+%turnstile, effectively getting ahead of the other threads by
+%a lap.
+    همانطوری که تا کنون نیز نوشته شده است، این کد به نخی که زودتر از ناحیه بحرانی خود خارج می‌شود 
+    اجازه عبور از \lr{mutex} دوم را داده و سپس در حلقه کد خود از \lr{mutex} 
+    اول و ترن‌استایل عبور می‌نماید، که در عمل همین نکته سبب می‌شود آن نخ، یک دور جلوتر از دیگر نخ‌ها قرار گیرد. 
 
-To solve this problem we can use two turnstiles.
+%To solve this problem we can use two turnstiles.
+    برای رفع این مساله می‌توانیم از دو ترن‌استایل استفاده نماییم. 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Reusable barrier hint}]{}
+%\begin{lstlisting}[title={Reusable barrier hint}]{}
+\begin{lstlisting}[title=\rl{{  راهنمای حصار با قابلیت استفاده مجدد}}]{} 
 turnstile = Semaphore(0)
 turnstile2 = Semaphore(1)
 mutex = Semaphore(1)
@@ -2005,20 +2034,26 @@ mutex = Semaphore(1)
 \end{latin}
 \end{latin}
 
-Initially the first is locked and the second is open.  When all the
-threads arrive at the first, we lock the second and unlock the first.
-When all the threads arrive at the second we relock the first,
-which makes it safe for the threads to loop around to the beginning,
-and then open the second.
-
+%Initially the first is locked and the second is open.  When all the
+%threads arrive at the first, we lock the second and unlock the first.
+%When all the threads arrive at the second we relock the first,
+%which makes it safe for the threads to loop around to the beginning,
+%and then open the second.
+    در ابتدا ترن‌استایل اولی قبل و دومی باز است. زمانی که تمامی نخ‌ها به ترن‌استایل اول برسند، آن دومی را قفل  و اولی را باز می‌نماییم. 
+    آن هنگام که تمامی نخ‌ها به ترن‌استایل دوم برسند اولی را دوباره قفل کرده --%
+    که این کار از بازگشت نخ‌ها به ابتدای حلقه جلوگیری می‌نماید--
+    و سپس دومی را باز می‌نماییم.
 
 
 \clearemptydoublepage
-\subsection {Reusable barrier solution}
+%\subsection {Reusable barrier solution}
+\subsection {   راه حل حصار با قابلیت استفاده مجدد}
+
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Reusable barrier solution}]{}
+%\begin{lstlisting}[title={Reusable barrier solution}]{}
+\begin{lstlisting}[title=\rl{{  راهنمای حصار با قابلیت استفاده مجدد}}]{} 
 # rendezvous
 
 mutex.wait()
@@ -2046,49 +2081,71 @@ turnstile2.signal()
 \end{latin}
 \end{latin}
 
-This solution is sometimes called a {\bf two-phase barrier} because
-it forces all the threads to wait twice: once for all the threads
-to arrive and again for all the threads to execute the critical
-section.
+%This solution is sometimes called a {\bf two-phase barrier} because
+%it forces all the threads to wait twice: once for all the threads
+%to arrive and again for all the threads to execute the critical
+%section.
+    گاهی اوقات به این راه حل، حصار دو-فاز گفته می‌شود زیرا که تمامی نخ‌ها را دوبار مجبور به انتظار می‌کند: یکبار برای اینکه تمام نخ‌ها برسند و 
+    بار دیگر برای آنکه تمام نخ‌های ناحیه بحرانی را اجرا نمایند. 
 
-Unfortunately, this solution is typical of most non-trivial
-synchronization code: it is difficult to be sure that a solution is
-correct.  Often there is a subtle way that a particular path through
-the program can cause an error.
+%Unfortunately, this solution is typical of most non-trivial
+%synchronization code: it is difficult to be sure that a solution is
+%correct.  Often there is a subtle way that a particular path through
+%the program can cause an error.
+    متاسفانه، این راه حل  از نابدیهی‌ترین انواع کد همگام‌سازی است: اطمینان یافتن از صحت این راه حل سخت است. 
+    اغلب فهم یک مسیر خاص از طریق برنامه که سبب یک خطا می‌گردد، ظریف است. 
+    %ترجمه مشکل داریم 
 
-To make matters worse, testing an implementation of a solution
-is not much help.  The error might occur very rarely
-because the particular path that causes it might
-require a spectacularly unlucky combination of circumstances.
-Such errors are almost
-impossible to reproduce and debug by conventional means.
+%To make matters worse, testing an implementation of a solution
+%is not much help.  The error might occur very rarely
+%because the particular path that causes it might
+%require a spectacularly unlucky combination of circumstances.
+%Such errors are almost
+%impossible to reproduce and debug by conventional means.
+    بدتر اینکه، بررسی پیاده‌سازی یک راه حل آنچنان کمکی نمی‌کند. خطا ممکن است خیلی به ندرت اتفاق افتد، 
+    زیرا که مسیر بخصوصی که سبب خطا می‌گردد ممکن است نیازمند 
+    ترکیبی فوق‌العاده بی‌بدیل از شرایط باشد. 
+    تولید و اشکال زدایی چنین خطاهایی با روش‌های مرسوم تقریبا ناممکن است. 
+    
+%The only alternative is to examine the code carefully and
+%``prove'' that it is correct.  I put ``prove'' in quotation
+%marks because I don't mean, necessarily, that you have to write
+%a formal proof (although there are zealots who encourage
+%such lunacy).
+    تنها جایگزین بررسی دقیق کد و "اثبات`` صحت آن است. "اثبات`` بین گیومه قرار دادیم زیرا که ضرورتاً منظور این نیست که یک اثبات 
+    رسمی برای آن بنویسید (اگرچه متعصب‌هایی وجود دارند که به چنین حماتی  ترغیب می‌نمایند).
 
-The only alternative is to examine the code carefully and
-``prove'' that it is correct.  I put ``prove'' in quotation
-marks because I don't mean, necessarily, that you have to write
-a formal proof (although there are zealots who encourage
-such lunacy).
+%The kind of proof I have in mind is more informal.  We can take
+%advantage of the structure of the code, and the idioms we have
+%developed, to assert, and then demonstrate, a number of
+%intermediate-level claims about the program.  For example:
+نوع اثبات مد نظر بسیار غیر رسمی است. می‌توانیم از مزیت ساختار کد و اصطلاحاتی که توسعه داده‌ایم برای اثبات و سپس نشان دادن 
+یک تعدادی از ادعاهای سطح متوسط درباره برنامه استفاده کنیم. برای نمونه:
 
-The kind of proof I have in mind is more informal.  We can take
-advantage of the structure of the code, and the idioms we have
-developed, to assert, and then demonstrate, a number of
-intermediate-level claims about the program.  For example:
 
+    
 \begin{enumerate}
 
-\item Only the $n$th thread can lock or unlock the turnstiles.
+\item 
+%Only the $n$th thread can lock or unlock the turnstiles.
+    فقط $n$امین نخ می‌تواند ترن‌استایل‌ها را قفل یا باز نماید. 
 
-\item Before a thread can unlock the first turnstile, it has to close 
-the second, and vice versa; therefore it is impossible for one thread
-to get ahead of the others by more than one turnstile.
+\item 
+%Before a thread can unlock the first turnstile, it has to close 
+%the second, and vice versa; therefore it is impossible for one thread
+%to get ahead of the others by more than one turnstile.
+    قبل اینکه یک نخ بتواند اولین ترن‌استایل را باز نماید، باید دومی را بسته باشد و بالعکس؛‌ بنابراین برای یک نخ، عبور از دیگر نخ‌ها به اندازه بیش از 
+    یک تر‌ن‌استایل ناممکن است. 
 
 \end{enumerate}
 
-By finding the right kinds of statements to assert and
-prove, you can sometimes find a concise way to convince yourself
-(or a skeptical colleague) that your code is bulletproof.
-
-
+%By finding the right kinds of statements to assert and
+%prove, you can sometimes find a concise way to convince yourself
+%(or a skeptical colleague) that your code is bulletproof.
+    با یافتن انواع صحیح عبارات به منظور اعلام و اثبات، گاهی اوقات می‌توانید یک راه موجز برای متقاعد کردن خودتان  (یا یک همکار 
+    شکاک) بیابید که کدتان ضدّ  گلوگه است. 
+    
+%%    Sun 24 Sep 2017 07:06:06 PM +0330
 
 \clearemptydoublepage
 \subsection {Preloaded turnstile}
