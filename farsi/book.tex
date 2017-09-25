@@ -2093,7 +2093,7 @@ turnstile2.signal()
 %correct.  Often there is a subtle way that a particular path through
 %the program can cause an error.
     متاسفانه، این راه حل  از نابدیهی‌ترین انواع کد همگام‌سازی است: اطمینان یافتن از صحت این راه حل سخت است. 
-    اغلب فهم یک مسیر خاص از طریق برنامه که سبب یک خطا می‌گردد، ظریف است. 
+    اغلب اینکه یک مسیر خاص از طریق برنامه سبب خطایی گردد، آنچنان آشکار نیست.
     %ترجمه مشکل داریم 
 
 %To make matters worse, testing an implementation of a solution
@@ -2148,28 +2148,38 @@ turnstile2.signal()
 %%    Sun 24 Sep 2017 07:06:06 PM +0330
 
 \clearemptydoublepage
-\subsection {Preloaded turnstile}
+%\subsection {Preloaded turnstile}
+\subsection { ترن‌استایل از پیش باگذاری شده}
 
-One nice thing about a turnstile is that it is a versatile
-component you can use in a variety of solutions.  But one
-drawback is that it forces threads to go through sequentially,
-which may cause more context switching than necessary.
+%One nice thing about a turnstile is that it is a versatile
+%component you can use in a variety of solutions.  But one
+%drawback is that it forces threads to go through sequentially,
+%which may cause more context switching than necessary.
+    یک چیز جالب در رابطه با ترن‌استایل این است که یک جزء همه منظوره است که می‌توانید آن را در راه حل‌های مختلفی بکار برید. 
+    امّا یک اشکال آن این است که نخ‌ها را مجبور می‌نماید که به صورت ترتیبی عبور نمایند و این ممکن است سبب 
+    تعویض بسترهای\LTRfootnote{context switch} زیادی بیش از حدّ نیاز گردد.
 
-In the reusable barrier solution, we can simplify the solution if the
-thread that unlocks the turnstile preloads the turnstile with enough
-signals to let the right number of threads through\footnote{Thanks to
-Matt Tesch for this solution!}.
+%In the reusable barrier solution, we can simplify the solution if the
+%thread that unlocks the turnstile preloads the turnstile with enough
+%signals to let the right number of threads through\footnote{Thanks to
+%Matt Tesch for this solution!}.
+    در مساله حصار با قابلیت استفاده مجدد، می‌توانیم راه حل را ساده‌تر کنیم اگر نخی که ترن‌استایل را از حالت قفل خارج می‌نماید 
+    آن را با تعداد سیگنال کافی به منظور عبور نخ‌های لازم، از پیش بارگذاری نماید \footnote{با تشکر از \lr{Matt Tesch} بابت این راه حل!}. 
 
-The syntax I am using here assumes that {\tt signal} can take a
-parameter that specifies the number of signals.  This is a
-non-standard feature, but it would be easy to implement with a loop.
-The only thing to keep in mind is that the multiple signals are not
-atomic; that is, the signaling thread might be interrupted in the
-loop.  But in this case that is not a problem.
+%The syntax I am using here assumes that {\tt signal} can take a
+%parameter that specifies the number of signals.  This is a
+%non-standard feature, but it would be easy to implement with a loop.
+%The only thing to keep in mind is that the multiple signals are not
+%atomic; that is, the signaling thread might be interrupted in the
+%loop.  But in this case that is not a problem.
+    نحو مورد استفاده در اینجا فرض می‌کند که \lr{\texttt{signal}} می‌تواند پارامتری دریافت دارد که تعداد سیگنال‌ها را مشخص می‌نماید. 
+    این، یک ویژگی استاندارد نیست، امّا پیاده‌سازی آن با یک حلقه، آسان خواهد بود. تنها چیزی که باید در ذهن داشت این است که سیگنال‌های چندگانه 
+    اتمی نیستند؛ بدین معنی که نخ علامت دهنده ممکن است در میانه حلقه با وقفه روبرو شود. لکن در اینجا مشکلی نیست.
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Reusable barrier solution}]{}
+%\begin{lstlisting}[title={Reusable barrier solution}]{}
+\begin{lstlisting}[title=\rl{راه حل حصار با قابلیت استفاده مجدد}]{}
 # rendezvous
 
 mutex.wait()
@@ -2193,24 +2203,32 @@ turnstile2.wait()                # second turnstile
 \end{latin}
 \end{latin}
 
-When the $n$th thread arrives, it preloads the first turnstile with
-one signal for each thread.  When the $n$th thread passes the
-turnstile, it ``takes the last token'' and leaves the turnstile locked
-again.
+%When the $n$th thread arrives, it preloads the first turnstile with
+%one signal for each thread.  When the $n$th thread passes the
+%turnstile, it ``takes the last token'' and leaves the turnstile locked
+%again.
+    زمانیکه $n$امین نخ می‌رسد، ترن‌استایل اول را با یک سیگنال بازای هر نخ از پیش بارگذاری می‌نماید.
+    زمانیکه $n$امین نخ از ترن‌استایل عبور می‌نماید آخرین توکن را در اختیار گرفته و ترن‌استایل را دوباره قفل می‌نماید. 
+    
 
-The same thing happens at the second turnstile, which is
-unlocked when the last thread goes through the mutex.
+%The same thing happens at the second turnstile, which is
+%unlocked when the last thread goes through the mutex.
+    اتفاق مشابهی در ترن‌استایل دوم  رخ می‌دهد،  آن زمان که آخرین نخ از \lr{mutex} عبور نموده آن را باز می‌نماید. 
 
 
 \newpage
-\subsection {Barrier objects}
+%\subsection {Barrier objects}
+\subsection {اشیاء حصار}
 
-It is natural to encapsulate a barrier in an object.  I will
-borrow the Python syntax for defining a class:
+%It is natural to encapsulate a barrier in an object.  I will
+%borrow the Python syntax for defining a class:
+    به طور معمول، یک حصار را درون یک شیء محصور\LTRfootnote{encapsulate} می‌نمایند. 
+    در اینجا برای تعریف کلاس، نحو پایتون را بکار می‌بریم. 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Barrier class}]{}
+%\begin{lstlisting}[title={Barrier class}]{}
+\begin{lstlisting}[title=\rl{کلاس \lr{Barrier} }]{}
 class Barrier:
     def __init__(self, n):
         self.n = n
@@ -2242,49 +2260,67 @@ class Barrier:
 \end{latin}
 \end{latin}
 
-The {\tt \_\_init\_\_} method runs when we create a new
-{\tt Barrier} object, and initializes the instance variables.
-The parameter {\tt n} is the number of threads that have
-to invoke {\tt wait} before the Barrier opens.
+%The {\tt \_\_init\_\_} method runs when we create a new
+%{\tt Barrier} object, and initializes the instance variables.
+%The parameter {\tt n} is the number of threads that have
+%to invoke {\tt wait} before the Barrier opens.
+    زمانیکه یک شیء \lr{\texttt{Barrier}} ایجاد می‌گردد 
+    متد \lr{\texttt{\_\_init\_\_}} اجرا می‌شود و متغیرهای نمونه را مقداردهی اولیه می‌نماید. 
+    پارامتر \lr{\texttt{n}} تعداد نخ‌هایی است که باید پیش از اینکه حصار باز شود \lr{\texttt{wait}}  را فراخوانند. 
+%    Barrier باید با حرف کوچک باشد.  report
+    
 
-The variable {\tt self} refers to the object the method
-is operating on.  Since each barrier object has its own
-mutex and turnstiles, {\tt self.mutex} refers to the specific
-mutex of the current object.
+%The variable {\tt self} refers to the object the method
+%is operating on.  Since each barrier object has its own
+%mutex and turnstiles, {\tt self.mutex} refers to the specific
+%mutex of the current object.
+    متغیر \lr{\texttt{self}} به شیئی اشاره دارد که متد روی آن عمل می‌نماید. 
+    از آنجایی که هر شیء حصار، \lr{mutex} و ترن‌استایل‌های خود را دارد، \lr{\texttt{self.mutex}} به \lr{mutex} شیء جاری اشاره می‌نماید. 
 
-Here is an example that creates a {\tt Barrier}
-object and waits on it:
+%Here is an example that creates a {\tt Barrier}
+%object and waits on it:
+    در اینجا مثالی مشاهده می‌نمایید که یک شیء \lr{\texttt{Barrier}} را ایجاد نموده و روی آن منتظر می‌ماند:
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Barrier interface}]{}
+%\begin{lstlisting}[title={Barrier interface}]{}
+\begin{lstlisting}[title={Barrier \rl{واسط}}]{}
 barrier = Barrier(n)        # initialize a new barrier
 barrier.wait()              # wait at a barrier
 \end{lstlisting}
 \end{latin}
 \end{latin}
 
-Optionally, code that uses a barrier can call {\tt phase1} and
-{\tt phase2} separately, if there is something else that
-should be done in between.
+%Optionally, code that uses a barrier can call {\tt phase1} and
+%{\tt phase2} separately, if there is something else that
+%should be done in between.
+        کدی که حصار را بکار می‌برد می‌تواند \lr{\texttt{phase1}} و \lr{\texttt{phase2}} را به صورت مجزا فراخواند
+        اگر چیزی وجود داشته باشد که لازم باشد در آن بین اجرا شود. 
 
 
 
 \section{صف}
 \label{dancers}
 
-سمافور‌ها می توانند به عنوان یک صف نیز استفاده شوند. {MASHKOOK}در این مورد مقدار اولیه ۰ و کد مربوطه از قبل نوشته شده است، بنابرین سیگنال دادن به نخ دیگر عملا غیر ممکن است مگر اینکه یک ترد دیگر در حال انتظار باشد در نتیجه مقدار سمافور هرگز مثبت نخواهد شد.
-به عنوان مثال، تصور کنید که نخ‌ها نمایش دهنده اتاق رقص باشند و دو نوع رقاص، به شکل جلودار و دنباله‌رو باشد، که قبل از ورود به صحن در دو صف مجزا قرار خواهند گرفت. زمانی که یک جلودار می‌رسد، چک می‌کند که آیا هیچ دنباله‌رو‌ای در حالت انتظار است یا خیر. اگر چنین باشد، هر دو می توانند عمل کنند(به رقصند!) در غیر اینصورت می بایست منتظر باشند.
-به شکل مشابهی، زمانی که یک دنباله‌رو می‌رسد، او ابتدا چک می‌کند که آیا هیچ جلو‌داری فعال یا منتظر شده است یا خیر، او نیز چنین خواهد کرد.
-معما: یک کدی بنویسید برای جلو‌دارها و دنباله‌رو‌ها که این شرایط در آن صدق کند.
+    سمافور‌ها می توانند به عنوان یک صف نیز استفاده شوند. 
+    در این حالت، مقدار اولیه \lr{\texttt{0}} است
+    و معمولاً کد به گونه‌ای  نوشته شده است که امکان علامت‌دهی وجود ندارد 
+    مگر اینکه یک نخ، در حال انتظار وجود داشته باشد، لذا مقدار سمافور هیچگاه مثبت نیست.
+
+    به عنوان مثال، تصور کنید که نخ‌ها، نمایشگر رقصنده‌هایی باشند و دو نوع رقاص --جلودار و  دنباله‌رو--
+    در دو صف، پیش از ورود به اتاق رقص منتظر هستند. 
+    هنگامی که که یک جلودار می‌رسد، بررسی می‌کند که آیا هیچ دنباله‌روئی منتظر هست یا خیر. 
+    اگر چنین باشد، هر دو می‌توانند داخل شوند در غیر اینصورت می بایست منتظر بماند.
+
+    به طور مشابه، زمانیکه یک دنباله‌رو می‌رسد، او ابتدا چک می‌کند که آیا جلوداری وجود دارد یا خیر و منطبق با داخل شده یا صبر می‌نماید. 
+
+    معما:  کدی بنویسید برای جلو‌دارها و دنباله‌رو‌ها که این شرایط در آن صدق کند.
 
 
 \clearemptydoublepage
 \subsection {راهنمایی برای معما}
 
-اینجا یک متغیر
-\lr{I}
-هست که در راه حل ما استفاده شده است:
+    در اینجا متعیرهایی آمده است که در راه حل خود بکار برده‌ام: 
 
 \begin{latin}
 \begin{latin}
@@ -2295,16 +2331,16 @@ followerQueue = Semaphore(0)
 \end{latin}
 \end{latin}
 
-{\tt leaderQueue} صف حاوی جلو‌دارهای منتظر هست!
-و
- {\tt followerQueue} صف حاوی دنباله‌رو‌های منتظر هست!
+\lr{\texttt{ leaderQueue }}
+     صف حاوی جلو‌دارهای منتظر هست و
+\lr{\texttt{  followerQueue }} صف حاوی دنباله‌رو‌های منتظر هست.
 
 
 
 \clearemptydoublepage
 \subsection {راه حل صف}
 
-کد مربوط به جلو‌دارها را در اینجا مشاهده می‌کند:
+    کد مربوط به جلو‌دارها را در اینجا آمده است:
 
 \begin{latin}
 \begin{latin}
@@ -2316,7 +2352,7 @@ dance()
 \end{latin}
 \end{latin}
 
-و در این قسمت کد مربوط به دنباله‌روها گذاشته شده است:
+    و در این قسمت کد مربوط به دنباله‌روها را مشاهده می‌نمایید:
 
 \begin{latin}
 \begin{latin}
@@ -2327,7 +2363,13 @@ dance()
 \end{lstlisting}
 \end{latin}
 \end{latin}
-این راه حل ساده تر از آن است که آن را بگیرید! صرفا یک کلید است. هر سیگنال از جلودار دقیقا یک دنباله‌رو دارد و هر سیگنال دنباله‌رو یک جلو‌دار دارد، لذا این ضمانت می‌کند که جلو‌دار و دنباله‌رو هر دو به شکل همزمان وارد عملیات می‌شوند(می‌رقصند!!!). اگرچه  آنها هر دو وارد عملیات شده اند اما این ممکن است که نخ‌ها قبل از اجرای {\tt dance} انباشته شوند، و در نتیجه امکان دارد که تعدادی از جلو‌دارهای {\tt dance} قبل از دنباله‌رو‌ها وارد عمل شوند. بر اساس مفهوم {\tt dance} که ممکن است گیج کننده باشد!
+%%        Mon 25 Sep 2017 07:02:12 PM +0330
+
+    این راه حل به همان اندازه که نشان می‌دهد ساده‌ است، تنها یک قرار ملاقات است. 
+    هر جلودار دقیقا به یک دنباله‌رو علامت می‌دهد و هر دنباله‌رو به یک جلودار علامت می‌دهد، لذا این ضمانت می‌کند که جلو‌دارها و دنباله‌روها تنها 
+    به صورت جفت جفت اجازه اقدام داشته باشند.  امّا 
+%    هر سیگنال از جلودار دقیقا یک دنباله‌رو دارد و هر سیگنال دنباله‌رو یک جلو‌دار دارد، لذا این ضمانت می‌کند که جلو‌دار و دنباله‌رو هر دو به شکل همزمان وارد عملیات می‌شوند(می‌رقصند!!!). 
+    اگرچه  آنها هر دو وارد عملیات شده اند اما این ممکن است که نخ‌ها قبل از اجرای {\tt dance} انباشته شوند، و در نتیجه امکان دارد که تعدادی از جلو‌دارهای {\tt dance} قبل از دنباله‌رو‌ها وارد عمل شوند. بر اساس مفهوم {\tt dance} که ممکن است گیج کننده باشد!
 برای اینکه جالب تر باشد، فرض کنید یک شرط اضافه را به هر کدام از جلودار‌ها که می توانند {\tt dance} را به شکل همزمان صدا بزنند با تنها یک دنباله‌رو و برعکس، اضافه کنیم. به معنی دیگر شما می توانید برقصید با کسی که شما را آورده است\footnote{ترانه توسط شاینا تیواین}.
 معما: یک راه حل برای این مساله صف انحصاری ارائه کنید.
 
