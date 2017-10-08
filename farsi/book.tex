@@ -2479,90 +2479,123 @@ rendezvous.signal()
 
 
 \clearemptydoublepage
-\chapter{Classical synchronization problems}
-
-In this chapter we examine the classical problems that appear
-in nearly every operating systems textbook.  They
-are usually presented in terms of real-world problems, so
-that the statement of the problem is clear and so that students
-can bring their intuition to bear.
-
-For the most part, though, these problems do not happen in the
-real world, or if they do, the real-world solutions are not much
-like the kind of synchronization code we are working with.
-
-The reason we are interested in these problems
-is that they are analogous to common problems that operating
-systems (and some applications) need to solve.  For each classical
-problem I will present the classical formulation, and also explain
-the analogy to the corresponding OS problem.
+%\chapter{Classical synchronization problems}
+\chapter{مسائل همگام‌سازی کلاسیک}
 
 
-\section{Producer-consumer problem}
+%In this chapter we examine the classical problems that appear
+%in nearly every operating systems textbook.  They
+%are usually presented in terms of real-world problems, so
+%that the statement of the problem is clear and so that students
+%can bring their intuition to bear.
+    مسائل کلاسیک همگام‌سازی، که تقریباً در هر کتاب درسی سیستم‌عامل وجود دارد را در این فصل بررسی می‌نماییم. 
+    این مسائل معمولاً در غالب مسائل جهان واقع ارائه می‌گردد، لذا بیان مساله واضح است و بنابراین دانشجویان می‌توانند شهود خود را بکار بندند. 
+    
+%For the most part, though, these problems do not happen in the
+%real world, or if they do, the real-world solutions are not much
+%like the kind of synchronization code we are working with.
+    گرچه برای اکثر موارد، این مسائل در دنیای واقع رخ نمی‌دهد یا اگر هم رخ دهد راه حل‌های دنیای واقع چندان شبیه کد همگام‌سازی 
+    که با آن کار می‌کنیم نیست. 
 
-In multithreaded programs there is often a division of labor between
-threads.  In one common pattern, some threads are producers and some
-are consumers.  Producers create items of some kind and add them to a
-data structure; consumers remove the items and process them.
+%The reason we are interested in these problems
+%is that they are analogous to common problems that operating
+%systems (and some applications) need to solve.  For each classical
+%problem I will present the classical formulation, and also explain
+%the analogy to the corresponding OS problem.
+    دلیل علاقه‌مندی ما، به اینگونه مسائل این است که شبیه مسائل رایجی هستند که سیستم‌عامل‌ها  (و برخی برنامه‌ها) نیاز به حل آن‌ها دارند. 
+    برای هر مساله کلاسیک، یک فرمول‌بندی کلاسیک ارائه می‌دهیم و همچنین شباهات آن را به مساله متناظر در سیستم‌عامل  بیان می‌نمایی. 
 
-Event-driven programs are a good example.  An ``event'' is something
-that happens that requires the program to respond: the user presses a
-key or moves the mouse, a block of data arrives from the disk, a
-packet arrives from the network, a pending operation completes.
+%\section{Producer-consumer problem}
+\section{مسئله تولیدکننده-مصرف‌کننده}
 
-Whenever an event occurs, a producer thread creates an event
-object and adds it to the event buffer.  Concurrently, consumer
-threads take events out of the buffer and process them.
-In this case, the consumers are called ``event handlers.''
+%In multithreaded programs there is often a division of labor between
+%threads.  In one common pattern, some threads are producers and some
+%are consumers.  Producers create items of some kind and add them to a
+%data structure; consumers remove the items and process them.
+    در برنامه‌های چندنخی اغلب یک تقسیم‌بندی از کار بین نخ‌ها وجود دارد. در یک الگوی رایج، برخی نخ‌ها تولیدکننده و برخی مصرف‌کننده هستند. 
+    تولیدکننده‌ها عناصری از برخی نوع‌ها را ایجاد نموده و آن‌ها را به یک ساختمان داده می‌افزاید؛ مصرف‌کننده‌ها عناصر را حذف نموده و پردازش می‌کنند.
 
-There are several synchronization constraints that we need to
-enforce to make this system work correctly:
+
+%Event-driven programs are a good example.  An ``event'' is something
+%that happens that requires the program to respond: the user presses a
+%key or moves the mouse, a block of data arrives from the disk, a
+%packet arrives from the network, a pending operation completes.
+    برنامه‌های رویداد-محور مثال‌های خوبی هستند. یک "رویداد``\footnote{event}، رخدادی است که به پاسخ برنامه نیاز دارد: 
+    کاربر کلیدی را فشار می‌دهد یا ماوس را جابجا می‌کند، یک بلوک داده از دیسک می‌رسد، یک بسته از شبکه می‌رسد، یک عمل در‌حال انتظار تکمیل می‌شود.
+
+%Whenever an event occurs, a producer thread creates an event
+%object and adds it to the event buffer.  Concurrently, consumer
+%threads take events out of the buffer and process them.
+%In this case, the consumers are called ``event handlers.''
+
+    هر زمان که یک رویداد رخ می‌دهد، یک نخ تولید‌کننده یک شیئ رویداد را ایجاد نموده و آن را به بافر رویداد می‌افزاید. 
+    به طور همزمان، نخ مصرف‌کننده، رویدادها را از بافر خارج کرده و آن‌ها را پردازش می‌کند. 
+    در این حالت، مصرف‌کننده ها "مدیریت‌کنندهٔ رویداد``\footnote{event handler} نامیده می‌شوند.
+
+%There are several synchronization constraints that we need to
+%enforce to make this system work correctly:
+    چندین محدودیت همگام‌سازی وجود دارد که برای درست کار کردن سیستم نیاز به تحمیل آن‌ها داریم.
 
 \begin{itemize}
 
-\item While an item is being added to or removed from the buffer,
-the buffer is in an inconsistent state.  Therefore, threads must
-have exclusive access to the buffer.
-
-\item If a consumer thread arrives while the buffer is empty, it
-blocks until a producer adds a new item.
+\item 
+%While an item is being added to or removed from the buffer,
+%the buffer is in an inconsistent state.  Therefore, threads must
+%have exclusive access to the buffer.
+    زمانی که یک عنصر به بافر افزوده شده یا از آن حذف می‌گردد، بافر در وضعیتی ناپایدار است.
+    بنابراین نخ‌ها باید دسترسی انحصاری به بافر داشته باشند.
+    
+\item 
+%If a consumer thread arrives while the buffer is empty, it
+%blocks until a producer adds a new item.
+    اگر یک نخ مصرف‌کننده در زمانی که بافر خالی است سر برسد، تا زمانی که یک تولید کننده عنصر جدیدی را بیفزاید مسدود می‌گردد.
 
 \end{itemize}
 
-Assume that producers perform the following operations over and
-over:
+%Assume that producers perform the following operations over and
+%over:
+    فرض کنید که تولیدکننده‌ها عملیات زیر را بارها و بارها انجام می‌دهند:
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Basic producer code}]{}
+%\begin{lstlisting}[title={Basic producer code}]{}
+\begin{lstlisting}[title=\rl{کد پایه تولیدکننده}]{}
 event = waitForEvent()
 buffer.add(event)
 \end{lstlisting}
 \end{latin}
 \end{latin}
 
-Also, assume that consumers perform the following operations:
+%Also, assume that consumers perform the following operations:
+    همچنین فرض کنید مصرف کننده‌ها عملیات زیر را اجرا می‌کنند:
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Basic consumer code}]{}
+%\begin{lstlisting}[title={Basic consumer code}]{}
+\begin{lstlisting}[title=\rl{کد پایه مصرف‌کننده}]{}
 event = buffer.get()
 event.process()
 \end{lstlisting}
 \end{latin}
 \end{latin}
 
-As specified above, access to the buffer has to be exclusive,
-but {\tt waitForEvent} and {\tt event.process}
-can run concurrently.
+%As specified above, access to the buffer has to be exclusive,
+%but {\tt waitForEvent} and {\tt event.process}
+%can run concurrently.
+    همانطوری که در بالا مشخص شده، دسترسی به بافر باید انحصاری باشد، 
+    اما {\tt waitForEvent} و {\tt event.process} می‌توانند به طور همزمان اجرا شوند.
+    
 
-Puzzle: Add synchronization statements to the producer and
-consumer code to enforce the synchronization constraints.
+%Puzzle: Add synchronization statements to the producer and
+%consumer code to enforce the synchronization constraints.
+    معما: دستورات همگام‌سازی را به کد تولید‌کننده و مصرف‌کننده بیفزایید تا محدودیت‌های همگام‌سازی اعمال شود.
 
 \clearemptydoublepage
-\subsection{Producer-consumer hint}
+%\subsection{Producer-consumer hint}
+\subsection{راهنمای تولیدکننده-مصرف‌کننده}
 
-Here are the variables you might want to use:
+%Here are the variables you might want to use:
+    در اینجا متغیرهایی آمده است که ممکن است بخواهید استفاده کنید:
 
 \begin{latin}
 \begin{latin}
@@ -2574,39 +2607,57 @@ local event
 \end{latin}
 \end{latin}
 
-Not surprisingly, {\tt mutex} provides exclusive access to
-the buffer.  When {\tt items} is positive, it indicates the
-number of items in the buffer.  When it is negative, it
-indicates the number of consumer threads in queue.
+%Not surprisingly, {\tt mutex} provides exclusive access to
+%the buffer.  When {\tt items} is positive, it indicates the
+%number of items in the buffer.  When it is negative, it
+%indicates the number of consumer threads in queue.
 
-{\tt event} is a {\bf local variable}, which in this context means
-that each thread has its own version.
-So far we have been assuming that all threads have access
-to all variables, but we will sometimes find it useful to
-attach a variable to each thread.
+    بدون تعجب، {\tt mutex} دسترسی انحصاری را به بافر فراهم می‌آورد. 
+    هنگامی که {\tt items} مثبت است، تعداد عناصر موجود در بافر را نشان می‌دهد. 
+    زمانی که منفی است، نشان‌دهندهٔ تعداد نخ‌های مصرف‌کنندهٔ در صف می‌باشد. 
 
-There are a number of ways this can be implemented in different
-environments:
+%{\tt event} is a {\bf local variable}, which in this context means
+%that each thread has its own version.
+%So far we have been assuming that all threads have access
+%to all variables, but we will sometimes find it useful to
+%attach a variable to each thread.
+    {\tt event}
+    یک \textbf{متغیر محلی}\footnote{local variable} است، که در اینجا بدین معنی است که هر نخ نسخهٔ خود را دارد.
+    تاکنون فرض کرده‌ایم که تمام نخ‌ها به تمام متغیرها دسترسی دارند، اما گاهی اوقات بهتر است که به هر نخ یک متغیر الحاق شود.
 
+%There are a number of ways this can be implemented in different
+%environments:
+    راه های مختلفی برای پیاده‌سازی این نکته در محیط‌های گوناگون وجود دارد:
+    
 \begin{itemize}
 
-\item If each thread has its own run-time stack, then any variables
-allocated on the stack are thread-specific.
+\item 
+%If each thread has its own run-time stack, then any variables
+%allocated on the stack are thread-specific.
+    اگر هر نخ پشتهٔ زمان اجرای خودش را داشته باشد، آنگاه هر متغیر تخصیص داده شده در پشته، 
+    مخصوص به نخ\footnote{thread-specific} است.
 
-\item If threads are represented as objects, we can add an attribute
-to each thread object.
+\item 
+%If threads are represented as objects, we can add an attribute
+%to each thread object.
+    اگر نخ ها به عنوان اشیا نشان داده شوند، می‌توانیم به هر شیئ نخ یک خصیصه اضافه نماییم.
 
-\item If threads have unique IDs, we can use the IDs as an index
-into an array or hash table, and store per-thread data there.
+\item 
+%If threads have unique IDs, we can use the IDs as an index
+%into an array or hash table, and store per-thread data there.
+    اگر نخ ها \lr{ID}های یکتا داشته باشند، می‌توانیم \lr{ID} را به عنوان اندیس یک آرایه یا جدول درهم سازی به کار بریم، 
+    و داده‌های هر نخ را در آن ذخیره کنیم.
 
 \end{itemize}
 
-In most programs, most variables are local unless declared otherwise,
-but in this book most variables are shared, so we will assume that
-that variables are shared unless they are explicitly declared {\tt
-local}.
+%In most programs, most variables are local unless declared otherwise,
+%but in this book most variables are shared, so we will assume that
+%that variables are shared unless they are explicitly declared {\tt
+%local}.
+    در بیشتر برنامه‌ها، اغلب متغیرها محلی هستند مگر اینکه به صورت دیگری اعلان شوند، 
+    اما در این کتاب بیشتر متغیرها اشتراکی اند، لذا پیش فرض متغیرها اشتراکی هستند مگر اینکه به صراحت به صورت \tt{local} اعلان شوند.
 
-
+%%    Sun 08 Oct 2017 06:02:27 PM +0330   
 
 \clearemptydoublepage
 \subsection{Producer-consumer solution}
