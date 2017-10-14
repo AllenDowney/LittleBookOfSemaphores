@@ -2660,13 +2660,16 @@ local event
 %%    Sun 08 Oct 2017 06:02:27 PM +0330   
 
 \clearemptydoublepage
-\subsection{Producer-consumer solution}
+%\subsection{Producer-consumer solution}
+\subsection{راه حل تولیدکننده-مصرف‌کننده}
 
-Here is the producer code from my solution.
+%Here is the producer code from my solution.
+    کد تولیدکننده از راه حل من در ادامه آمده است. 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Producer solution}]{}
+%\begin{lstlisting}[title={Producer solution}]{}
+\begin{lstlisting}[title=\rl{راه حل تولیدکننده}]{}
 event = waitForEvent()
 mutex.wait()
     buffer.add(event)
@@ -2676,19 +2679,24 @@ mutex.signal()
 \end{latin}
 \end{latin}
 
-The producer doesn't have to get exclusive access to the buffer
-until it gets an event.  Several threads can run {\tt waitForEvent}
-concurrently.
-
-The {\tt items} semaphore keeps track of the
-number of items in the buffer.  Each time the producer adds an
-item, it signals {\tt items}, incrementing it by one.
-
-The consumer code is similar.
+%The producer doesn't have to get exclusive access to the buffer
+%until it gets an event.  Several threads can run {\tt waitForEvent}
+%concurrently.
+    تولیدکننده تا زمان دریافت یک رویداد، نباید دسترسی انحصاری به بافر داشته باشد. 
+    چندین نخ به صورت همزمان می‌توانند  {\tt waitForEvent} را اجرا نمایند. 
+    
+%The {\tt items} semaphore keeps track of the
+%number of items in the buffer.  Each time the producer adds an
+%item, it signals {\tt items}, incrementing it by one.
+    سمافور {\tt items} تعداد عناصر موجود در بافر را در خود نگاه می‌دارد. هر زمان که تولیدکننده یک عنصر بیفزاید، با {\tt items}
+    دادن سیگنال یک واحد آن را افزایش می‌دهد. 
+%The consumer code is similar.
+    کد مصرف‌کننده نیز مشابه است. 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Consumer solution}]{}
+%\begin{lstlisting}[title={Consumer solution}]{}
+\begin{lstlisting}[title=\rl{راه حل مصرف‌کننده}]{}
 items.wait()
 mutex.wait()
     event = buffer.get()
@@ -2698,26 +2706,35 @@ event.process()
 \end{latin}
 \end{latin}
 
-Again, the buffer operation is protected by a mutex,
-but before the consumer gets to it, it has to decrement
-{\tt items}.  If {\tt items} is zero or negative, the
-consumer blocks until a producer signals.
+%Again, the buffer operation is protected by a mutex,
+%but before the consumer gets to it, it has to decrement
+%{\tt items}.  If {\tt items} is zero or negative, the
+%consumer blocks until a producer signals.
+    دوباره، عملیات بافر توسط یک میوتکس حفاظت می‌شود امّا پیش از اینکه مصرف‌کننده به آن برسد باید {\tt items} را کاهش دهد. 
+    اگر {\tt items} مقدار صفر یا منفی داشته باشد، مصرف‌کننده تا زمانی که یک تولیدکننده سیگنال دهد مسدود می‌گردد. 
 
-Although this solution is correct, there is an opportunity
-to make one small improvement to its performance.  Imagine
-that there is at least one consumer in queue when a producer
-signals {\tt items}.  If the scheduler allows the consumer
-to run, what happens next?  It immediately blocks on the
-mutex that is (still) held by the producer.
+%Although this solution is correct, there is an opportunity
+%to make one small improvement to its performance.  Imagine
+%that there is at least one consumer in queue when a producer
+%signals {\tt items}.  If the scheduler allows the consumer
+%to run, what happens next?  It immediately blocks on the
+%mutex that is (still) held by the producer.
+    اگرچه این راه حل درست است، این امکان وجود دارد که کارایی آن را قدری بهبود بخشید. 
+%    یک فرصت برای اعمال یک بهبود کوچک در کارایی آن وجود دارد. 
+    تصور کنید زمانیکه یک تولید به {\tt items} سیگنال می‌دهد حداقل یک مصرف‌کننده در صف قرار دارد. 
+    اگر زمان‌بند به مصرف‌کننده اجازه اجرا را بدهد، پس از آن چه اتفاقی می‌افتد؟
+    بلافاصله روی میوتکس که (هنوز) در اختیار تولیدکننده است مسدود می‌شود. 
 
-Blocking and waking up are moderately expensive operations;
-performing them unnecessarily can impair the performance of
-a program.  So it would probably be better to rearrange the
-producer like this:
-
+%Blocking and waking up are moderately expensive operations;
+%performing them unnecessarily can impair the performance of
+%a program.  So it would probably be better to rearrange the
+%producer like this:
+    مسدودسازی و رفع انسداد، اعمال نسبتاً پر هزینه‌ای هستند: 
+    انجام غیرضروری آن‌ها می‌تواند به کارایی برنامه آسیب زند. لذا احتمالاً بازنویسی کد تولیدکننده به صورت زیر بهتر باشد. 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Improved producer solution}]{}
+%\begin{lstlisting}[title={Improved producer solution}]{}
+\begin{lstlisting}[title=\rl{راه حل بهبود یافتهٔ تولیدکننده}]{}
 event = waitForEvent()
 mutex.wait()
     buffer.add(event)
@@ -2727,23 +2744,31 @@ items.signal()
 \end{latin}
 \end{latin}
 
-Now we don't bother unblocking a consumer until we know it can proceed
-(except in the rare case that another producer beats it to the mutex).
+%Now we don't bother unblocking a consumer until we know it can proceed
+%(except in the rare case that another producer beats it to the mutex).
+    اکنون تا زمانیکه بدانیم یک مصرف‌کننده می‌تواند به کار خود ادامه دهد برای رفع انسداد آن خود را بزحمت نمی‌اندازیم 
+    (بجز موردی نادر که تولید‌کننده‌ دیگری در گرفتن میوتکس، از مصرف‌کننده پیشی می‌گیرد).
+    
+%There's one other thing about this solution that might bother
+%a stickler.  In the hint section I claimed that the {\tt items}
+%semaphore keeps track of the number of items in queue.  But looking
+%at the consumer code, we see the possibility that several consumers
+%could decrement {\tt items} before any of them gets the mutex
+%and removes an item from the buffer.  At least for a little while,
+%{\tt items} would be inaccurate.
+    یک چیز دیگری در رابطه با این راه حل وجود دارد که ممکن است یک فرد دقیق را آزار دهد. 
+    در بخش راهنمایی ادعا کردیم که سمافور {\tt items} تعداد عناصر موجود در صف را در خود نگاه می‌دارد. امّا با نگاه به کد مصرف‌کننده، 
+    در می‌یابیم این امکان وجود دارد که چندین مصرف‌کننده بتوانند پیش از اینکه میوتکس را بگیرند و یک عنصر را از بافر بردارند، {\tt items} را  کاهش دهند. 
+    حداقل برای یک زمان کوتاه، {\tt items} را  می‌تواند نادقیق باشد. 
 
-There's one other thing about this solution that might bother
-a stickler.  In the hint section I claimed that the {\tt items}
-semaphore keeps track of the number of items in queue.  But looking
-at the consumer code, we see the possibility that several consumers
-could decrement {\tt items} before any of them gets the mutex
-and removes an item from the buffer.  At least for a little while,
-{\tt items} would be inaccurate.
-
-We might try to address that by checking the buffer inside the
-mutex:
+%We might try to address that by checking the buffer inside the
+%mutex:
+    ممکن آن را بخواهیم بوسیله چک کردن بافر را درون میوتکس مدیریت کنیم: 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Broken consumer solution}]{}
+%\begin{lstlisting}[title={Broken consumer solution}]{}
+\begin{lstlisting}[title=\rl{راه حل معیوب مصرف‌کننده}]{}
 mutex.wait()
     items.wait()
     event = buffer.get()
@@ -2753,19 +2778,25 @@ event.process()
 \end{latin}
 \end{latin}
 
-This is a bad idea.
+%This is a bad idea.
+    این ایدهٔ بدی است. 
 
-Puzzle: why?
+%Puzzle: why?
+    معمّا: چرا؟
 
 
 \clearemptydoublepage
-\subsection{Deadlock \#4}
+%\subsection{Deadlock \#4}
+\subsection{بن‌بست \#4}
 
-If the consumer is running this code
+
+%If the consumer is running this code
+    اگر مصرف‌کنند کد زیر را اجرا نماید
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Broken consumer solution}]{}
+%\begin{lstlisting}[title={Broken consumer solution}]{}
+\begin{lstlisting}[title=\rl{راه حل معیوب مصرف‌کننده}]{}
 mutex.wait()
     items.wait()
     event = buffer.get()
@@ -2776,58 +2807,76 @@ event.process()
 \end{latin}
 \end{latin}
 %
-it can cause a deadlock.  Imagine that the buffer is empty.
-A consumer arrives, gets the mutex, and then blocks on
-{\tt items}.  When the producer arrives, it blocks on
-{\tt mutex} and the system comes to a grinding halt.
+%it can cause a deadlock.  Imagine that the buffer is empty.
+%A consumer arrives, gets the mutex, and then blocks on
+%{\tt items}.  When the producer arrives, it blocks on
+%{\tt mutex} and the system comes to a grinding halt.
+    می‌تواند سبب بروز بن‌بست گردد. تصور نمایید که بافر خالی است. یک مصرف‌کننده سر رسیده و میوتکس را گرفته و سپس روی {\tt items}
+    مسدود می‌گردد. زمانیکه تولید‌کننده سر می‌رسد،‌ روی {\tt mutex} مسدود شده و سیستم وارد یک توقف تمام اعیار گردد. 
 
-This is a common error in synchronization code: any time
-you wait for a semaphore while holding a mutex, there is
-a danger of deadlock.  When you are checking a solution to
-a synchronization problem, you should check for this kind
-of deadlock.
+%This is a common error in synchronization code: any time
+%you wait for a semaphore while holding a mutex, there is
+%a danger of deadlock.  When you are checking a solution to
+%a synchronization problem, you should check for this kind
+%of deadlock.
+    این مشکل یک خطای رایج در کد همگام‌سازی است: هر زمان که برای یک سمافور منتظر می‌مانید در حالیکه یک میوتکس را در دست دارید، 
+    خطر بن‌بست وجود دارد. زمانیکه یک راه حل را نسبت به مساله همگام‌سازی بررسی می‌نمایید، باید این نوع از بن‌بست را مد نظر داشته باشید .
 
 
-\subsection{Producer-consumer with a finite buffer}
+%\subsection{Producer-consumer with a finite buffer}
+\subsection{تولیدکننده-مصرف‌کننده با یک بافر متناهی}
 
-In the example I described above, event-handling threads,
-the shared buffer is usually infinite (more accurately, it is
-bounded by system resources like physical memory and swap
-space).
+%In the example I described above, event-handling threads,
+%the shared buffer is usually infinite (more accurately, it is
+%bounded by system resources like physical memory and swap
+%space).
+    در این مثالی که بالا توضیح داده شد (نخ‌های کنترل‌کننده رویداد)، بافر اشتراکی معمولاً نامتناهی است (به طور دقیق‌تر، 
+    با منابع سیستم نظیر حافظه فیزیکی و فضای مبادله\LTRfootnote{swap space} محدود شده است).
 
-In the kernel of the operating system, though, there are
-limits on available space.  Buffers for things like disk
-requests and network packets are usually fixed size.  In
-situations like these, we have an additional synchronization
-constraint:
+%In the kernel of the operating system, though, there are
+%limits on available space.  Buffers for things like disk
+%requests and network packets are usually fixed size.  In
+%situations like these, we have an additional synchronization
+%constraint:
+    گرچه در هستهٔ سیستم‌عامل، محدودیت‌هایی روی فضای موجود نیز وجود دارد. بافرهایی نظیر درخواست دیسک یا بسته‌های شبکه معمولاً سایز ثابتی دارند. 
+    در این گونه موارد،‌ یک محدودیت همگام‌سازی دیگر نیز داریم:
 
 \begin{itemize}
 
-\item If a producer arrives when the buffer is full, it
-blocks until a consumer removes an item.
+\item 
+%If a producer arrives when the buffer is full, it
+%blocks until a consumer removes an item.
+    اگر زمانیکه بافر پر است یک تولیدکننده برسد، تا زمانیکه یک مصرف‌کننده عنصری را از بافر حذف کند مسدود می‌گردد. 
 
 \end{itemize}
 
-Assume that we know the size of the buffer.  Call it
-{\tt bufferSize}.  Since we have a semaphore that is keeping
-track of the number of items, it is tempting to write something
-like 
+%Assume that we know the size of the buffer.  Call it
+%{\tt bufferSize}.  Since we have a semaphore that is keeping
+%track of the number of items, it is tempting to write something
+%like 
+    فرض کنید که اندازه بافر را می‌دانیم. آن {\tt bufferSize} بنامید. از آنجاییکه سمافوری داریم که تعداد عناصر را نگاه می‌دارد،‌ وسوسه می‌شویم 
+    کدی به صورت زیر بنویسیم.
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Broken finite buffer solution}]{}
+%\begin{lstlisting}[title={Broken finite buffer solution}]{}
+\begin{lstlisting}[title=\rl{راه حل معیوب بافر محدود}]{}
 if items >= bufferSize:
     block()
 \end{lstlisting}
 \end{latin}
 \end{latin}
 
-But we can't.  Remember that we can't check the current
-value of a semaphore; the only operations are {\tt wait}
-and {\tt signal}.
-
-Puzzle: write producer-consumer code that handles the finite-buffer
-constraint.
+%But we can't.  Remember that we can't check the current
+%value of a semaphore; the only operations are {\tt wait}
+%and {\tt signal}.
+    امّا نمی‌توانیم چنین کنیم. به یاد آورید مقدار جاری یک سمافور را نمی‌توان بررسی نمود؛ {\tt wait} و {\tt signal} تنها  عملیات ما هستند. 
+    
+%Puzzle: write producer-consumer code that handles the finite-buffer
+%constraint.
+    معمّا: کد تولیدکننده-مصرف‌کننده‌ای بنویسید که محدودیت بافر-متناهی را مدیریت کند. 
+    
+%%%%        Sat 14 Oct 2017 05:36:04 PM +0330
 
 \clearemptydoublepage
 \subsection{Finite buffer producer-consumer hint}
