@@ -1420,7 +1420,7 @@ count = count + 1
 
 \clearemptydoublepage
 %\subsection{Mutual exclusion hint}
-\subsection{راهنمایی انحصار متقابل}
+\subsection{راهنمای انحصار متقابل}
 
 %Create a semaphore named {\tt mutex} that is initialized
 %to 1.  A value of one means that a thread may proceed and
@@ -1666,7 +1666,7 @@ critical point
 
 \clearemptydoublepage
 %\subsection {Barrier hint}
-\subsection {راهنمایی حصار}
+\subsection {راهنمای حصار}
 
 
 %For many of the problems in this book I will provide hints
@@ -1677,7 +1677,7 @@ critical point
 \begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Barrier hint}]{}
-\begin{lstlisting}[title=\rl{راهنمایی حصار}]{}
+\begin{lstlisting}[title=\rl{راهنمای حصار}]{}
 n = the number of threads
 count = 0
 mutex = Semaphore(1)
@@ -1893,7 +1893,7 @@ critical point
 
 \clearemptydoublepage
 %\subsection {Reusable barrier non-solution \#1}
-\subsection { \#1 نا راه حل حصار با قابلیت استفاده مجدد}
+\subsection{ نا راه حل حصار با قابلیت استفاده مجدد  \#1}
 
 %Once again, we will start with a simple attempt at a solution
 %and gradually improve it:
@@ -1939,7 +1939,8 @@ if count == 0: turnstile.wait()         (*\label{problem2}*)
 
 \clearemptydoublepage
 %\subsection {Reusable barrier problem \#1}
-\subsection { \#1 مساله حصار با قابلیت استفاده مجدد}
+\subsection 
+{ مساله حصار با قابلیت استفاده مجدد  \#1}
 
 %There is a problem spot at Line~\ref{problem} of the previous code.
     یک مشکلی در خط ~\ref{problem} کد قبل وجود دارد. 
@@ -1961,7 +1962,7 @@ if count == 0: turnstile.wait()         (*\label{problem2}*)
 
 \clearemptydoublepage
 %\subsection {Reusable barrier non-solution \#2}
-\subsection { \#2 نا راه حل حصار با قابلیت استفاده مجدد}
+\subsection {  نا راه حل حصار با قابلیت استفاده مجدد \#2}
 
 %This attempt fixes the previous error, but a subtle problem
 %remains.
@@ -2879,14 +2880,16 @@ if items >= bufferSize:
 %%%%        Sat 14 Oct 2017 05:36:04 PM +0330
 
 \clearemptydoublepage
-\subsection{Finite buffer producer-consumer hint}
+%\subsection{Finite buffer producer-consumer hint}
+\subsection{ راهنمای بافر محدود تولیدکننده-مصرف‌کننده }
 
-Add a second semaphore to keep track of the number of
-available spaces in the buffer.
-
+%Add a second semaphore to keep track of the number of
+%available spaces in the buffer.
+    سمافور دیگری را به منظور نگهداری تعداد فضای موجود در بافر  بیفزایید. 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Finite-buffer producer-consumer initialization}]{}
+%\begin{lstlisting}[title={Finite-buffer producer-consumer initialization}]{}
+\begin{lstlisting}[title=\rl{مقداردهی اولیه بافر محدود تولیدکننده-مصرف‌کننده}]{}
 mutex = Semaphore(1)
 items = Semaphore(0)
 spaces = Semaphore(buffer.size())
@@ -2894,19 +2897,24 @@ spaces = Semaphore(buffer.size())
 \end{latin}
 \end{latin}
 
-When a consumer removes an item it should signal {\tt spaces}.
-When a producer arrives it should decrement {\tt spaces}, at
-which point it might block until the next consumer signals.
+%When a consumer removes an item it should signal {\tt spaces}.
+%When a producer arrives it should decrement {\tt spaces}, at
+%which point it might block until the next consumer signals.
+    زمانیکه مصرف‌کننده عنصری را حذف می‌کند باید به {\tt spaces} سیگنال دهد. 
+    زمانیکه تولیدکننده می‌رسد باید {\tt spaces} را کاهش دهد، که در این نقطه ممکن است تا آن هنگامیکه مصرف‌کننده بعدی سیگنال دهد مسدود گردد. 
 
 
 \clearemptydoublepage
-\subsection{Finite buffer producer-consumer solution}
+%\subsection{Finite buffer producer-consumer solution}
+\subsection{ راه حل بافر محدود تولیدکننده-مصرف‌کننده }
 
-Here is a solution.
+%Here is a solution.
+    و امّا راه حل. 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Finite buffer consumer solution}]{}
+%\begin{lstlisting}[title={Finite buffer consumer solution}]{}
+\begin{lstlisting}[title=\rl{راه حل  بافر محدود  مصرف‌کننده}]{}
 items.wait()
 mutex.wait()
     event = buffer.get()
@@ -2918,11 +2926,13 @@ event.process()
 \end{latin}
 \end{latin}
 
-The producer code is symmetric, in a way:
+%The producer code is symmetric, in a way:
+    کد تولیدکننده  تا حدودی متقارن است: 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Finite buffer producer solution}]{}
+%\begin{lstlisting}[title={Finite buffer producer solution}]{}
+\begin{lstlisting}[title=\rl{راه حل  بافر محدود تولیدکننده}]{}
 event = waitForEvent()
 
 spaces.wait()
@@ -2934,57 +2944,76 @@ items.signal()
 \end{latin}
 \end{latin}
 
-In order to avoid deadlock, producers and consumers check
-availability before getting the mutex.  For best performance,
-they release the mutex before signaling.
+%In order to avoid deadlock, producers and consumers check
+%availability before getting the mutex.  For best performance,
+%they release the mutex before signaling.
+    به منظور اجتناب از بن‌بست، تولیدکننده‌ها و مصرف‌کننده‌ها پیش از گرفتن میوتکس موجود بودنش بررسی می‌نماید. 
+    برای بهترین کارایی، آن‌ها میوتکس را پیش از سیگنال‌دهی آزاد می‌نمایند. 
 
 
-\section{Readers-writers problem} 
+%\section{Readers-writers problem} 
+\section{مساله خوانندگان-نویسندگان}
 
-The next classical problem, called the Reader-Writer Problem, pertains
-to any situation where a data structure, database, or file system is
-read and modified by concurrent threads.  While the data structure is
-being written or modified it is often necessary to bar other threads
-from reading, in order to prevent a reader from interrupting a
-modification in progress and reading inconsistent or invalid data.
+%The next classical problem, called the Reader-Writer Problem, pertains
+%to any situation where a data structure, database, or file system is
+%read and modified by concurrent threads.  While the data structure is
+%being written or modified it is often necessary to bar other threads
+%from reading, in order to prevent a reader from interrupting a
+%modification in progress and reading inconsistent or invalid data.
+    مساله کلاسیک بعدی، که مساله خواننده-نویسنده گفته می‌شود، مربوط می‌شود به هر راه حلی که یک ساختمان‌داده، پایگاه‌داده یا سیستم فایل 
+    خوانده شده و توسط نخ‌های همروند ویرایش می‌شود. زمانیکه ساختمان‌داده نوشته شده یا ویرایش می‌گردد ضروری است که دیگر نخ‌ها
+    از خواندن منع گردند تا از دخالت در ویرایشی که در حال انجام است جلوگیری نموده و داده‌های نامعتبر یا ناپایدار خوانده نشود. 
 
-As in the producer-consumer problem, the solution is asymmetric.
-Readers and writers execute different code before entering the
-critical section.  The synchronization constraints are:
+%As in the producer-consumer problem, the solution is asymmetric.
+%Readers and writers execute different code before entering the
+%critical section.  The synchronization constraints are:
+    همانند مساله تولیدکننده‌-مصرف‌کننده،‌ راه حل مساله، متقارن است. 
+    خوانندگان و نویسندگان قبل از ورود به ناحیه بحرانی کد متفاوتی را اجرا می‌نمایند. محدودیت‌های همگام‌سازی عبارتند از: 
 
 \begin{enumerate}
 
-\item Any number of readers can be in the critical section
-simultaneously.
+\item 
+%Any number of readers can be in the critical section
+%simultaneously.
+    هر تعداد خواننده می‌تواند به صورت همزمان در ناحیه بحرانی باشد. 
 
-\item Writers must have exclusive access to the critical section.
-
+\item 
+%Writers must have exclusive access to the critical section.
+    نویسندگان باید دسترسی انحصاری به ناحیه بحرانی داشته باشند. 
 \end{enumerate}
 
-In other words, a writer cannot enter the critical section while
-any other thread (reader or writer) is there, and while the writer
-is there, no other thread may enter.
+%In other words, a writer cannot enter the critical section while
+%any other thread (reader or writer) is there, and while the writer
+%is there, no other thread may enter.
+    به عبارت دیگر، یک نویسنده تا زمانیکه نخ دیگری (اعم از خواننده یا نویسنده) در ناحیه بحرانی وجود دارد، نمی‌تواند وارد شود و زمانیکه یک نویسنده 
+    وجود داشته باشد هیچ نخی نمی‌تواند وارد شود. 
 
-The exclusion pattern here might be called {\bf categorical
-mutual exclusion}.  A thread in the critical section
-does not necessarily exclude other threads, but the presence
-of one category in the critical section excludes other
-categories.
+%The exclusion pattern here might be called {\bf categorical
+%mutual exclusion}.  A thread in the critical section
+%does not necessarily exclude other threads, but the presence
+%of one category in the critical section excludes other
+%categories.
+    الگوی انحصاری اینجا ممکن است \textbf{انحصار متقابل مطلق}\LTRfootnote{categorical mutual exclusion} نامیده شود. 
+    یک نخ در ناحیه بحرانی ضرورتاً دیگر نخ‌ها را بیرون نمی‌نماید، امّا وجود یک دستهٔ خاص در ناحیه بحرانی دسته‌های دیگر را مانع می‌گردد. 
 
-Puzzle: Use semaphores to enforce these constraints, while allowing
-readers and writers to access the data structure, and avoiding
-the possibility of deadlock.
+%Puzzle: Use semaphores to enforce these constraints, while allowing
+%readers and writers to access the data structure, and avoiding
+%the possibility of deadlock.
+    معمّا: سمافورهایی برای اعمال این محدودیت‌ها به کار برید به گونه‌ای که به خوانندگان و نویسندگان اجازه دسترسی به ساختمان‌داده را بدهد و 
+    از  وقوع بن‌بست جلوگیری نماید. 
 
 
 \clearemptydoublepage
-\subsection{Readers-writers hint}
+%\subsection{Readers-writers hint}
+\subsection{راهنمای خوانندگان-نویسندگان}
 
-Here is a set of variables that is sufficient to solve the
-problem.
+%Here is a set of variables that is sufficient to solve the problem.
+    مجموعه متغیرهایی که برای حل مساله کافی هستند در ادامه آمده است. 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Readers-writers initialization}]{}
+%\begin{lstlisting}[title={Readers-writers initialization}]{}
+\begin{lstlisting}[title=\rl{مقداردهی اولیه خوانندگان-نویسندگان}]{}
 int readers = 0
 mutex = Semaphore(1)
 roomEmpty = Semaphore(1)
@@ -2992,26 +3021,35 @@ roomEmpty = Semaphore(1)
 \end{latin}
 \end{latin}
 
-The counter {\tt readers} keeps track of how many readers
-are in the room.  {\tt mutex} protects the shared counter.
+%The counter {\tt readers} keeps track of how many readers
+%are in the room.  {\tt mutex} protects the shared counter.
+    شمارندهٔ {\tt readers} تعداد خوانندگان در اتاق را نگاه می‌دارد.  {\tt mutex} شمارندهٔ اشتراکی را حفاظت می‌نماید. 
 
-{\tt roomEmpty} is 1 if there are no threads (readers or writers) in
-the critical section, and 0 otherwise.  This demonstrates the naming
-convention I use for semaphores that indicate a condition.  In
-this convention, ``wait'' usually means ``wait for the condition to
-be true'' and ``signal'' means ``signal that the condition is true''.
+%{\tt roomEmpty} is 1 if there are no threads (readers or writers) in
+%the critical section, and 0 otherwise.  This demonstrates the naming
+%convention I use for semaphores that indicate a condition.  In
+%this convention, ``wait'' usually means ``wait for the condition to
+%be true'' and ``signal'' means ``signal that the condition is true''.
+    
+    اگر هیچ نخی (اعم از خواننده یا نویسنده) در ناحیه بحرانی نباشد {\tt roomEmpty}  مقدار \lr{\texttt{1}} دارد و الا \lr{\texttt{0}}.
+    نام {\tt roomEmpty}  بر اساس قاعده‌ای که خود قرار گذاشتیم انتخاب گردیده تا اینکه نام سمافور نشانگر شرط مورد نظر باشد. 
+    طبق  این قرارداد، معمولاً ''انتظار`` به معنای "انتظار برای بر قرار بودن شرط`` و "سیگنال`` به معنای "علامتی ده که شرط برقرار است`` می‌باشد. 
 
 
 \clearemptydoublepage
-\subsection {Readers-writers solution}
+%\subsection {Readers-writers solution}
+\subsection{راه حل خوانندگان-نویسندگان}
 
-The code for writers is simple.  If the critical section
-is empty, a writer may enter, but entering has the effect
-of excluding all other threads:
+%The code for writers is simple.  If the critical section
+%is empty, a writer may enter, but entering has the effect
+%of excluding all other threads:
+    کد نویسندگان ساده است. اگر ناحیه بحرانی خالی باشد، نویسنده می‌تواند وارد شود امّا  اثر این ورود این است که از ورود تمامی دیگر نخ‌ها ممانعت 
+    به عمل می‌آید. 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Writers solution}]{}
+%\begin{lstlisting}[title={Writers solution}]{}
+\begin{lstlisting}[title=\rl{ راه حل  نویسندگان}]{}
 roomEmpty.wait()
     critical section for writers
 roomEmpty.signal()
@@ -3019,27 +3057,35 @@ roomEmpty.signal()
 \end{latin}
 \end{latin}
 
-When the writer exits, can it be sure that the room is
-now empty?  Yes, because it knows that no other thread can
-have entered while it was there.
+%When the writer exits, can it be sure that the room is
+%now empty?  Yes, because it knows that no other thread can
+%have entered while it was there.
+    آیا نویسنده آن زمانیکه از اتاق خارج می‌شود، می‌تواند از خالی بودن آن مطمئن باشد؟
+    بله، زیرا که می‌داند هیچ نخی نمی‌تواند تا آن زمان که آنجا است وارد شود. 
 
-The code for readers is similar to the barrier code we
-saw in the previous section.  We keep track of the number
-of readers in the room so that we can give a special assignment
-to the first to arrive and the last to leave.
+%The code for readers is similar to the barrier code we
+%saw in the previous section.  We keep track of the number
+%of readers in the room so that we can give a special assignment
+%to the first to arrive and the last to leave.
+    کد خوانندگان مشابه کد حصار است که در بخش قبل دیدیم. تعداد خواننده‌هایی که در اتاق هستند را نگاه می‌داریم لذا می‌توانیم به 
+    اولین خواننده‌ای که وارد می‌شود و آخرین خواننده‌ای که خارج می‌شود دستوراتی خاص را بدهیم. 
 
-The first reader that arrives has to wait for {\tt roomEmpty}.
-If the room is empty, then the reader proceeds and, at the
-same time, bars writers.  Subsequent readers can still enter
-because none of them will try to wait on {\tt roomEmpty}.
+%The first reader that arrives has to wait for {\tt roomEmpty}.
+%If the room is empty, then the reader proceeds and, at the
+%same time, bars writers.  Subsequent readers can still enter
+%because none of them will try to wait on {\tt roomEmpty}.
+    اولین خواننده‌ای که می‌رسد باید منتظر  {\tt roomEmpty} بماند. اگر اتاق خالی باشد،‌ خواننده می‌تواند وارد شده و در همان زمان 
+    ورود نویسندگان را ممنوع نماید. خوانندگان بعدی هنوز می‌توانند وارد شوند زیرا که هیچ کدام از آنان منتظر  {\tt roomEmpty} نخواهند ماند. 
 
-If a reader arrives while there is a writer in the room,
-it waits on {\tt roomEmpty}.  Since it holds the mutex, any
-subsequent readers queue on {\tt mutex}.
-
+%If a reader arrives while there is a writer in the room,
+%it waits on {\tt roomEmpty}.  Since it holds the mutex, any
+%subsequent readers queue on {\tt mutex}.
+    اگر زمانیکه یک نویسنده در اتاق است خواننده‌ای برسد روی {\tt roomEmpty} منتظر می‌ماند. از آنجاییکه 
+    میوتکس را در اختیار گرفته، هر خوانندهٔ بعدی روی  {\tt mutex} تشکیل صف می‌دهند. 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Readers solution}]{}
+%\begin{lstlisting}[title={Readers solution}]{}
+\begin{lstlisting}[title=\rl{راه حل خوانندگان}]{}
 mutex.wait()
     readers += 1
     if readers == 1:
@@ -3057,38 +3103,54 @@ mutex.signal()
 \end{latin}
 \end{latin}
 
-The code after the critical section is similar.  The last reader
-to leave the room turns out the lights---that is, it signals
-{\tt roomEmpty}, possibly allowing a waiting writer to enter.
+%The code after the critical section is similar.  The last reader
+%to leave the room turns out the lights---that is, it signals
+%{\tt roomEmpty}, possibly allowing a waiting writer to enter.
+    کد پس از ناحیه بحرانی یکسان است. آخرین خواننده‌ای که اتاق را ترک می‌نماید لامپ خاموش کرده --بدین معنی که به {\tt roomEmpty}
+    سیگنال می‌دهد-- که ورود نویسندهٔ منتظر را ممکن می‌سازد. 
 
-Again, to demonstrate that this code is correct, it is useful
-to assert and demonstrate a number of claims about how the program
-must behave.  Can you convince yourself that the following are
-true?
+%Again, to demonstrate that this code is correct, it is useful
+%to assert and demonstrate a number of claims about how the program
+%must behave.  Can you convince yourself that the following are
+%true?
+    دوباره، برای اینکه نشان دهیم این کد درست است، مفید است 
+    تعدادی از ادعاهایی که درباره نحوهٔ رفتار برنامه داریم را شرح داده و ثابت کنیم. 
+    آیا می‌توانید خودتان را مجاب نمایید که آنچه در ادامه آمده صحیح است؟
 
 \begin{itemize}
 
-\item Only one reader can queue waiting for {\tt roomEmpty},
-but several writers might be queued.
+\item 
+%Only one reader can queue waiting for {\tt roomEmpty},
+%but several writers might be queued.
+    فقط یک خواننده می‌تواند روی {\tt roomEmpty} در صف قرار گیرد امّا چندین نویسنده ممکن است در صف قرار گیرند. 
 
-\item When a reader signals {\tt roomEmpty} the room must
-be empty.
-
+\item 
+%When a reader signals {\tt roomEmpty} the room must
+%be empty.
+    زمانیکه یک خواننده به {\tt roomEmpty} سیگنال می‌دهد اتاق باید خالی باشد. 
 \end{itemize}
 
-Patterns similar to this reader code are common: the first thread into
-a section locks a semaphore (or queues) and the last one out unlocks
-it.  In fact, it is so common we should give it a name and wrap it up
-in an object.
+%%Sun 15 Oct 2017 05:07:03 PM +0330
 
-The name of the pattern is {\bf Lightswitch}, by analogy with the
-pattern where the first person into a room turns on the light (locks
-the mutex) and the last one out turns it off (unlocks the mutex).
-Here is a class definition for a Lightswitch:
+%Patterns similar to this reader code are common: the first thread into
+%a section locks a semaphore (or queues) and the last one out unlocks
+%it.  In fact, it is so common we should give it a name and wrap it up
+%in an object.
 
+    الگوهای مشابه این کد خواننده رایج هستند: اولین نخ وارد شده به بخش، سمافور (یا صف‌ها) را قفل نموده و آخرین نخ خروجی آن را باز می‌نماید. 
+    در واقع، این کد اینقدر رایج است که بهتر است به آن نامی دهیم و آن را به صورت یک شیء بسته‌بندی نماییم. 
+    
+%The name of the pattern is {\bf Lightswitch}, by analogy with the
+%pattern where the first person into a room turns on the light (locks
+%the mutex) and the last one out turns it off (unlocks the mutex).
+%Here is a class definition for a Lightswitch:
+    نام این الگو {\bf Lightswitch}\footnote{کلید برق} است، شبیه به الگویی که اولین نفری که وارد اتاق می‌شود لامپ را روشن می‌کند  (میوتکس
+    را قفل می‌نماید) و آخرین نفری که از اتاق خارج می‌شود آن را خاموش می‌نماید (میوتکس را باز می‌کند).
+    در ادامه تعریف کلاس {\bf Lightswitch} آمده است: 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Lightswitch definition}]{}
+%\begin{lstlisting}[title={Lightswitch definition}]{}
+\begin{lstlisting}[title={\rl{تعریف} Lightswitch }]{}
 class Lightswitch:
     def __init__(self):
         self.counter = 0
@@ -3111,38 +3173,52 @@ class Lightswitch:
 \end{latin}
 \end{latin}
 
-{\tt lock} takes one parameter, a semaphore that it will check and
-possibly hold.  If the semaphore is locked, the calling thread blocks
-on {\tt semaphore} and all subsequent threads block on {\tt
-self.mutex}.  When the semaphore is unlocked, the first waiting thread
-locks it again and all waiting threads proceed.
+%{\tt lock} takes one parameter, a semaphore that it will check and
+%possibly hold.  If the semaphore is locked, the calling thread blocks
+%on {\tt semaphore} and all subsequent threads block on {\tt
+%self.mutex}.  When the semaphore is unlocked, the first waiting thread
+%locks it again and all waiting threads proceed.    
+    {\tt lock} 
+    یک سمافور را به عنوان پارامتر دریافت می‌دارد و آن را چک نموده و حتی ممکن آن را بگیرد. 
+    اگر سمافور قفل باشد، نخ فراخواننده روی  {\tt semaphore} مسدود گردیده و تمامی نخ‌های بعدی روی {\tt self.mutex} مسدود می‌گردند. 
+    زمانیکه سمافور باز هست، اولین نخ در حال انتظار مجدداً  آن را قفل نموده و تمامی نخ‌های در حال انتظار ادامه می‌یابند. 
 
-If the semaphore is initially unlocked, the first thread locks it
-and all subsequent threads proceed.
+%If the semaphore is initially unlocked, the first thread locks it
+%and all subsequent threads proceed.
+    اگر سمافور در ابتدا باز باشد، اولین نخ آن را قفل نموده و مابقی نخ‌ها ادامه می‌یابند. 
 
-{\tt unlock} has no effect until every thread that called {\tt lock}
-also calls {\tt unlock}.  When the last thread calls {\tt unlock}, it
-unlocks the semaphore.
+%{\tt unlock} has no effect until every thread that called {\tt lock}
+%also calls {\tt unlock}.  When the last thread calls {\tt unlock}, it
+%unlocks the semaphore.
+{\tt unlock} 
+    تا زمانیکه تمامی نخ‌هایی که {\tt lock} را فراخوانده‌اند {\tt unlock} را نیز فرا خوانند هیچ اثری نخواهد داشت. زمانیکه آخرین نخ {\tt unlock} را 
+    فراخواند سمافور را باز می‌نماید. 
 
 \newpage
-Using these functions, we can rewrite the reader code
-more simply:
+%Using these functions, we can rewrite the reader code
+%more simply:
+    با کمک این توابع، می‌توانیم کد خواننده را کمی ساده‌تر بازنویسی نماییم: 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Readers-writers initialization}]{}
+%\begin{lstlisting}[title={Readers-writers initialization}]{}
+\begin{lstlisting}[title={مقدار دهی اولیه خوانندگان-نویسندگان}]{}
 readLightswitch = Lightswitch()
 roomEmpty = Semaphore(1)
 \end{lstlisting}
 \end{latin}
 \end{latin}
 
-{\tt readLightswitch} is a shared {\tt Lightswitch} object whose counter
-is initially zero.
+%{\tt readLightswitch} is a shared {\tt Lightswitch} object whose counter
+%is initially zero.
+    {\tt readLightswitch} 
+    یک شیء  {\tt Lightswitch} اشتراکی است که مقدار شمارنده آن در ابتدا صفر است. 
+
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Readers-writers solution (reader)}]{}
+%\begin{lstlisting}[title={Readers-writers solution (reader)}]{}
+\begin{lstlisting}[title={راه حل خوانندگان-نویسندگان (خواننده)}]{}
 readLightswitch.lock(roomEmpty)
 # critical section
 readLightswitch.unlock(roomEmpty)
@@ -3150,58 +3226,82 @@ readLightswitch.unlock(roomEmpty)
 \end{latin}
 \end{latin}
 
-The code for writers is unchanged.
+%The code for writers is unchanged.
+    کد نویسنده بدون تغییر باقی می‌ماند. 
 
-It would also be possible to store a reference to {\tt roomEmpty}
-as an attribute of the Lightswitch, rather than pass it as a parameter
-to {\tt lock} and {\tt unlock}.  This alternative would be less
-error-prone, but I think it improves readability if each invocation
-of {\tt lock} and {\tt unlocks} specifies the semaphore it operates on.
+%It would also be possible to store a reference to {\tt roomEmpty}
+%as an attribute of the Lightswitch, rather than pass it as a parameter
+%to {\tt lock} and {\tt unlock}.  This alternative would be less
+%error-prone, but I think it improves readability if each invocation
+%of {\tt lock} and {\tt unlocks} specifies the semaphore it operates on.
+%% alen downy: unlocks -> unlock
+    همچنین این امکان وجود دارد که بجای ارسال {\tt roomEmpty} به عنوان یک پارامتر به {\tt lock}و  {\tt unlock}، 
+    ارجاعی  به {\tt roomEmpty} را به عنوان یک خصیصهٔ‌ \lr{Lightswitch} ذخیره نمود. این رهیافت جایگزین، کمتر مستعدّ خطا است،
+    امّا تصور می‌کنم اگر هر یک از فراخوانی‌های {\tt lock} و  {\tt unlock} سمافوری که روی آن عمل می‌کند را مشخص نماید خوانایی افزایش می‌یابد. 
+    
+%\subsection{Starvation}
+\subsection{قحطی}
 
-\subsection{Starvation}
+%In the previous solution, is there any danger of deadlock?
+%In order for a deadlock to occur, it must be possible for a
+%thread to wait on a semaphore while holding another, and thereby
+%prevent itself from being signaled.
+    آیا خطر بن‌بست در راه حل قبل وجود دارد؟ 
+    برای اینکه بن‌بستی رخ دهد، باید این امکان برای یک نخ وجود داشته باشد که بر  روی یک سمافور منتظر بماند در حالیکه سمافور دیگر را در اختیار دارد و 
+    به موجب آن مانع از این شود که خودش سیگنالی دریافت نماید. 
 
-In the previous solution, is there any danger of deadlock?
-In order for a deadlock to occur, it must be possible for a
-thread to wait on a semaphore while holding another, and thereby
-prevent itself from being signaled.
+%In this example, deadlock is not possible, but there is a related
+%problem that is almost as bad: it is possible for a writer to
+%starve.
+    در این مثال، بن‌بست ممکن نیست، امّا یک مشکل مرتبط وجود دارد که تقریبا به همان اندازه بد است:‌ ممکن است نویسنده دچار قحطی شود. 
 
-In this example, deadlock is not possible, but there is a related
-problem that is almost as bad: it is possible for a writer to
-starve.
+%If a writer arrives while there are readers in the critical section,
+%it might wait in queue forever while readers come and go.  As long
+%as a new reader arrives before the last of the current readers
+%departs, there will always be at least one reader in the room.
+    اگر نویسنده‌ای آن زمان که چندین خواننده در ناحیه بحرانی قرار دارند سر برسد ممکن است برای همیشه در صف منتظر بماند در حالیکه خوانندگان 
+    می‌آیند و می‌روند. تا زمانیکه یک خواننده جدید پیش از اینکه آخرین خواننده از خواننده‌های جاری خارج شود برسد، همیشه حداقل یک خواننده در اتاق 
+    وجود خواهد داشت. 
+    
 
-If a writer arrives while there are readers in the critical section,
-it might wait in queue forever while readers come and go.  As long
-as a new reader arrives before the last of the current readers
-departs, there will always be at least one reader in the room.
+%This situation is not a deadlock, because some threads are making
+%progress, but it is not exactly desirable.  A program like this
+%might work as long as the load on the system is low, because then there
+%are plenty of opportunities for the writers.  But as the load
+%increases the behavior of the system would deteriorate quickly
+%(at least from the point of view of writers).
+    این وضعیت یک بن‌بست نیست زیرا که برخی نخ‌ها در حال پیشروی هستند، امّا این به طور کامل مطلوب نیست. 
+    برنامه‌ای نظیر این ممکن است تا زمانیکه بار روی سیستم کم است کار کند، زیرا که فرصت‌های زیادی برای نویسندگان وجود دارد. 
+    امّا همانطوری که بار سیسیتم افزایش یابد رفتار سیستم ممکن است به سرعت به زوال گراید (حداقل از دید نویسندگان). 
 
-This situation is not a deadlock, because some threads are making
-progress, but it is not exactly desirable.  A program like this
-might work as long as the load on the system is low, because then there
-are plenty of opportunities for the writers.  But as the load
-increases the behavior of the system would deteriorate quickly
-(at least from the point of view of writers).
-
-Puzzle: Extend this solution so that when a writer arrives,
-the existing readers can finish, but no additional readers
-may enter.
+%Puzzle: Extend this solution so that when a writer arrives,
+%the existing readers can finish, but no additional readers
+%may enter.
+    معمّا: این راه حل را به گونه‌ای توسعه دهید تا زمانیکه یک نویسنده می‌رسد، خوانندگان موجود بتوانند خاتمه یابند ولی هیچ خوانندهٔ جدیدی نتواند وارد شود. 
 
 
 \clearemptydoublepage
-\subsection {No-starve readers-writers hint}  
+%\subsection {No-starve readers-writers hint}  
+\subsection {راهنمایی خوانندگان-نویسندگان بدون قحطی}  
 
-Here's a hint.  You can add a turnstile for the readers and
-allow writers to lock it.  The writers have to pass through
-the same turnstile, but they should check the {\tt roomEmpty}
-semaphore while they are inside the turnstile.  If a writer
-gets stuck in the turnstile it has the effect of forcing the
-readers to queue at the turnstile.  Then when the last reader
-leaves the critical section, we are guaranteed that at least
-one writer enters next (before any of the queued readers can
-proceed).
+%Here's a hint.  You can add a turnstile for the readers and
+%allow writers to lock it.  The writers have to pass through
+%the same turnstile, but they should check the {\tt roomEmpty}
+%semaphore while they are inside the turnstile.  If a writer
+%gets stuck in the turnstile it has the effect of forcing the
+%readers to queue at the turnstile.  Then when the last reader
+%leaves the critical section, we are guaranteed that at least
+%one writer enters next (before any of the queued readers can
+%proceed).
+    راهنمایی در ادامه آمده است. می‌توانید یک ترن‌استایل برای خوانندگان بیفزایید و به نویسندگان اجازه دهید آن را قفل نمایند. 
+    نویسندگان باید از طریق ترن‌استایل مشابهی گذر نمایند، امّا تا زمانیکه داخل آن هستند باید سمافور {\tt roomEmpty} را بررسی نمایند. 
+    اگر یک نویسنده در ترن‌استایل گیر افتد اثر آن این است که خوانندگان را مجبور می‌نماید روی ترن‌استایل تشکیل صف دهند. سپس زمانیکه آخرین 
+    خواننده ناحیه بحرانی را ترک نمود، می‌توانیم مطمئن باشیم که حداقل یک نویسنده در ادامه وارد می‌شود (قبل از آنکه خوانندگان در صف بتوانند ادامه یابند).
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={No-starve readers-writers initialization}]{}
+%\begin{lstlisting}[title={No-starve readers-writers initialization}]{}
+\begin{lstlisting}[title={مقدار دهی اولیه خوانندگان-نویسندگان بدون قحطی}]{}
 readSwitch = Lightswitch()
 roomEmpty = Semaphore(1)
 turnstile = Semaphore(1)
@@ -3209,22 +3309,30 @@ turnstile = Semaphore(1)
 \end{latin}
 \end{latin}
 
-{\tt readSwitch} keeps track of how many readers are in the room;
-it locks {\tt roomEmpty} when the first reader
-enters and unlocks it when the last reader exits.
+%{\tt readSwitch} keeps track of how many readers are in the room;
+%it locks {\tt roomEmpty} when the first reader
+%enters and unlocks it when the last reader exits.
+    {\tt readSwitch} 
+    تعداد خوانندگان موجود در اتاق را نگاه می‌دارد؛ زمانیکه اولین خواننده وارد شد  {\tt roomEmpty} را قفل نموده و زمانیکه آخرین خواننده خارج شد 
+    آن را باز می‌نماید. 
 
-{\tt turnstile} is a turnstile for readers and a 
-mutex for writers.
+%{\tt turnstile} is a turnstile for readers and a 
+%mutex for writers.
+    {\tt turnstile}
+    برای خواننده‌ها یک ترن‌استایل  و برای نویسندگان یک میوتکس است. 
 
 
 \clearemptydoublepage
-\subsection {No-starve readers-writers solution}  
+%\subsection {No-starve readers-writers solution}
+\subsection{راه حل خوانندگان-نویسندگان بدون قحطی}  
 
-Here is the writer code:
+%Here is the writer code:
+    کد نویسنده در ادامه آمده است: 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={No-starve writer solution}]{}
+%\begin{lstlisting}[title={No-starve writer solution}]{}
+\begin{lstlisting}[title={راه حل نویسنده بدون قحطی}]{}
 turnstile.wait()
     roomEmpty.wait()           (* \label{stuck} *)
     # critical section for writers
@@ -3235,14 +3343,17 @@ roomEmpty.signal()
 \end{latin}
 \end{latin}
 
-If a writer arrives while there are readers in the room, it
-will block at Line~\ref{stuck}, which means that the turnstile will
-be locked.  This will bar readers from entering while a writer
-is queued.  Here is the reader code:
+%If a writer arrives while there are readers in the room, it
+%will block at Line~\ref{stuck}, which means that the turnstile will
+%be locked.  This will bar readers from entering while a writer
+%is queued.  Here is the reader code:
+    اگر یک نویسنده آن زمانیکه چندین خواننده در اتاق وجود دارد برسد، در خط~\ref{stuck} مسدود می‌گردد، بدین معنی که ترن‌استایل قفل شده است. 
+    این کار، مانع ورود خوانندگان تا زمانیکه یک نویسنده در صف است می‌گردد. کد خواننده در ادامه آمده است: 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={No-starve reader solution}]{}
+%\begin{lstlisting}[title={No-starve reader solution}]{}
+\begin{lstlisting}[title={راه حل خواننده بدون قطحی}]{}
 turnstile.wait()
 turnstile.signal()
 
@@ -3253,50 +3364,70 @@ readSwitch.unlock(roomEmpty)
 \end{latin}
 \end{latin}
 
-When the last reader leaves, it signals {\tt roomEmpty},
-unblocking the waiting writer.  The writer immediately
-enters its critical section, since none of the waiting
-readers can pass the turnstile.
+%When the last reader leaves, it signals {\tt roomEmpty},
+%unblocking the waiting writer.  The writer immediately
+%enters its critical section, since none of the waiting
+%readers can pass the turnstile.
+    زمانیکه آخرین خواننده خارج می‌شود به {\tt roomEmpty} سیگنال داده و نویسنده در حال انتظار را رفع انسداد می‌نماید. 
+    از آنجایی که هیچکدام از خوانندگان در حال انتظار نمی‌توانند از ترن‌استایل بگذرند، نویسنده بلافاصله وارد ناحیهٔ بحرانی خودش می‌شود. 
 
-When the writer exits it signals {\tt turnstile}, which unblocks a
-waiting thread, which could be a reader or a writer.  Thus, this
-solution guarantees that at least one writer gets to proceed, but it
-is still possible for a reader to enter while there are writers
-queued.  
+%When the writer exits it signals {\tt turnstile}, which unblocks a
+%waiting thread, which could be a reader or a writer.  Thus, this
+%solution guarantees that at least one writer gets to proceed, but it
+%is still possible for a reader to enter while there are writers
+%queued.  
+    زمانیکه نویسنده خارج می‌شود  {\tt turnstile} را سیگنال می‌دهد که نخ‌ در حال انتظار اعم از خواننده یا نویسنده را رفع انسداد می‌نماید. 
+    بنابراین، این راه حل تضمین می‌نماید که حداقل یک نویسنده می‌تواند ادامه یابد، امّا هنوز این امکان برای یک خواننده وجود دارد آن زمان که 
+    نویسندگانی در صف وجود دارند وارد شود. 
+    
+%Depending on the application, it might be a good idea to
+%give more priority to writers.  For example, if writers are making
+%time-critical updates to a data structure, it is best
+%to minimize the number of readers that see the old data before
+%the writer has a chance to proceed.
+    بسته به کاربرد، اعطای اولویت بیشتر به نویسندگان ممکن ایده خوبی باشد. برای مثال، اگر خوانندگان ضرب العجلی در بروزرسانی‌های خود 
+    نسبت به یک ساختمان داده‌ داشته باشند 
+    بهتر است که تعداد خوانندگانی که داده قدیمی را پیش از اینکه نویسنده تغییر خود را اعمال نمایند می‌بیند کمینه باشند. 
+%%%ترجمه فوق باید اصلاح شود. 
 
-Depending on the application, it might be a good idea to
-give more priority to writers.  For example, if writers are making
-time-critical updates to a data structure, it is best
-to minimize the number of readers that see the old data before
-the writer has a chance to proceed.
+%In general, though, it is up to the scheduler, not the programmer,
+%to choose which waiting thread to unblock.
+%Some schedulers use a first-in-first-out queue, which means
+%that threads are unblocked in the same order they queued.
+%Other schedulers choose at random, or according to
+%a priority scheme based on the properties of the waiting
+%threads.
+    گرچه عموماً، بر عهده زمان‌بند و نه برنامه‌نویس است که تعیین نماید کدام نخ در حال انتظار رفع انسداد گردد. 
+    برخی زمان‌بندها از یک صف \lr{FIFO}\LTRfootnote{First-In-First-Out} استفاده می‌کند و بدین معنی است که نخ‌ها بهمان ترتیبی که 
+    وارد صف شده‌اند رفع انسداد می‌شود. در دیگر زمان‌بندها، انتخاب ممکن است به صورت تصادفی، یا بر اساس الگوی اولویت  
+    بر مبنای اولویت نخ‌های در حال انتظار باشد. 
 
-In general, though, it is up to the scheduler, not the programmer,
-to choose which waiting thread to unblock.
-Some schedulers use a first-in-first-out queue, which means
-that threads are unblocked in the same order they queued.
-Other schedulers choose at random, or according to
-a priority scheme based on the properties of the waiting
-threads.
+%If your programming environment makes it possible to give
+%some threads priority over others, then that is a simple way
+%to address this issue.  If not, you will have to find another
+%way.
+    اگر محیط برنامه‌نویسی شما این امکان را بدهد که برخی نخ‌ها را نسبت به مابقی اولویت دهید، آنگاه برای رسیدگی به مساله فوق، راه آسان استفاده از همین امکان است. 
+    و اگر محیط برنامه‌نویسی چنین امکانی را به شما ندهد باید بدنبال راه حل دیگری باشید. 
 
-If your programming environment makes it possible to give
-some threads priority over others, then that is a simple way
-to address this issue.  If not, you will have to find another
-way.
-
-Puzzle: Write a solution to the readers-writers problem that gives
-priority to writers.  That is, once a writer arrives, no readers
-should be allowed to enter until all writers have left the system.
+%Puzzle: Write a solution to the readers-writers problem that gives
+%priority to writers.  That is, once a writer arrives, no readers
+%should be allowed to enter until all writers have left the system.
+    معمّا: راه حلی برای مساله خوانندگان-نویسندگان ارائه دهید که اولویت را به نویسندگان  دهد. به این معنی که اگر یک نویسنده رسید، هیچ خواننده‌ای  
+    مجاز به ورود نباشد تا آن زمان که تمامی نویسندگان سیستم را ترک گفته باشند. 
 
 
 \clearemptydoublepage
-\subsection{Writer-priority readers-writers hint}
+%\subsection{Writer-priority readers-writers hint}
+\subsection{راهنمایی خوانندگان-نویسندگان با اولویت نویسنده}
 
-As usual, the hint is in the form of variables
-used in the solution.
+%As usual, the hint is in the form of variables
+%used in the solution.
+    طبق معمول،‌ راهنمایی در قالب متغیرهای مورد استفاده در راه حل آمده است. 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Writer-priority readers-writers initialization}]{}
+%\begin{lstlisting}[title={Writer-priority readers-writers initialization}]{}
+\begin{lstlisting}[title={مقداردهی اولیه خوانندگان-نویسندگان با اولویت نویسنده}]{}
 readSwitch = Lightswitch()
 writeSwitch = Lightswitch()
 noReaders = Semaphore(1)
@@ -3304,6 +3435,8 @@ noWriters = Semaphore(1)
 \end{lstlisting}
 \end{latin}
 \end{latin}
+
+%%%    Mon 23 Oct 2017 06:38:02 PM +0330
 
 
 \clearemptydoublepage
