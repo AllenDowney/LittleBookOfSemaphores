@@ -2993,7 +2993,7 @@ items.signal()
 %does not necessarily exclude other threads, but the presence
 %of one category in the critical section excludes other
 %categories.
-    الگوی انحصاری اینجا ممکن است \textbf{انحصار متقابل مطلق}\LTRfootnote{categorical mutual exclusion} نامیده شود. 
+    الگوی انحصاری اینجا ممکن است \textbf{انحصار متقابل دسته‌ای}\LTRfootnote{categorical mutual exclusion} نامیده شود. 
     یک نخ در ناحیه بحرانی ضرورتاً دیگر نخ‌ها را بیرون نمی‌نماید، امّا وجود یک دستهٔ خاص در ناحیه بحرانی دسته‌های دیگر را مانع می‌گردد. 
 
 %Puzzle: Use semaphores to enforce these constraints, while allowing
@@ -3440,13 +3440,17 @@ noWriters = Semaphore(1)
 
 
 \clearemptydoublepage
-\subsection{Writer-priority readers-writers solution}
+%\subsection{Writer-priority readers-writers solution}
+\subsection{راه حل نویسندگان-خوانندگان با اولویت نویسنده}
 
-Here is the reader code:
+
+%Here is the reader code:
+    کد خواننده در ادامه آمده است:
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Writer-priority reader solution}]{}
+%\begin{lstlisting}[title={Writer-priority reader solution}]{}
+\begin{lstlisting}[title={راه حل خواننده با اولویت نویسنده}]{}
 noReaders.wait()
     readSwitch.lock(noWriters)
 noReaders.signal()
@@ -3458,19 +3462,24 @@ readSwitch.unlock(noWriters)
 \end{latin}
 \end{latin}
 
-If a reader is in the critical section, it holds
-{\tt noWriters}, but it doesn't hold {\tt noReaders}.
-Thus if a writer arrives it can lock {\tt noReaders},
-which will cause subsequent readers to queue.
+%If a reader is in the critical section, it holds
+%{\tt noWriters}, but it doesn't hold {\tt noReaders}.
+%Thus if a writer arrives it can lock {\tt noReaders},
+%which will cause subsequent readers to queue.
+    اگر یک خواننده درون ناحیه بحرانی باشد، {\tt noWriters} را در اختیار می‌گیرد، امّا {\tt noReaders} را خیر. 
+    بنابراین اگر یک نویسنده برسد می‌تواند می‌تواند {\tt noReaders} را قفل نماید که سبب در صف قرار گرفتن خوانندگان بعدی می‌گردد. 
 
-When the last reader exits, it signals {\tt noWriters},
-allowing any queued writers to proceed.
+%When the last reader exits, it signals {\tt noWriters},
+%allowing any queued writers to proceed.
+    زمانیکه آخرین خواننده خارج می‌شود، با سیگنال دهی به {\tt noWriters} اجازه می‌دهد تا نویسندگانی که در صف قرار گرفته‌اند بکار خود ادامه دهند. 
 
-The writer code:
+%The writer code:
+    کد نویسنده: 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Writer-priority writer solution}]{}
+%\begin{lstlisting}[title={Writer-priority writer solution}]{}
+\begin{lstlisting}[title={راه حل نویسنده با اولویت نویسنده}]{}
 writeSwitch.lock(noReaders)
     noWriters.wait()
         # critical section for writers
@@ -3480,102 +3489,140 @@ writeSwitch.unlock(noReaders)
 \end{latin}
 \end{latin}
 
-When a writer is in the critical section it holds both
-{\tt noReaders} and {\tt noWriters}.  This has the
-(relatively obvious) effect of insuring that there are
-no readers and no other writers in the critical section.
-In addition, {\tt writeSwitch} has the (less obvious) effect of
-allowing multiple writers to queue on {\tt noWriters},
-but keeping {\tt noReaders} locked while they are
-there.  Thus, many writers can pass through the critical
-section without ever signaling
-{\tt noReaders}.  Only when the last writer exits can
-the readers enter.
+%When a writer is in the critical section it holds both
+%{\tt noReaders} and {\tt noWriters}.  This has the
+%(relatively obvious) effect of insuring that there are
+%no readers and no other writers in the critical section.
+%In addition, {\tt writeSwitch} has the (less obvious) effect of
+%allowing multiple writers to queue on {\tt noWriters},
+%but keeping {\tt noReaders} locked while they are
+%there.  Thus, many writers can pass through the critical
+%section without ever signaling
+%{\tt noReaders}.  Only when the last writer exits can
+%the readers enter.
+    زمانیکه یک نویسنده در ناحیه بحرانی است هر دوی {\tt noReaders} و {\tt noWriters} را در اختیار می‌گیرد. 
+    نسبتاً واضح است که اثر این، تضمین نمودن این است که هیچ خواننده و نویسندهٔ دیگری در ناحیه بحرانی قرار ندارد. 
+    به علاوه، اثر کمتر واضح این است که {\tt writeSwitch} به چندین نویسنده اجازه می‌دهد تا روی {\tt noWriters} در صف قرار گیرند،‌ 
+    امّا تا زمانیکه نویسندگان حضور دارند،   {\tt noReaders} را قفل نگاه می‌دارد. 
+    فقط زمانیکه آخرین نویسنده خارج می‌شود، خوانندگان می‌توانند وارد شوند. 
 
-Of course, a drawback of this solution is that now it is
-possible for {\em readers} to starve (or at least face long
-delays).  For some applications it might be better to get
-obsolete data with predictable turnaround times.
-
+%Of course, a drawback of this solution is that now it is
+%possible for {\em readers} to starve (or at least face long
+%delays).  For some applications it might be better to get
+%obsolete data with predictable turnaround times.
+    البته، یک اشکال این راه حل این است که اکنون ممکن است خوانندگان دچار قحطی شوند (یا حداقل با تاخیر طولانی مواجه شوند).  
+    برای برخی کاربردها شاید بهتر باشد که داده‌های قدیمی با زمان‌های بازگشتِ پیش‌بینی‌ پذیر، اخذ گردد. 
 
 
 \clearemptydoublepage
-\section{No-starve mutex}
+%\section{No-starve mutex}
+\section{میوتکس بدون قحطی}
 \label{props}
 
-In the previous section, we addressed what I'll call
-{\bf categorical starvation}, in which one category of threads
-(readers) allows another category (writers) to starve.
-At a more basic level, we have to address the issue of
-{\bf thread starvation}, which is the possibility that one
-thread might wait indefinitely while others proceed.
+%In the previous section, we addressed what I'll call
+%{\bf categorical starvation}, in which one category of threads
+%(readers) allows another category (writers) to starve.
+%At a more basic level, we have to address the issue of
+%{\bf thread starvation}, which is the possibility that one
+%thread might wait indefinitely while others proceed.
+    در بخش قبل، با چیزی که من آن را \textbf{قحطی دسته‌ای} نامیدم مواجه شدیم، که در آن یک گروه از نخ‌ها (خوانندگان) 
+    سبب قحطی دسته دیگر (نویسندگان) می‌گردد. در  سطحی ابتدایی‌تر،‌ باید این موضوع \textbf{قحطی نخ} را بررسی نماییم (امکان 
+    اینکه یک نخ در حالیکه مابقی نخ‌ها به کار خود ادامه می‌دهند، به صورت نامتناهی منتظر بماند). 
+    
+    
+%For most concurrent applications, starvation is unacceptable,
+%so we enforce the requirement of {\bf bounded waiting}, which
+%means that the time a thread waits on a semaphore (or anywhere
+%else, for that matter) has to be provably finite.
+    برای غالب برنامه‌های کاربردی همروند، قحطی پذیرفتی نیست، لذا باید ضرورت \textbf{انتظار محدود}\LTRfootnote{bounded waiting}
+    را اعمال کنیم، بدین معنی که زمان انتظار نخ بر روی یک سمافور (یا هر جای دیگری به همان منظور) باید ثبوتاً متناهی باشد. 
 
-For most concurrent applications, starvation is unacceptable,
-so we enforce the requirement of {\bf bounded waiting}, which
-means that the time a thread waits on a semaphore (or anywhere
-else, for that matter) has to be provably finite.
+%In part, starvation is the responsibility of the scheduler.
+%Whenever multiple threads are ready to run, the scheduler decides
+%which one or, on a parallel processor, which set of threads gets
+%to run.  If a thread is never scheduled, then it will starve,
+%no matter what we do with semaphores.
+    تا حدّی، زمان‌بند مسبب قحطی است. هر زمان که چندین نخ آمادهٔ اجرا هستند، زمان‌بند تصمیم می‌گیرد که کدام یک، در یک پردازنده موازی،‌ کدام 
+    مجموعه از نخ‌ها، اجرا شوند. اگر یک نخ هرگز زمانبندی نشود آنگاه دچار قطحی خواهد شد، بدون توجه به اینکه ما با سمافورها چه می‌کنیم. 
 
-In part, starvation is the responsibility of the scheduler.
-Whenever multiple threads are ready to run, the scheduler decides
-which one or, on a parallel processor, which set of threads gets
-to run.  If a thread is never scheduled, then it will starve,
-no matter what we do with semaphores.
-
-So in order to say anything about starvation, we have to start
-with some assumptions about the scheduler.  If we are willing
-to make a strong assumption, we can assume that the scheduler
-uses one of the many algorithms that can be proven to enforce
-bounded waiting.  If we don't know what algorithm the scheduler
-uses, then we can get by with a weaker assumption:
-
-\begin{quote}
-Property 1: if there is only one thread that is ready to
-run, the scheduler has to let it run.
-\end{quote}
-
-If we can assume Property 1, then we can build a system
-that is provably free of starvation.  For example, if there
-are a finite number of threads, then any program that contains
-a barrier cannot starve, since eventually all threads but one
-will be waiting at the barrier, at which point the last thread
-has to run.
-
-In general, though, it is non-trivial to write programs that
-are free from starvation unless we make the stronger
-assumption:
+%So in order to say anything about starvation, we have to start
+%with some assumptions about the scheduler.  If we are willing
+%to make a strong assumption, we can assume that the scheduler
+%uses one of the many algorithms that can be proven to enforce
+%bounded waiting.  If we don't know what algorithm the scheduler
+%uses, then we can get by with a weaker assumption:
+    لذا به منظور اینکه چیزی درباره قحطی بگوییم،‌ باید با تعدادی پیش‌فرض درباره زمان‌بند شروع نماییم. 
+    اگر تمایل به یک فرض قوی درباره زمان‌بند داریم، 
+    می‌توانیم تصویر نماییم که زمان‌بند یکی از الگوریتم‌های بسیاری که می‌تواند ثابت شود که انتظار محدود را اعمال می‌کند، استفاده می‌نماید. 
+    اگر نمی‌دانیم که زمان‌بند از چه الگوریتمی استفاده می‌نماید، سپس می‌توانیم یک فرض ضعیف‌تر در نظر بگیریم: 
 
 \begin{quote}
-Property 2: if a thread is ready to run, then the time it
-waits until it runs is bounded.
+%Property 1: if there is only one thread that is ready to
+%run, the scheduler has to let it run.
+    خصوصیت ۱: اگر تنها یک نخ آماده اجرا هست، زمان‌بند باید اجازه اجرای آن را بدهد. 
 \end{quote}
 
-In our discussion so far, we have been assuming Property 2
-implicitly, and we will continue to.  On the other hand,
-you should know that many existing systems use schedulers
-that do not guarantee this property strictly.
+%If we can assume Property 1, then we can build a system
+%that is provably free of starvation.  For example, if there
+%are a finite number of threads, then any program that contains
+%a barrier cannot starve, since eventually all threads but one
+%will be waiting at the barrier, at which point the last thread
+%has to run.
+    اگر بتوانیم خصوصیت ۱ را فرض کنیم، سپس می‌توانیم سیستمی بدون قحطی بسازیم.
+    برای مثال، اگر یک تعداد متناهی از نخ‌ها وجود داشته باشد، سپس هر برنامه‌ای که شامل یک حصار باشد دچار قحطی نمی‌گردد، زیرا که 
+    نهایتاً تمامی نخ‌ها بجز یکی پشت حصار منتظر می‌ماند که در این نقطه آخرین نخ باید اجرا شود. 
 
-Even with Property 2, starvation rears its ugly head again
-when we introduce semaphores.  In the definition of a semaphore,
-we said that when one thread executes {\tt signal}, one of
-the waiting threads gets woken up.  But we never said which one.
-In order to say anything about starvation, we have to
-make assumptions about the behavior of semaphores.
-
-The weakest assumption that makes it possible to avoid
-starvation is:
+%In general, though, it is non-trivial to write programs that
+%are free from starvation unless we make the stronger
+%assumption:
+    اگر چه، به طور کلی نوشتن برنامه‌هایی که دچار قحطی نمی‌شوند بدیهی نیست مگر اینکه فرض قوی‌تری نماییم:
 
 \begin{quote}
-Property 3: if there are threads waiting on a semaphore when
-a thread executes {\tt signal}, then one of the waiting threads
-has to be woken.
+%Property 2: if a thread is ready to run, then the time it
+%waits until it runs is bounded.
+    خصوصیت ۲: اگر یک نخ آماده اجرا باشد، آنگاه زمانیکه برای اجرا منتظر می‌ماند باید متناهی باشد. 
 \end{quote}
 
-This requirement may seem obvious, but it is not trivial.  It has the
-effect of barring one form of problematic behavior, which is a thread
-that signals a semaphore while other threads are waiting, and then
-keeps running, waits on the same semaphore, and gets its own signal!
-If that were possible, there would be nothing we
-could do to prevent starvation.
+%In our discussion so far, we have been assuming Property 2
+%implicitly, and we will continue to.  On the other hand,
+%you should know that many existing systems use schedulers
+%that do not guarantee this property strictly.
+    تا  اینجای بحث، به طور ضمنی خصوصیت ۲ را فرض نموده‌ایم و به آن ادامه خواهیم داد. 
+    از طرف دیگر باید بدانید که بسیاری از سیستم‌های موجود از زمان‌بندهایی استفاده می‌نمایند که این خصوصیت را موکداً تضمین نمی‌نماید. 
+
+%Even with Property 2, starvation rears its ugly head again
+%when we introduce semaphores.  In the definition of a semaphore,
+%we said that when one thread executes {\tt signal}, one of
+%the waiting threads gets woken up.  But we never said which one.
+%In order to say anything about starvation, we have to
+%make assumptions about the behavior of semaphores.
+    حتی با خصوصیت ۲، زمانیکه سمافورها را معرفی می‌کنیم، قحطی چهره نازیبایش را دومرتبه نشان می‌دهد. 
+    در تعریف یک سمافور، گفتیم زمانیکه یک نخ {\tt signal} را اجرا می‌نماید، یکی از نخ‌های در حال انتظار را بیدار می‌نماید. امّا هیچگاه نگفتم کدام را. 
+    قبل از اینکه چیزی 
+    درباره قطحی بگوییم باید پیش‌فرض‌هایی درباره رفتار سمافورها در نظر بگیریم. 
+
+%The weakest assumption that makes it possible to avoid
+%starvation is:
+    ضعیف‌ترین فرضی که به منظور اجتناب از قحطی ممکن است به شرح زیر است:
+
+\begin{quote}
+%Property 3: if there are threads waiting on a semaphore when
+%a thread executes {\tt signal}, then one of the waiting threads
+%has to be woken.
+    خصوصیت ۳: اگر نخ‌هایی وجود دارد که روی یک سمافور در حال انتظار هستند در حالیکه یک نخ {\tt signal} را اجرا می‌نماید، 
+    آنگاه یکی از نخ‌های در حال انتظار باید بیدار شوند. 
+\end{quote}
+
+%This requirement may seem obvious, but it is not trivial.  It has the
+%effect of barring one form of problematic behavior, which is a thread
+%that signals a semaphore while other threads are waiting, and then
+%keeps running, waits on the same semaphore, and gets its own signal!
+%If that were possible, there would be nothing we
+%could do to prevent starvation.
+    این التزام ممکن است واضح به نظر آید، امّا بدیهی نیست. این فرض جلوی یکی از گونه‌های مشکل‌ساز را خواهد گرفت که در آن 
+    یک نخ که به یک سمافور سیگنال می‌دهد در حالیکه نخ‌های دیگری در حال انتظار هستند، سپس به اجرای خود ادامه داده و روی همان سمافور منتظر شده و 
+    سیگنال خودش را می‌گیرد. اگر این نکته ممکن باشد، آنگاه هیچ کاری برای جلوگیری از قحطی نمی‌توانیم انجام دهیم. 
+%%    Sat 04 Nov 2017 06:05:01 PM +0330
 
 With Property 3, it becomes possible to avoid starvation, but
 even for something as simple as a mutex, it is not easy.
