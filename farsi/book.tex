@@ -23,6 +23,40 @@
 \settextfont{XB Niloofar}
 \setdigitfont{Yas}
 \setlatintextfont{Linux Libertine}[Scale=0.94]
+\defpersianfont\yasfont{Yas}
+%کدهای زیر سبب نگارش تمامی‌ ارقام با قلم یاس می‌گردد. (در این قلم صفرها به صورت صحیح و توخالی نگاشته می‌شوند.)
+\makeatletter
+\if@bidi@csundef{bidi@digits}{% 
+\newcount\bidi@digits
+\XeTeXinterchartokenstate=\@ne
+\newXeTeXintercharclass\bidi@digits@charclass
+\bidi@digits=`\0 \loop \XeTeXcharclass \bidi@digits \bidi@digits@charclass \ifnum\bidi@digits<`\9 \advance\bidi@digits \@ne \repeat
+\bidi@digits=`\۰ \loop \XeTeXcharclass \bidi@digits \bidi@digits@charclass \ifnum\bidi@digits<`\۹ \advance\bidi@digits \@ne \repeat
+}{}
+\newXeTeXintercharclass\@leftparen@charclass
+\newXeTeXintercharclass\@rightparen@charclass
+\XeTeXcharclass `\( \@leftparen@charclass
+\XeTeXcharclass `\) \@rightparen@charclass
+\XeTeXcharclass `\[ \@leftparen@charclass
+\XeTeXcharclass `\] \@rightparen@charclass
+\ifdim\the\XeTeXversion\XeTeXrevision\p@>0.99993\p@
+  \chardef\@alloc@intercharclass@top=4095
+\else
+  \chardef\@alloc@intercharclass@top=255
+\fi
+\XeTeXinterchartoks \@alloc@intercharclass@top \bidi@digits@charclass = {\BeginSwitchDigitFont}
+\XeTeXinterchartoks \bidi@digits@charclass \@alloc@intercharclass@top = {\EndSwitchDigitFont}
+\XeTeXinterchartoks \@leftparen@charclass \bidi@digits@charclass = {\BeginSwitchDigitFont}
+\XeTeXinterchartoks \bidi@digits@charclass \@rightparen@charclass = {\EndSwitchDigitFont}
+\if@bidi@csundef{if@nonlatin}{%
+\newcommand*{\BeginSwitchDigitFont}{\if@Latin\else\yasfont \fi}
+\newcommand*{\EndSwitchDigitFont}{\if@Latin\else\setpersianfont \fi}
+}{%
+\newcommand*{\BeginSwitchDigitFont}{\if@nonlatin\yasfont \fi}
+\newcommand*{\EndSwitchDigitFont}{\if@nonlatin\setpersianfont \fi}
+}
+\makeatother
+
 
 %\title{The Little Book of Semaphores}
 \title{کتاب کوچک سمافورها}
@@ -31,7 +65,7 @@
 \author{آلن بی.دونی\\[2cm]
 %\vspace{2cm}
 مترجمین:\\
-سیّدمحمّدجواد رضویان، محمّدمهدی قاسمی‌نیا و سیّدعلی آل‌طه}
+سیّدمحمّدجواد رضویان، سیّدعلی آل‌طه و محمّدمهدی قاسمی‌نیا}
 
 \newcommand{\theversion}{نسخه $2.2.1$}
 
@@ -3624,14 +3658,17 @@ writeSwitch.unlock(noReaders)
     سیگنال خودش را می‌گیرد. اگر این نکته ممکن باشد، آنگاه هیچ کاری برای جلوگیری از قحطی نمی‌توانیم انجام دهیم. 
 %%    Sat 04 Nov 2017 06:05:01 PM +0330
 
-With Property 3, it becomes possible to avoid starvation, but
-even for something as simple as a mutex, it is not easy.
-For example, imagine three threads
-running the following code:
-
+%With Property 3, it becomes possible to avoid starvation, but
+%even for something as simple as a mutex, it is not easy.
+%For example, imagine three threads
+%running the following code:
+    با خصوصیت ۳، اجتناب از قحطی امکان‌پذیر می‌گردد، امّا حتی برای چیزی به سادگی میوتکس، این امر ساده نیست. 
+    برای مثال، سه نخ که در حال اجرای کد زیر هستند را تصویر نمایید:
+    
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Mutex loop}]{}
+%\begin{lstlisting}[title={Mutex loop}]{}
+\begin{lstlisting}[title={حلقه میوتکس}]{}
 while True:
     mutex.wait()
     # critical section 
@@ -3640,75 +3677,104 @@ while True:
 \end{latin}
 \end{latin}
 
-The {\tt while} statement is an infinite loop; in other words,
-as soon as a thread leaves the critical section, it loops to the
-top and tries to get the mutex again.
+%The {\tt while} statement is an infinite loop; in other words,
+%as soon as a thread leaves the critical section, it loops to the
+%top and tries to get the mutex again.
+    این دستور {\tt while} یک حلقه بی‌پایان است؛ به عبارت دیگر، به محض اینکه یک نخ، ناحیه بحرانی را ترک می‌نماید به بالای حلقه بر می‌گردد و 
+    تلاش می‌کند که میوتکس را دوباره بگیرد. 
 
-Imagine that Thread A gets the mutex and Thread B and C wait.
-When A leaves, B enters, but before B leaves, A loops around
-and joins C in the queue.  When B leaves, there is no guarantee
-that C goes next.  In fact, if A goes next, and B joins the
-queue, then we are back to the starting position, and we can
-repeat the cycle forever.  C starves.
+%Imagine that Thread A gets the mutex and Thread B and C wait.
+%When A leaves, B enters, but before B leaves, A loops around
+%and joins C in the queue.  When B leaves, there is no guarantee
+%that C goes next.  In fact, if A goes next, and B joins the
+%queue, then we are back to the starting position, and we can
+%repeat the cycle forever.  C starves.
+    تصور کنید نخ \lr{A} میوتکس را گرفته و \lr{B} و \lr{C} منتظر هستند. 
+    زمانی که \lr{A} خارج می‌شود \lr{B} وارد می‌گردد امّا پیش از اینکه \lr{B}  خارج شود، \lr{A}  دور زده و در صف به \lr{C}  ملحق می‌شود. 
+    زمانیکه \lr{B}  خارج می‌شود، هیچ تضمینی وجود ندارد که  پس از آن  \lr{C} وارد شود. در واقع، اگر پس از آن \lr{A} وارد شود و \lr{B}  
+    به صف ملحق شود، آنگاه ما به نقطه  شروع بازگشته‌ایم و می‌توانیم این چرخه را تا ابد تکرار کنیم. \lr{C} قحطی زده می‌شود. 
 
-The existence of this pattern proves that the mutex is
-vulnerable to starvation.  One solution to this problem is
-to change the implementation of the semaphore so that it
-guarantees a stronger property:
+%The existence of this pattern proves that the mutex is
+%vulnerable to starvation.  One solution to this problem is
+%to change the implementation of the semaphore so that it
+%guarantees a stronger property:
+    وجود این الگو ثابت می‌نماید که میوتکس نسبت به قحطی آسیب‌پذیر است. 
+    یک راه حل برای این مساله این است که پیاده‌سازی سمافور را به گونه‌ای تغییر دهیم که خصوصیت قوی‌تری را تضمین نماید. 
 
 \begin{quote}
-Property 4: if a thread is waiting at a semaphore, then the
-number of threads that will be woken before it is bounded.
+%Property 4: if a thread is waiting at a semaphore, then the
+%number of threads that will be woken before it is bounded.
+    خصوصیت ۴: اگر یک نخ منتظر یک سمافور باشد، آنگاه تعداد نخ‌هایی که قبل از آن بیدار خواهند شد محدود است. 
 \end{quote}
 
-For example, if the semaphore maintains a first-in-first-out
-queue, then Property 4 holds because when a thread joins the
-queue, the number of threads ahead of it is finite, and
-no threads that arrive later can go ahead of it.
+%For example, if the semaphore maintains a first-in-first-out
+%queue, then Property 4 holds because when a thread joins the
+%queue, the number of threads ahead of it is finite, and
+%no threads that arrive later can go ahead of it.
+    برای مثال، اگر صف تشکیل شده روی سمافور، از نوع  \lr{FIFO} باشد،
+    آنگاه خصوصیت ۴ برقرار است زیرا که زمانیکه یک نخ به صف ملحق می‌شود تعداد نخ‌های جلوی آن، متناهی است و هیچ نخی که پس از آن می‌رسد 
+    نمی‌تواند جلوی آن قرار گیرد. 
 
-A semaphore that has Property 4 is sometimes called a {\bf strong
-semaphore}; one that has only Property 3 is called a {\bf weak
-semaphore}.  We have shown that with weak semaphores, the simple mutex
-solution is vulnerable to starvation.  In fact, Dijkstra conjectured
-that it is not possible to solve the mutex problem without starvation
-using only weak semaphores.
+%A semaphore that has Property 4 is sometimes called a {\bf strong
+%semaphore}; one that has only Property 3 is called a {\bf weak
+%semaphore}.  We have shown that with weak semaphores, the simple mutex
+%solution is vulnerable to starvation.  In fact, Dijkstra conjectured
+%that it is not possible to solve the mutex problem without starvation
+%using only weak semaphores.
+    سمافوری که خصوصیت ۴ را دارد گاهی اوقات \textbf{سمافور قوی}\LTRfootnote{strong semaphore} گفته می‌شود؛ و 
+    سمافوری که تنها خصوصیت ۳ را دارد \textbf{سمافور ضعیف}\LTRfootnote{weak semaphore} گفته می‌شود.
+    نشان‌ داده‌ایم که  با سمافورهای ضعیف، راه حل میوتکس ساده نسبت به قحطی آسیب‌پذیر هست.
+    در واقع، حدس \lr{Dijkstra} این بود که حل بدون قطحی مساله میوتکس تنها با کمک سمافورهای ضعیف ممکن نیست. 
 
-In 1979, J.M. Morris refuted the conjecture by solving the problem,
-assuming that the number of threads is finite \cite{morris}.  If you
-are interested in this problem, the next section presents his
-solution.  If this is not your idea of fun, you can just assume that
-semaphores have Property 4 and go on to Section~\ref{dining}.
+%In 1979, J.M. Morris refuted the conjecture by solving the problem,
+%assuming that the number of threads is finite \cite{morris}.  If you
+%are interested in this problem, the next section presents his
+%solution.  If this is not your idea of fun, you can just assume that
+%semaphores have Property 4 and go on to Section~\ref{dining}.
+    در ۱۹۷۹ \lr{ J.M. Morris} با حل مساله فوق و در نظر گرفتن اینکه تعداد نخ‌ها متناهی باشد، حدس  \lr{Dijkstra}  را رد نمود\cite{morris}. 
+    اگر شما به این مساله علاقه‌مند هستید، بخش بعدی راه حل او را نشان می‌دهد. در غیر اینصورت، می‌توانید تصور کنید که سمافورها خصوصیت ۴ 
+    را دارند و به بخش~\ref{dining} بروید. 
 
-Puzzle: write a solution to the mutual exclusion problem using weak
-semaphores.  Your solution should provide the following guarantee:
-once a thread arrives and attempts to enter the mutex, there is a
-bound on the number of threads that can proceed ahead of it.  You can
-assume that the total number of threads is finite.
-
+%Puzzle: write a solution to the mutual exclusion problem using weak
+%semaphores.  Your solution should provide the following guarantee:
+%once a thread arrives and attempts to enter the mutex, there is a
+%bound on the number of threads that can proceed ahead of it.  You can
+%assume that the total number of threads is finite.
+    معمّا: یک راه برای مساله انحصار متقابل با کمک سمافورهای ضعیف بنویسید. راه حل شما باید شرط زیر را تضمین نماید: 
+    زمانیکه یک نخ می‌رسد و تلاش می‌کند به میوتکس وارد شود،  روی تعداد نخ‌هایی که می‌توانند پیش از آن ادامه یابند باید یک حدی وجود داشته باشد. 
+    می‌توانید تصور نمایید که تعداد کلّ نخ‌ها متناهی است. 
 
 \clearemptydoublepage
-\subsection{No-starve mutex hint}
+%\subsection{No-starve mutex hint}
+\subsection{راهنمای میوتکس بدون قحطی}
 \label{morris}
 
-Morris's solution is similar to the reusable barrier in
-Section~\ref{rebar}.  It uses two turnstiles to create two waiting
-rooms before the critical section.  The mechanism works in two phases.
-During the first phase, the first turnstile is open and the second is
-closed, so threads accumulate in the second room.  During the second
-phase, the first turnstile is closed, so no new threads can enter, and
-the second is open, so the existing threads can get to the critical
-section.
+%Morris's solution is similar to the reusable barrier in
+%Section~\ref{rebar}.  It uses two turnstiles to create two waiting
+%rooms before the critical section.  The mechanism works in two phases.
+%During the first phase, the first turnstile is open and the second is
+%closed, so threads accumulate in the second room.  During the second
+%phase, the first turnstile is closed, so no new threads can enter, and
+%the second is open, so the existing threads can get to the critical
+%section.
+    راه حل \lr{Morris} مشابه با حصار قابل استفاده مجدد در بخش~\ref{rebar} است. 
+    این راه حل از دو ترن‌استایل برای ایجاد دو اتاق انتظار قبل از ناحیه بحرانی استفاده می‌نماید. این مکانیزم در دو فاز عمل می‌نماید. 
+    در طول فاز اول، ترن‌استایل اول باز است و دومی بسته، لذا نخ‌ها در اتاق دوم مجتمع می‌گردند. در طول فاز دوم، ترن‌استایل اول قفل است  و لذا هیچ 
+    نخی جدیدی نمی‌تواند وارد شود و ترن‌استایل دوم باز است، بنابراین نخ‌های موجود می‌توانند وارد ناحیه بحرانی شوند. 
 
-Although there may be an arbitrary number of threads in the waiting
-room, each one is guaranteed to enter the critical section before any
-future arrivals.
+%Although there may be an arbitrary number of threads in the waiting
+%room, each one is guaranteed to enter the critical section before any
+%future arrivals.
+    گرچه ممکن است تعداد دلخواهی از نخ‌ها در اتاق انتظار باشند، امّا  ورود هر کدام از آن‌ها به ناحیه بحرانی پیش از اینکه نخ‌های بعدی برسند تضمین شده است. 
 
-Here are the variables I used in the solution (I changed the
-names Morris used, trying to make the structure clearer).
+%Here are the variables I used in the solution (I changed the
+%names Morris used, trying to make the structure clearer).
+    در ادامه متغیرهایی که در راه حل بکار بردم آمده است (در تلاش برای واضح‌تر ساختن ساختار، نام‌هایی را که \lr{Morris} بکار برده بود، تغییر دادم). 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={No-starve mutex hint}]{}
+%\begin{lstlisting}[title={No-starve mutex hint}]{}
+\begin{lstlisting}[title={راهنمایی میوتکس بدون قحطی}]{}
 room1 = room2 = 0
 mutex = Semaphore(1)
 t1 = Semaphore(1)
@@ -3717,19 +3783,26 @@ t2 = Semaphore(0)
 \end{latin}
 \end{latin}
 
-{\tt room1} and {\tt room2} keep track of how many threads are in the
-waiting rooms.  {\tt mutex} helps protect the counters.  {\tt t1} and
-{\tt t2} are the turnstiles.
+%{\tt room1} and {\tt room2} keep track of how many threads are in the
+%waiting rooms.  {\tt mutex} helps protect the counters.  {\tt t1} and
+%{\tt t2} are the turnstiles.
+    {\tt room1} و  {\tt room2} 
+    تعداد نخ‌هایی که در اتاق‌های انتظار هستند را نگاهداری می‌نماید. {\tt mutex} از شمارنده‌ها محافظت می‌نماید. {\tt t1} و {\tt t2}
+    ترن‌استایل هستند. 
+    
 
 
 \clearemptydoublepage
-\subsection{No-starve mutex solution}
+%\subsection{No-starve mutex solution}
+\subsection{راه حل میوتکس بدون قحطی}
 
-Here is Morris's solution.
+%Here is Morris's solution.
+    در ادامه راه حل \lr{Morris} آمده است. 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Morris's algorithm}]{}
+%\begin{lstlisting}[title={Morris's algorithm}]{}
+\begin{lstlisting}[title={الگوریتم  \lr{Morris}}]{}
 mutex.wait()
     room1 += 1            (*\label{room1begin}*)
 mutex.signal()
@@ -3759,56 +3832,82 @@ t2.wait()                  (*\label{wait2}*)
 \end{latin}
 \end{latin}
 
-Before entering the critical section, a thread has to pass two
-turnstiles.  These turnstiles divide the code into three ``rooms''.
-Room 1 is Lines~\ref{room1begin}--~\ref{room1end}.  Room 2 is
-Lines~\ref{room2begin}--~\ref{room2end}.  Room 3 is the rest.
-Speaking loosely, the counters {\tt room1} and {\tt room2} keep track
-of the number of threads in each room.
+%Before entering the critical section, a thread has to pass two
+%turnstiles.  These turnstiles divide the code into three ``rooms''.
+%Room 1 is Lines~\ref{room1begin}--~\ref{room1end}.  Room 2 is
+%Lines~\ref{room2begin}--~\ref{room2end}.  Room 3 is the rest.
+%Speaking loosely, the counters {\tt room1} and {\tt room2} keep track
+%of the number of threads in each room.
+    پیش از ورود به ناحیه بحرانی، یک نخ باید از دو ترن‌استایل بگذرد. 
+    این ترن‌استایل‌ها کد را به سه اتاق تقسیم می‌نمایند. اتاق ۱ خطوط~\ref{room1begin}--~\ref{room1end}.
+    اتاق ۲ خطوط~\ref{room2begin}--~\ref{room2end}. اتاق ۳ مابقی  کد  است. 
+    شمارنده‌های {\tt room1} و {\tt room2} تعداد نخ‌های هر اتاق را در خود نگه می‌دارند. 
+%    ترجمه speaking loosely
 
-The counter {\tt room1} is protected by {\tt mutex} in the usual way,
-but guard duty for {\tt room2} is split between {\tt t1} and {\tt t2}.
-Similarly, responsibility for exclusive access to the critical section
-involves both {\tt t1} and {\tt t2}.  In order to enter the critical
-section, a thread has to hold one or the other, but not both.  Then,
-before exiting, it gives up whichever one it has.
+%The counter {\tt room1} is protected by {\tt mutex} in the usual way,
+%but guard duty for {\tt room2} is split between {\tt t1} and {\tt t2}.
+%Similarly, responsibility for exclusive access to the critical section
+%involves both {\tt t1} and {\tt t2}.  In order to enter the critical
+%section, a thread has to hold one or the other, but not both.  Then,
+%before exiting, it gives up whichever one it has.
+    شمارنده  {\tt room1}  به طور معمول با کمک {\tt mutex} محافظت می‌شود امّا امر حفاظت از {\tt room2} 
+    بین {\tt t1} و {\tt t2} تقسیم شده است. به طور مشابه، مسئولیت دسترسی انحصاری به ناحیه بحرانی مشمول هر دوی {\tt t1} و {\tt t2} است. 
+    یک نخ به منظور ورود به ناحیه بحرانی،  باید یکی از این دو و نه هر دو را بگیرد. آنگاه پیش از خروج، هر کدام را که گرفته باشد آزاد می‌نماید. 
 
-To understand how this solution works, start by following a single
-thread all the way through.  When it gets to Line~\ref{room1end}, it
-holds {\tt mutex} and {\tt t1}.  Once it checks {\tt room1}, which is
-0, it can release {\tt mutex} and then open the second turnstile, {\tt
-t2}.  As a result, it doesn't wait at Line~\ref{wait2} and it can
-safely decrement {\tt room2} and enter the critical section, because
-any following threads have to be queued on {\tt t1}.  Leaving the
-critical section, it finds {\tt room2 = 0} and releases {\tt t1},
-which brings us back to the starting state.
+%To understand how this solution works, start by following a single
+%thread all the way through.  When it gets to Line~\ref{room1end}, it
+%holds {\tt mutex} and {\tt t1}.  Once it checks {\tt room1}, which is
+%0, it can release {\tt mutex} and then open the second turnstile, {\tt
+%t2}.  As a result, it doesn't wait at Line~\ref{wait2} and it can
+%safely decrement {\tt room2} and enter the critical section, because
+%any following threads have to be queued on {\tt t1}.  Leaving the
+%critical section, it finds {\tt room2 = 0} and releases {\tt t1},
+%which brings us back to the starting state.
+    برای فهم اینکه این راه حل چگونه عمل می‌نماید، با دنبال نمودن یک نخ در تمام مسیر شروع می‌کنیم. 
+    زمانیکه به خط~\ref{room1end}، {\tt mutex} و {\tt t1}  را گرفته است. زمانیکه {\tt room1}  را بررسی می‌نماید، که مقدار آن ۰ است، 
+    می‌تواند {\tt mutex} را رها کرده و سپس ترن‌استایل دوم ({\tt t2} ) را باز نماید. در نتیجه، در خط~\ref{wait2} منتظر نمانده و می‌تواند بدون خطر 
+    مقدار {\tt room2} را یک واحد کاهش داده  و وارد ناحیه بحرانی شود، زیرا نخ‌های بعدی باید روی  {\tt t1} به صف شوند. 
+    با خروج از ناحیه بحرانی، مقدار  {\tt room2 } را صفر می‌بیند و {\tt t1} را رها می‌نماید که ما را به نقطه شروع بر می‌گرداند. 
 
-Of course, the situation is more interesting if there is more than one
-thread.  In that case, it is possible that when the lead thread gets
-to Line~\ref{room1end}, other threads have entered the waiting room
-and queued on {\tt t1}.  Since {\tt room1 > 0}, the lead thread leaves
-{\tt t2} locked and instead signals {\tt t1} to allow a following
-thread to enter Room 2.  Since {\tt t2} is still locked, neither
-thread can enter Room 3.
+%Of course, the situation is more interesting if there is more than one
+%thread.  In that case, it is possible that when the lead thread gets
+%to Line~\ref{room1end}, other threads have entered the waiting room
+%and queued on {\tt t1}.  Since {\tt room1 > 0}, the lead thread leaves
+%{\tt t2} locked and instead signals {\tt t1} to allow a following
+%thread to enter Room 2.  Since {\tt t2} is still locked, neither
+%thread can enter Room 3.
+    البته، راه حل اگر بیش از یک نخ وجود داشته باشد جذاب‌تر است. در این حالت، زمانیکه نخ مقدّم به خط~\ref{room1end} می‌رسد، ممکن است دیگر نخ‌ها 
+    وارد اتاق انتظار شده  و روی  {\tt t1} صف تشکیل داده باشند. از آنجایی که {\tt room1 > 0} نخ مقدّم، {\tt t2} را قفل شده رها نموده و در عوض 
+    به {\tt t1} سیگنال می‌دهد تا اجازه ورود به اتاق ۲ را به دیگر نخ‌ها بدهد. از آنجایی که {\tt t2} هنوز قفل است، هیچ نخی نمی‌تواند وارد اتاق ۳ بشود. 
 
-Eventually (because there are a finite number of threads), a thread
-will get to Line~\ref{room1end} before another thread enters Room 1, in which
-case it will open {\tt t2}, allowing any threads there to move into
-Room 3.  The thread that opens {\tt t2} continues to hold {\tt t1}, so
-if any of the lead threads loop around, they will block at Line~\ref{wait1}.
+%Eventually (because there are a finite number of threads), a thread
+%will get to Line~\ref{room1end} before another thread enters Room 1, in which
+%case it will open {\tt t2}, allowing any threads there to move into
+%Room 3.  The thread that opens {\tt t2} continues to hold {\tt t1}, so
+%if any of the lead threads loop around, they will block at Line~\ref{wait1}.
+    نهایتاً (چون تعداد نخ‌ها متناهی است)، یک نخ پیش از اینکه دیگر نخ‌ها به اتاق ۱ وارد شوند به خط~\ref{room1end} می‌رسد، که در این حالت {\tt t2}
+    را باز نموده و به دیگر نخ‌ها اجازه می‌دهد که به اتاق ۳وارد شوند. نخی که  {\tt t2}  را باز می‌کند همچنان  {\tt t1} را نگاه می‌دارد، بنابراین 
+    اگر هر کدام از نخ‌های مقدم دوباره به ابتدای کد باز گردد، در خط~\ref{wait1} مسدود می‌گردد. 
 
-As each thread leaves Room 3, it signals {\tt t2}, allowing another
-thread to leave Room 2.  When the last thread leaves Room 2, it leaves
-{\tt t2} locked and opens {\tt t1}, which brings us back to the
-starting state.
+%As each thread leaves Room 3, it signals {\tt t2}, allowing another
+%thread to leave Room 2.  When the last thread leaves Room 2, it leaves
+%{\tt t2} locked and opens {\tt t1}, which brings us back to the
+%starting state.
+    از آنجایی که هر نخ خروجی از اتاق ۳ به  {\tt t2} سیگنال می‌دهد،  به دیگر نخ‌ها اجازه می‌دهد اتاق ۲ را ترک نمایند. 
+    زمانیکه آخرین نخ اتاق ۲ را ترک می‌نماید، {\tt t2}  را قفل شده رها می‌کند و  {\tt t1} را باز می‌نماید که این ما را به نقطه شروع باز می‌گرداند. 
 
-To see how this solution avoids starvation, it helps to think of its
-operation in two phases.  In the first phase, threads check into Room
-1, increment {\tt room1}, and then cascade into Room 2 one at a time.
-The only way to keep a {\tt t2} locked is to maintain a
-procession of threads through Room 1.  Because there are a finite
-number of threads, the procession has to end eventually, at which
-point {\tt t1} stays locked and {\tt t2} opens.
+%%%    Sun 05 Nov 2017 06:09:44 PM +0330
+
+%To see how this solution avoids starvation, it helps to think of its
+%operation in two phases.  In the first phase, threads check into Room
+%1, increment {\tt room1}, and then cascade into Room 2 one at a time.
+%The only way to keep a {\tt t2} locked is to maintain a
+%procession of threads through Room 1.  Because there are a finite
+%number of threads, the procession has to end eventually, at which
+%point {\tt t1} stays locked and {\tt t2} opens.
+    برای اینکه ببینیم این راه حل چگونه از قحطی جلوگیری می‌نماید، بهتر است که عملکردش را در دو فاز بررسی نماییم. 
+    در فار اول، نخ‌ها در اتاق ۱ بررسی شده، مقدار {\tt room1} را یک واحد افزایش داده، و سپس در یک زمان به اتاق ۲ سرازیر می‌شوند. 
+    تنها راه قفل نگاه داشتن  {\tt t2}، 
 
 In the second phase, threads cascade into Room 3.  
 Because there are a finite number of threads in Room 2, and
