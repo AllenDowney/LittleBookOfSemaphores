@@ -146,9 +146,9 @@ numbers=left, numberstyle=\tiny, numbersep=10pt}
 \chapter{پیشگفتار}
 
 غالب کتاب‌های درسی سیستم‌های عامل در دوره کارشناسی بخشی در همگام سازی دارند که به طور معمول شامل معرفی اجزای اولیه‌ای (موتکس، سمافور، ناظر و متغیر‌های شرطی) و مسائل کلاسیک مثل خواننده نویسنده و تولیدکننده مصرف کننده.
-وقتی که من در برکلی کلاسی سیستم عامل را داشتم، و در کالج کالبی این درس را تدریس کردم، به این نتیجه رسیدم که بیشتر دانشجویان قادر به درک راه حل ارائه شده برای اینگونه مسائل هستند، اما تنها برخی از این دانشجویان توانایی [ارئه چنین راه حل‌هایی][ارئه همان راه‌حل‌ها] و  حل مسائل مشابه را دارند.
+وقتی که من در برکلی کلاسی سیستم‌عامل را داشتم، و در کالج کالبی این درس را تدریس کردم، به این نتیجه رسیدم که بیشتر دانشجویان قادر به درک راه حل ارائه شده برای اینگونه مسائل هستند، اما تنها برخی از این دانشجویان توانایی [ارئه چنین راه حل‌هایی][ارئه همان راه‌حل‌ها] و  حل مسائل مشابه را دارند.
 
-یکی از دلایلی که دانشجویان نمی توانند به طور عمیق این قبیل مسایل را بفهمند، این است که وقت و تلاش بیشتری می برند از آنچیزی که کلاس‌ها در اختیارشان می گذارد.همگام‌سازی یکی از ماژول‌هایی است که نسبت به دیگر ماژول‌ها وقت بیشتری نیاز دارد. و من مطمئن نیستم که بتوانم برای این منظور دلایلی را شرح دهم، منتها من فکر می کنم که سمافور‌ها یکی از چالشی‌ترین، جالب‌ترین و سرگرمی‌ترین بخش‌های سیستم عامل می باشد.
+یکی از دلایلی که دانشجویان نمی توانند به طور عمیق این قبیل مسایل را بفهمند، این است که وقت و تلاش بیشتری می برند از آنچیزی که کلاس‌ها در اختیارشان می گذارد.همگام‌سازی یکی از ماژول‌هایی است که نسبت به دیگر ماژول‌ها وقت بیشتری نیاز دارد. و من مطمئن نیستم که بتوانم برای این منظور دلایلی را شرح دهم، منتها من فکر می کنم که سمافور‌ها یکی از چالشی‌ترین، جالب‌ترین و سرگرمی‌ترین بخش‌های سیستم‌عامل می باشد.
 با هدف شناساندن  اصطلاحات والگوهای همگام‌سازی به گونه ای که به صورت مستقل قابل درک باشد و بتوان از آنها برای حل مسائل پیچیده استفاده نمود، اولین ویرایش این کتاب نوشتم.
 نوشتن کدهمگام‌سازی چالش‌های مختص به خود را دارد زیرا که با افزایش تعداد اجزا و تعداد تعاملات به طور غیر قابل کنترلی افزایش می یابد.
 
@@ -392,7 +392,7 @@ numbers=left, numberstyle=\tiny, numbersep=10pt}
 %the operating system (specifically, the scheduler) makes those
 %decisions.  As a result, again, the programmer can't tell when
 %statements in different threads will be executed.
-    به طور کلی برنامه‌نویس هیچ کنترلی روی اجرای نخ‌ها ندارد؛ در واقع سیستم عامل (بخصوص زمان‌بند) در این باره تصمیم‌ می‌گیرد. 
+    به طور کلی برنامه‌نویس هیچ کنترلی روی اجرای نخ‌ها ندارد؛ در واقع سیستم‌عامل (بخصوص زمان‌بند) در این باره تصمیم‌ می‌گیرد. 
     در نتیجه برنامه‌نویس نمی‌تواند بگوید که دستورات چه زمانی در نخ‌های مختلف اجرا خواهد شد.
     
 %For purposes of synchronization, there is no difference between the
@@ -958,7 +958,7 @@ for i in range(100):
 %available as part of the programming language or the operating system.
 %Different implementations sometimes offer slightly different
 %capabilities, and usually require different syntax.
-    در بیشتر محیط‌های برنامه‌نویسی، پیاده‌سازی سمافور به صورت بخشی از زبان برنامه‌نویسی یا سیستم عامل موجود است. 
+    در بیشتر محیط‌های برنامه‌نویسی، پیاده‌سازی سمافور به صورت بخشی از زبان برنامه‌نویسی یا سیستم‌عامل موجود است. 
     گاهی اوقات پیاده‌سازی‌های مختلف،‌ اندک توانایی‌های متفاوتی را فراهم آورده و نحو متفاوتی را نیاز دارند.
 
 %In this book I will use a simple pseudo-language to demonstrate
@@ -4227,44 +4227,59 @@ def put_forks(i):
     
 %%%%    Sat 11 Nov 2017 06:20:18 PM +0330
 
+\clearemptydoublepage
+%\subsection{Dining philosopher's solution \#2}
+\subsection{راه حل غذاخوردن فیلسوف‌ها \#2}
+
+%In the asymmetric solution to the Dining philosophers problem,
+%there has to be at least one leftie and at least one rightie at
+%the table.  In that case, deadlock is impossible.  The previous
+%hint outlines the proof.  Here are the details.
+    در راه حل متقارن مساله غذاخوردن فلیسوف‌ها، لازم است حداقل یک چپ دست و  حداقل یک راست دست سر میز باشند. 
+    در این حالت، بن‌بست غیر ممکن است. راهنمایی قبل طرح کلی اثبات را بیان می‌کند.
+    در ادامه جزئیات آمده است. 
+
+%Again, if deadlock is possible, it occurs when all 5 philosophers
+%are holding one fork and waiting for the other.  If we assume that
+%Philosopher $j$ is a leftie, then she must be holding her left
+%fork and waiting for her right.  Therefore her neighbor to the right,
+%Philosopher $k$, must be holding his left fork and waiting for
+%his right neighbor; in other words, Philosopher $k$ must be a leftie.
+%Repeating the same argument, we can prove that the philosophers
+%are all lefties, which contradicts the original claim that there
+%is at least one rightie.  Therefore deadlock is not possible.
+    دوباره، اگر بن‌بست ممکن باشد، زمانی رخ می‌دهد که تمامی ۵ فیلسوف یک چنگال را نگاه داشته و منتظر چنگال دیگر بمانند. 
+    اگر فرض کنیم فیلسوف $j$ چپ دست باشد آنگاه او باید چنگال سمت چپ را نگاه داشته و منتظر چنگال سمت راست باشد. 
+    بنابراین همسایه سمت راست او (فیلسوف $k$) باید چنگال سمت چپش را نگاه داشته و منتظر همسایه راست خود باشد؛ به عبارت دیگر 
+    فیلسوف $k$ باید چپ دست باشد. با تکرار استدلال مشابه می‌توانیم ثابت کنیم که تمامی فیلسوف‌ها چپ دست هستند که با حکم اولیه که در آن 
+    حداقل یک راست دست وجود دارد در تناقض است. لذا بن‌بست ممکن نیست. 
+
+%The same argument we used for the previous solution also proves
+%that starvation is impossible for this solution.
+    استدلالی مشابه آنچه برای راه حل قبل به کار بردیم ثابت می‌کند که قطحی نیز غیر ممکن است. 
+
 
 \clearemptydoublepage
-\subsection{Dining philosopher's solution \#2}
+%\subsection{Tanenbaum's solution}
+\subsection{راه حل تننبام}
 
-In the asymmetric solution to the Dining philosophers problem,
-there has to be at least one leftie and at least one rightie at
-the table.  In that case, deadlock is impossible.  The previous
-hint outlines the proof.  Here are the details.
-
-Again, if deadlock is possible, it occurs when all 5 philosophers
-are holding one fork and waiting for the other.  If we assume that
-Philosopher $j$ is a leftie, then she must be holding her left
-fork and waiting for her right.  Therefore her neighbor to the right,
-Philosopher $k$, must be holding his left fork and waiting for
-his right neighbor; in other words, Philosopher $k$ must be a leftie.
-Repeating the same argument, we can prove that the philosophers
-are all lefties, which contradicts the original claim that there
-is at least one rightie.  Therefore deadlock is not possible.
-
-The same argument we used for the previous solution also proves
-that starvation is impossible for this solution.
-
-
-\clearemptydoublepage
-\subsection{Tanenbaum's solution}
-
-There is nothing wrong with the previous solutions, but just for
-completeness, let's look at some alternatives.  One of the best known
-is the one that appears in Tanenbaum's popular operating systems
-textbook \cite{tanenbaum}.
-For each philosopher there is a state variable that
-indicates whether the philosopher is thinking, eating, or waiting to
-eat (``hungry'') and a semaphore that indicates whether the
-philosopher can start eating.  Here are the variables:
+%There is nothing wrong with the previous solutions, but just for
+%completeness, let's look at some alternatives.  One of the best known
+%is the one that appears in Tanenbaum's popular operating systems
+%textbook \cite{tanenbaum}.
+%For each philosopher there is a state variable that
+%indicates whether the philosopher is thinking, eating, or waiting to
+%eat (``hungry'') and a semaphore that indicates whether the
+%philosopher can start eating.  Here are the variables:
+    در راه حل قبل هیچ چیز نادرستی وجود ندارد امّا تنها برای تکمیل بحث، بگذارید نگاهی به برخی راه حل‌های جایگزین بیندازیم. 
+    یکی از شناخته‌ شده ترینِ  این راه حل‌ها، همانی است که در کتاب معروف سیستم‌عامل تننبام آمده است\cite{tanenbaum}. 
+    برای هر فیلسوف یک متغیر وضعیت وجود دارد که نشان می‌دهد فیلسوف در کدامیک از حالات تفکر، خوردن و یاد انتظار برای خوردن (گرسنگی) است و 
+    یک سمافور که نشان می‌دهد آیا فیلسوف می‌تواند غذا خوردن را آغاز نماید نیز وجود دارد. 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Variables for Tanenbaum's solution}]{}
+%\begin{lstlisting}[title={Variables for Tanenbaum's solution}]{}
+\begin{lstlisting}[title={متغیرهای راه حل تننبام}]{}
 state = ['thinking'] * 5
 sem = [Semaphore(0) for i in range(5)]
 mutex = Semaphore(1)
@@ -4272,13 +4287,17 @@ mutex = Semaphore(1)
 \end{latin}
 \end{latin}
 
-The initial value of {\tt state} is a list of 5 copies of {\tt
-'thinking'}.  {\tt sem} is a list of 5 semaphores with the initial
-value 0.  Here is the code:
+%The initial value of {\tt state} is a list of 5 copies of {\tt
+%'thinking'}.  {\tt sem} is a list of 5 semaphores with the initial
+%value 0.  Here is the code:
+    مقدار اولیه {\tt state} یک لیست ۵ تایی از {\tt 'thinking'} است.     {\tt sem}
+    یک لیست ۵ تایی از سمافورهایی است با مقدار اولیه ۰. 
+    و امّا کد: 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Tanenbaum's solution}]{}
+%\begin{lstlisting}[title={Tanenbaum's solution}]{}
+\begin{lstlisting}[title={ راه حل تننبام}]{}
 def get_fork(i):
     mutex.wait()
     state[i] = 'hungry'
@@ -4305,123 +4324,172 @@ def test(i):
 
 % NOTE: need to fix this; see email from David Furcy.
 
-The {\tt test} function checks whether the $i$th philosopher can
-start eating, which he can if he is hungry and
-neither of his neighbors are eating.  If so, the {\tt test} signals
-semaphore $i$.
+%The {\tt test} function checks whether the $i$th philosopher can
+%start eating, which he can if he is hungry and
+%neither of his neighbors are eating.  If so, the {\tt test} signals
+%semaphore $i$.
+    تابع {\tt test}  بررسی می‌کند که آیا فیلسوف $i$ام می‌تواند شروع به غذا خوردن نماید، و این در صورتی است که 
+    او گرسنه بوده و هیچکدام از همسایه‌هایش در حال غذا خوردن نباشند. اگر چنین باشد، {\tt test} به سمافور $i$ سیگنال می‌دهد. 
+    
+%There are two ways a philosopher gets to eat.  In the first case, the
+%philosopher executes {\tt get\_forks}, finds the forks available, and
+%proceeds immediately.  In the second case, one of the neighbors is
+%eating and the philosopher blocks on its own semaphore.  Eventually,
+%one of the neighbors will finish, at which point it executes {\tt
+%test} on both of its neighbors.  It is possible that both tests
+%will succeed, in which case the neighbors can run concurrently.
+%The order of the two tests doesn't matter.
+    دو راه وجود دارد که یک فیلسوف می‌تواند غذا بخورد. در حالت اول، فیلسوف {\tt get\_forks} را اجرا کرده، چنگال‌های موجود را یافته و 
+    بلافاصله مشغول خوردن می‌شود. در حالت دوم، یکی از همسایه‌ها در حال غذا خوردن است و فیلسوف روی سمافور خودش مسدود گردیده است. 
+    نهایتاً یکی از همسایه‌ها دست از غذا می‌کشد و در این زمان  {\tt test} را روی هر دو همسایه خود اجرا می‌نماید. 
+    ممکن است که هر دو بررسی موفقیت آمیز باشد، و در این حالت همسایه‌ها می‌توانند به صورت همروند مشغول غذا خوردن شوند. 
+    ترتیب دو بررسی اهمیتی ندارد. 
 
-There are two ways a philosopher gets to eat.  In the first case, the
-philosopher executes {\tt get\_forks}, finds the forks available, and
-proceeds immediately.  In the second case, one of the neighbors is
-eating and the philosopher blocks on its own semaphore.  Eventually,
-one of the neighbors will finish, at which point it executes {\tt
-test} on both of its neighbors.  It is possible that both tests
-will succeed, in which case the neighbors can run concurrently.
-The order of the two tests doesn't matter.
+%In order to access {\tt state} or invoke {\tt test}, a thread
+%has to hold {\tt mutex}.  Thus, the operation of checking and
+%updating the array is atomic.  Since a philosopher can only proceed
+%when we know both forks are available, exclusive access to the forks
+%is guaranteed.
+    به منظور دسترسی به {\tt state} یا فراخوانی {\tt test}، یک نخ باید {\tt mutex} را بگیرد. 
+    بنابراین، عمل بررسی و بروزرسانی آرایه، اتمی است.از آنجایی که یک فیلسوف تنها زمانی می‌تواند مشغول خوردن شود که بدانیم هر دو چنگال موجود است، 
+    دسترسی انحصاری به چنگال‌ها تضمین شده است. 
 
-In order to access {\tt state} or invoke {\tt test}, a thread
-has to hold {\tt mutex}.  Thus, the operation of checking and
-updating the array is atomic.  Since a philosopher can only proceed
-when we know both forks are available, exclusive access to the forks
-is guaranteed.
+%No deadlock is possible, because the only semaphore that is accessed
+%by more than one philosopher is {\tt mutex}, and no thread executes
+%{\tt wait} while holding {\tt mutex}.
+    هیچ بن‌بستی ممکن نیست، زیرا تنها سمافوری که بیش از یک فیلسوف به آن دسترسی دارد، {\tt mutex} است و هیچ نخی  
+    تا زمانی که {\tt mutex} را در اختیار دارد {\tt wait} را اجرا نمی‌نماید. 
 
-No deadlock is possible, because the only semaphore that is accessed
-by more than one philosopher is {\tt mutex}, and no thread executes
-{\tt wait} while holding {\tt mutex}.
+%But again, starvation is tricky.
+    امّا دومرتبه، قطحی ممکن ولی در اینجا خیلی مستلزم دقت و مهارت است.
 
-But again, starvation is tricky.
-
-Puzzle: Either convince yourself that Tanenbaum's solution prevents
-starvation or find a repeating pattern that allows a thread to starve
-while other threads make progress.
-
-
-\clearemptydoublepage
-\subsection{Starving Tanenbaums}
-
-Unfortunately, this solution is not starvation-free.  Gingras
-demonstrated that there are repeating patterns that allow a
-thread to wait forever while other threads come and go
-\cite{gingras90dining}.
-
-Imagine that we are trying to starve Philosopher 0.  Initially,
-2 and 4 are at the table and 1 and 3 are hungry.  Imagine that 2 gets up and
-1 sit downs; then 4 gets up and 3 sits down.
-Now we are in the mirror image of the starting position.
-
-If 3 gets up and 4 sits
-down, and then 1 gets up and 2 sits down, we are back
-where we started.  We could repeat the cycle indefinitely and
-Philosopher 0 would starve.
-
-So, Tanenbaum's solution doesn't satisfy all the requirements.
-
-
+%Puzzle: Either convince yourself that Tanenbaum's solution prevents
+%starvation or find a repeating pattern that allows a thread to starve
+%while other threads make progress.
+    معمّا: یا خودتان را متقاعد نمایید راه حل تننبام از قحطی جلوگیری می‌نماید و یا یک الگوی تکرارشونده بیابید اجازه می‌دهد یک نخ دچار قحطی شود 
+    در حالیکه مابقی نخ‌ها به کار خود ادامه می‌دهند. 
 
 
 \clearemptydoublepage
-\section {Cigarette smokers problem}
+%\subsection{Starving Tanenbaums}
+\subsection{قطحی تننبام}
 
-The cigarette smokers problem was originally presented by
-Suhas Patil \cite{patil}, who claimed that it cannot be solved with
-semaphores.  That claim comes with some qualifications, but in
-any case the problem is interesting and challenging.
+%Unfortunately, this solution is not starvation-free.  Gingras
+%demonstrated that there are repeating patterns that allow a
+%thread to wait forever while other threads come and go
+%\cite{gingras90dining}.
+    متاسفانه، این راه حل مصون از قحطی نیست. \lr{Gingras} نشان داد که الگوهای تکرارشونده‌ای وجود دارد در آن یک نخ برای همیشه منتظر مانده در 
+    حالیکه دیگر نخ‌ها می‌آیند و می‌روند\cite{gingras90dining}.
 
-Four threads are involved: an agent and three smokers.  The smokers
-loop forever, first waiting for ingredients, then making and smoking
-cigarettes.  The ingredients are tobacco, paper, and matches.
+%Imagine that we are trying to starve Philosopher 0.  Initially,
+%2 and 4 are at the table and 1 and 3 are hungry.  Imagine that 2 gets up and
+%1 sit downs; then 4 gets up and 3 sits down.
+%Now we are in the mirror image of the starting position.
+    تصور کنید که می‌خواهیم فیلسوف ۰ دچار قطحی شود. در ابتدا، ۲ و ۴ سر میز هستند و ۱ و ۳ گرسنه هستند. تصور کنید که ۲ بر می‌خیزد و یک سر میز می‌نشیند؛ 
+    سپس ۴ برخواسته و ۳ می‌نشیند. اکنون در وضعیتی قرینه موقعیت شروع هستیم. 
 
-We assume that the agent has an infinite supply of all three
-ingredients, and each smoker has an infinite supply of one of
-the ingredients; that is, one smoker has matches, another has
-paper, and the third has tobacco.
+%If 3 gets up and 4 sits
+%down, and then 1 gets up and 2 sits down, we are back
+%where we started.  We could repeat the cycle indefinitely and
+%Philosopher 0 would starve.
+    اگر ۳ برخیزد و ۴ بنشیند، و سپس  برخواسته و ۲ بنشیند، به نقطه شروع بازگشته‌ایم. 
+    این  حلقه را می‌توانیم تا ابد تکرار نماییم و در این صورت فیلسوف ۰ دچار قحطی می‌شود. 
 
-The agent repeatedly chooses two different ingredients at random
-and makes them available to the smokers.  Depending on which
-ingredients are chosen, the smoker with the complementary ingredient
-should pick up both resources and proceed.
-
-For example, if the agent puts out tobacco and paper, the
-smoker with the matches should pick up both ingredients, make
-a cigarette, and then signal the agent.
-
-To explain the premise, the agent represents an operating system that
-allocates resources, and the smokers represent applications that need
-resources.  The problem is to make sure that if resources are
-available that would allow one more applications to proceed,
-those applications should be woken up.  Conversely, we want to avoid
-waking an application if it cannot proceed.
+%So, Tanenbaum's solution doesn't satisfy all the requirements.
+    لذا راه حل تننبام تمامی ملزومات را بار آورده نمی‌نماید. 
 
 
+\clearemptydoublepage
+%\section {Cigarette smokers problem}
+\section {مساله سیگاری‌ها}
 
-Based on this premise, there are three versions of this problem
-that often appear in textbooks:
+%The cigarette smokers problem was originally presented by
+%Suhas Patil \cite{patil}, who claimed that it cannot be solved with
+%semaphores.  That claim comes with some qualifications, but in
+%any case the problem is interesting and challenging.
+    مساله سیگاری‌ها در ابتدا توسط     \lr{Suhas Patil} مطرح شد \cite{patil}، و ادعا نمود که  این مساله به سمافورها قابل حل نیست. 
+    این ادعا با تعدادی شرط همراه است، امّا در هر حالت مساله جذاب و چالش برانگیز است. 
+
+%Four threads are involved: an agent and three smokers.  The smokers
+%loop forever, first waiting for ingredients, then making and smoking
+%cigarettes.  The ingredients are tobacco, paper, and matches.
+    چهار نخ در مساله وجود دارد: یک عامل و سه سیگاری. سیگاری‌ها تا ابد، در حلقهٔ ابتدا انتظار برای مواد مورد نیاز و سپس ساختن و کشیدن سیگار هستند.
+    مواد مورد نیاز شامل تنباکو، کاغذ و کبریت است. 
+
+%We assume that the agent has an infinite supply of all three
+%ingredients, and each smoker has an infinite supply of one of
+%the ingredients; that is, one smoker has matches, another has
+%paper, and the third has tobacco.
+    فرض می‌کنیم که عامل یک منبع لایزال از این سه ماده لازم دارد و هر سیگاری یک منبع نامتناهی از یکی از این سه مواد لازم را دارد، بدین معنی که 
+    یکی از سیگاری‌ها کبریت، دیگری کاغذ و سومی نیز تنباکو دارد. 
+
+%The agent repeatedly chooses two different ingredients at random
+%and makes them available to the smokers.  Depending on which
+%ingredients are chosen, the smoker with the complementary ingredient
+%should pick up both resources and proceed.
+    عامل مکراراً دو ماده متفاوت را به صورت تصادفی انتخاب نموده و آن‌ها را به سیگاری‌ها عرضه می‌کند. 
+    بسته به اینکه چه موادی انتخاب شده باشد، فرد سیگاری با ماده مکمل خود می‌تواند دو منبع را برداشته و ادامه دهد. 
+
+%For example, if the agent puts out tobacco and paper, the
+%smoker with the matches should pick up both ingredients, make
+%a cigarette, and then signal the agent.
+    برای مثال، اگر عامل تنباکو و کاغذ بر دارد، فرد سیگاری که کبریت دارد می‌تواند هر دو ماده را برداشته و یک سیگار ساخته و سپس به عامل سیگنال دهد. 
+
+%To explain the premise, the agent represents an operating system that
+%allocates resources, and the smokers represent applications that need
+%resources.  The problem is to make sure that if resources are
+%available that would allow one more applications to proceed,
+%those applications should be woken up.  Conversely, we want to avoid
+%waking an application if it cannot proceed.
+    برای توضیح فرض قبل،‌    
+    عامل نشانگر یک سیستم‌عامل است که منابع را تخصیص می‌دهد، و سیگاری‌ها نشانگر برنامه‌هایی هستند که به منابع نیاز دارند. 
+    مساله این است که اطمینان دهیم اگر منابعی موجود هستند که می‌توانند اجازه ادامه فعالیت برنامه‌های بیشتری را بدهند آن برنامه‌ها باید بیدار شوند. 
+    بر عکس، می‌خواهیم از بیدار نمودن برنامه‌هایی که نمی‌توانند به کار خود ادامه دهند اجتناب نماییم. 
+
+
+%Based on this premise, there are three versions of this problem
+%that often appear in textbooks:
+    بر طبق این فرض، سه نسخه از این مساله وجود دارد که اغلب در کتاب‌ها مشاهده می‌شود: 
 
 \begin{description}
 
-\item[The impossible version:] Patil's version imposes restrictions on
-the solution.  First, you are not allowed to modify the agent code.
-If the agent represents an operating system, it makes sense to assume
-that you don't want to modify it every time a new application comes
-along.  The second restriction is that you can't use conditional
-statements or an array of semaphores.  With these constraints, the
-problem cannot be solved, but as Parnas points out, the second
-restriction is pretty artificial \cite{Parnas}.  With constraints like
-these, a lot of problems become unsolvable.
+\item
+%[The impossible version:] Patil's version imposes restrictions on
+%the solution.  First, you are not allowed to modify the agent code.
+%If the agent represents an operating system, it makes sense to assume
+%that you don't want to modify it every time a new application comes
+%along.  The second restriction is that you can't use conditional
+%statements or an array of semaphores.  With these constraints, the
+%problem cannot be solved, but as Parnas points out, the second
+%restriction is pretty artificial \cite{Parnas}.  With constraints like
+%these, a lot of problems become unsolvable.
+    [نسخه غیرممکن:] نسخه \lr{Patil} محدودیت‌هایی روی راه حل تحمیل می‌نماید. اول اینکه، شما اجازه تغییر کد عامل را ندارید. 
+    اگر عامل نشانگر یک سیستم‌عامل باشد، این فرض که شما نمی‌خواهید کد سیستم عامل را هر زمان که یک برنامه جدید می‌آید تغییر دهید بی معنی نیست. 
+    محدودیت دوم این است که شما نمی‌توانید از عبارات شرطی یا یک آرایه‌ای از سمافورها استفاده نمایید. با این محدودیت‌ها، 
+    مساله قابل حل نیست، امّا همانطور که  \lr{Patil} اشاره نموده است محدودیت دوم کاملاً تصنعی است  \cite{Parnas}. 
+    با محدودیت‌هایی نظیر این دو، مسائل بسیار غیر قابل حل خواهد شد. 
 
-\item[The interesting version:] This version keeps the first
-restriction---you can't change the agent code---but it drops the others.
-
-\item[The trivial version:] In some textbooks, the problem specifies
-that the agent should signal the smoker that should go next, according
-to the ingredients that are available.  This version of the problem
-is uninteresting because it makes the whole premise, the ingredients
-and the cigarettes, irrelevant.  Also, as a practical matter, it is
-probably not a good idea to require the agent to know about the other
-threads and what they are waiting for.  Finally, this version of
-the problem is just too easy.
-
+\item
+%[The interesting version:] This version keeps the first
+%restriction---you can't change the agent code---but it drops the others.
+    [نسخه جالب:] این نسخه محدودیت اول (عدم امکان تغییر کد عامل) را دارد ولی مابقی را در نظر نمی‌گیرد.
+    
+\item
+%[The trivial version:] In some textbooks, the problem specifies
+%that the agent should signal the smoker that should go next, according
+%to the ingredients that are available.  This version of the problem
+%is uninteresting because it makes the whole premise, the ingredients
+%and the cigarettes, irrelevant.  Also, as a practical matter, it is
+%probably not a good idea to require the agent to know about the other
+%threads and what they are waiting for.  Finally, this version of
+%the problem is just too easy.
+    [نسخه بدیهی:] در برخی کتاب‌ها، در خود مساله آمده است که عامل باید بر مبنای مواد موجود به آن فرد سیگاری که می‌تواند ادامه دهد سیگنال ارسال نماید. 
+    این نسخه از مساله، جذابیتی ندارد زیرا که تمام فرض اولیه، مواد افزودنی و سیگارها را غیرضروری می‌نماید. همچنین در عمل، احتمالاً     
+     اینکه عامل، اطلاعی از سایر نخ‌ها و آنچه آن‌ها نیاز دارند داشته باشد ایده خوبی نباشد. در نهایت،  این نسخه از مساله نیز بسیار ساده است. 
+     
 \end{description}
+
+%%%%        Sat 18 Nov 2017 06:11:58 PM +0330
 
 Naturally, we will focus on the interesting version.  To complete
 the statement of the problem, we need to specify the agent code.
