@@ -4702,27 +4702,35 @@ smoke()
     
 %%%    Sun 26 Nov 2017 05:59:38 PM +0330
 
-\subsection{Generalized Smokers Problem}
+%\subsection{Generalized Smokers Problem}
+\subsection{تعمیم مساله سیگاری‌ها}
 
-Parnas suggested that the smokers problem becomes more
-difficult if we modify the agent, eliminating the requirement
-that the agent wait after putting out ingredients.  In this
-case, there might be multiple instances of an ingredient on
-the table.
+%Parnas suggested that the smokers problem becomes more
+%difficult if we modify the agent, eliminating the requirement
+%that the agent wait after putting out ingredients.  In this
+%case, there might be multiple instances of an ingredient on
+%the table.
+    \lr{Parnas} پیشنهاد نمود که اگر عامل را به این صورت دستکاری کنیم 
+    که نیازی نباشد که عامل پس از گذاشتن مواد لازم صبر نماید، آنگاه مساله سیگاری‌ها دشوارتر خواهد می‌گردد. 
+    در این حالت، باید چند نمونه از یک ماده روی میز موجود باشد. 
 
-Puzzle: modify the previous solution to deal with this
-variation.
+%Puzzle: modify the previous solution to deal with this
+%variation.
+    معمّا: راه حل قبل را به گونه‌ای دستکاری کنید که با این تغییر مطابقت داشته باشد. 
 
 \clearemptydoublepage
-\subsection{Generalized Smokers Problem Hint}
+%\subsection{Generalized Smokers Problem Hint}
+\subsection{راهنمای تعمیم مساله سیگاری‌ها}
 
-If the agents don't wait for the smokers, ingredients might
-accumulate on the table.  Instead of using boolean values to
-keep track of ingredients, we need integers to count them.
+%If the agents don't wait for the smokers, ingredients might
+%accumulate on the table.  Instead of using boolean values to
+%keep track of ingredients, we need integers to count them.
+    اگر عامل، منتظر سیگاری‌ها نماند، ممکن است موارد لازم روی میز انباشته شود. بجای استفاده از مقادیر بولی به منظور ردگیری موارد لازم، 
+    به اعداد صحیح برای شمارش آن‌ها نیاز داریم. 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Generalized Smokers problem hint}]{}
+\begin{lstlisting}[title=\rl{راهنمای تعمیم مساله سیگاری‌ها}]
 numTobacco = numPaper = numMatch = 0
 \end{lstlisting}
 \end{latin}
@@ -4731,13 +4739,16 @@ numTobacco = numPaper = numMatch = 0
 
 \clearemptydoublepage
 \subsection{Generalized Smokers Problem Solution}
+\subsection{راه حل تعمیم مساله سیگاری‌ها}
 \label{smoker}
 
-Here is the modified code for Pusher A:
+%Here is the modified code for Pusher A:
+    کد تغییر یافته فروشنده \lr{A} در ادامه آمده است: 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Pusher A}]{}
+%\begin{lstlisting}[title={Pusher A}]{}
+\begin{lstlisting}[title={\rl{فروشنده} A}]{}
 tobacco.wait()
 mutex.wait()
     if numPaper:
@@ -4753,55 +4764,74 @@ mutex.signal()
 \end{latin}
 \end{latin}
 
-One way to visualize this problem is to imagine that when an
-Agent runs, it creates two pushers, gives each of them one ingredient,
-and puts them in a room with all the other pushers.  Because of the
-mutex, the pushers file into a room where there are
-three sleeping smokers and a table.  One at a time, each pusher enters
-the room and checks the ingredients on the table.  If he can
-assemble a complete set of ingredients, he takes them off the table
-and wakes the corresponding smoker.  If not, he leaves his ingredient
-on the table and leaves without waking anyone.
+%One way to visualize this problem is to imagine that when an
+%Agent runs, it creates two pushers, gives each of them one ingredient,
+%and puts them in a room with all the other pushers.  Because of the
+%mutex, the pushers file into a room where there are
+%three sleeping smokers and a table.  One at a time, each pusher enters
+%the room and checks the ingredients on the table.  If he can
+%assemble a complete set of ingredients, he takes them off the table
+%and wakes the corresponding smoker.  If not, he leaves his ingredient
+%on the table and leaves without waking anyone.
+    یک راه تصویرسازی این مساله این است که تصویر نمایید آنزمان که عاملی اجرا می‌شود‌، دو فروشنده ساخته و به هر کدام از آن‌ها یکی از مواد لازم را 
+    می‌دهد و آن‌ها را همراه با سایر فروشندگان در یک اتاق قرار می‌دهد. به سبب میوتکس، فروشنده‌ها در اتاقی که سه سیگاری خوابیده و یک میز وجود دارد 
+    به ترتیب وارد می‌شوند. هر فروشنده یکی پس از دیگری وارد اتاق شده و مواد روی میز را بررسی می‌نماید. اگر او بتواند یک مجموعه کامل از مواد لازم سیگار را
+    گرد آورد، آن‌ها از روی میز برداشته و سیگاری متناظر را بیدار می‌نماید. و اگر نتواند،‌ مواد همراه خود را روی میز رها کرده و اتاق را بدون اینکه کسی را 
+    بیدار کند ترک می‌نماید. 
 
-This is an example of a pattern we will see several times, which
-I call a {\bf scoreboard}.  The variables {\tt numPaper}, {\tt numTobacco}
-and {\tt numMatch} keep track of the state of the system.  As each
-thread files through the mutex, it checks the state as if looking
-at the scoreboard, and reacts accordingly.
+%This is an example of a pattern we will see several times, which
+%I call a {\bf scoreboard}.  The variables {\tt numPaper}, {\tt numTobacco}
+%and {\tt numMatch} keep track of the state of the system.  As each
+%thread files through the mutex, it checks the state as if looking
+%at the scoreboard, and reacts accordingly.
+    این مثالی از الگویی است که آن را «جدول امتیاز»\LTRfootnote{scoreboard} خوانده و بعداً چندین مرتبه آن را خواهیم دید.   
+    متغیرهای     {\tt numPaper}، {\tt numTobacco} و  {\tt numMatch}    وضعیت سیستم را نگاه می‌دارند. 
+    از آنجایی که هر نخ از طریق میوتکس به ترتیب وارد می‌شود، مثل اینکه به جدول امتیاز نگاه کرده باشد وضعیت را بررسی نموده و مطابق آن عکس العمل نشان می‌دهد. 
 
 
 \clearemptydoublepage
-\chapter{Less classical synchronization problems}
+%\chapter{Less classical synchronization problems}
+\chapter{مسائل همگام‌سازی کمتر-کلاسیک}
 \label{next}
 
 
-\section{The dining savages problem}
+%\section{The dining savages problem}
+\section{مساله غذاخوردن درندگان}
 
-This problem is from Andrews's 
-{\em Concurrent Programming} \cite{andrews}.
+%This problem is from Andrews's 
+%{\em Concurrent Programming} \cite{andrews}.
+    این مساله از  \emph{برنامه‌نویسی همروند} \lr{Andrews}  اقتباس شده است\cite{andrews}. 
 
 \begin {quotation}
-A tribe of savages eats communal dinners from a large pot that can
-hold M servings of stewed missionary\footnote{This problem is based on
-a cartoonish representation of the history of Western missionaries
-among hunter-gatherer societies.  Some humor is intended by the
-allusion to the Dining Philosophers problem, but the representation of
-``savages'' here isn't intended to be any more realistic than the
-previous representation of philosophers.  If you are interested in
-hunter-gatherer societies, I recommend Jared Diamond's {\em Guns,
-Germs and Steel}, Napoleon Chagnon's {\em The Yanomamo}, and Redmond
-O'Hanlon's {\em In Trouble Again}, but not Tierney's {\em Darkness in
-El Dorado}, which I believe is unreliable.}.  When a savage wants to
-eat, he helps himself from the pot, unless it is empty.  If the pot is
-empty, the savage wakes up the cook and then waits until the cook has
-refilled the pot.
+%A tribe of savages eats communal dinners from a large pot that can
+%hold M servings of stewed missionary\footnote{This problem is based on
+%a cartoonish representation of the history of Western missionaries
+%among hunter-gatherer societies.  Some humor is intended by the
+%allusion to the Dining Philosophers problem, but the representation of
+%``savages'' here isn't intended to be any more realistic than the
+%previous representation of philosophers.  If you are interested in
+%hunter-gatherer societies, I recommend Jared Diamond's {\em Guns,
+%Germs and Steel}, Napoleon Chagnon's {\em The Yanomamo}, and Redmond
+%O'Hanlon's {\em In Trouble Again}, but not Tierney's {\em Darkness in
+%El Dorado}, which I believe is unreliable.}.  When a savage wants to
+%eat, he helps himself from the pot, unless it is empty.  If the pot is
+%empty, the savage wakes up the cook and then waits until the cook has
+%refilled the pot.
+    قبیله‌ای از وحشی‌ها، از یک دیگ بزرگ که می‌تواند \lr{M}  پرس ازمُبلّغ پخته شده را در خود نگاه دارد به صورت مشترک شام می‌خورند.
+%    \footnote{
+%    این مساله برای پایه نمایش کارتونی تاریخ مبلغین غربی در میان جوامع تشکیل شده با محوریت شکار است. مقداری طنز با کنایه به مساله غذاخوردن فلیسوف‌ها 
+%    تعمداً      }. 
+    زمانیکه یک وحشی می‌خواهد غذا بخورد، از درون دیگ از خود پذیرایی می‌کند مگر اینکه دیگ خالی باشد. 
+    اگر دیگ خالی بود، وحشی آشپز را بیدار نموده و سپس منتظر او می‌ماند تا دومرتبه دیگر را پر نماید.
 \end{quotation}
 
-Any number of savage threads run the following code:
+%Any number of savage threads run the following code:
+    هر تعداد نخ وحشی می‌تواند کد زیر را اجرا نماید:
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Unsynchronized savage code}]{}
+%\begin{lstlisting}[title={Unsynchronized savage code}]{}
+\begin{lstlisting}[title=\rl{کد ناهمگام یک وحشی}]{}
 while True:
     getServingFromPot()
     eat()
@@ -4809,33 +4839,41 @@ while True:
 \end{latin}
 \end{latin}
 
-And one cook thread runs this code:
+%And one cook thread runs this code:
+    و نخ یک آشپز کد زیر را اجرا می‌نماید:
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Unsynchronized cook code}]{}
+%\begin{lstlisting}[title={Unsynchronized cook code}]{}
+\begin{lstlisting}[title=\rl{کد ناهمگام آشپز}]{}
 while True:
     putServingsInPot(M)
 \end{lstlisting}
 \end{latin}
 \end{latin}
 
-The synchronization constraints are:
+%The synchronization constraints are:
+    محدودیت‌های همگام‌سازی عبارتند از:
 
 \begin{itemize}
 
-\item Savages cannot invoke {\tt getServingFromPot} if the
-pot is empty.
+\item 
+%Savages cannot invoke {\tt getServingFromPot} if the
+%pot is empty.
+    اگر دیگ خالی باشد وحشی‌ها نمی‌توانند {\tt getServingFromPot}  را فراخوانند. 
 
-\item The cook can invoke {\tt putServingsInPot} only if
-the pot is empty.
+\item 
+%The cook can invoke {\tt putServingsInPot} only if
+%the pot is empty.
+    آشپز تنها در صورتی می‌تواند  {\tt putServingsInPot} را فراخواند که دیگ خالی باشد. 
 
 \end{itemize}
 
-Puzzle: Add code for the savages and the cook that
-satisfies the synchronization constraints.
+%Puzzle: Add code for the savages and the cook that
+%satisfies the synchronization constraints.
+    معمّا: کدی برای وحشی‌ها و آشپز اضافه نمایید که محدودیت‌های همگام‌سازی را برآورده نماید. 
 
-
+%%%Sat 02 Dec 2017 06:03:27 PM +0330
 \clearemptydoublepage
 \subsection{Dining Savages hint}
 
