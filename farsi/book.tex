@@ -24,37 +24,54 @@
 \setdigitfont{Yas}
 \setlatintextfont{Linux Libertine}[Scale=0.94]
 \defpersianfont\yasfont{Yas}
-%کدهای زیر سبب نگارش تمامی‌ ارقام با قلم یاس می‌گردد. (در این قلم صفرها به صورت صحیح و توخالی نگاشته می‌شوند.)
 \makeatletter
-\if@bidi@csundef{bidi@digits}{% 
-\newcount\bidi@digits
-\XeTeXinterchartokenstate=\@ne
-\newXeTeXintercharclass\bidi@digits@charclass
-\bidi@digits=`\0 \loop \XeTeXcharclass \bidi@digits \bidi@digits@charclass \ifnum\bidi@digits<`\9 \advance\bidi@digits \@ne \repeat
-\bidi@digits=`\۰ \loop \XeTeXcharclass \bidi@digits \bidi@digits@charclass \ifnum\bidi@digits<`\۹ \advance\bidi@digits \@ne \repeat
-}{}
-\newXeTeXintercharclass\@leftparen@charclass
-\newXeTeXintercharclass\@rightparen@charclass
-\XeTeXcharclass `\( \@leftparen@charclass
-\XeTeXcharclass `\) \@rightparen@charclass
-\XeTeXcharclass `\[ \@leftparen@charclass
-\XeTeXcharclass `\] \@rightparen@charclass
-\ifdim\the\XeTeXversion\XeTeXrevision\p@>0.99993\p@
-  \chardef\@alloc@intercharclass@top=4095
-\else
-  \chardef\@alloc@intercharclass@top=255
-\fi
-\XeTeXinterchartoks \@alloc@intercharclass@top \bidi@digits@charclass = {\BeginSwitchDigitFont}
-\XeTeXinterchartoks \bidi@digits@charclass \@alloc@intercharclass@top = {\EndSwitchDigitFont}
-\XeTeXinterchartoks \@leftparen@charclass \bidi@digits@charclass = {\BeginSwitchDigitFont}
-\XeTeXinterchartoks \bidi@digits@charclass \@rightparen@charclass = {\EndSwitchDigitFont}
-\if@bidi@csundef{if@nonlatin}{%
-\newcommand*{\BeginSwitchDigitFont}{\if@Latin\else\yasfont \fi}
-\newcommand*{\EndSwitchDigitFont}{\if@Latin\else\setpersianfont \fi}
-}{%
-\newcommand*{\BeginSwitchDigitFont}{\if@nonlatin\yasfont \fi}
-\newcommand*{\EndSwitchDigitFont}{\if@nonlatin\setpersianfont \fi}
-}
+    %کدهای زیر سبب نگارش تمامی‌ ارقام با قلم یاس می‌گردد. (در این قلم صفرها به صورت صحیح و توخالی نگاشته می‌شوند.)
+    \if@bidi@csundef{bidi@digits}{% 
+        \newcount\bidi@digits
+        \XeTeXinterchartokenstate=\@ne
+        \newXeTeXintercharclass\bidi@digits@charclass
+        \bidi@digits=`\0 \loop \XeTeXcharclass \bidi@digits \bidi@digits@charclass \ifnum\bidi@digits<`\9 \advance\bidi@digits \@ne \repeat
+        \bidi@digits=`\۰ \loop \XeTeXcharclass \bidi@digits \bidi@digits@charclass \ifnum\bidi@digits<`\۹ \advance\bidi@digits \@ne \repeat
+    }{}
+    \newif\if@qom@verbatim
+    \bidi@appto\verbatim@font{\@qom@verbatimtrue}
+    \bidi@appto\ttfamily{\@qom@verbatimtrue}
+    \newXeTeXintercharclass\qom@leftparen@charclass
+    \newXeTeXintercharclass\qom@rightparen@charclass
+    \XeTeXcharclass `\( \qom@leftparen@charclass
+    \XeTeXcharclass `\) \qom@rightparen@charclass
+    \XeTeXcharclass `\[ \qom@leftparen@charclass
+    \XeTeXcharclass `\] \qom@rightparen@charclass
+    \XeTeXcharclass `\{ \qom@leftparen@charclass
+    \XeTeXcharclass `\} \qom@rightparen@charclass
+    \XeTeXcharclass `\« \qom@leftparen@charclass
+    \XeTeXcharclass `\» \qom@rightparen@charclass       
+    \XeTeXcharclass `\، \qom@leftparen@charclass    
+    \XeTeXcharclass `\, \qom@leftparen@charclass
+    \XeTeXcharclass `\؛ \qom@leftparen@charclass          
+    \XeTeXcharclass `\; \qom@leftparen@charclass          
+    \XeTeXcharclass `\: \qom@leftparen@charclass          
+    \XeTeXcharclass `\. \qom@leftparen@charclass     
+    \ifdim\the\XeTeXversion\XeTeXrevision\p@>0.99993\p@
+      \chardef\qom@alloc@intercharclass@top=4095
+    \else
+      \chardef\qom@alloc@intercharclass@top=255
+    \fi
+    \XeTeXinterchartoks \qom@alloc@intercharclass@top \bidi@digits@charclass = {\BeginSwitchDigitFont}
+    \XeTeXinterchartoks \bidi@digits@charclass \qom@alloc@intercharclass@top = {\EndSwitchDigitFont}
+    \XeTeXinterchartoks \qom@leftparen@charclass \bidi@digits@charclass = {\BeginSwitchDigitFont}
+    \XeTeXinterchartoks \bidi@digits@charclass \qom@rightparen@charclass = {\EndSwitchDigitFont}
+    \XeTeXinterchartoks \qom@rightparen@charclass \bidi@digits@charclass = {\BeginSwitchDigitFont}
+    \XeTeXinterchartoks \bidi@digits@charclass \qom@leftparen@charclass = {\EndSwitchDigitFont}    
+    \if@bidi@csundef{if@nonlatin}{%
+        \newcommand*{\BeginSwitchDigitFont}{\if@qom@verbatim\else%
+        \global\edef\currentfont{\the\font}\if@Latin\else\yasfont \fi\fi}
+        \newcommand*{\EndSwitchDigitFont}{\if@qom@verbatim\else\if@Latin\else\currentfont \fi\fi}
+    }{%
+        \newcommand*{\BeginSwitchDigitFont}{\if@qom@verbatim\else%
+        \global\edef\currentfont{\the\font}\if@nonlatin\yasfont \fi\fi}
+        \newcommand*{\EndSwitchDigitFont}{\if@qom@verbatim\else\if@nonlatin\currentfont \fi\fi}
+    }
 \makeatother
 
 
@@ -158,7 +175,7 @@ numbers=left, numberstyle=\tiny, numbersep=10pt}
 و همچنین ابزارهایی برای تست راه حل‌ها دادم، یه تخته مغناطیسی کوچک که می تونستن کدهاشون رو بنویسند و یک بسته آهنربا برای نمایش تردهای در حال اجرا.
 
 نتیجه بسیار چشمگیر بود، هر چه زمان بیشتری در اختیار داشنجویان می گذاشتم، عمق فهمشون بیشتر می شد، مهمتر اینکه غالبشون قادر به حل بیشتر معماها بودند، و در برخی حالات همان راه حل‌های کلاسیک را می یافتند و یا راه حل جدیدی را ایجاد می کردند.
-وقتی که رفتم کالج گام بعدی را با ایجاد کلاس فوق‌برنامه همگام سازی برداشتم، که در آن کلاس این کتاب تدریس می شد و همچنین پیاده سازی دستورات اولیه همگام‌سازی در زبان اسمبلی x86 و پاسیکس و پیتون.
+وقتی که رفتم کالج گام بعدی را با ایجاد کلاس فوق‌برنامه همگام سازی برداشتم، که در آن کلاس این کتاب تدریس می شد و همچنین پیاده سازی دستورات اولیه همگام‌سازی در زبان اسمبلی \lr{x86} و پاسیکس و پیتون.
 دانشجویانی که این درس را گرفتند در یافتن خطاهای نسخه نخست کمک کردند و چندتا از آنها راه‌حل‌هایی بهتر از راه حل‌های من ارائه داند در پایان ترم از هر کدام انها خواستم که یک مسائله جدید با ترجیحا با یک راه‌حل بنویسند. از این مشارکت‌ها در نسخه دوم استفاده کردم.
 
 بخش باقی مانده از پیشگفتار:
@@ -4796,7 +4813,7 @@ mutex.signal()
 
 
 %\section{The dining savages problem}
-\section{مساله غذاخوردن درندگان}
+\section{مساله غذاخوردن وحشی‌ها}
 
 %This problem is from Andrews's 
 %{\em Concurrent Programming} \cite{andrews}.
@@ -4872,25 +4889,33 @@ while True:
 %Puzzle: Add code for the savages and the cook that
 %satisfies the synchronization constraints.
     معمّا: کدی برای وحشی‌ها و آشپز اضافه نمایید که محدودیت‌های همگام‌سازی را برآورده نماید. 
-
 %%%Sat 02 Dec 2017 06:03:27 PM +0330
+
 \clearemptydoublepage
 \subsection{Dining Savages hint}
+\subsection{راهنمایی غذاخوردن وحشی‌ها}
 
-It is tempting to use a semaphore to keep track of the number of
-servings, as in the producer-consumer problem.  But in order to signal
-the cook when the pot is empty, a thread would have to know before
-decrementing the semaphore whether it would have to wait, and we just
-can't do that.
+%It is tempting to use a semaphore to keep track of the number of
+%servings, as in the producer-consumer problem.  But in order to signal
+%the cook when the pot is empty, a thread would have to know before
+%decrementing the semaphore whether it would have to wait, and we just
+%can't do that.
+    همانند مساله تولیدکننده-مصرف‌کننده  در اینجا نیز وسوسه می‌شویم که برای نگهداری تعداد پرس‌ها از سمافور استفاده نماییم. 
+    امّا به منظور سیگنال‌دهی به آشپز،‌ آن زمانی که دیگ خالی است، یک پیش از اینکه مقدار سمافور را کاهش دهد باید بداند که آیا باید منتظر بماند؟ و 
+    ما نمی‌توانیم چنین کاری کنیم. 
 
-An alternative is to use a scoreboard to
-keep track of the number of servings.  If a savage finds
-the counter at zero, he wakes the cook and waits for a signal
-that the pot is full.  Here are the variables I used:
+%An alternative is to use a scoreboard to
+%keep track of the number of servings.  If a savage finds
+%the counter at zero, he wakes the cook and waits for a signal
+%that the pot is full.  Here are the variables I used:
+    یک جایگزین این است که جدول امتیاز را به منظور نگهداری تعداد پرس‌ها بکار بریم. 
+    اگر یک وحشی شمارنده را صفر بیابد، آشپز را بیدار نموده و منتظر دریافت سینگال پرشدن دیگ می‌شود. 
+    متغیرهایی را که به کار برده‌ایم در ادامه مشاهده می‌نمایید:
 
 \begin{latin}
 \begin{latin}
 \begin{lstlisting}[title={Dining Savages hint}]{}
+\begin{lstlisting}[title=\rl{راهنمایی غذاخوردن وحشی‌ها}]{}
 servings = 0
 mutex = Semaphore(1)
 emptyPot = Semaphore(0)
@@ -4899,19 +4924,23 @@ fullPot = Semaphore(0)
 \end{latin}
 \end{latin}
 
-Not surprisingly, {\tt emptyPot} indicates that the pot is empty and
-{\tt fullPot} indicates that the pot is full.
+%Not surprisingly, {\tt emptyPot} indicates that the pot is empty and
+%{\tt fullPot} indicates that the pot is full.
+    جای تعجب نیست که {\tt emptyPot} نشانگر خالی بودن دیگ است و {\tt fullPot} بیانگر پربودن دیگ است. 
 
 \clearemptydoublepage
-\subsection{Dining Savages solution}
+%\subsection{Dining Savages solution}
+\subsection{راه‌ حل غذاخوردن وحشی‌ها}
 
-My solution is a combination of the scoreboard pattern
-with a rendezvous.
-Here is the code for the cook:
+%My solution is a combination of the scoreboard pattern
+%with a rendezvous.
+%Here is the code for the cook:
+    راه حل در اینجا ترکیبی از الگوی جدول امتیاز با یک قرار ملاقات است.  کد آشپز در ادامه آمده است. 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Dining Savages solution (cook)}]{}
+%\begin{lstlisting}[title={Dining Savages solution (cook)}]{}
+\begin{lstlisting}[title=\rl{راه‌ حل غذاخوردن وحشی‌ها (آشپز)}]{}
 while True:
     emptyPot.wait()
     putServingsInPot(M)
@@ -4920,14 +4949,17 @@ while True:
 \end{latin}
 \end{latin}
 
-The code for the savages is only a little more complicated.
-As each savage passes through the mutex, he checks the pot.
-If it is empty, he signals the cook and waits.  Otherwise,
-he decrements {\tt servings} and gets a serving from the pot.
+%The code for the savages is only a little more complicated.
+%As each savage passes through the mutex, he checks the pot.
+%If it is empty, he signals the cook and waits.  Otherwise,
+%he decrements {\tt servings} and gets a serving from the pot.
+    کد وحشی‌ها تنها کمی پیچیده‌تر است. از آنجایی که هر وحشی از میوتکس می‌گذرد، دیگ را بررسی می‌نماید. 
+    اگر دیگ خالی باشد، به آشپز سیگنال داده و منتظر می‌ماند و الا  {\tt servings} را کاهش داده و پرسی را از دیگ بر می‌دارد. 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Dining Savages solution (savage)}]{}
+%\begin{lstlisting}[title={Dining Savages solution (savage)}]{}
+\begin{lstlisting}[title=\rl{راه‌ حل غذاخوردن وحشی‌ها (وحشی)}]{}
 while True:
     mutex.wait()
         if servings == 0:
@@ -4943,119 +4975,170 @@ while True:
 \end{latin}
 \end{latin}
 
-It might seem odd that the savage, rather than the cook, sets
-{\tt servings = M}.  That's not really necessary; when the cook
-runs {\tt putServingsInPot}, we know that the savage that holds
-the mutex is waiting on {\tt fullPot}.  So the cook could
-access {\tt servings} safely.  But in this case, I decided to
-let the savage do it so that it is clear from looking at the
-code that all accesses to {\tt servings} are inside the mutex.
+%It might seem odd that the savage, rather than the cook, sets
+%{\tt servings = M}.  That's not really necessary; when the cook
+%runs {\tt putServingsInPot}, we know that the savage that holds
+%the mutex is waiting on {\tt fullPot}.  So the cook could
+%access {\tt servings} safely.  But in this case, I decided to
+%let the savage do it so that it is clear from looking at the
+%code that all accesses to {\tt servings} are inside the mutex.
+    اینکه وحشی بجای آشپز دستور {\tt servings = M} را اجرا می‌کند شاید کمی عجیب بنظر آید. واقعاً ضرورتی به اینکار نبود، زمانی که 
+    آشپز {\tt putServingsInPot} را اجرا می‌نماید، می‌دانیم آن وحشی که میوتکس را در اختیار دارد روی {\tt fullPot} منتظر می‌ماند. 
+    لذا آشپز به  {\tt servings} دسترسی اَمنی دارد.  امّا در این حالت،‌ تصمیم گرفتم که وحشی این کار را انجام دهد چنانکه با نگاه به کد نیز 
+    واضح است که تمامی دسترسی‌های به  {\tt servings} درون میوتکس انجام می‌پذیرد. 
+    
 
-This solution is deadlock-free.  The only opportunity for
-deadlock comes when the savage that holds {\tt mutex} waits
-for {\tt fullPot}.  While he is waiting, other savages are
-queued on {\tt mutex}.  But eventually the cook will run and
-signal {\tt fullPot}, which allows the waiting savage
-to resume and release the mutex.
+%This solution is deadlock-free.  The only opportunity for
+%deadlock comes when the savage that holds {\tt mutex} waits
+%for {\tt fullPot}.  While he is waiting, other savages are
+%queued on {\tt mutex}.  But eventually the cook will run and
+%signal {\tt fullPot}, which allows the waiting savage
+%to resume and release the mutex.
+    این راه حل، بدون بن‌بست است. تنها امکان بن‌بست زمانی رخ می‌دهد که آن وحشی‌ای که {\tt mutex}  را نگاه داشته منتظر {\tt fullPot} می‌ماند. 
+    زمانیکه او منتظر است، سایر وحشی‌ها روی {\tt mutex} در صف انتظار قرار می‌گیرند. اما نهایتاً آشپز اجرا شده و به {\tt fullPot} سیگنال می‌دهد، 
+    و این منجر به این می‌شود که  وحشی منتظر ادامه یافته و میوتکس را آزاد نماید. 
+    
 
-Does this solution assume that the pot is thread-safe, or does it
-guarantee that {\tt putServingsInPot} and {\tt getServingFromPot}
-are executed exclusively?
+%Does this solution assume that the pot is thread-safe, or does it
+%guarantee that {\tt putServingsInPot} and {\tt getServingFromPot}
+%are executed exclusively?
+    آیا این راه حل فرض نموده است است دیگ نخ-ایمن\footnote{
+    در برنامه‌نویسی چند نخی، کدی را نخ-ایمن گوییم که تضمین نماید ساختمان داده‌های اشتراکی بدون دخالت‌های ناخواسته دیگر نخ‌ها، بروزرسانی شود. 
+    }  است و یا تضمین می‌نماید که  {\tt putServingsInPot} و {\tt getServingFromPot} 
+    به صورت انحصاری انجام شوند.
 
 
 \clearemptydoublepage
-\section{The barbershop problem}
+%\section{The barbershop problem}
+\section{مساله آرایشگاه}
 
-The original barbershop problem was proposed by
-Dijkstra.  A variation of it appears in 
-Silberschatz and Galvin's {\em Operating Systems Concepts}
-\cite{silberschatz}.
+%The original barbershop problem was proposed by
+%Dijkstra.  A variation of it appears in 
+%Silberschatz and Galvin's {\em Operating Systems Concepts}
+%\cite{silberschatz}.
+    مساله اصلی آرایشگر بوسیله \lr{Dijkstra} پیشنهاد شد. یک گونه دیگر آن در کتاب اصول سیستم‌های عامل \lr{Silberschatz} و \lr{Galvin}
+    آمده است. 
 
 \begin {quotation}
-A barbershop consists of a waiting room with $n$ chairs, and the
-barber room containing the barber chair.  If there are no customers to
-be served, the barber goes to sleep.  If a customer enters the
-barbershop and all chairs are occupied, then the customer leaves the
-shop.  If the barber is busy, but chairs are available, then the
-customer sits in one of the free chairs.  If the barber is asleep, the
-customer wakes up the barber.  Write a program to coordinate the
-barber and the customers.
+%A barbershop consists of a waiting room with $n$ chairs, and the
+%barber room containing the barber chair.  If there are no customers to
+%be served, the barber goes to sleep.  If a customer enters the
+%barbershop and all chairs are occupied, then the customer leaves the
+%shop.  If the barber is busy, but chairs are available, then the
+%customer sits in one of the free chairs.  If the barber is asleep, the
+%customer wakes up the barber.  Write a program to coordinate the
+%barber and the customers.
+    یک آرایشگاه شامل یک صف انتظار با $n$ صندلی و اتاق آرایشگر با صندلی آرایشگر است. اگر هیچ مشتری وجود نداشته باشد 
+    آرایشگر می‌خوابد. اگر یک مشتری وارد آرایشگاه شود و تمامی صندلی‌ها اشغال شده باشد، آنگاه مشتری مغازه را ترک می‌نماید. 
+    اگر آرایشگر مشغول باشد، اما صندلی موجود باشد، مشتری روی یکی از صندلی‌های خالی می‌نشیند. اگر آرایشگر خواب باشد، مشتری او را بیدار می‌نماید. 
+    برنامه‌ای بنویسید که آرایشگر و مشتری‌ها را هماهنگ نماید. 
 \end{quotation}
 
-To make the problem a little more concrete, I added the
-following information:
+%To make the problem a little more concrete, I added the
+%following information:
+    برای اینکه مساله را کمی واقعی‌تر نماییم، اطلاعات زیر را به آن می‌افزاییم: 
 
 \begin{itemize}
 
-\item Customer threads should invoke a function named {\tt getHairCut}.
+\item %Customer threads should invoke a function named {\tt getHairCut}.
+    نخ‌های مشتری باید تابعی به نام {\tt getHairCut} را فراخوانند. 
 
-\item If a customer thread arrives when the shop is full, 
-it can invoke {\tt balk}, which does not return.
+\item 
+%If a customer thread arrives when the shop is full, 
+%it can invoke {\tt balk}, which does not return.
+    اگر زمانیکه آرایشگاه پر است یک نخ مشتری برسد، می‌تواند {\tt balk} را که هیچ مقداری بر نمی‌گرداند،  فرخواند. 
 
-\item The barber thread should invoke {\tt cutHair}.
+\item %The barber thread should invoke {\tt cutHair}.
+    نخ آرایشگر باید {\tt cutHair} را فراخواند. 
 
-\item When the barber invokes {\tt cutHair} there should
-be exactly one thread invoking {\tt getHairCut} concurrently.
+\item 
+%When the barber invokes {\tt cutHair} there should
+%be exactly one thread invoking {\tt getHairCut} concurrently.
+    زمانیکه آرایشگر {\tt cutHair} را فرا می‌خواند،‌ باید دقیقاً تنها یک نخ باشد که به طور همزمان  {\tt getHairCut} را فرا می‌خواند. 
 
 \end{itemize}
 
-Write a solution that guarantees these constraints.
+%Write a solution that guarantees these constraints.
+    راه حلی ارائه دهید  که شرایط فوق را تضمین نماید. 
 
 
 \clearemptydoublepage
-\subsection{Barbershop hint}
+%\subsection{Barbershop hint}
+\subsection{راهنمایی آرایشگاه}
 
-\lstinputlisting[title=Barbershop hint]{../code/barber.py.0}
+%\lstinputlisting[title=Barbershop hint]{../code/barber.py.0}
+\lstinputlisting[title=\rl{راهنمایی آرایشگاه}]{../code/barber.py.0}
 
-{\tt n} is the total number of customers that can be in the shop:
-three in the waiting room and one in the chair.
+%{\tt n} is the total number of customers that can be in the shop:
+%three in the waiting room and one in the chair.
+    {\tt n}    تعداد کل مشتری‌هایی است که می‌توانند در آرایشگاه باشند: سه نفر در اتاق انتظار و یک نفر روی صندلی آرایش. 
 
-{\tt customers} counts the number of customers in the shop;
-it is protected by {\tt mutex}.
+%{\tt customers} counts the number of customers in the shop;
+%it is protected by {\tt mutex}.
+    {\tt customers}        تعداد مشتری‌های درون آرایشگاه را می‌شمرد و بوسیله  {\tt mutex} حفاظت می‌ شود. 
+    
 
-The barber waits on {\tt customer} until a customer enters the
-shop, then the customer waits on {\tt barber} until the barber
-signals him to take a seat.
+%The barber waits on {\tt customer} until a customer enters the
+%shop, then the customer waits on {\tt barber} until the barber
+%signals him to take a seat.
+    آرایشگر روی {\tt customer} منتظر می‌ماند تا یک مشتری وارد شده و سپس مشتری روی  {\tt barber} می‌ماند تا زمانیکه آرایشگر 
+    به او سینگال نشتن روی صندلی آرایش را بدهد. 
 
-After the haircut, the customer signals {\tt customerDone} and
-waits on {\tt barberDone}.
+%After the haircut, the customer signals {\tt customerDone} and
+%waits on {\tt barberDone}.
+    پس از آرایش مو، مشتری به  {\tt customerDone}  سیگنال می‌دهد و روی {\tt barberDone} منتظر می‌ماند. 
 
 \clearemptydoublepage
-\subsection{Barbershop solution}
+%\subsection{Barbershop solution}
+\subsection{راه حل آرایشگاه}
 
-This solution combines a scoreboard and two rendezvouses\footnote{The
-  plural of rendezvous is rare, and not all dictionaries agree about
-  what it is.  Another possibility is that the plural is also spelled
-  ``rendezvous,'' but the final ``s'' is pronounced.}.  Here is the
-code for customers:
+%This solution combines a scoreboard and two rendezvouses\footnote{The
+%  plural of rendezvous is rare, and not all dictionaries agree about
+%  what it is.  Another possibility is that the plural is also spelled
+%  ``rendezvous,'' but the final ``s'' is pronounced.}.  Here is the
+%code for customers:
+    این راه حل یک جدول امتیاز و دو قرار ملاقات را ترکیب می‌نماید. کد مشتری‌ها در ادامه آمده است. 
 
-\lstinputlisting[title=Barbershop solution (customer)]{../code/barber.py.1}
+%\lstinputlisting[title=Barbershop solution (customer)]{../code/barber.py.1}
+\lstinputlisting[title=\rl{راه حل آرایشگاه (مشتری)}]{../code/barber.py.1}
 
-If there are $n$ customers in the shop any customers that
-arrive immediately invoke {\tt balk}.
-Otherwise each customer signals {\tt customer} and waits on
-{\tt barber}.
+%If there are $n$ customers in the shop any customers that
+%arrive immediately invoke {\tt balk}.
+%Otherwise each customer signals {\tt customer} and waits on
+%{\tt barber}.
+    اگر  $n$ مشتری در آرایشگاه وجود داشته باشد، هر مشتری که می‌رسد بلافاصله {\tt balk} را فرا می‌خواند و الّا هر مشتری {\tt customer}  
+    سیگال داده و روی {\tt barber} منتظر می‌ماند. 
 
-Here is the code for barbers:
+    % type: barbers -> barber
+%Here is the code for barbers:
+    کد آرایشگر در ادامه آمده است. 
 
-\lstinputlisting[title=Barbershop solution (barber)]{../code/barber.py.2}
+%\lstinputlisting[title=Barbershop solution (barber)]{../code/barber.py.2}
+\lstinputlisting[title=\rl{راه حل آرایشگاه (آرایشگر)}]{../code/barber.py.2}
 
-Each time a customer signals,
-the barber wakes, signals {\tt barber}, and gives one
-hair cut.  If another customer arrives while the barber
-is busy, then on the next iteration the barber will pass
-the {\tt customer} semaphore without sleeping.
+%Each time a customer signals,
+%the barber wakes, signals {\tt barber}, and gives one
+%hair cut.  If another customer arrives while the barber
+%is busy, then on the next iteration the barber will pass
+%the {\tt customer} semaphore without sleeping.
+    هر زمان که  یک مشتری سیگنال می‌دهد، آرایشگر بیدار شده، به  {\tt barber} سیگنال می‌دهد، و مشغول آرایش یک نفر می‌شود. 
+    اگر آن زمانیکه آرایشگر مشغول است مشتری دیگری برسد، آنگاه در تکرار بعدی آرایشگر بدون اینکه بخوابد از سمافور {\tt customer} می‌گذرد. 
 
-The names for {\tt customer} and {\tt barber} are based on
-the naming convention for a rendezvous, so {\tt customer.wait()}
-means ``wait for a customer,'' not ``customers wait here.''
+%The names for {\tt customer} and {\tt barber} are based on
+%the naming convention for a rendezvous, so {\tt customer.wait()}
+%means ``wait for a customer,'' not ``customers wait here.''
+    اسامی {\tt customer} و {\tt barber} بر مبنای قرارداد نامگذاری یک قرار ملاقات هستند، لذا {\tt customer.wait()} 
+    به معنای ''انتظار برای یک مشتری`` است و نه اینکه ''مشتری‌های در اینجا منتظرند``. 
 
-The second rendezvous, using {\tt customerDone} and {\tt barberDone},
-ensures that the hair cut is done before the barber loops around to
-let the next customer into the critical section.
+%The second rendezvous, using {\tt customerDone} and {\tt barberDone},
+%ensures that the hair cut is done before the barber loops around to
+%let the next customer into the critical section.
+    قرار ملاقات دوم با استفاده از  {\tt customerDone} و {\tt barberDone}، تضمین می‌نماید کار آرایش فعلی تمام شده باشد
+    پیش از اینکه آرایشگر به ابتدای حلقه برگردد و به مشتری بعدی اجازه ورود به ناحیه بحرانی دهد. 
 
-This solution is in \verb"sync_code/barber.py" (see~\ref{sync.py}).
-
+%This solution is in \verb"sync_code/barber.py" (see~\ref{sync.py}).
+    این راه حل در \verb"sync_code/barber.py" آمده است (نگ.~\ref{sync.py}).
+%%%    Mon 04 Dec 2017 06:21:40 PM +0330
 
 \clearemptydoublepage
 \section{The FIFO barbershop}
