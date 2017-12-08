@@ -5141,62 +5141,86 @@ while True:
 %%%    Mon 04 Dec 2017 06:21:40 PM +0330
 
 \clearemptydoublepage
-\section{The FIFO barbershop}
+%\section{The FIFO barbershop}
+\section{آرایشگاه FIFO}
 
-In the previous solution there is no guarantee that customers are
-served in the order they arrive.  Up to {\tt n} customers can pass
-the turnstile, signal
-{\tt customer} and wait on {\tt barber}.  When the barber signal
-{\tt barber}, any of the customers might proceed.
+%In the previous solution there is no guarantee that customers are
+%served in the order they arrive.  Up to {\tt n} customers can pass
+%the turnstile, signal
+%{\tt customer} and wait on {\tt barber}.  When the barber signal
+%{\tt barber}, any of the customers might proceed.
+    در راه‌حل قبل تضمینی وجود ندارد که مشتریان به همان ترتیبی که می‌رسند سرویس دریافت کنند. 
+    تا سقف {\tt n} مشتری می‌توانند از ترن‌استایل گذر کنند، به {\tt customer} سینگال داده، 
+    و روی {\tt barber} منتظر بمانند. زمانیکه آرایشگر به {\tt barber} سیگنال دهد، هر یک از 
+    مشتریان ممکن است ادامه دهد.
 
-Modify this solution so that customers are served in the order they
-pass the turnstile.
-
-Hint: you can refer to the current thread as {\tt self}, so if you
-write {\tt self.sem = Semaphore(0)}, each thread gets its own
-semaphore.
-
-
-\clearemptydoublepage
-\subsection{FIFO barbershop hint}
-
-My solution uses a list of semaphores named {\tt queue}.
-
-\lstinputlisting[title=FIFO barbershop hint]{../code/barber2.py.0}
-
-As each thread passes the turnstile, it creates a thread and puts it
-in the queue.
-
-Instead of waiting on {\tt barber}, each thread waits on its own
-semaphore.  When the barber wakes up, he removes a thread from the queue and
-signals it.
+%Modify this solution so that customers are served in the order they
+%pass the turnstile.
+	این راه‌حل را به گونه‌ای تغییر دهید که مشتریان به همان ترتیبی که از ترن‌استایل عبور می‌کنند سرویس دریافت نمایند.
+  
+%Hint: you can refer to the current thread as {\tt self}, so if you
+%write {\tt self.sem = Semaphore(0)}, each thread gets its own
+%semaphore.
+	راهنمایی: می‌توانید به نخ جاری به صورت {\tt self} ارجاع دهید، 
+	لذا وقتی می‌نویسد {\tt self.sem = Semaphore(0)}، هر نخ سمافور خودش را می‌گیرد.
 
 
 \clearemptydoublepage
-\subsection{FIFO barbershop solution}
+%\subsection{FIFO barbershop hint}
+\subsection{راهنمایی آرایشگاه FIFO}
 
-Here is the modified code for customers:
+%My solution uses a list of semaphores named {\tt queue}.
+	من از لیستی از سمافورها به نام {\tt queue} در راه‌حل خود استفاده می‌کنم.
 
-\lstinputlisting[title=FIFO barbershop solution (customer)]
+%\lstinputlisting[title=FIFO barbershop hint]{../code/barber2.py.0}
+\lstinputlisting[title=راهنمایی آرایشگاه FIFO]{../code/barber2.py.0}
+
+%As each thread passes the turnstile, it creates a thread and puts it
+%in the queue.
+	زمانی‌که هر یک از نخ‌ها از ترن‌استایل عبور می‌کند، یک نخ ساخته و آن را در صف قرار می‌دهد.
+
+%Instead of waiting on {\tt barber}, each thread waits on its own
+%semaphore.  When the barber wakes up, he removes a thread from the queue and
+%signals it.
+	به جای انتظار روی {\tt barber}، هر نخ روی سمافور خودش منتظر می‌ماند. 
+	وقتیکه آرایشگر بیدار می‌شود، یک نخ را از صف خارج کرده و به آن سیگنال می‌دهد.
+
+
+\clearemptydoublepage
+%\subsection{FIFO barbershop solution}
+\subsection{راه‌حل آرایشگاه FIFO}
+
+%Here is the modified code for customers:
+	در ادامه کد تغییریافتهٔ مشتریان آمده است:
+
+%\lstinputlisting[title=FIFO barbershop solution (customer)]
+\lstinputlisting[title=راه‌حل آرایشگاه FIFO (مشتری)]
 {../code/barber2.py.1}
 
-And the code for barbers:
+%And the code for barbers:
+	و کد آرایشگر به این صورت است:
 
-\lstinputlisting[title=FIFO barbershop solution (barber)]
+%\lstinputlisting[title=FIFO barbershop solution (barber)]
+\lstinputlisting[title=راه‌حل آرایشگاه FIFO (آرایشگر)]
 {../code/barber2.py.2}
 
-Notice that the barber has to get {\tt mutex} to access the
-queue.
+%Notice that the barber has to get {\tt mutex} to access the
+%queue.
+	توجه نمایید که آرایشگر باید {\tt mutex} را بگیرد تا به صف دسترسی داشته باشد.
 
-This solution is in \verb"sync_code/barber2.py" (see~\ref{sync.py}).
-
+%This solution is in \verb"sync_code/barber2.py" (see~\ref{sync.py}).
+	این راه حل در \verb"sync_code/barber2.py" آمده است (نگ.~\ref{sync.py}).
 
 \clearemptydoublepage
-\section {Hilzer's Barbershop problem}
+%\section {Hilzer's Barbershop problem}
+\section {مسألهٔ آرایشگاه هیلزر}
 
 William Stallings \cite{stallings} presents a more complicated version
 of the barbershop problem, which he attributes to Ralph Hilzer at the
 California State University at Chico.
+	ویلیام استالینگز \cite{stallings}  یک نسخهٔ پیچیده‌تر از مسألهٔ آرایشگاه را ارائه می‌دهد، 
+	که به رالف هیلزر در داشنگاه ایالتی کالیفرنیا در چیکو اختصاص می‌دهد.
+	یا: که آن را متعلق به رالف هیلزر در داشنگاه ایالتی کالیفرنیا در چیکو می‌داند.
 
 \begin{quotation}
 Our barbershop has three chairs, three barbers, and a waiting
