@@ -52,6 +52,7 @@
     \XeTeXcharclass `\; \q@leftparen@charclass          
     \XeTeXcharclass `\: \q@leftparen@charclass          
     \XeTeXcharclass `\. \q@leftparen@charclass     
+    \XeTeXcharclass `\- \q@leftparen@charclass     
     \ifdim\the\XeTeXversion\XeTeXrevision\p@>0.99993\p@
       \chardef\q@alloc@intercharclass@top=4095
     \else
@@ -68,14 +69,13 @@
     \XeTeXinterchartoks \bidi@digits@charclass \q@CharNormal = {\EndSwitchDigitFont}    
     \if@bidi@csundef{if@nonlatin}{%
         \newcommand*{\BeginSwitchDigitFont}{\if@q@verbatim\else%
-        \global\edef\currentfont{\the\font}\if@Latin\else\yasfont \fi\fi}
-        \newcommand*{\EndSwitchDigitFont}{\if@q@verbatim\else\if@Latin\else\currentfont \fi\fi}
+        \global\edef\currentfont{\the\font}\if@Latin\else\bgroup\yasfont \fi\fi}
+        \newcommand*{\EndSwitchDigitFont}{\if@q@verbatim\else\if@Latin\else\egroup\currentfont \fi\fi}
     }{%
         \newcommand*{\BeginSwitchDigitFont}{\if@q@verbatim\else%
-        \global\edef\currentfont{\the\font}\if@nonlatin\yasfont \fi\fi}
-        \newcommand*{\EndSwitchDigitFont}{\if@q@verbatim\else\if@nonlatin\currentfont \fi\fi}
-    }
-    
+        \global\edef\currentfont{\the\font}\if@nonlatin\bgroup\yasfont \fi\fi}
+        \newcommand*{\EndSwitchDigitFont}{\if@q@verbatim\else\if@nonlatin\egroup\currentfont \fi\fi}
+    }    
 \makeatother
 
 
@@ -1957,7 +1957,7 @@ critical point
 \begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Reusable barrier non-solution}]{} 
-\begin{lstlisting}[title=\rl{{  نا راه حل حصار با قابلیت استفاده مجدد}}]{} 
+\begin{lstlisting}[title=\rl{  نا راه حل حصار با قابلیت استفاده مجدد}]{} 
 
 rendezvous
 
@@ -2026,7 +2026,7 @@ if count == 0: turnstile.wait()         (*\label{problem2}*)
 \begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Reusable barrier non-solution}]{}
-\begin{lstlisting}[title=\rl{{  نا راه حل حصار با قابلیت استفاده مجدد}}]{} 
+\begin{lstlisting}[title=\rl{ نا راه حل حصار با قابلیت استفاده مجدد}]{} 
 rendezvous
 
 mutex.wait()
@@ -2082,7 +2082,7 @@ mutex.signal()
 \begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Reusable barrier hint}]{}
-\begin{lstlisting}[title=\rl{{  راهنمای حصار با قابلیت استفاده مجدد}}]{} 
+\begin{lstlisting}[title=\rl{ راهنمای حصار با قابلیت استفاده مجدد}]{} 
 turnstile = Semaphore(0)
 turnstile2 = Semaphore(1)
 mutex = Semaphore(1)
@@ -2109,7 +2109,7 @@ mutex = Semaphore(1)
 \begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Reusable barrier solution}]{}
-\begin{lstlisting}[title=\rl{{  راهنمای حصار با قابلیت استفاده مجدد}}]{} 
+\begin{lstlisting}[title=\rl{ راهنمای حصار با قابلیت استفاده مجدد}]{} 
 # rendezvous
 
 mutex.wait()
@@ -4300,7 +4300,7 @@ def put_forks(i):
 \begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Variables for Tanenbaum's solution}]{}
-\begin{lstlisting}[title={متغیرهای راه حل تننبام}]{}
+\begin{lstlisting}[title=\rl{متغیرهای راه حل تننبام}]{}
 state = ['thinking'] * 5
 sem = [Semaphore(0) for i in range(5)]
 mutex = Semaphore(1)
@@ -4318,7 +4318,7 @@ mutex = Semaphore(1)
 \begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Tanenbaum's solution}]{}
-\begin{lstlisting}[title={ راه حل تننبام}]{}
+\begin{lstlisting}[title=\rl{ راه حل تننبام}]{}
 def get_fork(i):
     mutex.wait()
     state[i] = 'hungry'
@@ -4519,7 +4519,7 @@ def test(i):
 \begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Agent semaphores}]{}
-\begin{lstlisting}[title={سمافورهای عامل}]{}
+\begin{lstlisting}[title=\rl{سمافورهای عامل}]{}
 agentSem = Semaphore(1)
 tobacco = Semaphore(0)
 paper = Semaphore(0)
@@ -4540,7 +4540,7 @@ match = Semaphore(0)
 \begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Agent A code}]{}
-\begin{lstlisting}[title={کد عامل \lr{A}}]{}
+\begin{lstlisting}[title=\rl{کد عامل \lr{A}}]{}
 agentSem.wait()
 tobacco.signal()
 paper.signal()
@@ -4550,7 +4550,7 @@ paper.signal()
 
 \begin{latin}
 %\begin{lstlisting}[title={Agent B code}]{}
-\begin{lstlisting}[title={کد عامل \lr{B}}]{}
+\begin{lstlisting}[title=\rl{کد عامل \lr{B}}]{}
 agentSem.wait()
 paper.signal()
 match.signal()
@@ -4559,7 +4559,7 @@ match.signal()
 
 \begin{latin}
 %\begin{lstlisting}[title={Agent C code}]{}
-\begin{lstlisting}[title={کد عامل \lr{C}}]{}
+\begin{lstlisting}[title=\rl{کد عامل \lr{C}}]{}
 agentSem.wait()
 tobacco.signal()
 match.signal()
@@ -4575,7 +4575,7 @@ match.signal()
 \begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Smoker with matches}]{}
-\begin{lstlisting}[title={سیگاری با کبریت}]{}
+\begin{lstlisting}[title=\rl{سیگاری با کبریت}]{}
 tobacco.wait()
 paper.wait()
 agentSem.signal()
@@ -4584,7 +4584,7 @@ agentSem.signal()
 
 \begin{latin}
 %\begin{lstlisting}[title={Smoker with tobacco}]{}
-\begin{lstlisting}[title={سیگاری با تنباکو}]{}
+\begin{lstlisting}[title=\rl{سیگاری با تنباکو}]{}
 paper.wait()
 match.wait()
 agentSem.signal()
@@ -4593,7 +4593,7 @@ agentSem.signal()
 
 \begin{latin}
 %\begin{lstlisting}[title={Smoker with paper}]{}
-\begin{lstlisting}[title={سیگاری با کاغذ}]{}
+\begin{lstlisting}[title=\rl{سیگاری با کاغذ}]{}
 tobacco.wait()
 match.wait()
 agentSem.signal()
@@ -4637,7 +4637,7 @@ agentSem.signal()
 \begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Smokers problem hint}]{}
-\begin{lstlisting}[title={راهنمایی مساله سیگاری‌ها}]{}
+\begin{lstlisting}[title=\rl{راهنمایی مساله سیگاری‌ها}]{}
 isTobacco = isPaper = isMatch = False
 tobaccoSem = Semaphore(0)
 paperSem = Semaphore(0)
@@ -4663,7 +4663,7 @@ matchSem = Semaphore(0)
 \begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Pusher A}]{}
-\begin{lstlisting}[title={فروشنده \lr{A}}]{}
+\begin{lstlisting}[title=\rl{فروشنده \lr{A}}]{}
 tobacco.wait()
 mutex.wait()
     if isPaper:
@@ -4701,7 +4701,7 @@ mutex.signal()
 \begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Smoker with tobacco}]{}
-\begin{lstlisting}[title={فرد سیگاری با تنباکو}]{}
+\begin{lstlisting}[title=\rl{فرد سیگاری با تنباکو}]{}
 tobaccoSem.wait()
 makeCigarette()
 agentSem.signal()
@@ -4759,8 +4759,8 @@ numTobacco = numPaper = numMatch = 0
 
 
 \clearemptydoublepage
-\subsection{Generalized Smokers Problem Solution}
-\subsection{راه حل تعمیم مساله سیگاری‌ها}
+%\subsection{Generalized Smokers Problem Solution}
+\subsection{راه حل تعمیم‌یافته مساله سیگاری‌ها}
 \label{smoker}
 
 %Here is the modified code for Pusher A:
@@ -5184,7 +5184,7 @@ while True:
 
 \begin{latin}
 %\lstinputlisting[title=FIFO barbershop hint]{../code/barber2.py.0}
-\lstinputlisting[title=راهنمایی آرایشگاه FIFO]{../code/barber2.py.0}
+\lstinputlisting[title=\rl{راهنمایی آرایشگاه \lr{FIFO}}]{../code/barber2.py.0}
 \end{latin}
 
 %As each thread passes the turnstile, it creates a thread and puts it
@@ -5207,7 +5207,7 @@ while True:
 
 \begin{latin}
 %\lstinputlisting[title=FIFO barbershop solution (customer)]
-\lstinputlisting[title=راه‌حل آرایشگاه FIFO (مشتری)]
+\lstinputlisting[title=\rl{راه‌حل آرایشگاه \lr{FIFO} (مشتری)}]
 {../code/barber2.py.1}
 \end{latin}
 
@@ -5216,7 +5216,7 @@ while True:
 
 \begin{latin}
 %\lstinputlisting[title=FIFO barbershop solution (barber)]
-\lstinputlisting[title=راه‌حل آرایشگاه FIFO (آرایشگر)]
+\lstinputlisting[title=\rl{راه‌حل آرایشگاه \lr{FIFO} (آرایشگر)}]
 {../code/barber2.py.2}
 \end{latin}
 
@@ -5392,7 +5392,7 @@ while True:
 
 %When it gets out of {\em that} queue, it gets a haircut, pays,
 %and then exits.
-    زمانیکه از آن صف خارج می‌شود، آرایش شده، پرداخت انجام داده و خارج می‌شود. 
+    زمانیکه از آن صف خارج می‌شود، آرایش شده، پرداخت انجام داده و خارج می‌شود.
 
 \begin{latin}
 %\lstinputlisting[title=Hilzer's barbershop solution (barber)]
