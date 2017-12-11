@@ -5147,7 +5147,7 @@ while True:
     پیش از اینکه آرایشگر به ابتدای حلقه برگردد و به مشتری بعدی اجازه ورود به ناحیه بحرانی دهد. 
 
 %This solution is in \verb"sync_code/barber.py" (see~\ref{sync.py}).
-    این راه حل در \verb"sync_code/barber.py" آمده است (نگ.~\ref{sync.py}).
+    این راه حل در \verb"sync_code/barber.py" آمده است (ر.ک.~\ref{sync.py}).
 %%%    Mon 04 Dec 2017 06:21:40 PM +0330
 
 \clearemptydoublepage
@@ -5225,7 +5225,7 @@ while True:
 	توجه نمایید که آرایشگر باید {\tt mutex} را بگیرد تا به صف دسترسی داشته باشد.
 
 %This solution is in \verb"sync_code/barber2.py" (see~\ref{sync.py}).
-	این راه حل در \verb"sync_code/barber2.py" آمده است (نگ.~\ref{sync.py}).
+	این راه حل در \verb"sync_code/barber2.py" آمده است (ر.ک.~\ref{sync.py}).
 
 \clearemptydoublepage
 %\section {Hilzer's Barbershop problem}
@@ -5400,58 +5400,81 @@ while True:
 {../code/barber3.py.2}
 \end{latin}
 
-%%%    Sat 09 Dec 2017 06:03:07 PM +0330   
+%%%    Sat 09 Dec 2017 06:03:07 PM +0330
 
-Each barber waits for a customer to enter, signals the customer's
-semaphore to get it out of queue, then waits for it to claim a seat
-on the sofa.  This enforces the FIFO requirement.
+%Each barber waits for a customer to enter, signals the customer's
+%semaphore to get it out of queue, then waits for it to claim a seat
+%on the sofa.  This enforces the FIFO requirement.
+    هر آرایشگر منتظر یک مشتری می‌ماند تا وارد شده، به سمافور مشتری سیگنال می‌دهد تا او را از صف خارج نماید، سپس منتظر او می‌ماند 
+    تا درخواست نشستن روی کاناپه بدهد. این روند، نیاز \lr{FIFO} را برآورده می‌کند.
 
-The barber waits for the customer to join the second queue and then
-signals it, allowing the customer to claim a chair.
+%The barber waits for the customer to join the second queue and then
+%signals it, allowing the customer to claim a chair.
+    آرایشگر منتظر مشتری می‌ماند تا به صف دوم ملحق شود و سپس با سیگنال دادن به او اجازه می‌دهد که یک صندلی را مطالبه کند. 
 
-Each barber admits one customer to the chair, so there can by up
-to three concurrent haircuts.  Because there is only one cash
-register, the customer has to get {\tt mutex}.  The customer
-and barber rendezvous at the cash register, then both exit.
+%Each barber admits one customer to the chair, so there can by up
+%to three concurrent haircuts.  Because there is only one cash
+%register, the customer has to get {\tt mutex}.  The customer
+%and barber rendezvous at the cash register, then both exit.
+    هر آرایشگر تنها به یک مشتری اجازه می‌دهد که روی صندلی بنشیند، لذا حداکثر تا سه آرایش همزمان می‌تواند صورت گیرد. از آنجایی که تنها یک صندوق وجود 
+    دارد، مشتری باید  {\tt mutex} را بگیرد. مشتری و آرایشگر نزد صندوق قرارا ملاقات گذاشته و سپس هر دو خارج می‌شوند. 
 
-This solution satisfies the synchonization constraints, but it leaves
-the sofa underutilized.  Because there are only three barbers, there
-can never be more than three customers on the sofa, so the multiplex
-is unnecessary.
+%This solution satisfies the synchonization constraints, but it leaves
+%the sofa underutilized.  Because there are only three barbers, there
+%can never be more than three customers on the sofa, so the multiplex
+%is unnecessary.
+    این راه حل،‌ محدودیت‌های همگام‌سازی را برآورده می‌نماید،‌ امّا نهایت بهره‌برداری را از کاناپه نمی‌کند. 
+    از آنجایی که تنها سه آرایشگر وجود دارد، هیچگاه بیش از سه مشتری نمی‌تواند روی کاناپه وجود داشته باشد، لذا ضرورتی به مالتی‌پلکس وجود ندارد. 
 
-This solution is in \verb"sync_code/barber3.py" (see~\ref{sync.py}).
+%This solution is in \verb"sync_code/barber3.py" (see~\ref{sync.py}).
+    این راه حل در \verb"sync_code/barber3.py" آمده است (ر.ک.~\ref{sync.py}).
 
-The only way I can think of to solve this problem is to create a third
-kind of thread, which I can an usher.  The ushers manage {\tt queue1}
-and the barbers manage {\tt queue2}.  If there are 4 ushers and 3 barbers,
-the sofa can be fully utilized.
+%The only way I can think of to solve this problem is to create a third
+%kind of thread, which I can an usher.  The ushers manage {\tt queue1}
+%and the barbers manage {\tt queue2}.  If there are 4 ushers and 3 barbers,
+%the sofa can be fully utilized.
 
-This solution is in \verb"sync_code/barber4.py" (see~\ref{sync.py}).
+    %typo: which I can an usher --> which I can name it an usher
+    تنها راهی که برای حل مساله به ذهنم می‌رسد این است که یک نوع سومی از نخ ایجاد نمایم که من آن را راهنما می‌نامم. 
+    راهنمایان {\tt queue1} مدیریت نموده و آرایشگران {\tt queue2} را مدیریت می‌نمایند. اگر چهار راهنما و سه آرایشگر وجود داشته باشد 
+    کاناپه می‌تواند به طور کامل مورد استفاده قرار گیرد. 
+
+%This solution is in \verb"sync_code/barber4.py" (see~\ref{sync.py}).
+    این راه حل در \verb"sync_code/barber4.py" آمده است (ر.ک.~\ref{sync.py}).
 
 
 \clearemptydoublepage
-\section{The Santa Claus problem}
+%\section{The Santa Claus problem}
+\section{مساله بابا نوئل}
 
-This problem is from William Stallings's
-{\em Operating Systems} \cite{stallings},
-but he attributes it to John Trono of St. Michael's College in
-Vermont.
+%This problem is from William Stallings's
+%{\em Operating Systems} \cite{stallings},
+%but he attributes it to John Trono of St. Michael's College in
+%Vermont.
+    این مساله از کتاب سیستم‌های عامل ویلیام استالینگز گرفته شده است  \cite{stallings}، امّا او در این مساله نیز خود را مدیون \lr{ John Trono}
+    از کالج \lr{Michael}  در ورمُنت می‌داند. 
+
+%%%    Mon 11 Dec 2017 06:09:55 PM +0330
 
 \begin{quotation}
-Santa Claus sleeps in his shop at the North Pole and can only be
-awakened by either (1) all nine reindeer being back from their
-vacation in the South Pacific, or (2) some of the elves having
-difficulty making toys; to allow Santa to get some sleep, the elves
-can only wake him when three of them have problems.  When three elves
-are having their problems solved, any other elves wishing to visit
-Santa must wait for those elves to return.  If Santa wakes up to find
-three elves waiting at his shop's door, along with the last reindeer
-having come back from the tropics, Santa has decided that the elves can
-wait until after Christmas, because it is more important to get his
-sleigh ready.  (It is assumed that the reindeer do not want to leave
-the tropics, and therefore they stay there until the last possible
-moment.)  The last reindeer to arrive must get Santa while the others
-wait in a warming hut before being harnessed to the sleigh.
+%Santa Claus sleeps in his shop at the North Pole and can only be
+%awakened by either (1) all nine reindeer being back from their
+%vacation in the South Pacific, or (2) some of the elves having
+%difficulty making toys; to allow Santa to get some sleep, the elves
+%can only wake him when three of them have problems.  When three elves
+%are having their problems solved, any other elves wishing to visit
+%Santa must wait for those elves to return.  If Santa wakes up to find
+%three elves waiting at his shop's door, along with the last reindeer
+%having come back from the tropics, Santa has decided that the elves can
+%wait until after Christmas, because it is more important to get his
+%sleigh ready.  (It is assumed that the reindeer do not want to leave
+%the tropics, and therefore they stay there until the last possible
+%moment.)  The last reindeer to arrive must get Santa while the others
+%wait in a warming hut before being harnessed to the sleigh.
+    بابا نوئل در مغازه خود در قطب شمال می‌خوابد و فقط در صورتی بیدار می‌شود که یا (۱) تمام نه گوزن از تعطیلات خود اقیانوس آرام جنوبی باز گردند یا (۲)
+    برخی از پری‌ها در ساخت اسباب‌بازی‌ها مشکل داشته باشند؛ به منظور اینکه اجازه دهیم بابا نوئل کمی بخوابد، پری‌ها تنها در صورتی می‌توانند 
+    بابا نوئل را بیدار نمایند که سه تا از آن‌ها با مشکل مواجه شوند. زمانیکه سه پری مشکلشان حل شود،‌ هر پری دیگری که آرزوی دیدن بابا نوئل را دارد 
+    باید صبر کند تا آن پری‌ها بازگردند. اگر بابا نوئل 
 \end{quotation}
 
 Here are some addition specifications:
