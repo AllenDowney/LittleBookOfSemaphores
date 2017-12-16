@@ -4896,7 +4896,7 @@ while True:
 %%%Sat 02 Dec 2017 06:03:27 PM +0330
 
 \clearemptydoublepage
-\subsection{Dining Savages hint}
+%\subsection{Dining Savages hint}
 \subsection{راهنمایی غذاخوردن وحشی‌ها}
 
 %It is tempting to use a semaphore to keep track of the number of
@@ -5457,7 +5457,7 @@ while True:
 %%%    Mon 11 Dec 2017 06:09:55 PM +0330
 
 \begin{quotation}
-%Santa Claus sleeps in his shop at the North Pole and can only be
+%Santa Claus sleeps in his shop at the North Pole and can only be 
 %awakened by either (1) all nine reindeer being back from their
 %vacation in the South Pacific, or (2) some of the elves having
 %difficulty making toys; to allow Santa to get some sleep, the elves
@@ -5474,35 +5474,49 @@ while True:
     بابا نوئل در مغازه خود در قطب شمال می‌خوابد و فقط در صورتی بیدار می‌شود که یا (۱) تمام نه گوزن از تعطیلات خود اقیانوس آرام جنوبی باز گردند یا (۲)
     برخی از پری‌ها در ساخت اسباب‌بازی‌ها مشکل داشته باشند؛ به منظور اینکه اجازه دهیم بابا نوئل کمی بخوابد، پری‌ها تنها در صورتی می‌توانند 
     بابا نوئل را بیدار نمایند که سه تا از آن‌ها با مشکل مواجه شوند. زمانیکه سه پری مشکلشان حل شود،‌ هر پری دیگری که آرزوی دیدن بابا نوئل را دارد 
-    باید صبر کند تا آن پری‌ها بازگردند. اگر بابا نوئل 
+    باید صبر کند تا آن پری‌ها بازگردند. اگر بابا نوئل بیدار شود و سه پری را پشت در مغازه‌اش منتظر بیابد و همچنین دریابد که آخرین گوزن شمالی دوباره  از مناطق 
+    گرمسیری آمده است، بابا نوئل تصمیم می‌گیرد که پری‌ها می‌توانند تا پس از کریسمس منتظر بمانند زیرا که از آن مهمتر، این است که سورتمه خود را آماده کند. 
+    (فرض شده است که گوزن شمالی نمی‌تواند مناطق گرمسیری را ترک کند و لذا آن‌ها تا آخرین لحظه ممکن در آنجا می‌مانند.)
+    آخرین گوزن شمالی که می‌رسد باید بابا نوئل را ببرد در حالیکه گوزن‌های دیگر در یک کلبه گرم پیش از اینکه به سورتمه بسته شوند منتظر هستند. 
 \end{quotation}
 
-Here are some addition specifications:
+%Here are some addition specifications:
+    در اینجا تعدادی مشخصه‌های اضافی آمده است: 
 
 \begin {itemize}
 
-\item After the ninth reindeer arrives, Santa must invoke 
-{\tt prepareSleigh}, and then all nine reindeer must
-invoke {\tt getHitched}.
+\item 
+%After the ninth reindeer arrives, Santa must invoke 
+%{\tt prepareSleigh}, and then all nine reindeer must
+%invoke {\tt getHitched}.
+    پس از اینکه نهمین گوزن رسید، بابا نوئل باید {\tt prepareSleigh} را فراخواند و سپس تمامی گوزن‌ها  {\tt getHitched} را فراخوانند. 
 
-\item After the third elf arrives, Santa must invoke {\tt helpElves}.
-Concurrently, all three elves should invoke {\tt getHelp}.
+\item 
+%After the third elf arrives, Santa must invoke {\tt helpElves}.
+%Concurrently, all three elves should invoke {\tt getHelp}.
+    پس از اینکه سومین پری می‌رسد، بابا نوئل باید  {\tt helpElves} را فراخواند. به صورت همزمان، سه پری نیز باید {\tt getHelp} فراخوانند. 
 
-\item All three elves must invoke {\tt getHelp} before any additional
-elves enter (increment the elf counter).
+\item 
+%All three elves must invoke {\tt getHelp} before any additional
+%elves enter (increment the elf counter).
+    هر سه پری پیش از اینکه پری دیگری وارد شود ( شمارنده پری‌ها را افزایش دهد) باید {\tt getHelp} را فراخوانند.
 
 \end {itemize}
 
-Santa should run in a loop so he can help many sets of elves.
-We can assume that there are exactly 9 reindeer, but there may
-be any number of elves.  
+%Santa should run in a loop so he can help many sets of elves.
+%We can assume that there are exactly 9 reindeer, but there may
+%be any number of elves.  
+    بابا نوئل باید در یک حلقه اجرا شود لذا او می‌تواند به مجموعه بسیاری از پری‌ها کمک کند. می‌توانیم تصور نماییم که دقیقا ۹ گوزن شمالی وجود دارد، امّا 
+    هر تعداد از پری ممکن است. 
 
 \clearemptydoublepage
-\subsection {Santa problem hint}
+%\subsection {Santa problem hint}
+\subsection {راهنمایی مساله بابا نوئل}
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Santa problem hint}]{}
+%\begin{lstlisting}[title={Santa problem hint}]{}
+\begin{lstlisting}[title=\rl{راهنمایی مساله بابا نوئل}]{}
 elves = 0
 reindeer = 0
 santaSem = Semaphore(0)
@@ -5513,29 +5527,37 @@ mutex = Semaphore(1)
 \end{latin}
 \end{latin}
 
-{\tt elves} and {\tt reindeer} are counters, both protected
-by {\tt mutex}.  Elves and reindeer get {\tt mutex} to modify the
-counters; Santa gets it to check them.
+%{\tt elves} and {\tt reindeer} are counters, both protected
+%by {\tt mutex}.  Elves and reindeer get {\tt mutex} to modify the
+%counters; Santa gets it to check them.
+    {\tt elves} و {\tt reindeer} شمارنده‌هایی هستند که بوسیله {\tt mutex} محافظت می‌شوند. 
+    پری‌ها و گوزن‌‌ها از {\tt mutex} برای تغییر شمارنده‌ها استفاده می‌کنند؛‌ بابا نوئل نیز آن را می‌گیرد تا متغیرها را بررسی نماید.
 
-Santa waits on {\tt santaSem} until either an elf or a reindeer
-signals him.
+%Santa waits on {\tt santaSem} until either an elf or a reindeer
+%signals him.
+    بابا نوئل روی  {\tt santaSem} منتظر می‌ماند تا یا یک پری یا یک گوزن به او سیگنال دهد. 
 
-The reindeer wait on {\tt reindeerSem} until Santa signals them to
-enter the paddock and get hitched.
+%The reindeer wait on {\tt reindeerSem} until Santa signals them to
+%enter the paddock and get hitched.
+    گوزن‌ها روی {\tt reindeerSem} منتظر می‌مانند تا بابا نوئل به آن‌ها سیگنال دهد که به چراگاه وارد شده و به سورتمه بسته شوند. 
 
-The elves use {\tt elfTex} to prevent additional elves from
-entering while three elves are being helped.
+%The elves use {\tt elfTex} to prevent additional elves from
+%entering while three elves are being helped.
+    پری‌ها {\tt elfTex} را بکار می‌برند تا از ورود پری اضافی، آن زمانی که سه پری در حال گرفتن کمک هستند جلوگیری نمایند. 
 
 
 \clearemptydoublepage
-\subsection {Santa problem solution}
+%\subsection {Santa problem solution}
+\subsection{راه حل مساله بابا نوئل}
 
-Santa's code is pretty straightforward.  Remember that it
-runs in a loop.
+%Santa's code is pretty straightforward.  Remember that it
+%runs in a loop.
+    کد بابا نوئل بسیار آسان است. به یاد داشته باشید که کد او همیشه در حلقه اجرا می‌شود. 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Santa problem solution (Santa)}]{}
+%\begin{lstlisting}[title={Santa problem solution (Santa)}]{}
+\begin{lstlisting}[title=\rl{راه حل مساله بابا نوئل (بابا نوئل)}]{}
 santaSem.wait()
 mutex.wait()
     if reindeer >= 9:
@@ -5549,25 +5571,32 @@ mutex.signal()
 \end{latin}
 \end{latin}
 
-When Santa wakes up, he checks which of the two conditions
-holds and either deals with the reindeer or the waiting elves.
-If there are nine reindeer waiting,
-Santa invokes {\tt prepareSleigh}, then signals {\tt reindeerSem}
-nine times, allowing the reindeer to invoke {\tt getHitched}.
-If there are elves waiting, Santa just
-invokes {\tt helpElves}.  There is no need for the elves to wait
-for Santa; once they signal {\tt santaSem}, they can
-invoke {\tt getHelp} immediately.
+%When Santa wakes up, he checks which of the two conditions
+%holds and either deals with the reindeer or the waiting elves.
+%If there are nine reindeer waiting,
+%Santa invokes {\tt prepareSleigh}, then signals {\tt reindeerSem}
+%nine times, allowing the reindeer to invoke {\tt getHitched}.
+%If there are elves waiting, Santa just
+%invokes {\tt helpElves}.  There is no need for the elves to wait
+%for Santa; once they signal {\tt santaSem}, they can
+%invoke {\tt getHelp} immediately.
+    زمانیکه بابا نوئل بیدار می‌شود، بررسی می‌نماید کدامیک از دو شرط بر قرار است و متناسب با آن با گوزن‌ها  و یا با پری‌های منتظر تعامل می‌نماید. 
+    اگر ۹ گوزن در حال انتظار باشند، بابا نوئل  {\tt prepareSleigh} را فراخوانده و سپس نه بار به {\tt reindeerSem} سیگنال می‌دهد تا به گوزن‌ها
+    اجازه دهد که {\tt getHitched} را فراخوانند. اگر پری‌های در حال انتظاری وجود داشته باشد، بابا نوئل فقط {\tt helpElves} را فرا می‌خواند. 
+    هیچ نیازی به این نیست که پری‌ها منتظر بابا نوئل شوند؛ زمانیکه آن‌ها به {\tt santaSem} سیگنال می‌دهند می‌توانند بلافاصله  {\tt getHelp}  را فراخوانند. 
 
-Santa doesn't have to decrement
-the {\tt elves} counter because the elves do it on their way
-out.
+%Santa doesn't have to decrement
+%the {\tt elves} counter because the elves do it on their way
+%out.
+    بابا نوئل نباید شمارنده {\tt elves} را کاهش دهد زیرا که پری‌ها در راه خروج‌شان اینکار را انجام می‌دهند. 
 
-Here is the code for reindeer:
+%Here is the code for reindeer:
+    کد گوزن‌ها در ادامه آمده است: 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Santa problem solution (reindeer)}]{}
+%\begin{lstlisting}[title={Santa problem solution (reindeer)}]{}
+\begin{lstlisting}[title=\rl{راه حل مساله بابا نوئل (گوزن‌ها)}]{}
 mutex.wait()
     reindeer += 1
     if reindeer == 9:
@@ -5580,18 +5609,24 @@ getHitched()
 \end{latin}
 \end{latin}
 
-The ninth reindeer signals Santa and then joins the other
-reindeer waiting on {\tt reindeerSem}.  When Santa signals, the
-reindeer all execute {\tt getHitched}.
+%The ninth reindeer signals Santa and then joins the other
+%reindeer waiting on {\tt reindeerSem}.  When Santa signals, the
+%reindeer all execute {\tt getHitched}.
+     گوزن نهم به بابا نوئل سیگنال می‌دهد و به گوزن‌های دیگر که روی  {\tt reindeerSem} منتظر هستند ملحق می‌گردد. 
+     زمانیکه بابا نوئل سیگنال می‌دهد تمامی گوزن‌ها {\tt getHitched} را اجرا می‌نمایند .
+    
 
-The elf code is similar, except that when the third elf arrives
-it has to bar subsequent arrivals until the first three have
-executed {\tt getHelp}.
+%The elf code is similar, except that when the third elf arrives
+%it has to bar subsequent arrivals until the first three have
+%executed {\tt getHelp}.
+%typo elf code -> elves code
+    کد پری‌‌ها نیز مشابه است، بجز اینکه زمانیکه سومین پری می‌رسد باید ورود پری بعدی را مانع شود تا آن هنگامی که سه تای اول {\tt getHelp} را اجرا نمایند. 
 
 \newpage
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Santa problem solution (elves)}]{}
+%\begin{lstlisting}[title={Santa problem solution (elves)}]{}
+\begin{lstlisting}[title=\rl{راه حل مساله بابا نوئل (پری‌ها)}]{}
 elfTex.wait()
 mutex.wait()
     elves += 1
@@ -5612,12 +5647,17 @@ mutex.signal()
 \end{latin}
 \end{latin}
 
-The first two elves release {\tt elfTex} at the same time they release
-the {\tt mutex}, but the last elf holds {\tt elfTex}, barring other
-elves from entering until all three elves have invoked {\tt getHelp}.
+%The first two elves release {\tt elfTex} at the same time they release
+%the {\tt mutex}, but the last elf holds {\tt elfTex}, barring other
+%elves from entering until all three elves have invoked {\tt getHelp}.
+    اولین دو پری  در همان زمانی که {\tt mutex} را  آزاد می‌نمایند {\tt elfTex} را نیز آزاد می‌نمایند،‌ امّا آخرین پری  {\tt elfTex} را نگاه می‌دارد که 
+    مانع از ورود پری‌های دیگر می‌گردد تا زمانیکه تمامی سه پری {\tt getHelp} را فراخوانند. 
 
-The last elf to leave releases {\tt elfTex}, allowing the
-next batch of elves to enter.
+%The last elf to leave releases {\tt elfTex}, allowing the
+%next batch of elves to enter.
+    آخرین پری که خارج می‌شود {\tt elfTex} را آزاد می‌نماید و این به دسته‌ بعدی پری‌ها اجازه ورود می‌دهد. 
+    
+%%%    Sat 16 Dec 2017 06:22:00 PM +0330
 
 \newpage
 \section{Building H$_2$O}
