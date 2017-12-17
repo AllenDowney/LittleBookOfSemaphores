@@ -5660,56 +5660,75 @@ mutex.signal()
 %%%    Sat 16 Dec 2017 06:22:00 PM +0330
 
 \newpage
-\section{Building H$_2$O}
+%\section{Building H$_2$O}
+\section{ساخت  \lr{H$_2$O}}
 \label{water}
 
-This problem has been a staple of the Operating Systems class
-at U.C. Berkeley for at least a decade.  It seems to be based on
-an exercise in Andrews's {\em Concurrent Programming} \cite{andrews}.
+%This problem has been a staple of the Operating Systems class
+%at U.C. Berkeley for at least a decade.  It seems to be based on
+%an exercise in Andrews's {\em Concurrent Programming} \cite{andrews}.
+    این مساله برای حداقل یک دهه جزء اصلی کلاس سیستم عامل در \lr{U.C. Berkeley}  بود. بنطر می‌رسد که بر مبنای تمرینی 
+    در کتاب «برنامه‌نویسی همروند» اندرو می‌باشد \cite{andrews}.
 
-There are two kinds of threads, oxygen and hydrogen.  In order
-to assemble these threads into water molecules, we have to
-create a barrier that makes each thread wait until a
-complete molecule is ready to proceed.
+%There are two kinds of threads, oxygen and hydrogen.  In order
+%to assemble these threads into water molecules, we have to
+%create a barrier that makes each thread wait until a
+%complete molecule is ready to proceed.
+    دو نوع نخ وجود دارد: اکسیژن و هیدروژن. به منظور ترکیب این نخ‌ها به مولکول‌های آب، باید حصاری بسازیم که هر نخ تا زمانیکه یک مولکول کامل 
+    آماده ادامه باشد منتظر بماند. 
 
-As each thread passes the barrier, it should invoke
-{\tt bond}.  You must guarantee that all the threads
-from one molecule invoke {\tt bond} before any of the threads
-from the next molecule do.
+%As each thread passes the barrier, it should invoke
+%{\tt bond}.  You must guarantee that all the threads
+%from one molecule invoke {\tt bond} before any of the threads
+%from the next molecule do.
+    هر نخ که از حصار عبور می‌نماید، باید {\tt bond} فراخواند. شما باید تضمین نمایید که تمامی نخ‌های یک مولکول پیش از نخ‌های مولکول بعدی {\tt bond} 
+    را فراخوانند. 
 
-In other words:
+
+%In other words:
+    به عبارت دیگر: 
 
 \begin{itemize}
 
-\item If an oxygen thread arrives at the barrier when no
-hydrogen threads are present, it has to wait for two
-hydrogen threads.
+\item
+%If an oxygen thread arrives at the barrier when no
+%hydrogen threads are present, it has to wait for two
+%hydrogen threads.
+    اگر زمانیکه یک نخ اکسیژن به حصار می‌رسد هیچ نخ‌ هیدروژنی حاضر نباشد، باید برای دو نخ هیدروژن منتظر بماند. 
 
-\item If a hydrogen thread arrives at the barrier when
-no other threads are present, it has to wait for an
-oxygen thread and another hydrogen thread.
-
+\item 
+%If a hydrogen thread arrives at the barrier when
+%no other threads are present, it has to wait for an
+%oxygen thread and another hydrogen thread.
+    اگر زمانیکه یک نخ هیدروژن به حصار می‌رسد هیچ نخ دیگری حاضر نباشد، باید منتظر یک نخ  اکسیژن و یک نخ دیگر هیدروژن بماند. 
 \end{itemize}
 
-We don't have to worry about matching the threads up explicitly; that
-is, the threads do not necessarily know which other threads they are
-paired up with.  The key is just that threads pass the barrier in
-complete sets; thus, if we examine the sequence of threads that invoke
-{\tt bond} and divide them into groups of three, each group should
-contain one oxygen and two hydrogen threads.
+%We don't have to worry about matching the threads up explicitly; that
+%is, the threads do not necessarily know which other threads they are
+%paired up with.  The key is just that threads pass the barrier in
+%complete sets; thus, if we examine the sequence of threads that invoke
+%{\tt bond} and divide them into groups of three, each group should
+%contain one oxygen and two hydrogen threads.
+    نباید نگران تطابق صریح نخ‌ها باشیم،‌ بدین معنی که نخ‌ها  از اینکه با چه نخ‌های دیگری جفت می‌شوند ضرورتاً  اطلاعی ندارند. نکته کلیدی تنها این است 
+    نخ‌ها به صورت مجموعه‌های کامل از حصار عبور می‌نمایند؛ بنابراین اگر ما دنباله نخ‌هایی که {\tt bond} را فرا می‌خوانند بررسی کنیم و آن‌ها را به گروه‌های 
+    سه‌تایی تقسیم کنیم هر گروه باید شامل یک نخ اکسیژن و دو نخ هیدروژن باشد. 
 
-Puzzle: Write synchronization code for oxygen and hydrogen
-molecules that enforces these constraints.
+%Puzzle: Write synchronization code for oxygen and hydrogen
+%molecules that enforces these constraints.
+    معمّا:‌ یک کد همگام‌سازی برای مولکول‌های اکسیژن و هیدروژن بنویسید که این شرایط را برآورده نمایند. 
 
 
 \clearemptydoublepage
-\subsection {H$_2$O hint}
+%\subsection {H$_2$O hint}
+\subsection {راهنمایی \lr{H$_2$O }}
 
-Here are the variables I used in my solution:
+%Here are the variables I used in my solution:
+    متغیرهایی که در راه حل بکار برده‌ام را در زیر مشاهده می‌نمایید:
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Water building hint}]{}
+%\begin{lstlisting}[title={Water building hint}]{}
+\begin{lstlisting}[title=\rl{راهنمایی ساخت آب}]{}
 mutex = Semaphore(1)
 oxygen = 0
 hydrogen = 0
@@ -5720,30 +5739,41 @@ hydroQueue = Semaphore(0)
 \end{latin}
 \end{latin}
 
-{\tt oxygen} and {\tt hydrogen} are counters, protected by {\tt mutex}.
-{\tt barrier} is where each set of three threads meets after
-invoking {\tt bond} and before allowing the next set of threads
-to proceed.
+%{\tt oxygen} and {\tt hydrogen} are counters, protected by {\tt mutex}.
+%{\tt barrier} is where each set of three threads meets after
+%invoking {\tt bond} and before allowing the next set of threads
+%to proceed.
+    {\tt oxygen} و {\tt hydrogen} شمارنده‌هایی هستند که بوسیله {\tt mutex} حفاظت می‌شوند. {\tt barrier} 
+    جایی است که هر مجموعه‌ای از سه نخ پس از فراخوانی {\tt bond} و پیش از اجازه فعالیت به نخ‌های بعدی، یکدیگر را ملاقات می‌کنند. 
+    
 
-{\tt oxyQueue} is the semaphore oxygen threads wait on;
-{\tt hydroQueue} is the semaphore hydrogen threads wait on.
-I am using the naming convention for queues, so
-{\tt oxyQueue.wait()} means ``join the oxygen queue'' and
-{\tt oxyQueue.signal()} means ``release an oxygen thread from
-the queue.''
+%{\tt oxyQueue} is the semaphore oxygen threads wait on;
+%{\tt hydroQueue} is the semaphore hydrogen threads wait on.
+%I am using the naming convention for queues, so
+%{\tt oxyQueue.wait()} means ``join the oxygen queue'' and
+%{\tt oxyQueue.signal()} means ``release an oxygen thread from
+%the queue.''
+    {\tt oxyQueue} سمافوری است که نخ‌های اکسیژن روی آن منتظر می‌مانند؛ 
+    {\tt hydroQueue} سمافوری است که نخ‌های هیدروژن روی آن منتظر می‌مانند؛ 
+    از آنجایی که از قرارداد نام‌گذاری برای صف‌ها استفاده می‌نمایم، لذا {\tt oxyQueue.wait()} بمعنای «به صف اکشیژن محلق شو» است 
+    و {\tt oxyQueue.signal()} بمعنای «یک نخ اکسیژن از صف آزاد نما» می‌باشد. 
 
 
 \clearemptydoublepage
-\subsection {H$_2$O solution}
+%\subsection {H$_2$O solution}
+\subsection {راه حل  \lr{H$_2$O }}
 
-Initially {\tt hydroQueue} and {\tt oxyQueue} are locked.  When
-an oxygen thread arrives it signals {\tt hydroQueue} twice,
-allowing two hydrogens to proceed.  Then the oxygen thread waits
-for the hydrogen threads to arrive.
+%Initially {\tt hydroQueue} and {\tt oxyQueue} are locked.  When
+%an oxygen thread arrives it signals {\tt hydroQueue} twice,
+%allowing two hydrogens to proceed.  Then the oxygen thread waits
+%for the hydrogen threads to arrive.
+    در ابتدا {\tt hydroQueue} و {\tt oxyQueue} قفل هستند. زمانیکه یک نخ اکسیژن می‌رسد دو بار به {\tt hydroQueue}  سیگنال می‌دهد تا 
+    به دو هیدروژن اجازه ادامه کار دهد. سپس نخ اکسیژن منتظر نخ‌های هیدروژن می‌ماند تا برسند. 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Oxygen code}]{}
+%\begin{lstlisting}[title={Oxygen code}]{}
+\begin{lstlisting}[title=\rl{ کد اکسیژن}]{}
 mutex.wait()
 oxygen += 1
 if hydrogen >= 2:
@@ -5763,21 +5793,27 @@ mutex.signal()
 \end{latin}
 \end{latin}
 
-As each oxygen thread enters, it gets the mutex and checks the scoreboard.
-If there are at least two hydrogen threads waiting, it signals two of
-them and itself and then bonds.  If not, it releases the mutex and
-waits.
+%As each oxygen thread enters, it gets the mutex and checks the scoreboard.
+%If there are at least two hydrogen threads waiting, it signals two of
+%them and itself and then bonds.  If not, it releases the mutex and
+%waits.
+    هر نخ اکسیژن که وارد می‌شود، میوتکس را می‌گیرد و جدول امتیاز را بررسی می‌نماید. اگر حداقل دو نخ هیدروژن منتظر وجود داشته باشد، به دو تای آن‌ها و خودش 
+    سیگنال می‌دهد و سپس با هم پیوند شیمیایی برقرار می‌نمایند. اگر دو نخ هیدروژن وجود نداشته باشد، میوتکس را آزاد نموده و منتظر می‌ماند. 
 
-After bonding, threads wait at the barrier until all three threads
-have bonded, and then the oxygen thread releases the mutex.  Since
-there is only one oxygen thread in each set of three, we are guaranteed
-to signal {\tt mutex} once.
+%After bonding, threads wait at the barrier until all three threads
+%have bonded, and then the oxygen thread releases the mutex.  Since
+%there is only one oxygen thread in each set of three, we are guaranteed
+%to signal {\tt mutex} once.
+    پس از پیوند (خط ۱۲)، نخ‌ها نزد حصار منتظر می‌مانند تا تمامی هر سه نخ با هم تشکیل پیوند دهد و سپس نخ اکسیژن میوتکس را آزاد می‌نماید. 
+    از آنجایی که تنها یک نخ اکسیژن در هر مجموعه وجود دارد، تضمین می‌شود که به  {\tt mutex} تنها یک بار سیگنال داده می‌شود. 
 
-The code for hydrogen is similar:
+%The code for hydrogen is similar:
+    کد هیدروژن نیز مشابه است: 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Hydrogen code}]{}
+%\begin{lstlisting}[title={Hydrogen code}]{}
+\begin{lstlisting}[title=\rl{کد هیدروژن}]{}
 mutex.wait()
 hydrogen += 1
 if hydrogen >= 2 and oxygen >= 1:
@@ -5796,26 +5832,37 @@ barrier.wait()
 \end{latin}
 \end{latin}
 
-An unusual feature of this solution is that
-the exit point of the mutex is ambiguous.  In
-some cases, threads enter the mutex, update the counter, and exit the
-mutex.  But when a thread arrives that forms a complete set, it has to
-keep the mutex in order to bar subsequent threads until the current
-set have invoked {\tt bond}.
+%An unusual feature of this solution is that
+%the exit point of the mutex is ambiguous.  In
+%some cases, threads enter the mutex, update the counter, and exit the
+%mutex.  But when a thread arrives that forms a complete set, it has to
+%keep the mutex in order to bar subsequent threads until the current
+%set have invoked {\tt bond}.
+    یک ویژگی غیرمعمول این راه حل این است که نقطه خروج از میوتکس مبهم است. در برخی حالات، نخ‌ها وارد میوتکس شده، شمارنده را 
+    بروزرسانی نموده و از میوتکس خارج می‌شوند. امّا زمانیکه آن نخ تشکیل دهنده یک مجموعه کامل می‌رسد، باید به منظور ممانعت از نخ‌های دیگر 
+    میوتکس را نگه دارد تا زمانیکه مجموعه فعلی {\tt bond} را فراخواند. 
 
-After invoking {\tt bond}, the three threads wait at a barrier.
-When the barrier opens, we know that all three threads have invoked
-{\tt bond} and that one of them holds the mutex.  We don't know
-{\em which} thread holds the mutex, but it doesn't matter as long
-as only one of them releases it.  Since we know there is only one
-oxygen thread, we make it do the work.
+%After invoking {\tt bond}, the three threads wait at a barrier.
+%When the barrier opens, we know that all three threads have invoked
+%{\tt bond} and that one of them holds the mutex.  We don't know
+%{\em which} thread holds the mutex, but it doesn't matter as long
+%as only one of them releases it.  Since we know there is only one
+%oxygen thread, we make it do the work.
+    پس از فراخوانی {\tt bond}، سه نخ نزد حصار منتظر می‌مانند. زمانیکه حصار باز می‌شود، می‌دانیم که تمامی سه نخ {\tt bond} را فراخوانده‌اند و 
+    یکی از آن‌ها میوتکس را نگه داشته است. نمی‌دانیم که  کدام نخ میوتکس را نگه داشته است امّا 
+    از آنجایی تنها یکی از آن‌ها میوتکس را آزاد می‌نماید دانستنش اهمیتی ندارد. با توجه به اینکه می‌دانیم تنها یک نخ اکسیژن وجود دارد، آن را قادر به انجام اینکار 
+    می‌سازیم. 
 
-This might seem wrong, because until now it
-has generally been true that a thread has to hold a lock in
-order to release it.  But there is no rule that says that has
-to be true.  This is one of those cases where it can be misleading
-to think of a mutex as a token that threads acquire and release.
-
+%This might seem wrong, because until now it
+%has generally been true that a thread has to hold a lock in
+%order to release it.  But there is no rule that says that has
+%to be true.  This is one of those cases where it can be misleading
+%to think of a mutex as a token that threads acquire and release.
+    ممکن است این راه حل نادرست به نظر آید، زیرا که تا کنون عموماً اینگونه درست بود که یک نخ باید قفلی را نگه دارد تا بتواند آن را آزاد نماید. 
+    امّا هیچ قاعده‌ای نمی‌گوید که  این نکته باید درست باشد. اینجا یکی از آن حالت‌هایی است که نگاه به میوتکس به عنوان توکنی که نخ‌ها باید آن گرفته و آزاد 
+    نمایند کمی گمراه کننده است. 
+    
+%%%    Sun 17 Dec 2017 06:36:45 PM +0330
 
 \section {River crossing problem}
 
