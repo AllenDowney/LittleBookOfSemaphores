@@ -6280,59 +6280,81 @@ unloadingArea[next(i)].signal()
 \chapter{مسائل نه-چندان-کلاسیک}
 
 
-\section{The search-insert-delete problem}
+%\section{The search-insert-delete problem}
+\section{مساله جستجو-درج-حذف}
 
-This one is from Andrews's {\em Concurrent Programming} \cite{andrews}.
+%This one is from Andrews's {\em Concurrent Programming} \cite{andrews}.
+    این مساله از کتاب «برنامه‌نویسی همروند» اندرو است \cite{andrews}.
 
 \begin {quotation}
-Three kinds of threads share access to a singly-linked list:
-searchers, inserters and deleters.  Searchers merely examine the list;
-hence they can execute concurrently with each other.  Inserters add
-new items to the end of the list; insertions must be mutually
-exclusive to preclude two inserters from inserting new items at about
-the same time.  However, one insert can proceed in parallel with any
-number of searches.  Finally, deleters remove items from anywhere in
-the list.  At most one deleter process can access the list at a time,
-and deletion must also be mutually exclusive with searches and
-insertions.
+%Three kinds of threads share access to a singly-linked list:
+%searchers, inserters and deleters.  Searchers merely examine the list;
+%hence they can execute concurrently with each other.  Inserters add
+%new items to the end of the list; insertions must be mutually
+%exclusive to preclude two inserters from inserting new items at about
+%the same time.  However, one insert can proceed in parallel with any
+%number of searches.  Finally, deleters remove items from anywhere in
+%the list.  At most one deleter process can access the list at a time,
+%and deletion must also be mutually exclusive with searches and
+%insertions.
+    سه نوع نخ به یک لیست پیوندی یکطرفه به صورت مشترک دسترسی دارند: 
+    نخ‌های جستجوگر، درج‌ کننده‌ و حذف کننده.  جستجوگرها تنها لیست را بررسی می‌نمایند؛ بنابراین این نوع نخ‌ها می‌توانند به صورت همزمان با یکدیگر 
+    عمل کنند. درج کننده‌ها عناصر جدید را به انتهای لیست می‌افزایند؛ درج‌ها باید به صورت انحصاری انجام شود تا  از درج همزمان عناصر جدید توسط 
+    دو درج کننده ممانعت بعمل آید. با اینوجود یک درج می‌تواند به موازات هر تعداد جستجو انجام شود. 
+    در نهایت حذف‌کننده‌ها، عناصر از هر جایی در لیست حذف می‌کنند. 
+    حداکثر یک فرآینده حذف کننده در  هر زمان می‌تواند به لیست دسترسی داشته باشد، و همچنین حذف باید به صورت انحصاری 
+    و بدون حضور جستجوگرها و درج کننده‌ها انجام شود. 
 \end{quotation}
 
-Puzzle: write code for searchers, inserters and deleters that
-enforces this kind of three-way categorical mutual exclusion.
+%Puzzle: write code for searchers, inserters and deleters that
+%enforces this kind of three-way categorical mutual exclusion.
+    معمّا: کدی برای جستجوگرها، درج کننده‌ها و حذف کننده‌ها بنویسید که این نوع از انحصار متقابل دسته‌ای سه‌گانه را اعمال نماید. 
 
 
 \clearemptydoublepage
-\subsection{Search-Insert-Delete hint}
+%\subsection{Search-Insert-Delete hint}
+\subsection{راهنمایی جستجو-درج-حذف}
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Search-Insert-Delete hint}]{}
+%\begin{lstlisting}[title={Search-Insert-Delete hint}]{}
+\begin{lstlisting}[title=\rl{راهنمایی جستجو-درج-حذف}]{}
 insertMutex = Semaphore(1)
 noSearcher = Semaphore(1)
 noInserter = Semaphore(1)
-searchSwitch = Lightswitch()
+searchSwitch = Lightswitch()    
 insertSwitch = Lightswitch()
 \end{lstlisting}
 \end{latin}
 \end{latin}
 
-{\tt insertMutex} ensures that only one inserter is in its critical
-section at a time.  {\tt noSearcher} and {\tt noInserter} indicate
-(surprise) that there are no searchers and no inserters in their
-critical sections; a deleter needs to hold both of these to enter.
+%{\tt insertMutex} ensures that only one inserter is in its critical
+%section at a time.  {\tt noSearcher} and {\tt noInserter} indicate
+%(surprise) that there are no searchers and no inserters in their
+%critical sections; a deleter needs to hold both of these to enter.
+    {\tt insertMutex}
+     تضمین می‌نماید که در یک زمان تنها یک درج کننده در ناحیه بحرانی خودش است. 
+      {\tt noSearcher} و {\tt noInserter} 
+    نشان می‌دهند که هیچ جستجوگر و درج کننده‌ای در نواحی بحرانی خودشان قرار ندارند؛ یک حذف کننده باید هر دوی 
+    اینها را نگاه دارد تا بتواند وارد شود. 
 
-{\tt searchSwitch} and {\tt insertSwitch} are used by searchers and
-inserters to exclude deleters.
+%{\tt searchSwitch} and {\tt insertSwitch} are used by searchers and
+%inserters to exclude deleters.
+{\tt searchSwitch} و {\tt insertSwitch} 
+ توسط جستجوگرها و درج‌ کننده‌ها برای بیرون نگاه داشتن حذف کننده استفاده می‌شود. 
 
 
 \clearemptydoublepage
-\subsection{Search-Insert-Delete solution}
+%\subsection{Search-Insert-Delete solution}
+\subsection{راه حل جستجو-درج-حذف}
 
-Here is my solution:
+%Here is my solution:
+    راه حل در ادامه آمده است: 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Search-Insert-Delete solution (searcher)}]{}
+%\begin{lstlisting}[title={Search-Insert-Delete solution (searcher)}]{}
+\begin{lstlisting}[title={راه حل جستجو-درج-حذف (جستجوگر)}]{}
 searchSwitch.wait(noSearcher)
 # critical section
 searchSwitch.signal(noSearcher)
@@ -6340,13 +6362,16 @@ searchSwitch.signal(noSearcher)
 \end{latin}
 \end{latin}
 
-The only thing a searcher needs to worry about is a deleter.
-The first searcher in takes {\tt noSearcher}; the last one out
-releases it.
+%The only thing a searcher needs to worry about is a deleter.
+%The first searcher in takes {\tt noSearcher}; the last one out
+%releases it.
+    تنها چیزی که یک جستجوگر باید نگران آن باشد حذف کننده است. 
+    اولین جستجوگری که وارد می‌شود {\tt noSearcher} را گرفته و آخرینی که خارج می‌شود آن را آزاد می‌نماید. 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Search-Insert-Delete solution (inserter)}]{}
+%\begin{lstlisting}[title={Search-Insert-Delete solution (inserter)}]{}
+\begin{lstlisting}[title={راه حل جستجو-درج-حذف (درج‌کننده)}]{}
 insertSwitch.wait(noInserter)
 insertMutex.wait()
 # critical section
@@ -6356,15 +6381,21 @@ insertSwitch.signal(noInserter)
 \end{latin}
 \end{latin}
 
-Similarly, the first inserter takes {\tt noInserter} and the last one
-out releases it.  Since searchers and inserters compete for different
-semaphores, they can be in their critical section concurrently.
-But {\tt insertMutex} ensures that only one inserter is in the room
-at a time.
+%Similarly, the first inserter takes {\tt noInserter} and the last one
+%out releases it.  Since searchers and inserters compete for different
+%semaphores, they can be in their critical section concurrently.
+%But {\tt insertMutex} ensures that only one inserter is in the room
+%at a time.
+
+%typo: the first inserter takes -> the first inserter in takes
+    مشابهاً، اولین درج کننده {\tt noInserter} گرفته و آخرینی که خارج می‌شود آن را آزاد می‌نماید.
+    از آنجایی که جستجوگرها و درج کننده‌ها برای سمافورهای متفاوتی رقابت می‌کنند، می‌توانند به صورت همزمان در ناحیه بحرانی خودشان 
+    باشند. امّا {\tt insertMutex} تضمین می‌نماید که تنها یک درج کننده در یک لحظه‌ در ناحیه بحرانی باشد. 
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Search-Insert-Delete solution (deleter)}]{}
+%\begin{lstlisting}[title={Search-Insert-Delete solution (deleter)}]{}
+\begin{lstlisting}[title={راه حل جستجو-درج-حذف (حذف کننده)}]{}
 noSearcher.wait()
 noInserter.wait()
 # critical section
@@ -6375,55 +6406,72 @@ noSearcher.signal()
 \end{latin}
 \end{latin}
 
-Since the deleter holds both {\tt noSearcher} and {\tt noInserter},
-it is guaranteed exclusive access.  Of course, any time we see
-a thread holding more than one semaphore, we need to check for
-deadlocks.  By trying out a few scenarios, you should be able
-to convince yourself that this solution is deadlock free.
+%Since the deleter holds both {\tt noSearcher} and {\tt noInserter},
+%it is guaranteed exclusive access.  Of course, any time we see
+%a thread holding more than one semaphore, we need to check for
+%deadlocks.  By trying out a few scenarios, you should be able
+%to convince yourself that this solution is deadlock free.
+    از آنجایی که حذف کننده هر دوی  {\tt noSearcher} و {\tt noInserter} را می‌گیرد، دسترسی انحصاری تضمین شده است. 
+    البته، هر زمانی که ببینیم نخی بیش از یک سمافور را گرفته است، باید بن‌بست بررسی نماییم. با بررسی نمودن چند سناریو، 
+    شما باید قادر باشید که خودتان را متقاعد نمایید که این راه حل عاری از بن بست است. 
 
-On the other hand, like many categorical exclusion problems, this
-one is prone to starvation.  As we saw in the Readers-Writers problem,
-we can sometimes mitigate this problem by giving priority to one
-category of threads according to application-specific criteria.
-But in general it is difficult to write an efficient solution
-(one that allows the maximum degree of concurrency)
-that avoids starvation.
+%On the other hand, like many categorical exclusion problems, this
+%one is prone to starvation.  As we saw in the Readers-Writers problem,
+%we can sometimes mitigate this problem by giving priority to one
+%category of threads according to application-specific criteria.
+%But in general it is difficult to write an efficient solution
+%(one that allows the maximum degree of concurrency)
+%that avoids starvation.
+    به عبارت دیگر، مانند بسیاری از مسائل انحصار متقابل دسته‌ای، این مساله نیز مستعد قطحی است. 
+    همانطوری که در مساله خوانندگان-نویسندگان دیدیم، گاهی اوقات می‌توانیم این مشکل را با اختصاص اولویت به یک دسته از نخ‌ها 
+    بر طبق معیارهای خاص برنامه حل کنیم. 
+    امّا به طور کلی نوشتن یک راه حل کارا (که حداکثر درجه همزمانی را ممکن سازد) و از قحطی جلوگیری نماید سخت است. 
 
 
+%\section{The unisex bathroom problem}
+\section{مساله سرویس بهداشتی عمومی}
 
-\section{The unisex bathroom problem}
+%I wrote this problem\footnote{Later I learned that a nearly
+%identical problem appears in Andrews's 
+%{\em Concurrent Programming}\cite{andrews}} when a friend of mine
+%left her position teaching physics at Colby College
+%and took a job at Xerox.
+    این مساله را زمانی که یکی از دوستانم موقعیت خود را در تدریس فیزیک در کالج کالبی\LTRfootnote{Colby College} رها نمود 
+    و در زیراکس\LTRfootnote{Xerox} مشغول به کار شد نوشتم%
+    \footnote{بعداً دریافتم که مساله‌ای تقریبا یکسان با این مساله در کتاب «برنامه‌نویسی همروند» اندرو وجود دارد \cite{andrews}.}. 
 
-I wrote this problem\footnote{Later I learned that a nearly
-identical problem appears in Andrews's 
-{\em Concurrent Programming}\cite{andrews}} when a friend of mine
-left her position teaching physics at Colby College
-and took a job at Xerox.
+%She was working in a cubicle in the basement of a
+%concrete monolith, and the nearest women's bathroom was two floors up.
+%She proposed to the Uberboss that they convert the men's bathroom
+%on her floor to a unisex bathroom, sort of like on Ally McBeal.
+    او در یک اتاقک در زیرزمین یک ساختمان کار می‌کرد و نزدیک‌تریم توالت زنانه دو طبقه بالاتر بود.
+    او به رئیس خود پیشنهاد داد که توالت مردانه طبقه خودشان مختص به جنس خاصی نباشد. 
 
-She was working in a cubicle in the basement of a
-concrete monolith, and the nearest women's bathroom was two floors up.
-She proposed to the Uberboss that they convert the men's bathroom
-on her floor to a unisex bathroom, sort of like on Ally McBeal.
-
-The Uberboss agreed, provided that the following synchronization
-constraints can be maintained:
+%The Uberboss agreed, provided that the following synchronization
+%constraints can be maintained:
+    رئیس موافقت نمود در صورتیکه محدودیت همگام‌سازی زیر بتواند فراهم آید: 
 
 \begin {itemize}
 
-\item There cannot be men and women in the bathroom
-at the same time.
+\item %There cannot be men and women in the bathroom at the same time.
+    مردها و زن‌ها به طور همزمان نمی‌توانند با هم در دستشویی باشند. 
 
-\item There should never be more than three
-employees squandering company time in the bathroom.
-
+\item %There should never be more than three
+%employees squandering company time in the bathroom.
+    هرگز نباید بیش از سه کارمند ساعت کاری خود را در دستشویی تلف کنند. 
 \end{itemize}
 
-Of course the solution should avoid deadlock.  For now, though, don't
-worry about starvation.  You may assume that the bathroom is equipped
-with all the semaphores you need.
+%Of course the solution should avoid deadlock.  For now, though, don't
+%worry about starvation.  You may assume that the bathroom is equipped
+%with all the semaphores you need.
+    البته راه حل باید از بن‌بست جلوگیری نماید. گرچه فعلاً نگران قحطی نباشید. می‌توانید فرض کنید که با سرویس بهداشتی تمام سمافورهای 
+    مورد نیاز شما فراهم آمده است. 
 
+%%%%Mon 25 Dec 2017 06:23:01 PM +0330
 
 \clearemptydoublepage
-\subsection {Unisex bathroom hint}
+%\subsection {Unisex bathroom hint}
+\subsection{راهنمایی سرویس بهداشتی عمومی}
 
 Here are the variables I used in my solution:
 

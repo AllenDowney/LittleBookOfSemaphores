@@ -20,3 +20,6 @@ FILES = book.tex book.bib table.eps
 distrib: 
 	ps2pdf $(PDFFLAGS) $(NAME).ps $(NAME).pdf
 	cp $(NAME).* /home/downey/public_html/greent/semaphores
+
+clean:
+	rm -fv *.aux *.log *.dvi *.idx *.ilg *.ind *.toc *.out *.pyg *.bbl *.blg
