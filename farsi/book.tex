@@ -23,60 +23,60 @@
 \settextfont{IRXLotus}[Scale=1.2]%XB Niloofar}
 \setdigitfont{Yas}
 \setlatintextfont{Linux Libertine}[Scale=0.94]
-\defpersianfont\yasfont{Yas}
-\makeatletter
-    %کدهای زیر سبب نگارش تمامی‌ ارقام با قلم یاس می‌گردد. (در این قلم صفرها به صورت صحیح و توخالی نگاشته می‌شوند.)
-    \if@bidi@csundef{bidi@digits}{% 
-        \newcount\bidi@digits
-        \XeTeXinterchartokenstate=\@ne
-        \newXeTeXintercharclass\bidi@digits@charclass
-        \bidi@digits=`\0 \loop \XeTeXcharclass \bidi@digits \bidi@digits@charclass \ifnum\bidi@digits<`\9 \advance\bidi@digits \@ne \repeat
-        \bidi@digits=`\۰ \loop \XeTeXcharclass \bidi@digits \bidi@digits@charclass \ifnum\bidi@digits<`\۹ \advance\bidi@digits \@ne \repeat
-    }{}
-    \newif\if@q@verbatim
-    \bidi@appto\verbatim@font{\@q@verbatimtrue}
-    \bidi@appto\ttfamily{\@q@verbatimtrue}
-    \newXeTeXintercharclass\q@leftparen@charclass
-    \newXeTeXintercharclass\q@rightparen@charclass
-    \XeTeXcharclass `\( \q@leftparen@charclass
-    \XeTeXcharclass `\) \q@rightparen@charclass
-    \XeTeXcharclass `\[ \q@leftparen@charclass
-    \XeTeXcharclass `\] \q@rightparen@charclass
-    \XeTeXcharclass `\{ \q@leftparen@charclass
-    \XeTeXcharclass `\} \q@rightparen@charclass
-    \XeTeXcharclass `\« \q@leftparen@charclass
-    \XeTeXcharclass `\» \q@rightparen@charclass       
-    \XeTeXcharclass `\، \q@leftparen@charclass    
-    \XeTeXcharclass `\, \q@leftparen@charclass
-    \XeTeXcharclass `\؛ \q@leftparen@charclass          
-    \XeTeXcharclass `\; \q@leftparen@charclass          
-    \XeTeXcharclass `\: \q@leftparen@charclass          
-    \XeTeXcharclass `\. \q@leftparen@charclass     
-    \XeTeXcharclass `\- \q@leftparen@charclass     
-    \ifdim\the\XeTeXversion\XeTeXrevision\p@>0.99993\p@
-      \chardef\q@alloc@intercharclass@top=4095
-    \else
-      \chardef\q@alloc@intercharclass@top=255
-    \fi
-    \chardef\q@CharNormal=0
-    \XeTeXinterchartoks \q@alloc@intercharclass@top \bidi@digits@charclass = {\BeginSwitchDigitFont}
-    \XeTeXinterchartoks \bidi@digits@charclass \q@alloc@intercharclass@top = {\EndSwitchDigitFont}
-    \XeTeXinterchartoks \q@leftparen@charclass \bidi@digits@charclass = {\BeginSwitchDigitFont}
-    \XeTeXinterchartoks \bidi@digits@charclass \q@rightparen@charclass = {\EndSwitchDigitFont}
-    \XeTeXinterchartoks \q@rightparen@charclass \bidi@digits@charclass = {\BeginSwitchDigitFont}
-    \XeTeXinterchartoks \bidi@digits@charclass \q@leftparen@charclass = {\EndSwitchDigitFont}    
-    \XeTeXinterchartoks \q@CharNormal \bidi@digits@charclass = {\BeginSwitchDigitFont}
-    \XeTeXinterchartoks \bidi@digits@charclass \q@CharNormal = {\EndSwitchDigitFont}    
-    \if@bidi@csundef{if@nonlatin}{%
-        \newcommand*{\BeginSwitchDigitFont}{\if@q@verbatim\else%
-        \global\edef\currentfont{\the\font}\if@Latin\else\bgroup\yasfont \fi\fi}
-        \newcommand*{\EndSwitchDigitFont}{\if@q@verbatim\else\if@Latin\else\egroup\currentfont \fi\fi}
-    }{%
-        \newcommand*{\BeginSwitchDigitFont}{\if@q@verbatim\else%
-        \global\edef\currentfont{\the\font}\if@nonlatin\bgroup\yasfont \fi\fi}
-        \newcommand*{\EndSwitchDigitFont}{\if@q@verbatim\else\if@nonlatin\egroup\currentfont \fi\fi}
-    }    
-\makeatother
+%\defpersianfont\yasfont{Yas}
+%\makeatletter
+%    %کدهای زیر سبب نگارش تمامی‌ ارقام با قلم یاس می‌گردد. (در این قلم صفرها به صورت صحیح و توخالی نگاشته می‌شوند.)
+%    \if@bidi@csundef{bidi@digits}{% 
+%        \newcount\bidi@digits
+%        \XeTeXinterchartokenstate=\@ne
+%        \newXeTeXintercharclass\bidi@digits@charclass
+%        \bidi@digits=`\0 \loop \XeTeXcharclass \bidi@digits \bidi@digits@charclass \ifnum\bidi@digits<`\9 \advance\bidi@digits \@ne \repeat
+%        \bidi@digits=`\۰ \loop \XeTeXcharclass \bidi@digits \bidi@digits@charclass \ifnum\bidi@digits<`\۹ \advance\bidi@digits \@ne \repeat
+%    }{}
+%    \newif\if@q@verbatim
+%    \bidi@appto\verbatim@font{\@q@verbatimtrue}
+%    \bidi@appto\ttfamily{\@q@verbatimtrue}
+%    \newXeTeXintercharclass\q@leftparen@charclass
+%    \newXeTeXintercharclass\q@rightparen@charclass
+%    \XeTeXcharclass `\( \q@leftparen@charclass
+%    \XeTeXcharclass `\) \q@rightparen@charclass
+%    \XeTeXcharclass `\[ \q@leftparen@charclass
+%    \XeTeXcharclass `\] \q@rightparen@charclass
+%    \XeTeXcharclass `\{ \q@leftparen@charclass
+%    \XeTeXcharclass `\} \q@rightparen@charclass
+%    \XeTeXcharclass `\« \q@leftparen@charclass
+%    \XeTeXcharclass `\» \q@rightparen@charclass       
+%    \XeTeXcharclass `\، \q@leftparen@charclass    
+%    \XeTeXcharclass `\, \q@leftparen@charclass
+%    \XeTeXcharclass `\؛ \q@leftparen@charclass          
+%    \XeTeXcharclass `\; \q@leftparen@charclass          
+%    \XeTeXcharclass `\: \q@leftparen@charclass          
+%    \XeTeXcharclass `\. \q@leftparen@charclass     
+%    \XeTeXcharclass `\- \q@leftparen@charclass     
+%    \ifdim\the\XeTeXversion\XeTeXrevision\p@>0.99993\p@
+%      \chardef\q@alloc@intercharclass@top=4095
+%    \else
+%      \chardef\q@alloc@intercharclass@top=255
+%    \fi
+%    \chardef\q@CharNormal=0
+%    \XeTeXinterchartoks \q@alloc@intercharclass@top \bidi@digits@charclass = {\BeginSwitchDigitFont}
+%    \XeTeXinterchartoks \bidi@digits@charclass \q@alloc@intercharclass@top = {\EndSwitchDigitFont}
+%    \XeTeXinterchartoks \q@leftparen@charclass \bidi@digits@charclass = {\BeginSwitchDigitFont}
+%    \XeTeXinterchartoks \bidi@digits@charclass \q@rightparen@charclass = {\EndSwitchDigitFont}
+%    \XeTeXinterchartoks \q@rightparen@charclass \bidi@digits@charclass = {\BeginSwitchDigitFont}
+%    \XeTeXinterchartoks \bidi@digits@charclass \q@leftparen@charclass = {\EndSwitchDigitFont}    
+%    \XeTeXinterchartoks \q@CharNormal \bidi@digits@charclass = {\BeginSwitchDigitFont}
+%    \XeTeXinterchartoks \bidi@digits@charclass \q@CharNormal = {\EndSwitchDigitFont}    
+%    \if@bidi@csundef{if@nonlatin}{%
+%        \newcommand*{\BeginSwitchDigitFont}{\if@q@verbatim\else%
+%        \global\edef\currentfont{\the\font}\if@Latin\else\bgroup\yasfont \fi\fi}
+%        \newcommand*{\EndSwitchDigitFont}{\if@q@verbatim\else\if@Latin\else\egroup\currentfont \fi\fi}
+%    }{%
+%        \newcommand*{\BeginSwitchDigitFont}{\if@q@verbatim\else%
+%        \global\edef\currentfont{\the\font}\if@nonlatin\bgroup\yasfont \fi\fi}
+%        \newcommand*{\EndSwitchDigitFont}{\if@q@verbatim\else\if@nonlatin\egroup\currentfont \fi\fi}
+%    }    
+%\makeatother
 
 
 %\title{The Little Book of Semaphores}
@@ -6473,11 +6473,13 @@ noSearcher.signal()
 %\subsection {Unisex bathroom hint}
 \subsection{راهنمایی سرویس بهداشتی عمومی}
 
-Here are the variables I used in my solution:
+%Here are the variables I used in my solution:
+    متغیرهایی که در راه حل بکار برده‌ام در ادامه آمده است:
 
 \begin{latin}
 \begin{latin}
-\begin{lstlisting}[title={Unisex bathroom hint}]{}
+%\begin{lstlisting}[title={Unisex bathroom hint}]{}
+\begin{lstlisting}[title=\rl{راهنمایی سرویس بهداشتی عمومی}]{}
 empty = Semaphore(1)
 maleSwitch = Lightswitch()
 femaleSwitch = Lightswitch()
@@ -6487,24 +6489,33 @@ femaleMultiplex = Semaphore(3)
 \end{latin}
 \end{latin}
 
-{\tt empty} is 1 if the room is empty and 0 otherwise.
+%{\tt empty} is 1 if the room is empty and 0 otherwise.
+     اگر اتاق خالی باشد مقدار {\tt empty} برابر ۰ است در غیر اینصورت ۱. 
+%{\tt maleSwitch} allows men to bar women from the room.
+%When the first male enters, the lightswitch locks {\tt empty}, barring women;
+%When the last male exits, it unlocks {\tt empty}, allowing women
+%to enter.  Women do likewise using {\tt femaleSwitch}.
+    {\tt maleSwitch} 
+    این امکان را به مردان می‌دهند که مانع ورود زن‌ها به اتاق شوند. زمانیکه اولین مرد وارد می‌شود، لایت‌سوئیچ، {\tt empty} را قفل نموده تا 
+    مانع وروود بانوان گردد؛ زمانیکه آخرین مرد خارج می‌شود، {\tt empty} را باز نموده تا ورود بانوان را ممکن سازد. بانوان نیز 
+    عملی مشابه با استفاده از {\tt femaleSwitch} انجام می‌دهند.
 
-{\tt maleSwitch} allows men to bar women from the room.
-When the first male enters, the lightswitch locks {\tt empty}, barring women;
-When the last male exits, it unlocks {\tt empty}, allowing women
-to enter.  Women do likewise using {\tt femaleSwitch}.
-
-{\tt maleMultiplex} and {\tt femaleMultiplex} ensure that there are no
-more than three men and three women in the system at a time.
+%{\tt maleMultiplex} and {\tt femaleMultiplex} ensure that there are no
+%more than three men and three women in the system at a time.
+    {\tt maleMultiplex} و {\tt femaleMultiplex}  
+    تضمین می‌نمایند که بیش از سه زن یا سه مزد در یک لحظه در سیستم نباشند. 
 
 
 \clearemptydoublepage
-\subsection {Unisex bathroom solution}
+%\subsection {Unisex bathroom solution}
+\subsection{راه حل سرویس بهداشتی عمومی}
 
-Here is the female code:
+%Here is the female code:
+    کد بانوان در ادامه آمده است: 
 
 \begin{latin}
-\begin{lstlisting}[title={Unisex bathroom solution (female)}]{}
+%\begin{lstlisting}[title={Unisex bathroom solution (female)}]{}
+\begin{lstlisting}[title=\rl{راه حل سرویس بهداشتی عمومی (بانوان)}]{}
 femaleSwitch.lock(empty)
     femaleMultiplex.wait()
         # bathroom code here
@@ -6513,29 +6524,37 @@ female Switch.unlock(empty)
 \end{lstlisting}
 \end{latin}
 
-The male code is similar.
+%The male code is similar.
+    کد آقایان نیز مشابه است. 
 
-Are there any problems with this solution?
-
-\clearemptydoublepage
-\subsection {No-starve unisex bathroom problem}
-
-The problem with the previous solution is that it allows starvation.
-A long line of women can arrive and enter while there is a man
-waiting, and vice versa.
-
-Puzzle: fix the problem.
-
+%Are there any problems with this solution?
+    آیا با این راه حل مشکلی دارد؟
 
 \clearemptydoublepage
-\subsection {No-starve unisex bathroom solution}
+%\subsection {No-starve unisex bathroom problem}
+\subsection{مساله سرویس بهداشتی عمومی بدون قحطی}
 
-As we have seen before, we can use a turnstile to allow one
-kind of thread to stop the flow of the other kind of thread.
-This time we'll look at the male code:
+%The problem with the previous solution is that it allows starvation.
+%A long line of women can arrive and enter while there is a man
+%waiting, and vice versa.
+    مشکل راه حل قبلی این است که قحطی را ممکن می‌سازد. در حالیکه یک مرد منتظر ورود است  ممکن است یک صف طولانی از بانوان و وارد شوند و بالعکس. 
+
+%Puzzle: fix the problem.
+    معمّا: مشکل را حل کنید: 
+
+
+\clearemptydoublepage
+%\subsection {No-starve unisex bathroom solution}
+\subsection{راه حل سرویس بهداشتی عمومی بدون قحطی}
+
+%As we have seen before, we can use a turnstile to allow one
+%kind of thread to stop the flow of the other kind of thread.
+%This time we'll look at the male code:
+    همانطوری که پیش از این دیدیم، می‌توانیم از ترن‌استایل استفاده کنیم تا یک نوعِ نخ‌ مانع جریان دیگر انواع نخ گردد. این مرتبه به کد آقایان نگاه خواهیم انداخت: 
 
 \begin{latin}
-\begin{lstlisting}[title={No-starve unisex bathroom solution (male)}]{}
+%\begin{lstlisting}[title={No-starve unisex bathroom solution (male)}]{}
+\begin{lstlisting}[title=\rl{راه حل سرویس بهداشتی عمومی  بدون قحطی(آقایان)}]{}
 turnstile.wait()
     maleSwitch.lock(empty)
 turnstile.signal()
@@ -6548,77 +6567,108 @@ maleSwitch.unlock (empty)
 \end{lstlisting}
 \end{latin}
 
-As long as there are men in the room, new arrivals will pass
-through the turnstile and enter.  If there are women in the room
-when a male arrives, the male will block inside the turnstile,
-which will bar all later arrivals (male and female) from entering
-until the current occupants leave.  At that point the male in
-the turnstile enters, possibly allowing additional males to enter.
+%As long as there are men in the room, new arrivals will pass
+%through the turnstile and enter.  If there are women in the room
+%when a male arrives, the male will block inside the turnstile,
+%which will bar all later arrivals (male and female) from entering
+%until the current occupants leave.  At that point the male in
+%the turnstile enters, possibly allowing additional males to enter.
+    تا زمانیکه مردانی در اتاق وجود دارند، مردان تازه از راه رسیده از ترن‌استایل عبور خواهند نمود و وارد می‌شوند. آن زمانیکه یک مرد  می‌رسد اگر یک تعدادی خانم 
+    داخل اتاق باشند، مرد مورد نظر درون ترن‌استایل مسدود شده و از ورود تمامی کسانی که پس از او می‌رسند (اعم از زن یا مرد) جلوگیری خواهد شد تا زمانیکه
+    افراد داخل اتاق آنجا را ترک نمایند. در این نقطه، مردی که درون ترن‌استایل هست وارد شده و ورود سایر مردان را نیز ممکن می‌سازد. 
 
-The female code is similar, so if there are men in the room an
-arriving female will get stuck in the turnstile, barring additional
-men.
+%The female code is similar, so if there are men in the room an
+%arriving female will get stuck in the turnstile, barring additional
+%men.
+    کد بانوان نیز مشابه است، لذا اگر مردانی درون اتاق باشند و یک خانم برسد، آن خانم درون ترن‌استایل گیر خواهد افتاد و مانع ورود مردان دیگر می‌شود. 
 
-This solution may not be efficient.  If
-the system is busy, then there will often be several threads, male and
-female, queued on the turnstile.  Each time {\tt empty} is signaled,
-one thread will leave the turnstile and another will enter.  If the
-new thread is the opposite gender, it will promptly block, barring
-additional threads.  Thus, there will usually be only 1-2 threads in
-the bathroom at a time, and the system will not take full advantage
-of the available concurrency.
+%This solution may not be efficient.  If
+%the system is busy, then there will often be several threads, male and
+%female, queued on the turnstile.  Each time {\tt empty} is signaled,
+%one thread will leave the turnstile and another will enter.  If the
+%new thread is the opposite gender, it will promptly block, barring
+%additional threads.  Thus, there will usually be only 1-2 threads in
+%the bathroom at a time, and the system will not take full advantage
+%of the available concurrency.
+    این راه حل ممکن است کارا نباشد. اگر سیستم مشغول باشد، اغلب چندین نخ مرد و زن وجود خواهد داشت که روی ترن‌استایل صف بسته‌اند. 
+    هر زمان که {\tt empty} سیگنال داده می‌شود، یک نخ ترن‌استایل را ترک نموده و نخ دیگر وارد خواهد شد. اگر نخ جدید از جنس مخالف باشد 
+    آن نخ بی‌درنگ مسدود خواهد شد و مانع نخ‌های دیگر می‌گردد. بنابراین معمولاً  در هر زمان تنها ۱ تا ۲ نخ در سرویس بهداشتی هستند و سیستم از تمام 
+    ظرفیت همزمانی موجود بهره نخواهد برد. 
 
 
-\section{Baboon crossing problem}
+%\section{Baboon crossing problem}
+\section{مساله عبورکردن میمون}
 
-This problem is adapted from Tanenbaum's {\em Operating Systems:
-Design and Implementation} \cite{tanenbaum}.
-There is a deep canyon somewhere in
-Kruger National Park, South Africa, and a single rope that spans the
-canyon.  Baboons can cross the canyon by swinging hand-over-hand on
-the rope, but if two baboons going in opposite directions meet in the
-middle, they will fight and drop to their deaths.  Furthermore,
-the rope is only strong enough to hold 5 baboons.  If there are
-more baboons on the rope at the same time, it will break.
+%This problem is adapted from Tanenbaum's {\em Operating Systems:
+%Design and Implementation} \cite{tanenbaum}.
+%There is a deep canyon somewhere in
+%Kruger National Park, South Africa, and a single rope that spans the
+%canyon.  Baboons can cross the canyon by swinging hand-over-hand on
+%the rope, but if two baboons going in opposite directions meet in the
+%middle, they will fight and drop to their deaths.  Furthermore,
+%the rope is only strong enough to hold 5 baboons.  If there are
+%more baboons on the rope at the same time, it will break.
+    این مساله از کتاب «سیستم‌های عامل: طراحی و پیاده‌سازی» تننبام اخذ شده است \cite{tanenbaum}.
+    یک جایی در پارک ملی کروگر در افریقای جنوبی\LTRfootnote{Kruger National Park, South Africa}
+    یک دره عمیق با یک تک طناب که بین این دره کشیده شده است وجود دارد. میمون‌ها می‌توانند با کمک دست‌هایشان با آویزان شدن از آن طناب 
+    از روی دره عبور نمایند، امّا اگر دو میمون در دو جهت مخالف در میانه راه به یکدیگر برسند، تا سر حد مرگ خواهند جنگید. 
+    علاوه بر این،‌ طناب تنها تحمل وزن ۵ میمون را دارد. اگر میمون‌های بیشتری به طور همزمان روی طناب باشند پاره خواهد شد. 
 
-Assuming that we can teach the baboons to use semaphores, we
-would like to design a synchronization scheme with the following
-properties:
+%Assuming that we can teach the baboons to use semaphores, we
+%would like to design a synchronization scheme with the following
+%properties:
+    تصور کنید که می‌توانیم  استفاده از سمافورها را به میمون‌ها آموزش دهیم، دوست داریم که یک برنامه همگام‌سازی با ویژگی‌های زیر طراحی نماییم:
 
 \begin{itemize}
 
-\item Once a baboon has begun to cross, it is guaranteed
-to get to the other side without running into a baboon going
-the other way.
+\item 
+%Once a baboon has begun to cross, it is guaranteed
+%to get to the other side without running into a baboon going
+%the other way.
+    هنگامیکه یک میمون شروع به عبور نموده است، تضمین شده باشد بدون اینکه با میمونی از روبرو مواجه شود به طرف دیگر برسد. 
 
-\item There are never more than 5 baboons on the rope.
+\item %There are never more than 5 baboons on the rope.
+    هیچگاه بیشتر از ۵ میمون روی طناب نباشد. 
 
-\item A continuing stream of baboons crossing in one direction
-should not bar baboons going the other way indefinitely
-(no starvation).
+\item %A continuing stream of baboons crossing in one direction
+%should not bar baboons going the other way indefinitely
+%(no starvation).
+    یک جریان پیوسه از میمون‌ها که در یک جهت عبور می‌کند نباید برای همیشه مانع میمون‌های جهت مخالف شود (بدون قحطی). 
 
 \end{itemize}
 
-I will not include a solution to this problem for reasons that
-should be clear.
+%I will not include a solution to this problem for reasons that
+%should be clear.
+    به دلایلی که واضح است راه حل این مساله را نخواهم گفت. 
 
 
-\section{The Modus Hall Problem}
+%\section{The Modus Hall Problem}
+\section{مساله تالار \lr{Modus} }
 
-This problem was written by Nathan Karst, one of the Olin students
-living in Modus Hall\footnote{Modus Hall is one of several nicknames
-for the modular buildings, aka Mods, that some students lived in while
-the second residence hall was being built.} during the winter of 2005.
+%This problem was written by Nathan Karst, one of the Olin students
+%living in Modus Hall\footnote{Modus Hall is one of several nicknames
+%for the modular buildings, aka Mods, that some students lived in while
+%the second residence hall was being built.} during the winter of 2005.
+    این مساله توسط \lr{Nathan Karst} یکی از دانشجویان \lr{Olin} که طی زمستان ۲۰۰۵ در تالار \lr{Modus}\footnote{
+    تالار \lr{Modus} یکی از چندین نام مستعار برای ساختمان‌های ماژولار است که همچنین به نام \lr{Mods} نیز شناخته می‌شود و جایی است که 
+    برخی دانشجویان در زمانی که تالار اقامتی دوم در حال ساخته شدن است در آنجا زندگی می‌کنند. 
+    } زندگی می‌کرده نوشته شده است. 
 
 \begin{quote}
-After a particularly heavy snowfall this winter, the denizens of Modus
-Hall created a trench-like path between their cardboard shantytown and
-the rest of campus.  Every day some of the residents walk to and from
-class, food and civilization via the path; we will ignore the
-indolent students who chose daily to drive to Tier 3.  We will also
-ignore the direction in which pedestrians are traveling.  For some
-unknown reason, students living in West Hall would occasionally find it
-necessary to venture to the Mods.
+%After a particularly heavy snowfall this winter, the denizens of Modus
+%Hall created a trench-like path between their cardboard shantytown and
+%the rest of campus.  Every day some of the residents walk to and from
+%class, food and civilization via the path; we will ignore the
+%indolent students who chose daily to drive to Tier 3.  We will also
+%ignore the direction in which pedestrians are traveling.  For some
+%unknown reason, students living in West Hall would occasionally find it
+%necessary to venture to the Mods.
+    زمستان، خصوصاً پس از یک بارش سنگین برف، ساکنان تالار  \lr{Modus} یک مسیر خندق مانند بین محل اقامت مقوایی‌شان  و بقیه محوطه کالج 
+    ایجاد نمودند. هر روز برخی از ساکنین  برای رفت و آمد بین کلاس‌ها، غذا خوردن و معاشرت از طریق این مسیر اقدام می‌نمایند؛ از دانشجویان 
+    تنبلی که روزانه  برای رفتن به \lr{Tier} ۳ از ماشین استفاده می‌کنند صرف نظر می‌کنیم. همچنین از جهت عابرین در حال حرکت نیز چشم‌پوشی می‌کنیم. 
+    به دلایلی نامعلومی، دانشجویانی که در تالار غربی زندگی می‌کنند گاهی اوقات، زندگی در \lr{Mods} را ضروری می‌دانند. 
+    
+%%%    Sat 06 Jan 2018 06:02:41 PM +0330 
 
 Unfortunately, the path is not wide enough to allow two people
 to walk side-by-side.  If two Mods persons meet at some point on the
