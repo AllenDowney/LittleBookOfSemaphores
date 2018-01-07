@@ -6665,46 +6665,63 @@ maleSwitch.unlock (empty)
 %necessary to venture to the Mods.
     زمستان، خصوصاً پس از یک بارش سنگین برف، ساکنان تالار  \lr{Modus} یک مسیر خندق مانند بین محل اقامت مقوایی‌شان  و بقیه محوطه کالج 
     ایجاد نمودند. هر روز برخی از ساکنین  برای رفت و آمد بین کلاس‌ها، غذا خوردن و معاشرت از طریق این مسیر اقدام می‌نمایند؛ از دانشجویان 
-    تنبلی که روزانه  برای رفتن به \lr{Tier} ۳ از ماشین استفاده می‌کنند صرف نظر می‌کنیم. همچنین از جهت عابرین در حال حرکت نیز چشم‌پوشی می‌کنیم. 
+    تنبلی که روزانه  برای رفتن به  \lr{Tier 3}  از ماشین استفاده می‌کنند صرف نظر می‌کنیم. همچنین از جهت عابرین در حال حرکت نیز چشم‌پوشی می‌کنیم. 
     به دلایلی نامعلومی، دانشجویانی که در تالار غربی زندگی می‌کنند گاهی اوقات، زندگی در \lr{Mods} را ضروری می‌دانند. 
     
 %%%    Sat 06 Jan 2018 06:02:41 PM +0330 
 
-Unfortunately, the path is not wide enough to allow two people
-to walk side-by-side.  If two Mods persons meet at some point on the
-path, one will gladly step aside into the neck high drift to accommodate
-the other.  A similar situation will occur if two ResHall inhabitants
-cross paths.  If a Mods heathen and a ResHall prude meet, however, a
-violent skirmish will ensue with the victors determined solely by
-strength of numbers; that is, the faction with the larger population will
-force the other to wait.
+%Unfortunately, the path is not wide enough to allow two people
+%to walk side-by-side.  If two Mods persons meet at some point on the
+%path, one will gladly step aside into the neck high drift to accommodate
+%the other.  A similar situation will occur if two ResHall inhabitants
+%cross paths.  If a Mods heathen and a ResHall prude meet, however, a
+%violent skirmish will ensue with the victors determined solely by
+%strength of numbers; that is, the faction with the larger population will
+%force the other to wait.
+    متاسفانه، مسیر آنقدر عریض نیست که دو نفر بتوانند در کنار هم راه بروند. اگر دو نفر از \lr{Mods} در یک نقطه از مسیر همدیگر را ببینند، 
+    یک نفر از آن‌ها با خوشحالی از مسیر خارج شده داخل برف می‌رود تا جا به دیگری دهد. وضعیت مشابهی برای دو ساکن \lr{ResHall}
+    در عبور از مسیر‌ها رخ خواهد داد. گرچه اگر یک نفر از \lr{Mods} (\r{heathen}) 
+    با یک نفر از  \lr{ResHall} (\lr{prude}) به هم برسند، یک کشمکش خشن 
+    به وقوع خواهد پیوست  و گروهی که در اکثریت است پیروز است؛ بدین معنی که آن دسته‌ای که جمعیت بیشتری دارد گروه دیگر را 
+    وادار به انتظار می‌نماید. 
 \end{quote}
 
-This is similar to the Baboon Crossing problem (in more ways than
-one), with the added twist that control of the critical section is
-determined by majority rule.  This has the potential to be an
-efficient and starvation-free solution to the categorical exclusion
-problem.
+%This is similar to the Baboon Crossing problem (in more ways than
+%one), with the added twist that control of the critical section is
+%determined by majority rule.  This has the potential to be an
+%efficient and starvation-free solution to the categorical exclusion
+%problem.
+    این مساله شبیه مساله عبور میمون‌ها است (منتهی با بیش از یک راه)، به همراه یک پیچیدگی مضاعف
+     که کنترل ناحیه بحرانی بوسیله قانون اکثریت تعیین می‌شود. این قانون، پتانسیل یک راه حل کارا و بدون قحطی را نسبت به مساله 
+     انحصار دسته‌ای دارد. 
 
-Starvation is avoided because while one faction controls the critical
-section, members of the other faction accumulate in queue until they
-achieve a majority.  Then they can bar new opponents from entering
-while they wait for the critical section to clear.  I expect this
-solution to be efficient because it will tend to move threads through
-in batches, allowing maximum concurrency in the critical section.
+%Starvation is avoided because while one faction controls the critical
+%section, members of the other faction accumulate in queue until they
+%achieve a majority.  Then they can bar new opponents from entering
+%while they wait for the critical section to clear.  I expect this
+%solution to be efficient because it will tend to move threads through
+%in batches, allowing maximum concurrency in the critical section.
+    قحطی ممکن نیست زیرا تا زمانیکه یک دسته، ناحیه بحرانی را کنترل می‌نماید، اعضای دسته دیگر به صف می‌پیوندند تا زمانیکه 
+    تبدیل به اکثریت شوند. سپس آن‌ها می‌توانند تا زمانیکه منتظر خالی شدن ناحیه بحرانی هستند مانع ورود رقیبان جدید گردند.
+    انتظار می‌رود این راه حل، کارا باشد زیرا  که نخ‌ها را در قالب دسته‌ها عبور داده لذا حداکثر همروندی در 
+    ناحیه بحرانی را ممکن می‌سازد. 
 
-Puzzle: write code that implements categorical exclusion with
-majority rule.
+%Puzzle: write code that implements categorical exclusion with
+%majority rule.
+    معمّا: کدی بنویسید که انحصار دسته‌ای با قانون اکثریت را پیاده‌سازی نماید. 
 
 
 
 \clearemptydoublepage
-\subsection {Modus Hall problem hint}
+%\subsection {Modus Hall problem hint}
+\subsection{راهنمایی مساله تالار \lr{Modus} }
 
-Here are the variables I used in my solution.
+%Here are the variables I used in my solution.
+    متغیرهایی که در راه حل بکار برده‌ام در ادامه آمده است. 
 
 \begin{latin}
-\begin{lstlisting}[title={Modus problem hint}]{}
+%\begin{lstlisting}[title={Modus problem hint}]{}
+\begin{lstlisting}[title=\rl{راهنمایی مساله تالار \lr{Modus}}]{}
 heathens = 0
 prudes = 0
 status = 'neutral'
@@ -6716,26 +6733,40 @@ prudeQueue = Semaphore(0)
 \end{lstlisting}
 \end{latin}
 
-{\tt heathens} and {\tt prudes} are counters, and {\tt status} records
-the status of the field, which can be `neutral', `heathens rule',
-`prudes rule', `transition to heathens' or `transition to prudes'.
-All three are protected by {\tt mutex} in the usual scoreboard
-pattern.
+%{\tt heathens} and {\tt prudes} are counters, and {\tt status} records
+%the status of the field, which can be `neutral', `heathens rule',
+%`prudes rule', `transition to heathens' or `transition to prudes'.
+%All three are protected by {\tt mutex} in the usual scoreboard
+%pattern.
+    {\tt heathens} و {\tt prudes} 
+    شمارنده هستند و  {\tt status} وضعیت میدان را نگاه می‌دارد که می‌تواند 
+    \lr{`neutral'}, \lr{`heathens rule'},
+    \lr{`prudes rule'}, \lr{`transition to heathens'} و یا \lr{`transition to prudes'}. 
+    هر سه تای این متغیرها با {\tt mutex} در یک الگوی جدول امتیاز معمولی محافظت می‌شوند. 
+    
 
-{\tt heathenTurn} and {\tt prudeTurn} control access to the field
-so that we can bar one side or the other during a transition.
 
-{\tt heathenQueue} and {\tt prudeQueue} are where threads wait after
-checking in and before taking the field.
+%{\tt heathenTurn} and {\tt prudeTurn} control access to the field
+%so that we can bar one side or the other during a transition.
+    {\tt heathenTurn} و {\tt prudeTurn} 
+    دسترسی به میدان را به نحوی کنترل می‌نمایند که می‌توانیم در مدت انتقال مانع یکی از دو طرف شویم. 
 
+%{\tt heathenQueue} and {\tt prudeQueue} are where threads wait after
+%checking in and before taking the field.
+    {\tt heathenQueue} و {\tt prudeQueue}
+    جایی هستند که نخ‌ها پس از ورود و پیش از گرفتن میدان، منتظر می‌مانند. 
+    
 
 \clearemptydoublepage
-\subsection {Modus Hall problem solution}
+%\subsection {Modus Hall problem solution}
+\subsection{راه حل مساله تالار \lr{Modus} }
 
-Here is the code for heathens:
+%Here is the code for heathens:
+    کد \lr{heathen}ها در ادامه آمده است:‌ 
 
 \begin{latin}
-\begin{lstlisting}[title={Modus problem solution}]{}
+%\begin{lstlisting}[title={Modus problem solution}]{}
+\begin{lstlisting}[title=\rl{راه حل مساله  \lr{Modus} }]{}
 heathenTurn.wait()
 heathenTurn.signal()
 (*\label{silentmajority}*)
@@ -6780,68 +6811,94 @@ mutex.signal()
 \end{lstlisting}
 \end{latin}
 
-As each student checks in, he has to
-consider the following cases:
+%As each student checks in, he has to
+%consider the following cases:
+    هر دانشجویی که می‌رسد باید حالات زیر را در نظر گیرد: 
 
 \begin{itemize}
 
-\item If the field is empty, the student lays claim for the heathens.
+\item %If the field is empty, the student lays claim for the heathens.
+    اگر میدان خالی بود، دانشجو مدعی عبور \lr{heathen}ها می‌شود. 
 
-\item If the heathens currently in charge, but the new arrival
-has tipped the balance, he locks the prude turnstile and the
-system switches to transition mode.
+\item %If the heathens currently in charge, but the new arrival
+%has tipped the balance, he locks the prude turnstile and the
+%system switches to transition mode.
+    اگر  الان \lr{heathen}ها مسئول هستند ولی ورودی جدید توازن را بهم زند، او ترن‌استایل \lr{prude} را قفل نموده و سیستم 
+    به حالت \lr{transition} می‌رود. 
 
-\item If the prudes in charge, but the new arrival doesn't
-tip the balance, he joins the queue.
+\item %If the prudes in charge, but the new arrival doesn't
+%tip the balance, he joins the queue.
+    اگر \lr{prude}ها مسئول بودند امّا ورودی جدید توازن به هم نزند، این فرد به صف ملحق می‌گردد. 
 
-\item If the system is transitioning to heathen control, the new arrival
-joins the queue.
+\item %If the system is transitioning to heathen control, the new arrival
+%joins the queue.
+    اگر سیستم در حال انتقال کنترل به  \lr{heathen} است، ورودی جدید به صف ملحق می‌شود. 
 
-\item Otherwise we conclude that either the heathens are in charge, or the
-system is transitioning to prude control.  In either case, this
-thread can proceed.
-
+\item %Otherwise we conclude that either the heathens are in charge, or the
+%system is transitioning to prude control.  In either case, this
+%thread can proceed.
+    در غیر اینصورت،  نتیجه می‌گیرم که یا  \lr{heathen}ها مسئول هستند و یا سیستم در حال انتقال کنترل به  \lr{prude} است. 
+    در هر حالت، این نخ می‌تواند ادامه یابد. 
 \end{itemize}  
 
-Similarly, as each student checks out, she has to consider several
-cases.  
+%Similarly, as each student checks out, she has to consider several
+%cases.  
+    به طور مشابه، هر دانشجویی که خارج می‌شود باید چندین حالت را در نظر گیرد. 
 
 \begin{itemize}
 
-\item If she is the last heathen to check out, she has to
-consider the following:
+\item %If she is the last heathen to check out, she has to
+%consider the following:
+    اگر او آخرین فرد \lr{heathen} باشد که می‌رود باید شرایط زیر را در نظر گیرد: 
 
     \begin{itemize}
 
-    \item If the system is in transition, that means that the prude
-      turnstile is locked, so she has to open it.
+    \item %If the system is in transition, that means that the prude
+%      turnstile is locked, so she has to open it.
+        اگر سیستم در حالت \lr{transition} است، بدین معنی که ترن‌استایل \lr{prude}  قفل شده است، آن فرد باید آن را باز نماید. 
 
-    \item If there are prudes waiting, she signals them and
-      updates {\tt status} so the prudes are in charge.  If not, the
-      new status is 'neutral'.
+    \item %If there are prudes waiting, she signals them and
+%      updates {\tt status} so the prudes are in charge.  If not, the
+%      new status is 'neutral'. 
+%%typo : 'neutral' -> `neutral'
+    اگر \lr{prude}هایی منتظر هستند، او باید به آن‌ها سیگنال داده و {\tt status}  را چنان بروزرسانی نماید که \lr{prude}ها 
+    مسئول هستند. و اگر چنین نباشد وضعیت جدید،       `\lr{neutral'} است. 
 
     \end{itemize}  
 
-\item If she is not the last heathen to check out, she still has to
-check the possibility that her departure will tip the balance.  In
-that case, she closes the heathen turnstile and starts the
-transition.
+\item %If she is not the last heathen to check out, she still has to
+%check the possibility that her departure will tip the balance.  In
+%that case, she closes the heathen turnstile and starts the
+%transition.
+    اگر آن فرد، آخرین نفر  \lr{heathen} که می‌رود نباشد، هنوز باید این امکان را بررسی نماید که آیا رفتن او، توازن را بر هم می‌زند یا نه؟ 
 
 \end{itemize}
 
-One potential difficulty of this solution is that any number
-of threads could be interrupted at Line~\ref{silentmajority},
-where they would have passed the turnstile but not yet checked in.
-Until they check in, they are not counted, so the balance of
-power may not reflect the number of threads that have passed the
-turnstile.  Also, a transition ends when all the threads that have
-checked in have also checked out.  At that point, there may
-be threads (of both types) that have passed the turnstile.
+    
 
-These behaviors may affect efficiency---this solution does
-not guarantee maximum concurrency---but they don't affect
-correctness, if you accept that ``majority rule'' only applies
-to threads that have registered to vote.
+%One potential difficulty of this solution is that any number
+%of threads could be interrupted at Line~\ref{silentmajority},
+%where they would have passed the turnstile but not yet checked in.
+%Until they check in, they are not counted, so the balance of
+%power may not reflect the number of threads that have passed the
+%turnstile.  Also, a transition ends when all the threads that have
+%checked in have also checked out.  At that point, there may
+%be threads (of both types) that have passed the turnstile.
+    
+    یک مشکل بالقوه این راه حل این است که هر تعداد نخ‌ ممکن است در خط~\ref{silentmajority} متوقف شوند، جاییکه آن‌ها 
+    باید از ترن‌استایل گذشته باشند ولی هنوز وارد نشده‌اند. تا زمانیکه آن‌ نخ‌ها وارد شوند، شمرده نمی‌شوند، لذا توازن قدرت ممکن است 
+    بازگوی تعداد نخ‌هایی که از ترن‌استایل عبور نموده‌اند نباشد. همچنین زمانیکه تمام نخ‌ها که وارد شده‌اند خارج نیز شده باشند یک انتقال 
+    پایان می‌پذیرد. در آن نقطه، ممکن است نخ‌هایی (از هر دو نوع) وجود داشته باشند که از ترن‌استایل گذر کرده باشند. 
+    
+%These behaviors may affect efficiency---this solution does
+%not guarantee maximum concurrency---but they don't affect
+%correctness, if you accept that ``majority rule'' only applies
+%to threads that have registered to vote.
+    این رفتارها کارایی را تحت تاثیر قرار می‌دهد ---این راه حل همروندی حداکثری را تضمین نمی‌کند--- امّا این نکات،
+    اگر بپذیرید که «قانون اکثریت»  تنها به نخ‌هایی که برای رای‌گیری ثبت‌نام نموده‌اند اعمال می‌شود، 
+    درستی راه حل را تحت تاثیر خود قرار نمی‌دهد. 
+    
+%%%    Sun 07 Jan 2018 06:21:11 PM +0330 
 
 
 \clearemptydoublepage
