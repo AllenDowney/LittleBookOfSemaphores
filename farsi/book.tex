@@ -7101,7 +7101,7 @@ mutex.signal()
 
 \begin{latin}
 %\begin{lstlisting}[title={Sushi bar solution \#2}]{}
-\begin{lstlisting}[title=\rl{راه حل بار سوشی  \#2}h]{}
+\begin{lstlisting}[title=\rl{راه حل بار سوشی  \#2}]{}
 mutex.wait()
 if must_wait:
     waiting += 1
@@ -7135,7 +7135,7 @@ else:
 %entering customer just increments {\tt eating} and releases the
 %mutex.  The fifth customer sets {\tt must\_wait}.
     اگر کمتر از ۵ مشتری در بار وجود داشته باشد و هیچ مشتری منتظر نباشد، یک مشتری جدید فقط مقدار {\tt eating} را افزایش داده و میوتکس را رها می‌کند. 
-    پنجمین مشتری مقدار {\tt must\_wait} را برابر \texttt{True} می‌کند. 
+    پنجمین مشتری مقدار {\tt must\_wait} را برابر \texttt{True} می‌نماید. 
 
 %If {\tt must\_wait} is set, entering customers block until the last
 %customer at the bar clears {\tt must\_wait} and signals {\tt block}.
@@ -7144,28 +7144,39 @@ else:
 %invariant understood by the programmer, and documented in the
 %comments, but not enforced by the semantics of semaphores.  It is up
 %to us to get it right.
-    اگر {\tt must\_wait} مقدار صحیح داشته باشد تا زمانیکه آخرین مشتری مقدار آن را ناصحیح نموده و به  {\tt block} سیگنال دهد مشتری‌های جدید 
-    مسدود می‌شوند. قابل درک است که نخ سیگنال دهنده از میوتکس صرف نظر نموده و نخ منتظر آن را می‌گیرد. 
+    اگر {\tt must\_wait} مقدار صحیح داشته باشد تا زمانیکه آخرین مشتری در بار مقدار آن را ناصحیح نموده و به  {\tt block} سیگنال دهد مشتری‌های جدید 
+    مسدود می‌شوند. این قابل درک است که نخ سیگنال دهنده از میوتکس صرف نظر نموده و نخ منتظر آن را می‌گیرد. در هر حال  به یاد داشته باشید که 
+    این نکته بوسیله برنامه‌نویس غیر قابل درک است و چیزی است که در توضیحات، مستند شده است 
+    ولکن به وسیله معانی سمافورها اعمال نشده است. این وظیفه ما است که معنی درست را دریابیم.
 
-When the waiting thread resumes, we understand that it has
-the mutex.  If there are other threads waiting,
-it signals {\tt block} which, again,
-passes the mutex to a waiting thread.  This process
-continues, with each thread passing the mutex to the next until
-there are no more chairs or no more waiting threads.  In either
-case, the last thread releases the mutex and goes to sit down.
+%When the waiting thread resumes, we understand that it has
+%the mutex.  If there are other threads waiting,
+%it signals {\tt block} which, again,
+%passes the mutex to a waiting thread.  This process
+%continues, with each thread passing the mutex to the next until
+%there are no more chairs or no more waiting threads.  In either
+%case, the last thread releases the mutex and goes to sit down.
+    زمانیکه نخ منتظر ادامه می‌یابد، در می‌یابیم که آن نخ میوتکس را دارد. اگر نخ‌های منتظر دیگری وجوپد داشته باشد، آن نخ به  {\tt block} سیگنال می‌دهد که 
+    دومرتبه میوتکس را به نخ منتظر می‌دهد. این فرآیند به این صورت ادامه می‌یابد که  اگر هیچ صندلی و یا نخ منتظر وجود نداشته باشد هر نخ میوتکس را
+    به دیگری می‌دهد. در هر حالت، آخرین نخ میوتکس را آزاد نموده و می‌رود که بنشیند. 
+    
 
-Reek calls this pattern ``Pass the baton,'' since the mutex
-is being passed from one thread to the next like a baton in a
-relay race.
-One nice thing about this solution is that it is easy to confirm
-that updates to {\tt eating} and {\tt waiting} are consistent.
-A drawback is that it is harder to confirm that the mutex is
-being used correctly.
+%Reek calls this pattern ``Pass the baton,'' since the mutex
+%is being passed from one thread to the next like a baton in a
+%relay race.
+%One nice thing about this solution is that it is easy to confirm
+%that updates to {\tt eating} and {\tt waiting} are consistent.
+%A drawback is that it is harder to confirm that the mutex is
+%being used correctly.
+    از آنجاییکه میوتکس از یک نخ به نخ دیگر منتقل می‌شود مشابه آنچه در مسابقه دو امدادی رخ می‌دهد \lr{Reek}
+    این الگو را "باتوم را منتقل کنید‍‍`` می‌نامد.
+    یک چیز خوب در رابطه با این راه حل این است که تایید پایدار بودن بروزرسانی  {\tt eating} و {\tt waiting} آسان است. و  یک نقطه ضعف آن 
+    این است که تایید صحیح بکار رفتن میوتکس سخت‌تر است. 
 
-
+%%%    Sun 14 Jan 2018 06:43:22 PM +0330
 % \clearemptydoublepage
-\section{The child care problem}
+%\section{The child care problem}
+\section{مساله مراقبت از بچه}
 
 Max Hailperin wrote this problem for his textbook {\em Operating
 Systems and Middleware} \cite{hailperin}.  At a child care center,
