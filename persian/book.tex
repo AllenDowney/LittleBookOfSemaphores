@@ -7176,44 +7176,58 @@ else:
 %%%    Sun 14 Jan 2018 06:43:22 PM +0330
 % \clearemptydoublepage
 %\section{The child care problem}
-\section{مساله مراقبت از بچه}
+\section{مساله مراقبت از کودکان}
 
-Max Hailperin wrote this problem for his textbook {\em Operating
-Systems and Middleware} \cite{hailperin}.  At a child care center,
-state regulations require that there is always one adult present for
-every three children.
+%Max Hailperin wrote this problem for his textbook {\em Operating
+%Systems and Middleware} \cite{hailperin}.  At a child care center,
+%state regulations require that there is always one adult present for
+%every three children.
+    این مساله را \lr{Max Hailperin} در کتابش، «سیستم‌های عامل و میان‌افزارها»\LTRfootnote{\em Operating
+Systems and Middleware}، نوشته است \cite{hailperin}. 
+    در یک مرکز مراقبت از کودکان، قوانین دولتی حضور دائم یک بزرگسال را برای هر سه بچه الزامی می‌نماید. 
 
-Puzzle: Write code for child threads and adult threads that enforces
-this constraint in a critical section.
-
+%Puzzle: Write code for child threads and adult threads that enforces
+%this constraint in a critical section.
+    معمّا: کدی برای سه نخ کودک و یک نخ بزرگسال بنویسید که این محدودیت‌ را در یک ناحیه بحرانی اعمال نماید. 
 
 \clearemptydoublepage
-\subsection {Child care hint}
+%\subsection {Child care hint}
+\subsection {راهنمایی مراقبت از کودکان}
 
-Hailperin suggests that you can {\em almost} solve this problem
-with one semaphore.
+%Hailperin suggests that you can {\em almost} solve this problem
+%with one semaphore.
+    پیشنهاد \lr{Hailperin} این است که این مساله با یک سمافور تقریباً قابل حل است. 
 
 \begin{latin}
-\begin{lstlisting}[title={Child care hint}]{}
+%\begin{lstlisting}[title={Child care hint}]{}
+\begin{lstlisting}[title=\rl{راهنمایی مراقبت از کودکان}]{}
 multiplex = Semaphore(0)
 \end{lstlisting}
 \end{latin}
 
-{\tt multiplex} counts the number of tokens available, where each token
-allows a child thread to enter.  As adults enter, they signal {\tt
-multiplex} three times; as they leave, they {\tt wait} three times.
-But there is a problem with this solution.
+%{\tt multiplex} counts the number of tokens available, where each token
+%allows a child thread to enter.  As adults enter, they signal {\tt
+%multiplex} three times; as they leave, they {\tt wait} three times.
+%But there is a problem with this solution.
+    {\tt multiplex} 
+    تعداد توکن‌های موجود را می‌شمرد که هر توکن اجازه ورود یک نخ کودک را می‌دهد. 
+    با ورود برزگسالان، آن‌ها به {\tt multiplex} سه بار سیگنال می‌دهند؛ و با خروجشان، سه بار {\tt wait} را فرا می‌خوانند. 
+    امّا این راه حل یک اشکال دارد. 
 
-Puzzle: what is the problem?
+%Puzzle: what is the problem?
+    معمّا: این مشکل چیست؟
 
 
 \clearemptydoublepage
-\subsection {Child care non-solution}
+%\subsection {Child care non-solution}
+\subsection {ناراه‌حل مراقبت از کودکان}
 
-Here is what the adult code looks like in Hailperin's non-solution:
+%Here is what the adult code looks like in Hailperin's non-solution:
+    آنچه در ادامه آمده مشابه کد بزرگسال در ناراه‌حل \lr{Hailperin} است: 
 
 \begin{latin}
-\begin{lstlisting}[title={Child care non-solution (adult)}]{}
+%\begin{lstlisting}[title={Child care non-solution (adult)}]{}
+\begin{lstlisting}[title=\rl{ناراه‌حل مراقبت از کودکان (بزرگسال)}]{}
 multiplex.signal(3)
 
 # critical section
@@ -7224,23 +7238,31 @@ multiplex.wait()
 \end{lstlisting}
 \end{latin}
 
-The problem is a potential deadlock.  Imagine that there are
-three children and two adults in the child care center.  The
-value of {\tt multiplex} is 3, so either adult should be able
-to leave.  But if both adults start to leave at the same time,
-they might divide the available tokens between them, and both
-block.
+%The problem is a potential deadlock.  Imagine that there are
+%three children and two adults in the child care center.  The
+%value of {\tt multiplex} is 3, so either adult should be able
+%to leave.  But if both adults start to leave at the same time,
+%they might divide the available tokens between them, and both
+%block. 
+    مشکل احتمال وقوع بن‌بست است. تصور نمایید که سه کودک و دو بزرگسال در مرکز مراقبت از کودکان وجود دارد. 
+    مقدار {\tt multiplex} برابر ۳ است، لذا هر کدام از بزرگسالان باید بتوانند که بروند. 
+    امّا اگر هر دو بزرگسال در یک لحظه بخواهند بروند، ممکن است توکن‌های موجود را بین خود تقسیم نمایند و هر دو مسدود شوند. 
 
-Puzzle: solve this problem with a minimal change.
+%Puzzle: solve this problem with a minimal change.
+    معمّا: این مشکل را با حداقل تغییرات، رفع نمایید. 
 
 
 \clearemptydoublepage
-\subsection {Child care solution}
+%\subsection {Child care solution}
+    \subsection{راه‌حل مرکز مراقبت از کودکان}        
 
-Adding a mutex solves the problem:
+%Adding a mutex solves the problem:
+    افزودن یک میوتکس مشکل را حل می‌نماید. 
 
 \begin{latin}
-\begin{lstlisting}[title={Child care solution (adult)}]{}
+%\begin{lstlisting}[title={Child care solution (adult)}]{}
+\begin{lstlisting}[title=\rl{راه‌حل مرکز مراقبت از کودکان (بزرگسال)}]{}
+     
 multiplex.signal(3)
 
 # critical section
@@ -7253,39 +7275,52 @@ mutex.signal()
 \end{lstlisting}
 \end{latin}
 
-Now the three {\tt wait} operations are atomic.  If there
-are three tokens available, the thread that gets the mutex
-will get all three tokens and exit.  If there are fewer
-tokens available, the first thread will block in the mutex
-and subsequent threads will queue on the mutex.
+%Now the three {\tt wait} operations are atomic.  If there
+%are three tokens available, the thread that gets the mutex
+%will get all three tokens and exit.  If there are fewer
+%tokens available, the first thread will block in the mutex
+%and subsequent threads will queue on the mutex.
+    اکنون سه عمل {\tt wait} اتمی هستند. اگر سه توکن موجود باشد، نخی که میوتکس را می‌گیرد تمامی هر سه توکن را گرفته و خارج می‌شود. 
+    اگر  توکن کمتری وجود داشته باشد، اولین نخ روی میوتکس مسدود خواهد شد و نخ‌های بعدی روی میوتکس تشکیل صف می‌دهند. 
 
-\subsection {Extended child care problem}
+%\subsection {Extended child care problem}
+\subsection {مساله توسعه‌یافته مرکز مراقبت}
 
-One feature of this solution is that an adult thread waiting to leave
-can prevent child threads from entering.
+%One feature of this solution is that an adult thread waiting to leave
+%can prevent child threads from entering.
+    یک ویژگی این راه‌حل این استکه نخ بزرگسال در انتظار خروج می‌تواند جلوی ورود نخ‌های کودک را بگیرد. 
 
-Imagine that there are 4 children and two adults, so the value of the
-multiplex is 2.  If one of the adults tries to leave, she will take
-two tokens and then block waiting for the third.  If a child thread
-arrives, it will wait even though it would be legal to enter.
-From the point of view of the adult trying to leave, that might
-be just fine, but if you are trying to maximize the utilization
-of the child care center, it's not.
+%Imagine that there are 4 children and two adults, so the value of the
+%multiplex is 2.  If one of the adults tries to leave, she will take
+%two tokens and then block waiting for the third.  If a child thread
+%arrives, it will wait even though it would be legal to enter.
+%From the point of view of the adult trying to leave, that might
+%be just fine, but if you are trying to maximize the utilization
+%of the child care center, it's not.
+    تصور نمایید که ۴ کودک و ۲ بزرگسال وجود دارد، لذا مقدار \lr{multiplex} برابر ۲ است. اگر یکی از بزرگسالان بخواهد که برود، باید دو توکن 
+    را نگاه دارد و سپس منتظر سومی بماند. اگر یک نخ کودک برسد، گرچه قانوناً می‌تواند وارد شود ولی منتظر خواهند ماند. 
+    از منظر بزرگسالی که تلاش می‌کند تا خارج شود، این امر خوب است، امّا اگر شما در تلاش برای حداکثر کردن بهره‌وری مرکز مراقبت از کودکان هستید 
+    این مساله خوب نیست. 
 
-Puzzle: write a solution to this problem that avoids unnecessary
-waiting.
+%Puzzle: write a solution to this problem that avoids unnecessary
+%waiting.
+    معمّا: راه‌حلی برای این مشکل ارائه دهید که از انتظارهای غیرضروری اجتناب نماید. 
 
-Hint: think about the dancers in Section~\ref{dancers}.
+%Hint: think about the dancers in Section~\ref{dancers}.
+    راهنمایی: به رقصندگان در بخش~\ref{dancers} بیندیشید. 
 
 
 
 \clearemptydoublepage
-\subsection {Extended child care hint}
+%\subsection {Extended child care hint}
+\subsection {راهنمایی مساله توسعه‌یافته مرکز مراقبت}
 
-Here are the variables I used in my solution:
+%Here are the variables I used in my solution:
+    متغیرهای بکار رفته در راه‌حل در اینجا آمده است:
 
 \begin{latin}
-\begin{lstlisting}[title={Extended child care hint}]{}
+%\begin{lstlisting}[title={Extended child care hint}]{}
+\begin{lstlisting}[title=\rl{راهنمایی مساله توسعه‌یافته مرکز مراقبت}]{}
 children = adults = waiting = leaving = 0
 mutex = Semaphore(1)
 childQueue = Semaphore(0)
@@ -7293,28 +7328,37 @@ adultQueue = Semaphore(0)
 \end{lstlisting}
 \end{latin}
 
-{\tt children}, {\tt adults}, {\tt waiting} and {\tt leaving}
-keep track of the number of children, adults, children waiting
-to enter, and adults waiting to leave; they are protected by
-{\tt mutex}.
+%{\tt children}, {\tt adults}, {\tt waiting} and {\tt leaving}
+%keep track of the number of children, adults, children waiting
+%to enter, and adults waiting to leave; they are protected by
+%{\tt mutex}.
+{\tt children}, {\tt adults}, {\tt waiting} و {\tt leaving}
+    تعداد کودکان، بزرگسالان، کودکان در انتظار ورود و بزرگسالان در انتظار خروج را نگاه می‌دارند؛ این متغیرها بوسیله {\tt mutex} محافظت می‌شوند. 
 
-Children wait on {\tt childQueue} to enter, if necessary.
-Adults wait on {\tt adultQueue} to leave.
+%Children wait on {\tt childQueue} to enter, if necessary.
+%Adults wait on {\tt adultQueue} to leave.
+    در صورت لزوم،  کودکان  برای ورود  روی {\tt childQueue}  منتظر می‌مانند. 
+    بزرگسالان به منظور خروج روی  {\tt adultQueue}  منتظر می‌مانند. 
 
 
 
 \clearemptydoublepage
-\subsection {Extended child care solution}
+%\subsection {Extended child care solution}
+\subsection {راه‌حل مساله توسعه‌یافته مرکز مراقبت}
 
-This solution is more complicated than
-Hailperin's elegant solution, but it is mostly a combination
-of patterns we have seen before: a scoreboard, two queues,
-and ``I'll do it for you''.
+%This solution is more complicated than
+%Hailperin's elegant solution, but it is mostly a combination
+%of patterns we have seen before: a scoreboard, two queues,
+%and ``I'll do it for you''.
+    این راه حل، از را‌ه‌حل زیبای \lr{Hailperin} کمی پیچیده‌تر است، امّا تقریبا ترکیبی از الگوهایی است که پیش از این  دیده‌ایم: یک تابلوی امتیاز، دو صف و 
+    ‍‍‍‍‍``بخاطر تو این کار را انجام خواهم داد".
 
-Here is the child code:
+%Here is the child code:
+    کد کودک در ادامه آمده است. 
 
 \begin{latin}
-\begin{lstlisting}[title={Extended child care solution (child)}]{}
+%\begin{lstlisting}[title={Extended child care solution (child)}]{}
+\begin{lstlisting}[title=\rl{راه‌حل توسعه‌یافته مرکز مراقبت از کودکان (کودک)}]{}
 mutex.wait()
     if children < 3 * adults:
         children++
@@ -7336,17 +7380,22 @@ mutex.signal()
 \end{lstlisting}
 \end{latin}
 
-As children enter, they check whether there are enough adults
-and either (1) increment {\tt children} and enter or (2) increment
-{\tt waiting} and block.
-When they exit, they check for an adult thread waiting to leave and
-signal it if possible.
-
+%As children enter, they check whether there are enough adults
+%and either (1) increment {\tt children} and enter or (2) increment
+%{\tt waiting} and block.
+%When they exit, they check for an adult thread waiting to leave and
+%signal it if possible.
+    وقتی کودکان وارد می‌شوند، بررسی می‌نمایند که آیا به اندازه کافی بزرگسال وجود دارد و یا  (1) {\tt children} را یک واحد افزایش داده و وارد می‌شود و 
+    یا (2) {\tt waiting}  را یک واحد افزایش داده و مسدود می‌گردد. زمانیکه کودکان خارج می‌شوند، بررسی می‌نمایند که آیا نخ بزرگسالی در انتظار برای خروج 
+    وجود دارد و اگر مقدور باشد به آن سینگال می‌دهند. 
+    
 \newpage
-Here is the code for adults:
+%Here is the code for adults:
+    کد بزرگسال در ادامه آمده است:
 
 \begin{latin}
-\begin{lstlisting}[title={Extended child care solution (adult)}]{}
+%\begin{lstlisting}[title={Extended child care solution (adult)}]{}
+\begin{lstlisting}[title=\rl{راه‌حل توسعه‌یافته مرکز مراقبت از کودکان (بزرگسال)}]{}
 mutex.wait()
     adults++
     if waiting:
@@ -7369,16 +7418,18 @@ mutex.wait()
 \end{lstlisting}
 \end{latin}
 
-As adults enter, they signal waiting children, if any.  Before they
-leave, they check whether there are enough adults left.  If so, they
-decrement {\tt adults} and exit.  Otherwise they increment {\tt
-leaving} and block.  While an adult thread is waiting to leave, it
-counts as one of the adults in the critical section, so additional
-children can enter.
+%As adults enter, they signal waiting children, if any.  Before they
+%leave, they check whether there are enough adults left.  If so, they
+%decrement {\tt adults} and exit.  Otherwise they increment {\tt
+%leaving} and block.  While an adult thread is waiting to leave, it
+%counts as one of the adults in the critical section, so additional
+%children can enter.
+    بزرگسالان همانطوری که وارد می‌شوند اگر کودکانی در حال انتظار باشند به آن‌ها سیگنال می‌دهند. قبل از خروج، بررسی می‌نمایند که آیا به اندازهٔ کافی بزرگسال 
+    باقی می‌ماند یا خیر؟. اگر به تعدادی کافی بودند، {\tt adults} را یک واحد کم کرده و خارج می‌شوند. در غیر اینصورت {\tt leaving} را یک واحد افزایش 
+    داده و مسدود می‌گردند. زمانیکه یک نخ بزرگسال در انتظار خروج است، به عنوان یکی از بزرگسالان موجود در ناحیه بحرانی شمرده می‌شود، لذا کودکان 
+    بیشتری می‌توانند وارد شوند.     
 
-
-
-
+%%%    Sun 28 Jan 2018 05:57:06 PM +0330
 
 \newpage
 \section{The room party problem}
