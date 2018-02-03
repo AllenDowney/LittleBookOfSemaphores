@@ -23,61 +23,6 @@
 \settextfont{IRXLotus}[Scale=1.2]%XB Niloofar}
 \setdigitfont{Yas}
 \setlatintextfont{Linux Libertine}[Scale=0.94]
-%\defpersianfont\yasfont{Yas}
-%\makeatletter
-%    %کدهای زیر سبب نگارش تمامی‌ ارقام با قلم یاس می‌گردد. (در این قلم صفرها به صورت صحیح و توخالی نگاشته می‌شوند.)
-%    \if@bidi@csundef{bidi@digits}{% 
-%        \newcount\bidi@digits
-%        \XeTeXinterchartokenstate=\@ne
-%        \newXeTeXintercharclass\bidi@digits@charclass
-%        \bidi@digits=`\0 \loop \XeTeXcharclass \bidi@digits \bidi@digits@charclass \ifnum\bidi@digits<`\9 \advance\bidi@digits \@ne \repeat
-%        \bidi@digits=`\۰ \loop \XeTeXcharclass \bidi@digits \bidi@digits@charclass \ifnum\bidi@digits<`\۹ \advance\bidi@digits \@ne \repeat
-%    }{}
-%    \newif\if@q@verbatim
-%    \bidi@appto\verbatim@font{\@q@verbatimtrue}
-%    \bidi@appto\ttfamily{\@q@verbatimtrue}
-%    \newXeTeXintercharclass\q@leftparen@charclass
-%    \newXeTeXintercharclass\q@rightparen@charclass
-%    \XeTeXcharclass `\( \q@leftparen@charclass
-%    \XeTeXcharclass `\) \q@rightparen@charclass
-%    \XeTeXcharclass `\[ \q@leftparen@charclass
-%    \XeTeXcharclass `\] \q@rightparen@charclass
-%    \XeTeXcharclass `\{ \q@leftparen@charclass
-%    \XeTeXcharclass `\} \q@rightparen@charclass
-%    \XeTeXcharclass `\« \q@leftparen@charclass
-%    \XeTeXcharclass `\» \q@rightparen@charclass       
-%    \XeTeXcharclass `\، \q@leftparen@charclass    
-%    \XeTeXcharclass `\, \q@leftparen@charclass
-%    \XeTeXcharclass `\؛ \q@leftparen@charclass          
-%    \XeTeXcharclass `\; \q@leftparen@charclass          
-%    \XeTeXcharclass `\: \q@leftparen@charclass          
-%    \XeTeXcharclass `\. \q@leftparen@charclass     
-%    \XeTeXcharclass `\- \q@leftparen@charclass     
-%    \ifdim\the\XeTeXversion\XeTeXrevision\p@>0.99993\p@
-%      \chardef\q@alloc@intercharclass@top=4095
-%    \else
-%      \chardef\q@alloc@intercharclass@top=255
-%    \fi
-%    \chardef\q@CharNormal=0
-%    \XeTeXinterchartoks \q@alloc@intercharclass@top \bidi@digits@charclass = {\BeginSwitchDigitFont}
-%    \XeTeXinterchartoks \bidi@digits@charclass \q@alloc@intercharclass@top = {\EndSwitchDigitFont}
-%    \XeTeXinterchartoks \q@leftparen@charclass \bidi@digits@charclass = {\BeginSwitchDigitFont}
-%    \XeTeXinterchartoks \bidi@digits@charclass \q@rightparen@charclass = {\EndSwitchDigitFont}
-%    \XeTeXinterchartoks \q@rightparen@charclass \bidi@digits@charclass = {\BeginSwitchDigitFont}
-%    \XeTeXinterchartoks \bidi@digits@charclass \q@leftparen@charclass = {\EndSwitchDigitFont}    
-%    \XeTeXinterchartoks \q@CharNormal \bidi@digits@charclass = {\BeginSwitchDigitFont}
-%    \XeTeXinterchartoks \bidi@digits@charclass \q@CharNormal = {\EndSwitchDigitFont}    
-%    \if@bidi@csundef{if@nonlatin}{%
-%        \newcommand*{\BeginSwitchDigitFont}{\if@q@verbatim\else%
-%        \global\edef\currentfont{\the\font}\if@Latin\else\bgroup\yasfont \fi\fi}
-%        \newcommand*{\EndSwitchDigitFont}{\if@q@verbatim\else\if@Latin\else\egroup\currentfont \fi\fi}
-%    }{%
-%        \newcommand*{\BeginSwitchDigitFont}{\if@q@verbatim\else%
-%        \global\edef\currentfont{\the\font}\if@nonlatin\bgroup\yasfont \fi\fi}
-%        \newcommand*{\EndSwitchDigitFont}{\if@q@verbatim\else\if@nonlatin\egroup\currentfont \fi\fi}
-%    }    
-%\makeatother
-
 
 %\title{The Little Book of Semaphores}
 \title{کتاب کوچک سمافورها}
@@ -7432,49 +7377,66 @@ mutex.wait()
 %%%    Sun 28 Jan 2018 05:57:06 PM +0330
 
 \newpage
-\section{The room party problem}
+%\section{The room party problem}
+\section{مساله اتاق پارتی}
 
-I wrote this problem while I was at Colby College.  One semester
-there was a controversy over an allegation by a student that someone
-from the Dean of Students Office had searched his room in his
-absence.  Although the allegation was public, the Dean of Students
-wasn't able to comment on the case, so we never found out what
-really happened.  I wrote this problem to tease a friend of mine,
-who was the Dean of Student Housing.
+%I wrote this problem while I was at Colby College.  One semester
+%there was a controversy over an allegation by a student that someone
+%from the Dean of Students Office had searched his room in his
+%absence.  Although the allegation was public, the Dean of Students
+%wasn't able to comment on the case, so we never found out what
+%really happened.  I wrote this problem to tease a friend of mine,
+%who was the Dean of Student Housing.
+    این مساله را زمانیکه در کالج کالبی بودم نوشتم. در یک ترم  به سبب اینکه یک دانشجو مدعی شده بود که شخصی از طرف رئیس دفتر دانشجویان 
+    در غیاب او اتاقش را وارسی کرده است منازعه‌ای رخ داد. اگرچه ادعا به صورت عمومی مطرح شد، رئیس دفتر دانشجویان قادر به اظهار نظر در مورد آن نبود، 
+    لذا هرگز نفهمیدیم واقعاً چه اتفاقی افتاده است. این مساله را برای این نوشتن تا یکی از دوستانم را که معاون مسکن دانشجویی بود دست بیندازم. 
 
-The following synchronization constraints apply to students
-and the Dean of Students:
+%The following synchronization constraints apply to students
+%and the Dean of Students:
+    محدودیت‌های همگام‌سازی زیر نسبت دانشجویان و مدیریت دانشجویی اعمال می‌گردد: 
 
 \begin{enumerate}
 
-\item Any number of students can be in a room at the same
-time.
+\item %Any number of students can be in a room at the same time.
+    هر تعداد دانشجو می‌تواند به طور همزمان در یک اتاق باشد.
 
-\item The Dean of Students can only enter a room if there
-are no students in the room (to conduct a search) or if
-there are more than 50 students in the room (to break up
-the party).
+\item 
+%The Dean of Students can only enter a room if there
+%are no students in the room (to conduct a search) or if
+%there are more than 50 students in the room (to break up
+%the party).
+    مدیریت دانشجویی تنها  در صورتی می‌تواند وارد اتاقی شود که یا هیچ دانشجویی در اتاق نباشد (به منظور هدایت یک تفحص) و 
+    یا بیش از ۵۰ دانشجو در اتاق باشد  (به منظور بر هم زدن پارتی).
 
-\item While the Dean of Students is in the room, no additional
-students may enter, but students may leave.
+\item 
+%While the Dean of Students is in the room, no additional
+%students may enter, but students may leave.
+    زمانیکه مدیریت دانشجویی در اتاق هست هیچ دانشجویی دیگری ممکن نیست وارد شود ولی دانشجویان ممکن است اتاق را ترک کنند. 
 
-\item The Dean of Students may not leave the room until all
-students have left.
+\item 
+%The Dean of Students may not leave the room until all
+%students have left.
+    مدیریت دانشجویی ممکن نیست اتاق را ترک گوید مگر اینکه تمامی دانشجویان آن را ترک کرده باشند. 
 
-\item There is only one Dean of Students, so you do not have
-to enforce exclusion among multiple deans.
+\item 
+%There is only one Dean of Students, so you do not have
+%to enforce exclusion among multiple deans.
+    تنها یک مدیریت دانشجویی وجود دارد لذا نباید بین چند مدیر انحصار اعمال کنید. 
 
 \end{enumerate}
 
-Puzzle: write synchronization code for students and for the
-Dean of Students that enforces all of these constraints.
+%Puzzle: write synchronization code for students and for the
+%Dean of Students that enforces all of these constraints.
+    معمّا: برای دانشجویان و مدیریت دانشجویی یک کد همگام‌سازی بنویسید که تمامی این محدودیت‌ها را اعمال نماید. 
 
 
 \clearemptydoublepage
-\subsection {Room party hint}
+%\subsection {Room party hint}
+\subsection{راهنمای اتاق پارتی}
 
 \begin{latin}
-\begin{lstlisting}[title={Room party hint}]{}
+%\begin{lstlisting}[title={Room party hint}]{}
+\begin{lstlisting}[title=\rl{راهنمای اتاق پارتی}]{}
 students = 0                
 dean = 'not here'           
 mutex = Semaphore(1)
@@ -7484,35 +7446,54 @@ lieIn = Semaphore(0)
 \end{lstlisting}
 \end{latin}
 
-{\tt students} counts the number of students in the room,
-and {\tt dean} is the state of the Dean, which can also be
-``waiting'' or ``in the room''.
-{\tt mutex} protects {\tt students} and {\tt dean}, so this
-is yet another example of a scoreboard.
+%{\tt students} counts the number of students in the room,
+%and {\tt dean} is the state of the Dean, which can also be
+%``waiting'' or ``in the room''.
+%{\tt mutex} protects {\tt students} and {\tt dean}, so this
+%is yet another example of a scoreboard.
+    {\tt students}
+    تعداد دانشجویان داخل اتاق را می‌شمرد و {\tt dean}  وضعیت مدیر است که علاوه بر  \lr{'not here'}
+    همچنین می‌تواند \lr{``waiting'' } و یا \lr{ ``in the room''}. 
+    {\tt mutex}
+    از  {\tt students} و {\tt dean} محافظت می‌نماید لذا این نیز مثالی دیگر یک جدول امتیاز است. 
+    
 
-{\tt turn} is a turnstile that keeps students from entering
-while the Dean is in the room.
+%{\tt turn} is a turnstile that keeps students from entering
+%while the Dean is in the room.
+    {\tt turn}
+    ترن‌استایلی است که مانع ورود دانشجویان  به اتاق زمانیکه مدیر در اتاق است می‌گردد. 
 
-{\tt clear} and {\tt lieIn} are used as rendezvouses between
-a student and the Dean (which is a whole other kind of scandal!).
+%{\tt clear} and {\tt lieIn} are used as rendezvouses between
+%a student and the Dean (which is a whole other kind of scandal!).
+    {\tt clear} و {\tt lieIn}
+    به صورت قرار ملاقات‌هایی بین  یک دانشجو و مدیر (که یک نمونه کامل دیگر از رسوایی است)  بکار می‌رود. 
 
 
 \clearemptydoublepage
-\subsection {Room party solution}
+%\subsection {Room party solution}
+\subsection{راه‌حل اتاق پارتی}
 
-This problem is hard.  I worked through a lot of versions before
-I got to this one.  The version that appeared in the first edition
-was mostly correct, but occasionally the Dean would enter the
-room and then find that he could neither search nor break up the
-party, so he would have to skulk off in embarrassed silence.
+%This problem is hard.  I worked through a lot of versions before
+%I got to this one.  The version that appeared in the first edition
+%was mostly correct, but occasionally the Dean would enter the
+%room and then find that he could neither search nor break up the
+%party, so he would have to skulk off in embarrassed silence.
+    این مساله‌ای  سخت است. من پیش اینکه با این یکی روبرو شوم روی نسخه‌های زیادی کار کردم. این نسخه که در ویرایش اول این کتاب عرضه گردید 
+    کاملاً درست بود، امّا گهگاهی مدیر ممکن بود وارد اتاق شود و سپس دریابد که نه می‌تواند به جستجو بپردازد و نه می‌تواند پارتی را متوقف کند، لذا او می‌بایست 
+    در سکوتی خجالت‌بار آنجا را ترک کند. 
 
-Matt Tesch wrote a solution that spared this humiliation, but the
-result was complicated enough that we had a hard time convincing
-ourselves that it was correct.  But that solution led me to this one,
-which is a bit more readable.
+%Matt Tesch wrote a solution that spared this humiliation, but the
+%result was complicated enough that we had a hard time convincing
+%ourselves that it was correct.  But that solution led me to this one,
+%which is a bit more readable.
+    \lr{Matt Tesch}
+    یک راه‌حل نوشت که جلوی این حقارت را می‌گرفت، امّا نتیجه اینقدر پیچیده بود که به سختی توانستیم خود را متقاعد کنیم که راه‌حل درست است. 
+    امّا آن راه‌حل مرا به این راه‌حل که کمی خواناتر است رهنمون گردید. 
+
 
 \begin{latin}
-\begin{lstlisting}[title={Room party solution (dean)}]{}
+%\begin{lstlisting}[title={Room party solution (dean)}]{}
+\begin{lstlisting}[title=\rl{راه‌حل اتاق پارتی (مدیر)}]{}
 mutex.wait()
     if students > 0 and students < 50:
         dean = 'waiting'
@@ -7537,20 +7518,28 @@ mutex.signal()
 \end{lstlisting}
 \end{latin}
 
-When the Dean arrives, there are three cases: if there are students in
-the room, but not 50 or more, the Dean has to wait.  If there are 50
-or more, the Dean breaks up the party and waits for the students to
-leave.  If there are no students, the Dean searches and leaves.
+%When the Dean arrives, there are three cases: if there are students in
+%the room, but not 50 or more, the Dean has to wait.  If there are 50
+%or more, the Dean breaks up the party and waits for the students to
+%leave.  If there are no students, the Dean searches and leaves.
+    زمانیکه مدیر می‌رسد، سه حالت وجود دارد: 
+    اگر دانشجویانی داخل اتاق بوده و ۵۰ نفر یا بیشتر  نباشد مدیر باید صبر کند. اگر ۵۰ یا تعدادی بیشتر دانشجو در اتاق باشد مدیر پارتی را متوقف نموده و 
+    منتظر خروج دانشجویان می‌ماند. اگر هیچ دانشجویی وجود نداشته باشد، مدیر به جستجو پرداخته و سپس اتاق را ترک می‌کند. 
+    
 
-In the first two cases, the Dean has to wait for a rendezvous with a
-student, so he has to give up {\tt mutex} to avoid a deadlock.  When
-the Dean wakes up, he has to modify the scoreboard, so he needs to get
-the mutex back.  This is similar to the situation we saw in the Sushi
-Bar problem.  The solution I chose is the ``Pass the baton'' pattern.
+%In the first two cases, the Dean has to wait for a rendezvous with a
+%student, so he has to give up {\tt mutex} to avoid a deadlock.  When
+%the Dean wakes up, he has to modify the scoreboard, so he needs to get
+%the mutex back.  This is similar to the situation we saw in the Sushi
+%Bar problem.  The solution I chose is the ``Pass the baton'' pattern.
+    در دو حالت اول، مدیر باید برای یک قرار ملاقات با یک دانشجو صبر کند لذا از {\tt mutex} صرف نظر می‌‌کند تا بن‌بستی رخ ندهد. 
+    زمانیکه مدیر بر می‌خیرد، باید جدول امتیاز را تغییر دهد بنابراین نیاز دارد تا میوتکس را دوباره بگیرد. 
+    این، مشابه وضعیتی است که در مساله بار سوشی دیدیم. راه‌حلی که انتخاب کردم الگوی "باتوم را منتقل کنید`` است. 
 
 \newpage
 \begin{latin}
-\begin{lstlisting}[title={Room party solution (student)}]{}
+%\begin{lstlisting}[title={Room party solution (student)}]{}
+\begin{lstlisting}[title=\rl{راه‌حل اتاق پارتی (دانشجو)}]{}
 mutex.wait()
     if dean == 'in the room':
         mutex.signal()
@@ -7579,24 +7568,35 @@ mutex.wait()
 \end{lstlisting}
 \end{latin}
 
-There are three cases where a student might have to signal the Dean.
-If the Dean is waiting, then the 50th student in or the last one out
-has to signal {\tt lieIn}.  If the Dean is in the room (waiting for
-all the students to leave), the last student out signals {\tt clear}.
-In all three cases, it is understood that the mutex passes from the
-student to the Dean.
+%There are three cases where a student might have to signal the Dean.
+%If the Dean is waiting, then the 50th student in or the last one out
+%has to signal {\tt lieIn}.  If the Dean is in the room (waiting for
+%all the students to leave), the last student out signals {\tt clear}.
+%In all three cases, it is understood that the mutex passes from the
+%student to the Dean.
+    سه حالت وجود دارد که ممکن است یک دانشجو مجبور شود به مدیر سیگنال دهد. 
+    اگر مدیر در حال انتظار است،  پنجاهمین دانشجویی که وارد می‌شود یا آخرین دانشجویی که خارج می‌شود باید  به {\tt lieIn} سینگال دهد.
+    اگر مدیر داخل اتاق است (و در حالیکه منتظر است تا تمامی دانشجویان خارج شوند)، آخرین دانشجویی که خارج می‌شود باید به {\tt clear} سیگنال دهد. 
+    در تمامی سه حالت، قابل درک است که میوتکس از یک دانشجو به مدیر منتقل می‌گردد. 
 
-One part of this solution that may not be obvious is how we know at
-Line~\ref{roomparty1} of the Dean's code that {\tt students} must be 0
-or not less than 50.  The key is to realize that there are only two
-ways to get to this point: either the first conditional was false,
-which means that {\tt students} is either 0 or not less than 50; or
-the Dean was waiting on {\tt lieIn} when a student signaled, which
-means, again, that {\tt students} is either 0 or not less than 50.
-
+%One part of this solution that may not be obvious is how we know at
+%Line~\ref{roomparty1} of the Dean's code that {\tt students} must be 0
+%or not less than 50.  The key is to realize that there are only two
+%ways to get to this point: either the first conditional was false,
+%which means that {\tt students} is either 0 or not less than 50; or
+%the Dean was waiting on {\tt lieIn} when a student signaled, which
+%means, again, that {\tt students} is either 0 or not less than 50.
+    بخشی از این راه‌حل که ممکن است واضح نباشد این است چطور در می‌یابیم در خط~\ref{roomparty1} از کد مدیر، مقدار {\tt students}  
+    باید صفر و یا نباید کمتر از ۵۰ باشد. نکته در فهم این است تنها دو راه برای رسیدن به این دونقطه وجود دارد: یا شرط اولی نادرست بود 
+    که در اینصورت  {\tt students} یا صفر است و یا کمتر پنجاه نیست؛‌ یا مدیر زمانیکه یک دانشجو سیگنال داد روی {\tt lieIn} منتظر بوده است و 
+    دوباره به این معنی است که {\tt students}  یا صفر است و یا کمتر از ۵۰ نیست. 
+    
+    
+%%%        Sat 03 Feb 2018 05:56:47 PM +0330
 
 \clearemptydoublepage
-\section{The Senate Bus problem}
+%\section{The Senate Bus problem}
+\section{مساله اتوبوس مجلس سنا}
 
 This problem was originally based on the Senate bus at Wellesley
 College.  Riders come to a bus stop and wait for a bus.  When the bus
