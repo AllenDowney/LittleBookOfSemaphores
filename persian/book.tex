@@ -18,8 +18,10 @@
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue]{hyperref}
 
 
+
 \usepackage[computeautoilg, extrafootnotefeatures]{xepersian}
 \usepackage{bidiftnxtra}
+
 \settextfont{IRXLotus}[Scale=1.2]%XB Niloofar}
 \setdigitfont{Yas}
 \setlatintextfont{Linux Libertine}[Scale=0.94]
@@ -7285,8 +7287,6 @@ adultQueue = Semaphore(0)
     در صورت لزوم،  کودکان  برای ورود  روی {\tt childQueue}  منتظر می‌مانند. 
     بزرگسالان به منظور خروج روی  {\tt adultQueue}  منتظر می‌مانند. 
 
-
-
 \clearemptydoublepage
 %\subsection {Extended child care solution}
 \subsection {راه‌حل مساله توسعه‌یافته مرکز مراقبت}
@@ -7596,30 +7596,41 @@ mutex.wait()
 
 \clearemptydoublepage
 %\section{The Senate Bus problem}
-\section{مساله اتوبوس مجلس سنا}
+\section{مساله اتوبوس سنا\footnotemark}
+\LTRfootnotetext{\url{https://www.wellesley.edu/housingtransp/transportation/shuttlebuses}}
 
-This problem was originally based on the Senate bus at Wellesley
-College.  Riders come to a bus stop and wait for a bus.  When the bus
-arrives, all the waiting riders invoke {\tt boardBus}, but anyone who
-arrives while the bus is boarding has to wait for the next bus.  The
-capacity of the bus is 50 people; if there are more than 50 people
-waiting, some will have to wait for the next bus.
+%This problem was originally based on the Senate bus at Wellesley
+%College.  Riders come to a bus stop and wait for a bus.  When the bus
+%arrives, all the waiting riders invoke {\tt boardBus}, but anyone who
+%arrives while the bus is boarding has to wait for the next bus.  The
+%capacity of the bus is 50 people; if there are more than 50 people
+%waiting, some will have to wait for the next bus.
+    این مساله در اصل بر مبنای اتوبوس سنا در کالج \lr{Wellesley} بود.
+    مسافران به ایستگاه اتوبوس آمده و منتظر اتوبوس می‌شوند. زمانیکه اتوبوس می‌رسد، تمامی مسافران منتظر    {\tt boardBus} را فرا می‌خوانند امّا 
+    هر کسی که در حین سوارشدن مسافران می‌رسد باید منتظر اتوبوس بعدی بماند. ظرفیت اتوبوس ۵۰ نفر است، اگر بیش از ۵۰ نفر منتظر باشند، 
+    برخی باید منتظر اتوبوس بعدی بنمانند. 
 
-When all the waiting riders have boarded,
-the bus can invoke {\tt depart}.  If the bus arrives when there
-are no riders, it should depart immediately.
+%When all the waiting riders have boarded,
+%the bus can invoke {\tt depart}.  If the bus arrives when there
+%are no riders, it should depart immediately.
+    زمانیکه تمامی مسافران منتظر سوار شدند، اتوبوس می‌تواند  {\tt depart} را فراخواند. 
+    اگر اتوبوس زمانی برسد که هیچ مسافری وجود نداشته باشد می‌تواند بلافاصله  حرکت کند. 
 
-Puzzle: Write synchronization code that enforces all of these
-constraints.
+%Puzzle: Write synchronization code that enforces all of these
+%constraints.
+    معمّا: کدی بمنظور همگام‌سازی بنویسید که تمامی این محدودیت‌ها را اعمال کند. 
 
 
 \clearemptydoublepage
-\subsection {Bus problem hint}
+%\subsection {Bus problem hint}
+\subsection {راهنمایی مساله اتوبوس}
 
-Here are the variables I used in my solution:
+%Here are the variables I used in my solution:
+    متغیرهایی که در راه حل بکار برده‌ام در ادامه آمده است: 
 
 \begin{latin}
-\begin{lstlisting}[title={Bus problem hint}]{}
+%\begin{lstlisting}[title={Bus problem hint}]{}
+\begin{lstlisting}[title=\rl{راهنمای مساله اتوبوس}]{}
 riders = 0
 mutex = Semaphore(1)
 multiplex = Semaphore(50)
@@ -7628,25 +7639,34 @@ allAboard = Semaphore(0)
 \end{lstlisting}
 \end{latin}
 
-{\tt mutex} protects {\tt riders}, which keeps track of
-how many riders are waiting;
-{\tt multiplex} makes sure there are no more than 50 riders
-in the boarding area.
+%{\tt mutex} protects {\tt riders}, which keeps track of
+%how many riders are waiting;
+%{\tt multiplex} makes sure there are no more than 50 riders
+%in the boarding area.
+    {\tt mutex}
+    از  {\tt riders} که تعداد مسافران منتظر را نگه می‌دارد محافظ می‌کند؛ {\tt multiplex} تضمین می‌کند که بیش از ۵۰ مسافر در 
+    سکوی  سوارشدن وجود نداشته باشد. 
+    
 
-Riders wait on
-{\tt bus}, which gets signaled when the bus arrives.  The
-bus waits on {\tt allAboard}, which gets signaled by the last
-student to board.
+%Riders wait on
+%{\tt bus}, which gets signaled when the bus arrives.  The
+%bus waits on {\tt allAboard}, which gets signaled by the last
+%student to board.
+    مسافران روی سمافور {\tt bus} منتظر می‌مانند و این سمافور زمانیکه اتوبوس می‌رسد سیگنال دریافت می‌دارد. 
+    اتوبوس روی سمافور {\tt allAboard} منتظر می‌ماند و این سمافور زمانیکه آخرین دانشجو سوار شد سیگنال دریافت می‌کند. 
 
 
 \clearemptydoublepage
-\subsection {Bus problem solution \#1}
+%\subsection {Bus problem solution \#1}
+\subsection {راه حل مساله اتوبوس \#1}
 
-Here is the code for the bus.  Again, we are using the
-``Pass the baton'' pattern.
+%Here is the code for the bus.  Again, we are using the
+%``Pass the baton'' pattern.
+    کد اتوبوس در ادامه آمده است. دوباره از الگوی ``باتوم را منتقل کنید" استفاده می‌کنیم. 
 
 \begin{latin}
-\begin{lstlisting}[title={Bus problem solution (bus)}]{}
+%\begin{lstlisting}[title={Bus problem solution (bus)}]{}
+\begin{lstlisting}[title=\rl{راه حل مساله اتوبوس (اتوبوس)}]{}
 mutex.wait()
 if riders > 0:
     bus.signal()        # and pass the mutex
@@ -7657,15 +7677,20 @@ depart()
 \end{lstlisting}
 \end{latin}
 
-When the bus arrives, it gets {\tt mutex}, which
-prevents late arrivals from entering the boarding area.  If there
-are no riders, it departs immediately.  Otherwise, it signals {\tt bus}
-and waits for the riders to board.
+%When the bus arrives, it gets {\tt mutex}, which
+%prevents late arrivals from entering the boarding area.  If there
+%are no riders, it departs immediately.  Otherwise, it signals {\tt bus}
+%and waits for the riders to board.
+    زمانیکه اتوبوس می‌رسد، {\tt mutex} را می‌گیرد تا از ورود کسانیکه بعداً می‌رسند به سکوی سوارشدن جلوگیری نماید.
+    اگر هیچ مسافری وجود نداشته اتوبوس بلافاصله محل را ترک می‌نماید. در غیر اینصورت، به {\tt bus} سیگنال داده و 
+    منتظر می‌ماند تا مسافران سوار شوند. 
 
-Here is the code for the riders:
+%Here is the code for the riders:
+    کد مسافران نیز در اینجا آمده است:
 
 \begin{latin}
-\begin{lstlisting}[title={Bus problem solution (riders)}]{}
+%\begin{lstlisting}[title={Bus problem solution (riders)}]{}
+\begin{lstlisting}[title=\rl{راه حل مساله اتوبوس (مسافران)}]{}
 multiplex.wait()
     mutex.wait()
         riders += 1
@@ -7684,47 +7709,65 @@ else:
 \end{lstlisting}
 \end{latin}
 
-The multiplex controls the number of riders in the waiting area,
-although strictly speaking, a rider doesn't enter the waiting
-area until she increments {\tt riders}.
+%The multiplex controls the number of riders in the waiting area,
+%although strictly speaking, a rider doesn't enter the waiting
+%area until she increments {\tt riders}.
+    {\tt multiplex}
+    تعداد مسافران موجود در محل انتظار را کنترل می‌کند، گرچه مسافران تا زمانیکه {\tt riders} را یک واحد افزایش ندهند وارد محل انتظار می‌گردند. 
+    
 
-Riders wait on {\tt bus} until the bus arrives.  When a rider
-wakes up, it is understood that she has the mutex.
-After boarding, each rider decrements {\tt riders}.  If there
-are more riders waiting, the boarding rider signals {\tt bus}
-and pass the mutex to the next rider.  The last rider signals
-{\tt allAboard} and passes the mutex back to the bus.
+%Riders wait on {\tt bus} until the bus arrives.  When a rider
+%wakes up, it is understood that she has the mutex.
+%After boarding, each rider decrements {\tt riders}.  If there
+%are more riders waiting, the boarding rider signals {\tt bus}
+%and pass the mutex to the next rider.  The last rider signals
+%{\tt allAboard} and passes the mutex back to the bus.
+    مسافران تا زمانیکه اتوبوس برسد روی سمافور  {\tt bus} منتظر می‌‌مانند. زمانیکه یک مسافر بیدار می‌شود (سیگنال دریافت می‌کند)، قابل فهم است که 
+    میوتکس را دارد. پس از سوار شدن هر مسافر یک واحد از مقدار  {\tt riders} کم می‌کند. اگر تعداد مسافران بیشتری در حال انتظار باشند، 
+    مسافری که در حال سوار شدن است به  {\tt bus} سیگنال داده و میوتکس را به مسافر بعدی منتقل می‌کند. 
+    آخرین مسافر به {\tt allAboard} سیگنال داده و میوتکس را به اتوبوس پس می‌دهد. 
+%Finally, the bus releases the mutex and departs.
+    نهایتاً اتوبوس میوتکس را رها کرده و حرکت می‌کند. 
 
-Finally, the bus releases the mutex and departs.
-
-Puzzle: can you find a solution to this problem using the
-``I'll do it for you'' pattern?
+%Puzzle: can you find a solution to this problem using the
+%``I'll do it for you'' pattern?
+    معمّا: آیا می‌توانید راه حلی برای این مساله با کمک الگوی ``بخاطر تو انجام خواهم داد'' بیابید؟
 
 
 \clearemptydoublepage
-\subsection {Bus problem solution \#2}
+%\subsection {Bus problem solution \#2}
+\subsection {راه حل مساله اتوبوس \#2}
 
-Grant Hutchins came up with this solution, which uses fewer
-variables than the previous one, and doesn't involve passing
-around any mutexes.  Here are the variables:
+%Grant Hutchins came up with this solution, which uses fewer
+%variables than the previous one, and doesn't involve passing
+%around any mutexes.  Here are the variables:
+    
+    این راه حل را \lr{Grant Hutchins} ارائه داد که متغیرهای کمتری نسبت به راه حل قبلی بکار می‌برد و  مستلزم انتقال میوتکس نیست. 
 
 \begin{latin}
-\begin{lstlisting}[title={Bus problem solution \#2 (initialization)}]{}
+%\begin{lstlisting}[title={Bus problem solution \#2 (initialization)}]{}
+\begin{lstlisting}[title=\rl{راه حل \#2 مساله اتوبوس  (مقداردهی اولیه)}]{}
 waiting = 0
 mutex = new Semaphore(1)
 bus = new Semaphore(0)
 boarded = new Semaphore(0)
 \end{lstlisting}
 \end{latin}
+%%%% typo  new Semaphore -> Semaphore
 
-{\tt waiting} is the number of riders in the boarding area,
-which is protected by {\tt mutex}.  {\tt bus} signals when the
-bus has arrived; {\tt boarded} signals that a rider has boarded.
+%{\tt waiting} is the number of riders in the boarding area,
+%which is protected by {\tt mutex}.  {\tt bus} signals when the
+%bus has arrived; {\tt boarded} signals that a rider has boarded.
+    {\tt waiting} 
+    تعداد مسافران در ناحیه سوارشدن است که بوسیله {\tt mutex} حفاظت می‌شود.  {\tt bus} زمانیکه اتوبوس رسیده است سیگنال می‌دهد؛     {\tt boarded} 
+    سیگنال می‌دهد که یک مسافر سوار شده است. 
 
-Here is the code for the bus.
+%Here is the code for the bus.
+    کد اتوبوس در ادامه آمده است. 
 
 \begin{latin}
-\begin{lstlisting}[title={Bus problem solution (bus)}]{}
+%\begin{lstlisting}[title={Bus problem solution (bus)}]{}
+\begin{lstlisting}[title=\rl{راه حل اتوبوس (اتوبوس)}]{}
 mutex.wait()
 n = min(waiting, 50)
 for i in range(n):
@@ -7738,19 +7781,25 @@ depart()
 \end{lstlisting}
 \end{latin}
 
-The bus gets the {\tt mutex} and holds it throughout the boarding
-process.  The loop signals each rider in turn and waits for her to
-board.  By controlling the number of signals, the bus prevents
-more than 50 riders from boarding.
+%The bus gets the {\tt mutex} and holds it throughout the boarding
+%process.  The loop signals each rider in turn and waits for her to
+%board.  By controlling the number of signals, the bus prevents
+%more than 50 riders from boarding.
+    اتوبوس {\tt mutex}  را می‌گیرد و در طی فرآیند سوارشدن مسافران آن را نگاه می‌دارد. 
+    حلقه به نوبت به هر مسافر  سیگنال داده  و منتظر او می‌ماند تا سوار شود. 
+    با کنترل تعداد سیگنال‌ها، اتوبوس از اینکه بیش از ۵۰ مسافر سوار شوند جلوگیری می‌نماید. 
 
-When all the riders have boarded, the bus updates {\tt
-waiting}, which is an example of the ``I'll do it for you'' pattern.
+%When all the riders have boarded, the bus updates {\tt
+%waiting}, which is an example of the ``I'll do it for you'' pattern.
+    زمانیکه تمامی مسافران سوار شدند، اتوبوس مقدار  {\tt waiting} را بروزرسانی می‌نماید که این مثالی از الگوی ``بخاطر تو انجام خواهم داد'' است. 
 
-The code for the riders uses two
-simple patterns: a mutex and a rendezvous.
+%The code for the riders uses two
+%simple patterns: a mutex and a rendezvous.
+    کد مسافران از دو الگوی ساده استفاده می‌نماید: یک میوتکس و یک قرار ملاقات. 
 
 \begin{latin}
 \begin{lstlisting}[title={Bus problem solution (riders)}]{}
+\begin{lstlisting}[title=\rl{راه حل اتوبوس (مسافران)}]{}
 mutex.wait()
      waiting += 1
 mutex.signal()
@@ -7761,10 +7810,14 @@ boarded.signal()
 \end{lstlisting}
 \end{latin}
 
-Challenge: if riders arrive while the bus is boarding, they
-might be annoyed if you make them wait for the next one.  Can you
-find a solution that allows late arrivals to board without violating
-the other constraints?
+%Challenge: if riders arrive while the bus is boarding, they
+%might be annoyed if you make them wait for the next one.  Can you
+%find a solution that allows late arrivals to board without violating
+%the other constraints?
+    چالش: اگر مسافران زمانیکه اتوبوس در حال مسافرگیری است برسند و آن‌ها را مجبور کنید که منتظر اتوبوس بعدی بمانند ممکن است که رنجیده خاطر شوند. 
+    آیا می‌توانید راه حلی بیابید که اجازه دهد تا مسافرینی که بعداً می‌رسند بدون نقض دیگر محدودیت‌ها سوار اتوبوس شوند. 
+    
+%%%    Wed 07 Feb 2018 06:03:48 PM +0330
 
 
 \clearemptydoublepage
