@@ -7821,74 +7821,101 @@ boarded.signal()
 
 
 \clearemptydoublepage
-\section{The Faneuil Hall problem}
+%\section{The Faneuil Hall problem}
+\section{مساله تالار \lr{Faneuil}}
 
-This problem was written by Grant Hutchins, who was inspired
-by a friend who took her
-Oath of Citizenship at Faneuil Hall in Boston.
+%This problem was written by Grant Hutchins, who was inspired
+%by a friend who took her
+%Oath of Citizenship at Faneuil Hall in Boston.
+    این مساله بوسیله \lr{Grant Hutchins} تحت تاثیر یک دوست که  برای سوگند شهروندی به تالار \lr{Faneuil}  بوستون رفته بود نوشته شده است.
 
-``There are three kinds of threads: immigrants, spectators, and a one
-judge.  Immigrants must wait in line, check in, and then sit down.  At
-some point, the judge enters the building.  When the judge is in the
-building, no one may enter, and the immigrants may not leave.
-Spectators may leave.  Once all immigrants check in, the judge can
-confirm the naturalization.  After the confirmation, the immigrants
-pick up their certificates of U.S. Citizenship.  The judge leaves at
-some point after the confirmation.  Spectators may now enter as
-before.  After immigrants get their certificates, they may leave.''
+%``There are three kinds of threads: immigrants, spectators, and a one
+%judge.  Immigrants must wait in line, check in, and then sit down.  At
+%some point, the judge enters the building.  When the judge is in the
+%building, no one may enter, and the immigrants may not leave.
+%Spectators may leave.  Once all immigrants check in, the judge can
+%confirm the naturalization.  After the confirmation, the immigrants
+%pick up their certificates of U.S. Citizenship.  The judge leaves at
+%some point after the confirmation.  Spectators may now enter as
+%before.  After immigrants get their certificates, they may leave.''
+    "سه نوع نخ وجود دارد: مهاجران، تماشاگران، و یک قاضی. مهاجران باید در یک صف منتظر مانده، مدارک را به منظور احراز هویت ارائه داده  و سپس بنشینند. 
+    قاضی در یک زمانی وارد ساختمان می‌شود. زمانی که قاضی در ساختمان است، هیچکس نمی‌تواند وارد شود و مهاجران نمی‌توانند محل را ترک کنند ولی 
+    تماشاگران می‌توانند سالن را ترک گویند. زمانیکه تمامی مهاجران احراز هویت شدند قاضی می‌تواند تابعیت آن‌ها را تایید کند. پس از تایید، مهاجران 
+    گواهی شهروندی خود را دریافت می‌کنند. قاضی در زمانی پس از تایید محل را ترک می‌گوید. تماشاگران اکنون نیز مانند قبل می‌توانند وارد شوند. 
+    پس از اینکه مهاجران گواهی‌ خود را گرفتند ممکن است سالن را ترک کنند. 
 
-To make these requirements more specific, let's give the threads
-some functions to execute, and put constraints on those functions.
+%To make these requirements more specific, let's give the threads
+%some functions to execute, and put constraints on those functions.
+    برای روشن‌تر نمودن این محدودیت‌ها، بگذارید نخ‌ها را مقید به اجرای    اعمالی کنیم و محدودیت‌ها را روی این اعمال بگذاریم. 
 
 \begin{itemize}
 
-\item Immigrants must invoke {\tt enter}, {\tt checkIn}, {\tt sitDown},
-{\tt swear}, {\tt getCertificate} and {\tt leave}.
+\item %Immigrants must invoke {\tt enter}, {\tt checkIn}, {\tt sitDown},
+%{\tt swear}, {\tt getCertificate} and {\tt leave}.
+    مهاجران باید {\tt enter}, {\tt checkIn}, {\tt sitDown}, {\tt swear}, {\tt getCertificate} و {\tt leave} 
+    فرا خوانند. 
 
-\item The judge invokes {\tt enter}, {\tt confirm} and {\tt leave}.
+\item %The judge invokes {\tt enter}, {\tt confirm} and {\tt leave}.
+    قاضی {\tt enter}, {\tt confirm} و {\tt leave}  را فرا می‌خواند. 
 
-\item Spectators invoke {\tt enter}, {\tt spectate} and {\tt leave}.
+\item% Spectators invoke {\tt enter}, {\tt spectate} and {\tt leave}.
+    تماشاگران {\tt enter}, {\tt spectate} و {\tt leave} را فرا می‌خوانند. 
 
-\item While the judge is in the building, no one may {\tt enter}
-and immigrants may not {\tt leave}.
+\item %While the judge is in the building, no one may {\tt enter}
+%and immigrants may not {\tt leave}.
+    زمانیکه قاضی در ساختمان است، هیچ کس نمی‌تواند {\tt enter} را فراخواند و مهاجران نمی‌توانند  {\tt leave} را فرا خوانند. 
 
-\item The judge can not {\tt confirm} until all immigrants who have
-invoked {\tt enter} have also invoked {\tt checkIn}.
+\item %The judge can not {\tt confirm} until all immigrants who have
+%invoked {\tt enter} have also invoked {\tt checkIn}.
+    تا زمانیکه تمامی مهاجرانی که {\tt enter} را فراخوانده‌اند  {\tt checkIn} را  اجرا نکرده‌اند  قاضی نمی‌تواند  {\tt confirm} را فراخواند.
 
-\item Immigrants can not {\tt getCertificate} until the judge
-has executed {\tt confirm}.
+\item %Immigrants can not {\tt getCertificate} until the judge
+%has executed {\tt confirm}.
+    تا زمانیکه قاضی {\tt confirm} اجرا نکرده باشد مهاجران نمی‌توانند {\tt getCertificate} را فراخوانند. 
 
 \end{itemize}
 
 \clearemptydoublepage
-\subsection {Faneuil Hall Problem Hint}
+%\subsection {Faneuil Hall Problem Hint}
+\subsection{راهنمایی مساله تالار \lr{Faneuil}}
 
 \begin{latin}
-\begin{lstlisting}[title={Faneuil Hall problem hint}]{}
+%\begin{lstlisting}[title={Faneuil Hall problem hint}]{}
+\begin{lstlisting}[title=\rl{راهنمایی مساله تالار \lr{Faneuil}}]{}
 noJudge = Semaphore(1)
 entered = 0
 checked = 0
+judge = 0
 mutex = Semaphore(1)
 confirmed = Semaphore(0)
+allSignedIn = Semaphore(0)
 \end{lstlisting}
 \end{latin}
 
-{\tt noJudge} acts as a turnstile for incoming immigrants and
-spectators; it also protects {\tt entered}, which counts the
-number of immigrants in the room.  {\tt checked} counts the
-number of immigrants who have checked in; it is protected by
-{\tt mutex}.
+%%%typo -> forgotten judge = 0
 
-{\tt confirmed} signals that the judge has executed {\tt confirm}.
-
+%{\tt noJudge} acts as a turnstile for incoming immigrants and
+%spectators; it also protects {\tt entered}, which counts the
+%number of immigrants in the room.  {\tt checked} counts the
+%number of immigrants who have checked in; it is protected by
+%{\tt mutex}.
+    {\tt noJudge} 
+    مانند یک ترن‌استایل برای مهاجران و تماشاگران در حال ورود عمل می نماید؛ همچنین از {\tt entered} که تعداد مهاجران درون اتاق را می‌شمرد 
+    محافظت می‌نماید.  {\tt checked} تعداد مهاجرانی که احراز هویت شده‌اند را می‌شمرد و بوسیله {\tt mutex} حفاظت می‌شود. 
+%{\tt confirmed} signals that the judge has executed {\tt confirm}.
+    {\tt confirmed}
+    علامت می‌دهد که قاضی {\tt confirm} را اجرا نموده است. 
 
 \clearemptydoublepage
-\subsection {Faneuil Hall problem solution}
+%\subsection {Faneuil Hall problem solution}
+\subsection{راه حل مساله تالار \lr{Faneuil}}
 
-Here is the code for immigrants:
+%Here is the code for immigrants:
+    کد مهاجران در ادامه آمده است:
 
 \begin{latin}
-\begin{lstlisting}[title={Faneuil Hall problem solution (immigrant)}]{}
+%\begin{lstlisting}[title={Faneuil Hall problem solution (immigrant)}]{}
+\begin{lstlisting}[title=\rl{راهنمایی مساله تالار \lr{Faneuil} (مهاجر)}]{}
 noJudge.wait()
 enter()
 entered++
@@ -7915,18 +7942,23 @@ noJudge.signal()
 \end{lstlisting}
 \end{latin}
 
-Immigrants pass through a turnstile when they enter; while the
-judge is in the room, the turnstile is locked.
+%Immigrants pass through a turnstile when they enter; while the
+%judge is in the room, the turnstile is locked.
+    مهاجران برای ورود از یک ترن‌استایل گذر کرده و زمانیکه قاضی در اتاق است این ترن‌استایل قفل می‌گردد.
 
-After entering, immigrants have to get {\tt mutex} to check 
-in and update {\tt checked}.  If there is a judge waiting, the
-last immigrant to check in signals {\tt allSignedIn} and passes
-the mutex to the judge.
+%After entering, immigrants have to get {\tt mutex} to check 
+%in and update {\tt checked}.  If there is a judge waiting, the
+%last immigrant to check in signals {\tt allSignedIn} and passes
+%the mutex to the judge.
+    مهاجران پس از ورود به منظور احراز هویت و بروزرسانی {\tt checked} باید  {\tt mutex} را بگیرند. اگر یک قاضی در حال انتظار باشد  آخرین مهاجری 
+    که احراز هویت می‌شود به  {\tt allSignedIn} سیگنال داده و میوتکس را به قاضی منتقل می‌کند. 
 
-Here is the code for the judge:
+%Here is the code for the judge:
+    کد قاضی در ادامه آمده است: 
 
 \begin{latin}
-\begin{lstlisting}[title={Faneuil Hall problem solution (judge)}]{}
+%\begin{lstlisting}[title={Faneuil Hall problem solution (judge)}]{}
+\begin{lstlisting}[title=\rl{راهنمایی مساله تالار \lr{Faneuil} (فاضی)}]{}
 noJudge.wait()
 mutex.wait()
 
@@ -7949,30 +7981,43 @@ noJudge.signal()
 \end{lstlisting}
 \end{latin}
 
-The judge holds {\tt noJudge} to bar immigrants and spectators
-from entering, and {\tt mutex} so he can access {\tt entered}
-and {\tt checked}.
+%The judge holds {\tt noJudge} to bar immigrants and spectators
+%from entering, and {\tt mutex} so he can access {\tt entered}
+%and {\tt checked}.
+    قاضی {\tt noJudge} را نگه می‌دارد تا مانع ورود مهاجران و تماشاگران گردد و نیز {\tt mutex} را نگه می‌دارد تا به {\tt entered} و  {\tt checked}
+    دسترسی داشته باشد. 
 
-If the judge arrives at an instant when everyone who has
-entered has also checked in, she can proceed immediately.  Otherwise,
-she has to give up the mutex and wait.  When the last immigrant
-checks in and signals {\tt allSignedIn}, it is understood that the
-judge will get the mutex back.
+%If the judge arrives at an instant when everyone who has
+%entered has also checked in, she can proceed immediately.  Otherwise,
+%she has to give up the mutex and wait.  When the last immigrant
+%checks in and signals {\tt allSignedIn}, it is understood that the
+%judge will get the mutex back.
+    اگر قاضی در لحظه‌ای برسد که تمامی مهاجرانی که داخل شده‌اند احراز هویت نیز شده باشند، می‌تواند بلافاصله کار را  خود ادامه دهد. 
+    در غیر اینصورت، باید از میوتکس صرف نموده و منتظر بماند. زمانیکه آخرین مهاجر احراز هویت شد به  {\tt allSignedIn} سیگنال می‌دهد، 
+    و قابل درک است که قاضی دومرتبه میوتکس را خواهد گرفت. 
+    
 
-After invoking {\tt confirm}, the judge signals {\tt confirmed}
-once for every immigrant who has checked in, and then resets
-the counters (an example of ``I'll do it for you'').
-Then the judge leaves and releases {\tt mutex} and {\tt noJudge}.
+%After invoking {\tt confirm}, the judge signals {\tt confirmed}
+%once for every immigrant who has checked in, and then resets
+%the counters (an example of ``I'll do it for you'').
+%Then the judge leaves and releases {\tt mutex} and {\tt noJudge}.
+    قاضی پس از فراخوانی {\tt confirm}، به  {\tt confirmed} بازای هر مهاجری که احراز هویت شده است  یک مرتبه سیگنال می‌دهد و سپس 
+    مقدار شمارنده‌ها را صفر می‌کند (مثالی از "بخاطر تو این کار را انجام خواهم داد``).
+    سپس قاضی محل را ترک نموده {\tt mutex} و {\tt noJudge}  را رها می‌نماید. 
 
-After the judge signals {\tt confirmed}, immigrants invoke
-{\tt swear} and {\tt getCertificate} concurrently, and then
-wait for the {\tt noJudge} turnstile to open before leaving.
+%After the judge signals {\tt confirmed}, immigrants invoke
+%{\tt swear} and {\tt getCertificate} concurrently, and then
+%wait for the {\tt noJudge} turnstile to open before leaving.
+    پس از اینکه قاضی به {\tt confirmed} سیگنال داد، مهاجران {\tt swear} و {\tt getCertificate} را به صورت همزمان فرا می‌خوانند و سپس 
+    قبل از خروج، منتظر ترن‌استایل {\tt noJudge} می‌شوند که باز شود. 
 
-The code for spectators is easy; the only constraint they have
-to obey is the {\tt noJudge} turnstile.
+%The code for spectators is easy; the only constraint they have
+%to obey is the {\tt noJudge} turnstile.
+    کد تماشاگران ساده است؛ تنها محدودیتی که  آن‌ها باید رعایت کنند ترن‌استایل  {\tt noJudge} است.
 
 \begin{latin}
-\begin{lstlisting}[title={Faneuil Hall problem solution (spectator)}]{}
+%\begin{lstlisting}[title={Faneuil Hall problem solution (spectator)}]{}
+\begin{lstlisting}[title=\rl{راهنمایی مساله تالار \lr{Faneuil} (تماشاگر)}]{}
 noJudge.wait()
 enter()
 noJudge.signal()
@@ -7983,44 +8028,56 @@ leave()
 \end{lstlisting}
 \end{latin}
 
-Note: in this solution it is possible for immigrants to get stuck,
-after they get their certificate, by another judge coming to swear
-in the next batch of immigrants.  If that happens, they might have
-to wait through another swearing in-ceremony.
+%Note: in this solution it is possible for immigrants to get stuck,
+%after they get their certificate, by another judge coming to swear
+%in the next batch of immigrants.  If that happens, they might have
+%to wait through another swearing in-ceremony.
+    توجه: در این راه حل ممکن است مهاجران پس از اینکه گواهی خود را گرفتند بوسیله قاضی‌ دیگری که برای سوگند دادن دسته بعدی 
+    مهاجران در حال ورود است گیر بیفتند. اگر چنین اتفاقی بیفتد، آن‌ها باید در تمام مدت زمان مراسم سوگند گروه دیگر صبر کنند. 
 
-Puzzle: modify this solution to handle the additional constraint
-that after the judge leaves, all immigrants who have been sworn
-in must leave before the judge can enter again.
+%Puzzle: modify this solution to handle the additional constraint
+%that after the judge leaves, all immigrants who have been sworn
+%in must leave before the judge can enter again.
+    معمّا: این راه حل را چنان دستکاری کنید که محدودیت اضافی زیر را اعمال نماید. پس از اینکه قاضی خارج می‌شود تمامی مهاجرانی سوگند خورده‌اند 
+    باید قبل از اینکه قاضی بعدی وارد شود خارج شوند. 
 
 
 \clearemptydoublepage
-\subsection {Extended Faneuil Hall Problem Hint}
+%\subsection {Extended Faneuil Hall Problem Hint}
+\subsection{راهنمایی مساله توسعه‌یافته تالار \lr{Faneuil}}
 
-My solution uses the following additional variables:
+%My solution uses the following additional variables:
+    راه حل من از متغیرهای اضافی زیر بهر می‌برد:‌
 
 \begin{latin}
-\begin{lstlisting}[title={Faneuil Hall problem hint}]{}
+%\begin{lstlisting}[title={Faneuil Hall problem hint}]{}
+\begin{lstlisting}[title=\rl{راهنمایی مساله تالار \lr{Faneuil}}]{}
 exit = Semaphore(0)
 allGone = Semaphore(0)
 \end{lstlisting}
 \end{latin}
 
-Since the extended problem involves an additional rendezvous,
-we can solve it with two semaphores.
+%Since the extended problem involves an additional rendezvous,
+%we can solve it with two semaphores.
+    از آنجایی که مساله توسعه‌یافته مستلزم یک قرار ملاقات اضافی است،‌ آن را با دو سمافور حل می‌نماییم. 
 
-One other hint: I found it useful to use the ``pass the baton''
-pattern again.
+%One other hint: I found it useful to use the ``pass the baton''
+%pattern again.
+    راهنمایی دیگر: استفاده مجدد از الگوی "باتوم را منتقل کنید`` را مفید یافتم.
 
 
 \clearemptydoublepage
-\subsection {Extended Faneuil Hall problem solution}
+%\subsection {Extended Faneuil Hall problem solution}
+\subsection{راه حل مساله توسعه‌یافته تالار \lr{Faneuil}}
 
-The top half of this solution is the same as before.  The
-difference starts at Line~\ref{fanexit}.  Immigrants wait
-here for the judge to leave.
+%The top half of this solution is the same as before.  The
+%difference starts at Line~\ref{fanexit}.  Immigrants wait
+%here for the judge to leave.
+    نیمه بالایی این راه حل مشابه قبل است. تفاوت از خط~\ref{fanexit} شروع می شود. در اینجا مهاجران منتظر قاضی می‌مانند تا خارج شود. 
 
 \begin{latin}
-\begin{lstlisting}[title={Faneuil Hall problem solution (immigrant)}]{}
+%\begin{lstlisting}[title={Faneuil Hall problem solution (immigrant)}]{}
+\begin{lstlisting}[title=\rl{راهنمایی مساله تالار \lr{Faneuil} (مهاجر)}]{}
 noJudge.wait()
 enter()
 entered++
@@ -8051,22 +8108,29 @@ else:
 \end{lstlisting}
 \end{latin}
 
-For the judge, the difference starts at Line~\ref{fanjudge}.
-When the judge is ready to leave, she can't release {\tt noJudge},
-because that would allow more immigrants, and possibly another
-judge, to enter.  Instead, she signals {\tt exit}, which allows
-one immigrant to leave, and passes {\tt mutex}.
-
-The immigrant that gets the signal decrements {\tt checked} and
-then passes the baton to the next immigrant.  The last immigrant
-to leave signals {\tt allGone} and passes the mutex back to the
-judge.  This pass-back is not strictly necessary, but it has
-the nice feature that the judge releases both {\tt mutex}
-and {\tt noJudge} to end the phase cleanly.
+%For the judge, the difference starts at Line~\ref{fanjudge}.
+%When the judge is ready to leave, she can't release {\tt noJudge},
+%because that would allow more immigrants, and possibly another
+%judge, to enter.  Instead, she signals {\tt exit}, which allows
+%one immigrant to leave, and passes {\tt mutex}.
+    برای قاضی، تفاوت از خط~\ref{fanjudge} شروع می‌شود. زمانیکه قاضی آماده ترک محل است، نمی‌تواند  {\tt noJudge} را آزاد کند زیرا که 
+    این کار ممکن است سبب ورود مهاجران بیشتر و یا یک قاضی دیگر شود.  در عوض،  به {\tt exit} سیگنال می‌دهد و این کار خروج یک مهاجر را 
+    مجاز می‌سازد و  {\tt mutex} را منتقل می‌کند. 
+    
+%The immigrant that gets the signal decrements {\tt checked} and
+%then passes the baton to the next immigrant.  The last immigrant
+%to leave signals {\tt allGone} and passes the mutex back to the
+%judge.  This pass-back is not strictly necessary, but it has
+%the nice feature that the judge releases both {\tt mutex}
+%and {\tt noJudge} to end the phase cleanly.
+    مهاجری که سیگنال را دریافت می‌کند مقدار  {\tt checked} را یک واحد کاهش می‌دهد و سپس باتوم را به مهاجر بعدی می‌دهد. 
+    آخرین مهاجری که خارج می شود به {\tt allGone} سیگنال داده و میوتکس را دومرتبه به قاضی می‌دهد. این بازگرداندن خیلی ضروری نیست ولی 
+    این ویژگی خوب را دارد که قاضی هر دوی  {\tt mutex} و {\tt noJudge}  را رها می‌نماید تا خیلی تر و تمیز به این مرحله پایان دهد. 
 
 \newpage
 \begin{latin}
-\begin{lstlisting}[title={Faneuil Hall problem solution (judge)}]{}
+%\begin{lstlisting}[title={Faneuil Hall problem solution (judge)}]{}
+\begin{lstlisting}[title=\rl{راهنمایی مساله تالار \lr{Faneuil} (قاضی)}]{}
 noJudge.wait()
 mutex.wait()
 
@@ -8091,8 +8155,10 @@ noJudge.signal()
 \end{lstlisting}
 \end{latin}
 
-The spectator code for the extended problem is unchanged.
+%The spectator code for the extended problem is unchanged.
+    کد تماشاگر در مساله توسعه‌یافته بدون تغییر است. 
 
+%%%    Sat 10 Feb 2018 06:14:16 PM +0330
 
 \clearemptydoublepage
 \section{Dining Hall problem}
