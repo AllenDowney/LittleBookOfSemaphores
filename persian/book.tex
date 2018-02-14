@@ -7731,7 +7731,7 @@ else:
 
 %Puzzle: can you find a solution to this problem using the
 %``I'll do it for you'' pattern?
-    معمّا: آیا می‌توانید راه حلی برای این مساله با کمک الگوی ``بخاطر تو انجام خواهم داد'' بیابید؟
+    معمّا: آیا می‌توانید راه حلی برای این مساله با کمک الگوی ``بخاطر تو انجام این کار را خواهم داد'' بیابید؟
 
 
 \clearemptydoublepage
@@ -7791,7 +7791,7 @@ depart()
 
 %When all the riders have boarded, the bus updates {\tt
 %waiting}, which is an example of the ``I'll do it for you'' pattern.
-    زمانیکه تمامی مسافران سوار شدند، اتوبوس مقدار  {\tt waiting} را بروزرسانی می‌نماید که این مثالی از الگوی ``بخاطر تو انجام خواهم داد'' است. 
+    زمانیکه تمامی مسافران سوار شدند، اتوبوس مقدار  {\tt waiting} را بروزرسانی می‌نماید که این مثالی از الگوی ``بخاطر تو  این کار را انجام خواهم داد'' است. 
 
 %The code for the riders uses two
 %simple patterns: a mutex and a rendezvous.
@@ -8161,29 +8161,39 @@ noJudge.signal()
 %%%    Sat 10 Feb 2018 06:14:16 PM +0330
 
 \clearemptydoublepage
-\section{Dining Hall problem}
+%\section{Dining Hall problem}
+\section{مساله سالن غذاخوری}
 
-This problem was written by Jon Pollack during my Synchronization
-class at Olin College.  
+%This problem was written by Jon Pollack during my Synchronization
+%class at Olin College.  
+    این مساله بوسیله \lr{ Jon Pollack} در کلاس \lr{Synchronization} من در کالج \lr{Olin} نوشته شده است. 
 
-Students in the dining hall invoke {\tt dine} and then {\tt leave}.
-After invoking {\tt dine} and before invoking {\tt leave} a student is
-considered ``ready to leave''.
+%Students in the dining hall invoke {\tt dine} and then {\tt leave}.
+%After invoking {\tt dine} and before invoking {\tt leave} a student is
+%considered ``ready to leave''.
+    دانشجویان در سالن غذاخوری  {\tt dine} را فراخوانده و سپس {\tt leave} را صدا می‌زنند. 
+    پس از فراخوانی  {\tt dine}  و پیش از فراخواندن {\tt leave}، وضعیت یک دانشجو "آماده برای خروج`` در نظر گرفته می‌شود. 
 
-The synchronization constraint that applies to students is that, in
-order to maintain the illusion of social suave, a student may never
-sit at a table alone.  A student is considered to be sitting alone
-if everyone else who has invoked {\tt dine} invokes {\tt leave}
-before she has finished {\tt dine}.
+%The synchronization constraint that applies to students is that, in
+%order to maintain the illusion of social suave, a student may never
+%sit at a table alone.  A student is considered to be sitting alone
+%if everyone else who has invoked {\tt dine} invokes {\tt leave}
+%before she has finished {\tt dine}.
+    محدودیت‌ همگام‌سازی که در مورد دانشجویان اعمال می‌شود این است به منظور حفظ وجهه اجتماعی، یک دانشجو هرگز ممکن نیست که سر 
+    یک میز تنها بنشیند. یک دانشجو در صورتی ممکن است تنها نشسته باشد که  اگر پیش از اینکه او {\tt dine} را تمام کرده باشد
+    هر  دانشجوی دیگری که {\tt dine} را فراخوانده‌ {\tt leave} را فراخواند. 
 
-Puzzle: write code that enforces this constraint.
+%Puzzle: write code that enforces this constraint.
+    معمّا: کدی بنویسید که این محدودیت را اعمال نماید. 
 
 
 \clearemptydoublepage
-\subsection {Dining Hall problem hint}
+%\subsection {Dining Hall problem hint}
+\subsection{راهنمایی مساله سالن غذاخوری}
 
 \begin{latin}
-\begin{lstlisting}[title={Dining Hall problem hint}]{}
+%\begin{lstlisting}[title={Dining Hall problem hint}]{}
+\begin{lstlisting}[title=\rl{راهنمایی مساله سالن غذاخوری}]{}
 eating = 0
 readyToLeave = 0
 mutex = Semaphore(1)
@@ -8191,33 +8201,45 @@ okToLeave = Semaphore(0)
 \end{lstlisting}
 \end{latin}
 
-{\tt eating} and {\tt readyToLeave} are
-counters protected by {\tt mutex}, so this is the usual
-scoreboard pattern.
+%{\tt eating} and {\tt readyToLeave} are
+%counters protected by {\tt mutex}, so this is the usual
+%scoreboard pattern.
+    {\tt eating} و {\tt readyToLeave}
+    شمارنده‌هایی هستند که بوسیله {\tt mutex} حفاظت می‌شوند لذا این یک الگوی جدول امتیاز معمول است. 
+    
 
-If a student is ready to leave, but another student would be
-left alone at the table, she waits on
-{\tt okToLeave} until another student changes
-the situation and signals.
+%If a student is ready to leave, but another student would be
+%left alone at the table, she waits on
+%{\tt okToLeave} until another student changes
+%the situation and signals.
+    اگر یک دانشجو آماده ترک میز باشد، اما دانشجوی دیگری ممکن است سر میز  تنها بماند، او باید روی {\tt okToLeave}  منتظر مانده تا 
+    دانشجوی دیگری این وضعیت را تغییر داده و سیگنال دهد. 
 
 
 \clearemptydoublepage
-\subsection {Dining Hall problem solution}
+%\subsection {Dining Hall problem solution}
+\subsection{راه حل مساله سالن غذاخوری}
 
-If you analyze the constraints, you will realize that there
-is only one situation where a student has to wait, if there is
-one student eating and one student who wants to leave.  But
-there are two ways to get out of this situation: another
-student might arrive to eat, or the dining student might 
-finish.
+%If you analyze the constraints, you will realize that there
+%is only one situation where a student has to wait, if there is
+%one student eating and one student who wants to leave.  But
+%there are two ways to get out of this situation: another
+%student might arrive to eat, or the dining student might 
+%finish.
+    اگر این محدودیت‌ها را تحلیل نمایید، متوجه خواهید شد که تنها یک وضعیت وجود دارد که یک دانشجو باید در آن صبر کند و آن این است که یک 
+    دانشجو در حال خوردن غذا است و یک دانشجو تمایل به ترک میز دارد. امّا تنها دو راه برای خلاصی از این وضعیت وجود دارد:
+    ممکن است دانشجوی دیگری برای غذا خوردن برسد و یا دانشجویی که غذا می‌خورد غذایش تمام شود. 
 
-In either case, the student who signals the waiting student
-updates the counters, so the waiting student doesn't have
-to get the mutex back.  This is another example of the
-the ``I'll do it for you'' pattern.
+%In either case, the student who signals the waiting student
+%updates the counters, so the waiting student doesn't have
+%to get the mutex back.  This is another example of the
+%the ``I'll do it for you'' pattern.
+    در هر حالت، دانشجویی که به دانشجوی منتظر سیگنال می‌دهد شمارنده‌ها را بروزرسانی می‌نماید لذا دانشجوی منتظر نباید مجدداً میوتکس را بگیرد. 
+    این، مثال دیگری از الگوی "به خاطر تو این کار را انجام خواهم داد`` است.
 
 \begin{latin}
-\begin{lstlisting}[title={Dining Hall problem solution}]{}
+%\begin{lstlisting}[title={Dining Hall problem solution}]{}
+\begin{lstlisting}[title=\rl{راه حل مساله سالن غذاخوری}]{}
 getFood()
 
 mutex.wait()
@@ -8248,59 +8270,79 @@ leave()
 \end{lstlisting}
 \end{latin}
 
-When is student is checking in, if she sees one student
-eating and one waiting to leave, she lets the waiter off the
-hook and decrements {\tt readyToLeave} for him.
+%When is student is checking in, if she sees one student
+%eating and one waiting to leave, she lets the waiter off the
+%hook and decrements {\tt readyToLeave} for him.
+    زمانیکه دانشجو وارد می‌شود، اگر ببیند که یک دانشجو در حال غذاخوردن است و یک دانشجو منتظر ترک کردن است اجازه می‌دهد که  دانشجوی منتظر 
+    برود و مقدار  {\tt readyToLeave} را برای او یک واحد کاهش می‌دهد. 
 
 \newpage
-After dining, the student checks three cases:
+%After dining, the student checks three cases:
+    پس از صرف غذا، دانشجو سه حالت را بررسی می‌نماید:
 
 \begin{itemize}
 
-\item If there is only one student left eating, the departing student
-has to give up the mutex and wait.
+\item %If there is only one student left eating, the departing student
+%has to give up the mutex and wait.
+    اگر تنها یک دانشجو در حال غذا خوردن سر میز باشد، دانشجویی که قصد ترک دارد باید از میوتکس صرف نظر نموده و منتظر بماند. 
 
-\item If the departing student finds that someone is waiting for
-her, she signals him and updates the counter for both of them.
+\item %If the departing student finds that someone is waiting for
+%her, she signals him and updates the counter for both of them.
+    اگر دانشجویی که در حال ترک میز است دریابد که دانشجوی دیگری منتظر اوست، او به آن دانشجوی منتظر سیگنال داده و مقدار شمارنده را برای هر دوی‌شان
+    بروزرسانی می‌نماید. 
 
-\item Otherwise, she just decrements {\tt readyToLeave} and leaves.
+\item %Otherwise, she just decrements {\tt readyToLeave} and leaves.
+    در غیر اینصورت، فقط مقدار  {\tt readyToLeave}  را یک واحد کاهش داده و میز را ترک می‌نماید.
 
 \end{itemize}
 
 
-\subsection{Extended Dining Hall problem}
+%\subsection{Extended Dining Hall problem}
+\subsection{مساله توسعه‌یافته سالن غذاخوری}
 
-The Dining Hall problem gets a little more challenging if we
-add another step.  As students come to lunch they
-invoke {\tt getFood}, {\tt dine} and then {\tt leave}.
-After invoking {\tt getFood} and before invoking {\tt dine},
-a student is considered ``ready to eat''.  Similarly, after
-invoking {\tt dine} a student is considered ``ready to leave''.
+%The Dining Hall problem gets a little more challenging if we
+%add another step.  As students come to lunch they
+%invoke {\tt getFood}, {\tt dine} and then {\tt leave}.
+%After invoking {\tt getFood} and before invoking {\tt dine},
+%a student is considered ``ready to eat''.  Similarly, after
+%invoking {\tt dine} a student is considered ``ready to leave''.
+    مساله سالن غذاخوری اگر یک مرحله دیگر به آن بیفزاییم کمی چالشی‌تر می‌شود. 
+    همانطوری که دانشجویان برای خوردن غذا می‌آیند {\tt getFood}, {\tt dine}  و سپس {\tt leave} را فرا می‌خوانند. 
+    پس از فراخوانی {\tt getFood}  و پیش از فراخوانی {\tt dine} یک دانشجو در وضعیت "آماده برای خوردن`` در نظر گرفته می‌شود. 
+    به طور مشابه، پس از فراخونی {\tt dine} یک دانشجو در وضعیت "آماده برای خروج`` در نظر گرفته می‌شود. 
 
-The same synchronization constraint applies: a student may never sit
-at a table alone.  A student is considered to be sitting alone if
-either
+%The same synchronization constraint applies: a student may never sit
+%at a table alone.  A student is considered to be sitting alone if
+%either
+    محدودیت همگام‌سازی مشابهی اعمال می‌گردد: 
+    یک دانشجو هرگز به تنهایی سر یک میز نمی‌نشیند. یک دانشجو در صورتی تنها در نظر گرفته می‌شود اگر 
 
 \begin{itemize}
 
-\item She invokes {\tt dine} while there is no one else at the table
-and no one ready to eat, or
+\item %She invokes {\tt dine} while there is no one else at the table
+%and no one ready to eat, or
+    زمانیکه هیچ کس دیگری سر میز نباشد و هیچ کس دیگری آماده غذا خوردن نباشد او {\tt dine} را فراخواند و یا 
 
-\item everyone else who has invoked {\tt dine} invokes {\tt leave}
-before she has finished {\tt dine}.
+\item %everyone else who has invoked {\tt dine} invokes {\tt leave}
+%before she has finished {\tt dine}.
+    هر کس دیگری که {\tt dine} را فراخونده پیش از اینکه او {\tt dine} را تمام کند {\tt leave} را فراخواند. 
 
 \end{itemize}
 
-Puzzle: write code that enforces these constraints.
+%Puzzle: write code that enforces these constraints.
+    معمّا: کدی بنویسید که این محدودیت‌ها را اعمال نماید. 
 
 
 \clearemptydoublepage
-\subsection {Extended Dining Hall problem hint}
+%\subsection {Extended Dining Hall problem hint}
+\subsection{راهنمای مساله توسعه‌یافته سالن غذاخوری}
 
-Here are the variables I used in my solution:
+%Here are the variables I used in my solution:
+    متغیرهایی که در راه حل خود بکار برده‌ام در ادامه آمده است:‌
 
 \begin{latin}
-\begin{lstlisting}[title={Extended Dining Hall problem hint}]{}
+%\begin{lstlisting}[title={Extended Dining Hall problem hint}]{}
+\begin{lstlisting}[title=\rl{راهنمای مساله توسعه‌یافته سالن غذاخوری}]{}
 readyToEat = 0
 eating = 0
 readyToLeave = 0
@@ -8310,29 +8352,37 @@ okToLeave = Semaphore(0)
 \end{lstlisting}
 \end{latin}
 
-{\tt readyToEat}, {\tt eating} and {\tt readyToLeave} are
-counters, all protected by {\tt mutex}.
+%{\tt readyToEat}, {\tt eating} and {\tt readyToLeave} are
+%counters, all protected by {\tt mutex}.
+    {\tt readyToEat}, {\tt eating} و {\tt readyToLeave} 
+    شمارنده‌هایی هستند که بوسیله {\tt mutex} محافظت می‌شوند. 
 
-If a student is in a situation where she cannot proceed, she
-waits on
-{\tt okToSit} or {\tt okToLeave} until another student changes
-the situation and signals.
+%If a student is in a situation where she cannot proceed, she
+%waits on {\tt okToSit} or {\tt okToLeave} until another student changes
+%the situation and signals.
+    اگر یک دانشجو در وضعیتی است که نمی‌تواند ادامه دهد، باید روی {\tt okToSit} یا {\tt okToLeave} منتظر بماند تا دانشجوی دیگری 
+    وضعیت را تغییر داده و سیگنال دهد. 
 
-I also used a per-thread variable named {\tt hasMutex} to help
-keep track of whether or not a thread holds the mutex.
-
+%I also used a per-thread variable named {\tt hasMutex} to help
+%keep track of whether or not a thread holds the mutex.
+    همچنین بازای هر نخ از یک متغیر به نام {\tt hasMutex} استفاده کردم تا با کمک آن بتوانم بررسی نمایم که آیا آن نخ میوتکس را دارد یا نه. 
 
 \clearemptydoublepage
-\subsection {Extended Dining Hall problem solution}
+%\subsection {Extended Dining Hall problem solution}
+\subsection{راه حل مساله توسعه‌یافته سالن غذاخوری}
 
-Again, if we analyze the constraints, we realize that there is
-only one situation where a student who is ready to eat has
-to wait, if there is no one eating and no one else ready to
-eat.  And the only way out is if someone else arrives who
-is ready to eat.
+%Again, if we analyze the constraints, we realize that there is
+%only one situation where a student who is ready to eat has
+%to wait, if there is no one eating and no one else ready to
+%eat.  And the only way out is if someone else arrives who
+%is ready to eat.
+    دومرتبه، اگر محدودیت‌ها را تحلیل نماییم، در می‌یابیم که تنها یک وضعیت وجود دارد که یک دانشجوی آماده غذاخوردن باید صبر کند و آن این است که 
+    هیچ کسی در حال غذاخوردن نبوده هیچ کس دیگری نیز آماده غذاخوردن نیست. و تنها راه خروج از این وضعیت این است که فرد دیگری که آماده غذاخوردن است 
+    برسد. 
 
 \begin{latin}
-\begin{lstlisting}[title={Extended Dining Hall problem solution}]{}
+%\begin{lstlisting}[title={Extended Dining Hall problem solution}]{}
+\begin{lstlisting}[title=\rl{راه حل مساله توسعه‌یافته سالن غذاخوری}]{}
 getFood()
 
 mutex.wait()
@@ -8373,17 +8423,22 @@ leave()
 \end{lstlisting}
 \end{latin}
 
-As in the previous solution, I used the ``I'll do it for you''
-pattern so that a waiting student doesn't have to get the mutex
-back.
+%As in the previous solution, I used the ``I'll do it for you''
+%pattern so that a waiting student doesn't have to get the mutex
+%back.
+    مشابه راه حل قبلی، در این راه حل نیز الگوی ``بخاطر تو این کار را انجام خواهم داد'' را بکار بردم چنانکه دانشجوی منتظر نباید دومرتبه میوتکس را بگیرد. 
 
-The primary difference between this solution and the previous
-one is that the first student who arrives at an empty table
-has to wait, and the second student allows both students to
-proceed.  It either case, we don't have to check for students
-waiting to leave, since no one can leave an empty table!
-
-
+%The primary difference between this solution and the previous
+%one is that the first student who arrives at an empty table
+%has to wait, and the second student allows both students to
+%proceed.  It either case, we don't have to check for students
+%waiting to leave, since no one can leave an empty table!
+%%%%typo it either case -> in either case
+    تفاوت اصلی بین این راه حل و راه حل قبلی در این است که اولین دانشجویی که به یک میز خالی می‌رسد باید منتظر بماند و دانشجوی دوم به هر دو اجازه 
+    می‌دهد که ادامه یابند. در هر حالت، نمی‌بایست وجود دانشجویان در حال انتظار برای خروج را بررسی کنیم چرا که سر یک میز خالی کسی نیست که بتواند
+    آن را ترک نماید!
+    
+%%%    Wed 14 Feb 2018 05:58:22 PM +0330
 
 %\clearemptydoublepage
 %\section{Party problem}
