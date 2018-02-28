@@ -8460,23 +8460,32 @@ leave()
 
 
 
-\chapter{Synchronization in Python}
+%\chapter{Synchronization in Python}
+\chapter{همگام‌سازی در پایتون}
 \label{pysync}
 
-By using pseudocode, we have avoided some of the ugly
-details of synchronization in the real world.  In this chapter
-we'll look at real synchronization code in Python; in the
-next chapter we'll look at C.
+%By using pseudocode, we have avoided some of the ugly
+%details of synchronization in the real world.  In this chapter
+%we'll look at real synchronization code in Python; in the
+%next chapter we'll look at C.
+    با استفاده از شبه‌کد، از برخی جزئیات نازیبای همگام‌سازی در دنیای واقعی اجتناب کرده‌ایم. 
+    در این فصل، نگاهی به کدهای واقعی همگام‌سازی در پایتون می‌اندازیم و در فصل بعد به کدهای \lr{C} می‌نگریم. 
 
-Python provides a reasonably pleasant multithreading environment,
-complete with Semaphore objects.  It has
-a few foibles, but there is some cleanup code in Appendix~\ref{cleanup}
-that makes things a little better.
+%Python provides a reasonably pleasant multithreading environment,
+%complete with Semaphore objects.  It has
+%a few foibles, but there is some cleanup code in Appendix~\ref{cleanup}
+%that makes things a little better.
+    پایتون یک محیط چندنخی منطقاً خوشایند فراهم می‌آورد که با اشیاء سمافور کامل می‌گردد. این محیط چندنخی، نقطه ضعف‌هایی نیز دارد امّا 
+    چندین کد تر و تمیز در پیوست~\ref{cleanup} وجود که باعث می‌شود اوضاع کمی بهتر شود. 
+    %این چیزها را کمی بهتر می‌کند. 
+    
 
-Here is a simple example:
+%Here is a simple example:
+    مثالی ساده در ادامه آمده است: 
 
 \begin{latin}
-\begin{lstlisting}[title={}]{}
+%\begin{lstlisting}[title={}]{}
+\begin{lstlisting}
 from threading_cleanup import *
 
 class Shared:
@@ -8495,36 +8504,52 @@ for child in children: child.join()
 \end{lstlisting}
 \end{latin}
 
-The first line runs the cleanup code from Appendix~\ref{cleanup};
-I will leave this line out of the other examples.
+%The first line runs the cleanup code from Appendix~\ref{cleanup};
+%I will leave this line out of the other examples.
+    خط اول کد تمیزکاری از پیوست~\ref{cleanup} را اجرا می‌نماید؛ این خط را در مثال‌های بعدی نشان نخواهیم داد. 
 
-{\tt Shared} defines an object type that will contain shared variables.
-Global variables are also shared between threads, but we won't
-use any in these examples.  Threads that are local in the sense
-that they are declared inside a function are also local in the
-sense that they are thread-specific.
+%{\tt Shared} defines an object type that will contain shared variables.
+%Global variables are also shared between threads, but we won't
+%use any in these examples.  Threads that are local in the sense
+%that they are declared inside a function are also local in the
+%sense that they are thread-specific.
+%% typo --> Threads -> Variables
+    {\tt Shared}  
+    یک نوعْ شیء است که حاوی متغیرهای اشتراکی خواهد بود. متغیرهای عمومی نیز بین نخ‌ها مشترک هستند، 
+    امّا ما هیچ متغیری عمومی‌ را در این مثال‌ها بکار نخواهیم برد. متغیرهایی که به واسطه تعریف شدن داخل یک تابع محلی محسوب می‌شوند 
+    باز به این معنی که مختص به یک نخ باشند نیز محلی هستند.
 
-The child code is an infinite loop that increments {\tt counter},
-prints the new value, and then sleeps for 0.5 seconds.
+%The child code is an infinite loop that increments {\tt counter},
+%prints the new value, and then sleeps for 0.5 seconds.
+    کد فرزند یک حلقه بی‌پایان است که مقدار {\tt counter} را یک واحد افزایش داده، مقدار جدید را چاپ کرده و سپس به مدت ۰.۵ به خواب می‌رود. 
 
-The parent thread creates {\tt shared} and two children,
-then waits for the children to exit (which in this case, they won't).
+%The parent thread creates {\tt shared} and two children,
+%then waits for the children to exit (which in this case, they won't).
+    نخ والد  {\tt shared} و دو فرزند را ایجاد نموده و سپس منتظر فرزندان می‌ماند تا خاتمه یابند (که در این حالت چنین نخواهد بود).
 
-\section{Mutex checker problem}
+%\section{Mutex checker problem}
+\section{مساله بررسی‌کننده میوتکس}
 
-Diligent students of synchronization will notice that the
-children make unsynchronized updates to {\tt counter}, which
-is not safe!  If you run this program, you might see some
-errors, but you probably won't.  The nasty thing about synchronization
-errors is that they are unpredictable, which means that even
-extensive testing may not reveal them.
+%Diligent students of synchronization will notice that the
+%children make unsynchronized updates to {\tt counter}, which
+%is not safe!  If you run this program, you might see some
+%errors, but you probably won't.  The nasty thing about synchronization
+%errors is that they are unpredictable, which means that even
+%extensive testing may not reveal them.
+    دانشجویان کوشا در همگام‌سازی درخواهند یافت که فرزندان بروزرسانی‌های ناهمگامی نسبت به {\tt counter} اعمال می‌کنند که این کار، امن نیست. 
+    اگر این کد را اجرا کنید ممکن است خطاهایی ببینید، امّا احتمالاً نخواهید دید. مساله‌ای ناخوشایند درباره خطاهای همگام‌سازی این است که غیر قابل پیش‌بینی هستند، 
+    بدین معنی که حتی با تست‌های  گسترده نیز  ممکن آن خطاها  آشکار نکند.
+    
 
-To detect errors, it is often necessary to automate the search.
-In this case, we can detect errors by keeping track of the values
-of {\tt counter}.
+%To detect errors, it is often necessary to automate the search.
+%In this case, we can detect errors by keeping track of the values
+%of {\tt counter}.
+    برای تشخیص خطاها معمولا ضروری است که عمل جستجوی خطا را خودکار نماییم. 
+    در این حالت، می‌توانیم خطاها را با دنبال کردن مقادیر  {\tt counter} تشخیص دهیم. 
 
 \begin{latin}
-\begin{lstlisting}[title={}]{}
+%\begin{lstlisting}[title={}]{}
+\begin{lstlisting}
 class Shared:
     def __init__(self, end=10):
         self.counter = 0
@@ -8544,33 +8569,44 @@ print shared.array
 \end{lstlisting}
 \end{latin}
 
-In this example, {\tt shared} contains a list (misleadingly
-named {\tt array}) that keeps track of the number of times
-each value of counter is used.
-Each time through the loop, the children check {\tt counter}
-and quit if it exceeds {\tt end}.  If not, they use {\tt counter}
-as an index into {\tt array} and increment the corresponding
-entry.  Then they increment {\tt counter}.
+%In this example, {\tt shared} contains a list (misleadingly
+%named {\tt array}) that keeps track of the number of times
+%each value of counter is used.
+    در این مثال، {\tt shared} حاوی یک لیست است (که به غلط {\tt array} نامیده شده است)  و  تعداد دفعاتی که هر مقدار شمارنده استفاده شده است را 
+    نگه می‌دارد. 
+%Each time through the loop, the children check {\tt counter}
+%and quit if it exceeds {\tt end}.  If not, they use {\tt counter}
+%as an index into {\tt array} and increment the corresponding
+%entry.  Then they increment {\tt counter}.
+    با هر اجرای حلقه، فرزندان مقدار {\tt counter} را بررسی نموده و اگر مقدار آن از {\tt end} بیشتر شود خاتمه می‌یابند. 
+    اگر مقدار از حد مجاز نگذرد، از مقدار {\tt counter} به عنوان اندیسی برای {\tt array} استفاده نموده و مدخل متناظر را یک واحد افزایش می‌دهند. 
+    سپس مقدار {\tt counter}  را یک واحد اضافه می‌نمایند. 
 
-If everything works correctly, each entry in the array should
-be incremented exactly once.  When the children exit, the parent
-returns from {\tt join} and prints the value of {\tt array}.
-When I ran the program, I got
+%If everything works correctly, each entry in the array should
+%be incremented exactly once.  When the children exit, the parent
+%returns from {\tt join} and prints the value of {\tt array}.
+%When I ran the program, I got
+    اگر هر چیز به درستی عمل کند، هر مدخل آرایه باید دقیقاً یک بار به میزان یک واحد افزایش یابد. 
+    زمانیکه فرزندان خاتمه می‌یابند، والد  از {\tt join} باز می‌گردد و مقدار  {\tt array} را چاپ می‌کند. 
+    زمانیکه برنامه را اجرا کردم مقدار زیر را گرفتم    
 %
 \begin{verbatim}
 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 \end{verbatim}
 %
-which is disappointingly correct.  If we increase the size of
-the array, we might expect more errors, but it also gets harder
-to check the result.
+%which is disappointingly correct.  If we increase the size of
+%the array, we might expect more errors, but it also gets harder
+%to check the result.
+    که مایوسانه صحیح است. اگر اندازه آرایه را افزایش دهیم، ممکن است انتظار خطاهای بیشتری را داشته باشیم، امّا بررسی نمودن نتیجه نیز مشکل‌تر می‌شود. 
 
 \newpage
-We can automate the checker by making
-a histogram of the results in the array:
+%We can automate the checker by making
+%a histogram of the results in the array:
+    می‌توانیم چک کردن را با ایجاد یک هیستوگرام از نتایج آرایه به صورت خودکار درآوریم: 
 
 \begin{latin}
-\begin{lstlisting}[title={}]{}
+%\begin{lstlisting}[title={}]{}
+\begin{lstlisting}
 class Histogram(dict):
     def __init__(self, seq=[]):
         for item in seq:
@@ -8580,46 +8616,62 @@ print Histogram(shared.array)
 \end{lstlisting}
 \end{latin}
 
-Now when I run the program, I get
+%Now when I run the program, I get
+    اکنون زمانیکه برنامه را اجرا کنم مقدار زیر را دریافت می‌دارم 
 
+\begin{latin}
 \begin{verbatim}
 {1: 10}
 \end{verbatim}
+\end{latin}
 %
-which means that the value 1 appeared 10 times, as expected.  No
-errors so far, but if we make {\tt end} bigger, things get more
-interesting:
+%which means that the value 1 appeared 10 times, as expected.  No
+%errors so far, but if we make {\tt end} bigger, things get more
+%interesting:
+    بدین معنی که مقدار 1 همانطوری که انتظار می‌رفت ۱۰ مرتبه ظاهر شده است. 
+    هیچ خطایی تاکنون رخ نداده، امّا اگر مقدار {\tt end} را بزرگتر کنیم، اوضاع جالب‌تر می‌شود:‌
 
+\begin{latin}
 \begin{verbatim}
 end = 100, {1: 100}
 end = 1000, {1: 1000}
 end = 10000, {1: 10000}
 end = 100000, {1: 27561, 2: 72439}
 \end{verbatim}
+\end{latin}
 %
-Oops!  When {\tt end} is big enough that there are a lot of
-context switches between the children, we start to get synchronization
-errors.  In this case, we get a {\em lot} of errors, which suggests
-that the program falls into a recurring pattern where threads are 
-consistently interrupted in the critical section.
+%Oops!  When {\tt end} is big enough that there are a lot of
+%context switches between the children, we start to get synchronization
+%errors.  In this case, we get a {\em lot} of errors, which suggests
+%that the program falls into a recurring pattern where threads are 
+%consistently interrupted in the critical section.
+    واای! زمانیکه {\tt end}  به اندازه کافی بزرگ باشد که تعویض بستر‌های زیادی بین فرزندان وجود داشته باشد، خطاهای همگام‌سازی نمایان می‌شود. 
+    در این حالت، مقدار خیلی زیادی خطا دریافت می‌کنیم که نشان می‌دهد برنامه در یک الگوی تکراری افتاده است که نخ‌ها دائما در ناحیه بحرانی 
+    دچار وقفه می‌گردند. 
 
-This example demonstrates one of the dangers of synchronization
-errors, which is that they may be rare, but they are not random.
-If an error occurs one time in a million, that doesn't mean it
-won't happen a million times in a row.
+%This example demonstrates one of the dangers of synchronization
+%errors, which is that they may be rare, but they are not random.
+%If an error occurs one time in a million, that doesn't mean it
+%won't happen a million times in a row.
+    این مثال یکی از خطرات خطاهای همگام‌سازی را نشان می‌دهد  که این خطاها ممکن است بندرت رخ دهند امّا تصادفی نیستند. 
+    اگر یک خطا در هر میلیون، یک مرتبه رخ دهد، بدین معنی نیست که یک میلیون بار پشت سر هم اتفاق نیفتد. 
 
-Puzzle: add synchronization code to this program to enforce
-exclusive access to the shared variables.  You can download the
-code in this section from \url{greenteapress.com/semaphores/counter.py}
+%Puzzle: add synchronization code to this program to enforce
+%exclusive access to the shared variables.  You can download the
+%code in this section from \url{greenteapress.com/semaphores/counter.py}
+    معمّا: کد همگام‌سازی به این برنامه اضافه نمایید که دسترسی انحصاری به متغیرهای اشتراکی را اعمال نماید. 
+    می‌توانید کد این بخش را از \url{greenteapress.com/semaphores/counter.py} دانلود کنید. 
 
 
 \clearemptydoublepage
-\subsection {Mutex checker hint}
+%\subsection {Mutex checker hint}
+\subsection{راهنمایی بررسی‌کننده میوتکس}
 
-Here is the version of {\tt Shared} I used:
-
+%Here is the version of {\tt Shared} I used:
+    نسخه‌ای از  {\tt Shared} که بکار برده‌ام در ادامه آمده است: 
 \begin{latin}
-\begin{lstlisting}[title={}]{}
+%\begin{lstlisting}[title={}]{}
+\begin{lstlisting}
 class Shared:
     def __init__(self, end=10):
         self.counter = 0
@@ -8629,16 +8681,20 @@ class Shared:
 \end{lstlisting}
 \end{latin}
 
-The only change is the Semaphore named {\tt mutex}, which should
-come as no surprise.
+%The only change is the Semaphore named {\tt mutex}, which should
+%come as no surprise.
+    تنها تغییر،  سمافوری است که {\tt mutex} نامگذاری شده است که تعجبی هم ندارد. 
 
 \clearemptydoublepage
-\subsection {Mutex checker solution}
+%\subsection {Mutex checker solution}
+\subsection{راه حل بررسی‌کننده میوتکس}
 
-Here is my solution:
+%Here is my solution:
+    راه حل در ادامه آمده است:
 
 \begin{latin}
-\begin{lstlisting}[title={}]{}
+%\begin{lstlisting}[title={}]{}
+\begin{lstlisting}
 def child_code(shared):
     while True:
         shared.mutex.wait()
@@ -8652,20 +8708,27 @@ def child_code(shared):
 \end{lstlisting}
 \end{latin}
 
-Although this is not the most difficult synchronization problem
-in this book, you might have found it tricky to get the details
-right.  In particular, it is easy to forget to signal the mutex
-before breaking out of the loop, which would cause a deadlock.
+%Although this is not the most difficult synchronization problem
+%in this book, you might have found it tricky to get the details
+%right.  In particular, it is easy to forget to signal the mutex
+%before breaking out of the loop, which would cause a deadlock.
+    گرچه این مساله، مشکل‌ترین مساله همگام‌سازی این کتاب نیست، امّا ممکن است شما درک درست جزئیات را کمی مستلزم زیرکی بدانید.
+    بخصوص که فراموشی سیگنال دهی به میوتکس قبل از شکستن حلقه سبب بن‌بست می‌گردد. 
 
-I ran this solution with {\tt end = 1000000}, and got the
-following result:
-
+%I ran this solution with {\tt end = 1000000}, and got the
+%following result:
+    من این راه حل را با  {\tt end = 1000000} اجرا کردم و نتیجه زیر را گرفتم: 
+\begin{latin}
 \begin{verbatim}
 {1: 1000000}
 \end{verbatim}
+\end{latin}
 
-Of course, that doesn't mean my solution is correct, but it is
-off to a good start.
+%Of course, that doesn't mean my solution is correct, but it is
+%off to a good start.
+    البته، این بدین معنی نیست که راه حل من درست است امّا برای شروع خوب است. 
+    
+%%%        Wed 28 Feb 2018 06:06:24 PM +0330
 
 
 \clearemptydoublepage
