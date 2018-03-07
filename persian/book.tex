@@ -8732,13 +8732,16 @@ def child_code(shared):
 
 
 \clearemptydoublepage
-\section {The coke machine problem}
+%\section {The coke machine problem}
+\section {مساله دستگاه خودکار کوکاکولا}
 
-The following program simulates producers and consumers
-adding and removing cokes from a coke machine:
+%The following program simulates producers and consumers
+%adding and removing cokes from a coke machine:
+    برنامه بعدی، عملیات افزودن/برداشتن  کوکاکولا به/از دستگاه خودکار کوکاکولا توسط تولیدکنندگان/مصرف‌کنندگان را شبیه‌سازی می‌نماید. 
 
 \begin{latin}
-\begin{lstlisting}[title={}]{}
+%\begin{lstlisting}[title={}]{}
+\begin{lstlisting}
 import random
 
 class Shared:
@@ -8766,48 +8769,65 @@ for thread in threads: thread.join()
 \end{lstlisting}
 \end{latin}
 
-The capacity is 10 cokes, and that the machine is initially
-half full.  So the shared variable {\tt cokes} is 5.
+%The capacity is 10 cokes, and that the machine is initially
+%half full.  So the shared variable {\tt cokes} is 5.
+    ظرفیت ماشین ۱۰ کوکاکولا است و ماشین در ابتدا نیمه‌پر است. لذا متغیر اشتراکی {\tt cokes} برابر ۵ است. 
 
-The program creates 4 threads, two producers and two consumers.
-They both run {\tt loop}, but producers invoke {\tt produce}
-and consumers invoke {\tt consume}.  These functions make
-unsynchronized access to a shared variable, which is a no-no.
+%The program creates 4 threads, two producers and two consumers.
+%They both run {\tt loop}, but producers invoke {\tt produce}
+%and consumers invoke {\tt consume}.  These functions make
+%unsynchronized access to a shared variable, which is a no-no.
+    برنامه ۴ نخ ایجاد می‌نماید: دو تولیدکننده و دو مصرف‌کننده. 
+    هر دوی آن‌ها تابع {\tt loop} را اجرا می‌نمایند امّا تولیدکننده  {\tt produce}  و مصرف‌کننده {\tt consume} را فرا می‌خواند. 
+    این توابع دسترسی ناهمگامی به یک متغیر اشتراکی دارند که این نوع دسترسی در اینجا پذیرفتنی نیست. 
 
-Each time through the loop, producers and consumers sleep for a
-duration chosen from an exponential distribution with mean {\tt mu}.
-Since there are two producers and two consumers, two cokes get added
-to the machine per second, on average, and two get removed.
+%Each time through the loop, producers and consumers sleep for a
+%duration chosen from an exponential distribution with mean {\tt mu}.
+%Since there are two producers and two consumers, two cokes get added
+%to the machine per second, on average, and two get removed.
+    در هر اجرای حلقه، تولیدکنندگان و مصرف‌کنندگان برای یک مدتی به خواب می‌روند که مقدار آن به صورت تصادفی 
+    از یک توزیع نمایی با میانگین  {\tt mu} تعیین می‌شود. از آنجایی که دو تولیدکننده و دو مصرف‌کننده وجود دارد، در هر ثانیه به طور میانگین 
+    دو کوکاکولا به ماشین افزوده شده و دو کوکاکولا مصرف می‌گردد. 
 
-So on average the number of cokes is constant, but in the short
-run in can vary quite widely.  If you run the program for a
-while, you will probably see the value of {\tt cokes} dip
-below zero, or climb above 10.  Of course, neither of these
-should happen.
-
-Puzzle: add code to this program to enforce the following
-synchronization constraints:
+%So on average the number of cokes is constant, but in the short
+%run in can vary quite widely.  If you run the program for a
+%while, you will probably see the value of {\tt cokes} dip
+%below zero, or climb above 10.  Of course, neither of these
+%should happen.
+%%%typo: run in can -> run it can 
+    بنابراین به طور متوسط میزان کوکاکولاها ثابت است، امّا در کوتاه مدت، این مقدار می‌تواند به صورت فزاینده‌ای متفاوت باشد.
+    اگر برنامه را برای مدتی اجرا کنید، احتمالا مقدار  {\tt cokes}  را زیر صفر و یا بیشتر از ۱۰ خواهید دید. البته که هیچکدام از این دو نباید اتفاق بیفتند. 
+    
+%Puzzle: add code to this program to enforce the following
+%synchronization constraints:   
+    معمّا: کدی به این برنامه بیفزایید که محدودیت‌های همگام‌سازی زیر را اعمال نماید:
 
 \begin{itemize}
 
-\item Access to {\tt cokes} should be mutually exclusive.
+\item %Access to {\tt cokes} should be mutually exclusive.
+    دسترسی به {\tt cokes} باید به صورت انحصاری باشد. 
 
-\item If the number of cokes is zero, consumers should block
-until a coke is added.
+\item %If the number of cokes is zero, consumers should block
+%until a coke is added.
+    اگر مقدار کوکاکولا صفر است، مصرف‌کننده باید تا زمانیکه کوکاکولا افزوده شود مسدود گردد. 
 
-\item If the number of cokes is 10, producers should block
-until a coke is removed.
+\item %If the number of cokes is 10, producers should block
+%until a coke is removed.
+    اگر مقدار کوکاکولا ۱۰ است، تولید‌کننده باید تا زمانیکه کوکاکولایی مصرف شود مسدود گردد. 
 
 \end{itemize}
 
-You can download the program from
+%You can download the program from
+    برنامه را می‌توانید از آدرس زیر دانلود کنید:
 \url{greenteapress.com/semaphores/coke.py}
 
 
 \clearemptydoublepage
-\subsection {Coke machine hint}
+%\subsection {Coke machine hint}
+\subsection {مساله دستگاه خودکار کوکاکولا}
 
-Here are the shared variables I used in my solution:
+%Here are the shared variables I used in my solution:
+    متغیرهای اشتراکی که در راه حل خود بکار برده‌ام به شرح زیر است:
 
 \begin{latin}
 \begin{lstlisting}[title={}]{}
@@ -8819,30 +8839,40 @@ class Shared:
 \end{lstlisting}
 \end{latin}
 
-{\tt cokes} is a Semaphore now (rather than a simple integer), 
-which makes it tricky to print its value.  Of course, you
-should never access the value of a Semaphore, and Python in
-its usual do-gooder way doesn't provide any of the cheater
-methods you see in some implementations.
+%{\tt cokes} is a Semaphore now (rather than a simple integer), 
+%which makes it tricky to print its value.  Of course, you
+%should never access the value of a Semaphore, and Python in
+%its usual do-gooder way doesn't provide any of the cheater
+%methods you see in some implementations.
+    الان {\tt cokes} یک سمافور است (بجای عدد صحیح ساده)، که سبب می‌شود چاپ مقدار آن مستلزم مقداری زیرکی گردد. 
+    البته که  شما هرگز نباید به مقدار یک سمافور دسترسی داشته باشید و پایتون با روش معمول خود، هیچکدام از شیوه‌های تقلب که در برخی از پیاده‌سازی‌ها را 
+    مشاهده می‌نمایید  فراهم نمی‌کند. 
 
-But you might find it interesting to know that the value
-of a Semaphore is stored in a private attribute named
-{\tt \_Semaphore\_\_value}.  Also, in case you don't know,
-Python doesn't actually enforce any restriction on access to
-private attributes.  You should never access it, of course,
-but I thought you might be interested.
+%But you might find it interesting to know that the value
+%of a Semaphore is stored in a private attribute named
+%{\tt \_Semaphore\_\_value}.  Also, in case you don't know,
+%Python doesn't actually enforce any restriction on access to
+%private attributes.  You should never access it, of course,
+%but I thought you might be interested.
+    امّا جالب است بدانید که مقدار یک سمافور در یک ویژگی خصوصی به نام {\tt \_Semaphore\_\_value} ذخیره شده است. 
+    همچنین، موردی که نمی‌دانید این است که در واقع پایتون هیچ محدودیتی در دسترسی به ویژگی‌های خصوصی اعمال نمی‌نماید. 
+    البته که شما هرگز نباید از این امکان استفاده کنید امّا فکر کردم دانستن این نکته شاید برایتان جالب باشد. 
 
-Ahem.
+%Ahem.
+%    اوهوم. 
 
 
 \clearemptydoublepage
-\subsection {Coke machine solution}
+%\subsection {Coke machine solution}
+\subsection {راه حل دستگاه خودکار کوکاکولا}
 
-If you've read the rest of this book, you should have had no
-trouble coming up with something at least as good as this:
+%If you've read the rest of this book, you should have had no
+%trouble coming up with something at least as good as this:
+    اگر شما بقیه کتاب را خوانده باشید، با چیزی که حداقل به خوبی کد زیر است نباید هیچ مشکلی داشته باشید:
 
 \begin{latin}
-\begin{lstlisting}[title={}]{}
+%\begin{lstlisting}[title={}]{}
+\begin{lstlisting}
 def consume(shared):
     shared.cokes.wait()
     shared.mutex.wait()
@@ -8859,28 +8889,37 @@ def produce(shared):
 \end{lstlisting}
 \end{latin}
 
-If you run this program for a while, you should be able to confirm
-that the number of cokes in the machine is never negative or greater
-than 10.  So this solution seems to be correct.
+%If you run this program for a while, you should be able to confirm
+%that the number of cokes in the machine is never negative or greater
+%than 10.  So this solution seems to be correct.
 
-So far.
+%So far.
+    اگر این برنامه را برای مدتی اجرا کنید، باید بتوانید تایید کنید که تعداد کوکاکولاها در ماشین هرگز منفی و یا بیشتر از ۱۰ نمی‌شود. 
+    بنابراین این راه حل به نظر درست می‌آید. 
 
+    لااقل تا الان. 
 
-\chapter{Synchronization in C}
+%\chapter{Synchronization in C}
+\chapter{همگام‌سازی در \lr{C}}
 \label{csync}
 
-In this section we will write a multithreaded, synchronized
-program in C.  Appendix~\ref{ccleanup} provides some of the utility
-code I use to make the C code a little more palatable.  The
-examples in this section depend on that code.
+%In this section we will write a multithreaded, synchronized
+%program in C.  Appendix~\ref{ccleanup} provides some of the utility
+%code I use to make the C code a little more palatable.  The
+%examples in this section depend on that code.
+    در این بخش یک برنامه چندنخی و همگام به زبان \lr{C} خواهیم نوشت. پیوست~\ref{ccleanup} کدهای کاربردی فراهم می‌آورد که 
+    من از آن‌ها به منظور دلچسب‌تر نمودن کد  \lr{C} استفاده می‌کنم. مثال‌های این بخش مبتنی بر آن کدهاست. 
+    
+%\section{Mutual exclusion}
+\section{انحصار متقابل}
 
-\section{Mutual exclusion}
-
-We'll start by defining a structure that contains shared
-variables:
+%We'll start by defining a structure that contains shared
+%variables:
+    با تعریف ساختاری که حاوی متغیرهای اشتراکی است شروع خواهم کرد:
 
 \begin{latin}
-\begin{lstlisting}[title={}]{}
+%\begin{lstlisting}[title={}]{}
+\begin{lstlisting}
 typedef struct {
   int counter;
   int end;
@@ -8904,10 +8943,14 @@ Shared *make_shared (int end)
 \end{lstlisting}
 \end{latin}
 
-{\tt counter} is a shared variable that will be incremented by
-concurrent threads until it reaches {\tt end}.  We will use
-{\tt array} to check for synchronization errors by keeping track
-of the value of {\tt counter} after each increment.
+%{\tt counter} is a shared variable that will be incremented by
+%concurrent threads until it reaches {\tt end}.  We will use
+%{\tt array} to check for synchronization errors by keeping track
+%of the value of {\tt counter} after each increment.
+    {\tt counter} یک متغیر  اشتراکی است که بوسیله نخ‌های همروند مقدارش یک واحد یک واحد  افزایش می‌یابد تا به مقدار   {\tt end} برسد. 
+    از {\tt array}  به منظور بررسی خطاهای همگام‌سازی، با ردگیری مقدار {\tt counter} پس از هر افزایش، استفاده خواهیم کرد.
+%%%        Wed 07 Mar 2018 06:05:49 PM +0330
+
 
 \subsection{Parent code}
 
