@@ -8476,7 +8476,7 @@ leave()
 %a few foibles, but there is some cleanup code in Appendix~\ref{cleanup}
 %that makes things a little better.
     پایتون یک محیط چندنخی منطقاً خوشایند فراهم می‌آورد که با اشیاء سمافور کامل می‌گردد. این محیط چندنخی، نقطه ضعف‌هایی نیز دارد امّا 
-    چندین کد تر و تمیز در پیوست~\ref{cleanup} وجود که باعث می‌شود اوضاع کمی بهتر شود. 
+    چندین کد  تمیزکاری در پیوست~\ref{cleanup} وجود که باعث می‌شود اوضاع کمی بهتر شود. 
     %این چیزها را کمی بهتر می‌کند. 
     
 
@@ -8952,13 +8952,16 @@ Shared *make_shared (int end)
 %%%        Wed 07 Mar 2018 06:05:49 PM +0330
 
 
-\subsection{Parent code}
+%\subsection{Parent code}
+\subsection{کد والد}
 
-Here is the code the parent thread uses to create threads
-and wait for them to complete:
+%Here is the code the parent thread uses to create threads
+%and wait for them to complete:
+    کدی که نخ والد به منظور ایجاد نخ‌ها  و سپس انتظار برای اتمام آن‌ها بکار می‌برد در ادامه آمده‌ است:
 
 \begin{latin}
-\begin{lstlisting}[title={}]{}
+%\begin{lstlisting}[title={}]{}
+\begin{lstlisting}
 int main ()
 {
   int i;
@@ -8980,18 +8983,24 @@ int main ()
 \end{lstlisting}
 \end{latin}
 
-The first loop creates the child threads; the second loop waits
-for them to complete.  When the last child has finished, the parent
-invokes {\tt check\_array} to check for errors.
-{\tt make\_thread} and {\tt join\_thread} are defined in
-Appendix~\ref{ccleanup}.
+%The first loop creates the child threads; the second loop waits
+%for them to complete.  When the last child has finished, the parent
+%invokes {\tt check\_array} to check for errors.
+%{\tt make\_thread} and {\tt join\_thread} are defined in
+%Appendix~\ref{ccleanup}.
+    حلقهٔ اول نخ‌های فرزند را ایجاد می‌نماید؛ حلقه دوم منتظر می‌شود تا آن‌ها کارشان را تمام کنند. زمانیکه کار آخرین فرزند پایان یابد،‌
+    نخ والد {\tt check\_array} را به منظور بررسی خطاها فراخوانی می‌نماید. {\tt make\_thread} و {\tt join\_thread}
+    در پیوست~\ref{ccleanup} تعریف شده‌اند. 
 
-\subsection{Child code}
+%\subsection{Child code}
+\subsection{کد فرزند}
 
-Here is the code that is executed by each of the children:
+%Here is the code that is executed by each of the children:
+    کدی که توسط هر کدام از فرزندان اجرا می‌شود در ادامه آمده است: 
 
 \begin{latin}
-\begin{lstlisting}[title={}]{}
+%\begin{lstlisting}[title={}]{}
+\begin{lstlisting}
 void child_code (Shared *shared)
 {
   while (1) {
@@ -9005,18 +9014,25 @@ void child_code (Shared *shared)
 \end{lstlisting}
 \end{latin}
 
-Each time through the loop, the child threads use {\tt counter}
-as an index into {\tt array} and increment the corresponding element.
-Then they increment {\tt counter} and check to see if they're done.
+%Each time through the loop, the child threads use {\tt counter}
+%as an index into {\tt array} and increment the corresponding element.
+%Then they increment {\tt counter} and check to see if they're done.
+    در هر اجرای حلقه، نخ‌های فرزند از {\tt counter} به عنوان اندیس {\tt array} استفاده نموده و عنصر متناطر را یک واحد افزایش می‌دهد. 
+    سپس مقدار  {\tt counter}  را یک واحد افزایش داده و اتمام کار را بررسی می‌کند. 
+    
 
-\subsection{Synchronization errors}
+%\subsection{Synchronization errors}
+\subsection{خطاهای همگام‌سازی}
 
-If everything works correctly, each element of the array should be
-incremented once.  So to check for errors, we can just count the
-number of elements that are not 1:
+%If everything works correctly, each element of the array should be
+%incremented once.  So to check for errors, we can just count the
+%number of elements that are not 1:
+    اگر هر چیز به درستی عمل هماید، هر عنصر {\tt array} باید یک واحد افزایش یابد. 
+    لذا به منظور بررسی خطاها، تنها تعداد عناصری را که نیستند {\tt 1} می‌شماریم.
 
 \begin{latin}
-\begin{lstlisting}[title={}]{}
+%\begin{lstlisting}[title={}]{}
+\begin{lstlisting}
 void check_array (Shared *shared)
 {
   int i, errors=0;
@@ -9029,11 +9045,16 @@ void check_array (Shared *shared)
 \end{lstlisting}
 \end{latin}
 
-You can download this program (including the cleanup code) from
-\url{greenteapress.com/semaphores/counter.c}
+%You can download this program (including the cleanup code) from
+%\url{greenteapress.com/semaphores/counter.c}
+    این برنامه را (بهمراه کدهای تمیزکاری)می‌توانید از آدرس زیر دانلود نمایید: \\*    
+    \leftline{\url{greenteapress.com/semaphores/counter.c}}
 
-If you compile and run the program, you should see output like this:
+%If you compile and run the program, you should see output like this:
+    اگر برنامه را کامپایل و اجرا نمایید، خروجی برنامه باید مشابه زیر باشد: 
 
+\begingroup
+\setLTR
 \begin{verbatim}
 Starting child at counter 0
 10000
@@ -9051,27 +9072,38 @@ Child done.
 Checking...
 0 errors.
 \end{verbatim}
+\endgroup
 
-Of course, the interaction of the children depends on details
-of your operating system and also other programs running on your
-computer.  In the example shown here, one thread ran all the way
-from 0 to {\tt end} before the other thread got started, so it is
-not surprising that there were no synchronization errors.
+%Of course, the interaction of the children depends on details
+%of your operating system and also other programs running on your
+%computer.  In the example shown here, one thread ran all the way
+%from 0 to {\tt end} before the other thread got started, so it is
+%not surprising that there were no synchronization errors.
+    البته که تعامل میان فرزندان بسته به جزئیات سیستم عامل و همچنین دیگر برنامه‌های در حال اجرا روی کامپیوتر دارد. 
+    در مثالی که دیدید، پیش از اینکه نخ‌های دیگری آغاز به کار نمایند یک نخ، از {\tt 0} تا  {\tt end} حلقه را به طور کامل و به تنهایی طی می‌کند
+    لذا تعجبی ندارد که هیچ خطای همگام‌سازی وجود نداشته باشد. 
 
-But as {\tt end} gets bigger, there are more context switches between
-the children.  On my system I start to see errors when
-{\tt end} is 100,000,000.
+%But as {\tt end} gets bigger, there are more context switches between
+%the children.  On my system I start to see errors when
+%{\tt end} is 100,000,000.
+    امّا همانطور که {\tt end}  بزرگتر می‌شود، تعویض بسترهای بیشتری بین فرزندان وجود دارد. 
+    در سیستم من، خطاها زمانی شروع شد که {\tt end} به  100000000 رسید. 
 
-Puzzle: use semaphores to enforce exclusive access to the shared
-variables and run the program again to confirm that there are
-no errors.
+%Puzzle: use semaphores to enforce exclusive access to the shared
+%variables and run the program again to confirm that there are
+%no errors.
+    معمّا:‌ سمافورها را به منظور اعمال دسترسی انحصاری به متغیرهای اشتراکی بکار برید و برنامه را دومرتبه اجرا نمایید تا نشان دهید که خطایی وجود ندارد. 
+    
 
 \clearemptydoublepage
-\subsection{Mutual exclusion hint}
+%\subsection{Mutual exclusion hint}
+\subsection{راهنمایی انحصار متقابل}
 
-Here is the version of {\tt Shared} I used in my solution:
+%Here is the version of {\tt Shared} I used in my solution:
+    نسخه‌ای از {\tt Shared} که در راه حل بکار برده‌ام، در زیر آمده است:
 
 \begin{latin}
+%\begin{lstlisting}[title={}]{}
 \begin{lstlisting}[title={}]{}
 typedef struct {
   int counter;
@@ -9098,9 +9130,12 @@ Shared *make_shared (int end)
 \end{lstlisting}
 \end{latin}
 
-Line~\ref{declaremutex} declares {\tt mutex} as a Semaphore;
-Line~\ref{initmutex} initializes the mutex with the value 1.
+%Line~\ref{declaremutex} declares {\tt mutex} as a Semaphore;
+%Line~\ref{initmutex} initializes the mutex with the value 1.   
+    خط~\ref{declaremutex} متغیر  {\tt mutex} را به عنوان یک سمافور اعلان می‌نماید و 
+    خط~\ref{initmutex} مقدر اولیه  {\tt 1} را به آن اختصاص می‌دهد. 
 
+%%%    Wed 11 Apr 2018 06:07:46 PM +0430
 
 \clearemptydoublepage
 \subsection{Mutual exclusion solution}
@@ -9582,7 +9617,8 @@ I've done the same thing with the Pthread functions I'm going to use;
 here's my wrapper for {\tt pthread\_create}.
 
 \begin{latin}
-\begin{lstlisting}[title={}]{}
+%\begin{lstlisting}[title={}]{}
+\begin{lstlisting}[escapeinside={}]
 pthread_t make_thread(void *(*entry)(void *), Shared *shared)
 {
   int n;
