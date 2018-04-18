@@ -3614,8 +3614,8 @@ writeSwitch.unlock(noReaders)
 %Property 3: if there are threads waiting on a semaphore when
 %a thread executes {\tt signal}, then one of the waiting threads
 %has to be woken.
-    خصوصیت ۳: اگر نخ‌هایی وجود دارد که روی یک سمافور در حال انتظار هستند در حالیکه یک نخ {\tt signal} را اجرا می‌نماید، 
-    آنگاه یکی از نخ‌های در حال انتظار باید بیدار شوند. 
+    خصوصیت ۳: اگر زمانیکه یک نخ، {\tt signal} را اجرا می‌نماید، نخ‌هایی در حال انتظار روی سمافور وجود داشته باشد،
+    آنگاه یکی از نخ‌های در حال انتظار باید بیدار شود. 
 \end{quote}
 
 %This requirement may seem obvious, but it is not trivial.  It has the
@@ -9138,12 +9138,15 @@ Shared *make_shared (int end)
 %%%    Wed 11 Apr 2018 06:07:46 PM +0430
 
 \clearemptydoublepage
-\subsection{Mutual exclusion solution}
+%\subsection{Mutual exclusion solution}
+\subsection{راه حل انحصار متقابل}
 
-Here is the synchronized version of the child code:
+%Here is the synchronized version of the child code:
+    نسخه همگام‌سازی شده کد فرزند در ادامه آمده است:
 
 \begin{latin}
-\begin{lstlisting}[title={}]{}
+%\begin{lstlisting}[title={}]{}
+\begin{lstlisting}
 void child_code (Shared *shared)
 {
   while (1) {
@@ -9161,31 +9164,42 @@ void child_code (Shared *shared)
 \end{lstlisting}
 \end{latin}
 
-There is nothing too surprising here; the only tricky thing
-is to remember to release the mutex before the {\tt return}
-statement.
+%There is nothing too surprising here; the only tricky thing    
+%is to remember to release the mutex before the {\tt return}
+%statement.
+    هیچ نکته شگفت‌انگیزی در اینجا وجود ندارد؛ تنها پیچیدگی مساله این است که به یاد داشته باشید که پیش از دستور {\tt return} میوتکس را آزاد نمایید.
+    
 
-You can download this solution from 
+%You can download this solution from 
+    کد این راه حل را می‌توانید از آدرس زیر دانلود نمایید.
 \url{greenteapress.com/semaphores/counter_mutex.c}
 
 
 \clearemptydoublepage
-\section{Make your own semaphores}
+%\section{Make your own semaphores}
+\section{سمافورهای خودتان را بسازید}
 \label{makeyourown}
 
-The most commonly used synchronization tools for programs that use
-Pthreads are mutexes and condition variables, not semaphores.  For an
-explanation of these tools, I recommend Butenhof's {\em Programming
-with POSIX Threads} \cite{butenhof}.
+%The most commonly used synchronization tools for programs that use
+%Pthreads are mutexes and condition variables, not semaphores.  For an
+%explanation of these tools, I recommend Butenhof's {\em Programming
+%with POSIX Threads} \cite{butenhof}.
+    رایج‌ترین ابزارهای همگام‌سازی برای برنامه‌هایی از \lr{Pthreads} استفاده می‌نمایند میوتکس‌ها و متغیرهای شرطی هستند و نه سمافورها. 
+    برای شرحی از این ابزارها، کتاب «برنامه‌نویسی با نخ‌های\lr{POSIX}»\LTRfootnote{{\em Programming with POSIX Threads}} 
+    اثر \lr{Butenhof} را پیشنهاد می‌کنم. 
 
-Puzzle: read about mutexes and condition variables, and then
-use them to write an implementation of semaphores.
+%Puzzle: read about mutexes and condition variables, and then
+%use them to write an implementation of semaphores.
+    معمّا: میوتکس‌ها و متغیرهای شرطی را مطالعه نموده و سپس با استفاده از آن‌ها یک پیاده‌سازی از سمافورها بنویسید. 
 
-You might want to use the following utility code in your solutions.
-Here is my wrapper for Pthreads mutexes:
+%You might want to use the following utility code in your solutions.
+%Here is my wrapper for Pthreads mutexes:
+    ممکن است بخواهید از کد کاربردی زیر را در راه حل خود استفاده کنید. 
+    این بسته‌بندی من از میوتکس‌های \lr{Pthreads} است.
 
 \begin{latin}
-\begin{lstlisting}[title={}]{}
+%\begin{lstlisting}[title={}]{}
+\begin{lstlisting}
 typedef pthread_mutex_t Mutex;
 
 Mutex *make_mutex ()
@@ -9211,10 +9225,13 @@ void mutex_unlock (Mutex *mutex)
 \end{latin}
 
 \newpage
-And my wrapper for Pthread condition variables:
+%And my wrapper for Pthread condition variables:
+    و بسته‌بندی من از متغیرهای شرطی \lr{Pthreads}:
+
 
 \begin{latin}
-\begin{lstlisting}[title={}]{}
+%\begin{lstlisting}[title={}]{}
+\begin{lstlisting}
 typedef pthread_cond_t Cond;
 
 Cond *make_cond ()
@@ -9242,12 +9259,15 @@ void cond_signal (Cond *cond)
 
 
 \clearemptydoublepage
-\subsection{Semaphore implementation hint}
+%\subsection{Semaphore implementation hint}
+\subsection{راهنمایی پیاده‌سازی سمافور}
 
-Here is the structure definition I used for my semaphores:
+%Here is the structure definition I used for my semaphores:
+     تعریف ساختار سمافورهایم در ادامه آمده است:
 
 \begin{latin}
-\begin{lstlisting}[title={}]{}
+%\begin{lstlisting}[title={}]{}
+\begin{lstlisting}
 typedef struct {
   int value, wakeups;
   Mutex *mutex;
@@ -9256,20 +9276,29 @@ typedef struct {
 \end{lstlisting}
 \end{latin}
 
-{\tt value} is the value of the semaphore.  {\tt wakeups} counts
-the number of pending signals; that is, the number of threads
-that have been woken but have not yet resumed execution.  The reason
-for wakeups is to make sure that our semaphores have
-Property 3, described in Section~\ref{props}.
+%{\tt value} is the value of the semaphore.  {\tt wakeups} counts
+%the number of pending signals; that is, the number of threads
+%that have been woken but have not yet resumed execution.  The reason
+%for wakeups is to make sure that our semaphores have
+%Property 3, described in Section~\ref{props}.
+    مقدار سمافور در {\tt value} قرار می‌گیرد.  {\tt wakeups} تعداد سیگنال‌های در حال انتظار را می‌شمارد که در واقع تعداد نخ‌هایی است که 
+    بیدار شده‌اند امّا هنوز اجرایشان ادامه نیافته است. دلیل وجود {\tt wakeups} برای برآورده شدن خصوصیت ۳ سمافورها است که در بخش~\ref{props} 
+    شرح داده شد. 
+    
 
-{\tt mutex} provides exclusive access to {\tt value} and
-{\tt wakeups}; {\tt cond} is the condition variable threads
-wait on if they wait on the semaphore.
+%{\tt mutex} provides exclusive access to {\tt value} and
+%{\tt wakeups}; {\tt cond} is the condition variable threads
+%wait on if they wait on the semaphore.
+    {\tt mutex} 
+    دسترسی انحصاری به  {\tt value} و {\tt wakeups} را فراهم می‌آورد؛ 
+     اگر  نخ‌ها روی سمافور منتظر باشند در واقع روی متغیر شرطی   {\tt cond}  منتظر می‌مانند. 
 
-Here is the initialization code for this structure:
+%Here is the initialization code for this structure:
+    کد مقداردهی اولیه این ساختار در ادامه آمده است:
 
 \begin{latin}
-\begin{lstlisting}[title={}]{}
+%\begin{lstlisting}[title={}]{}
+\begin{lstlisting}
 Semaphore *make_semaphore (int value)
 {
   Semaphore *semaphore = check_malloc (sizeof(Semaphore));
@@ -9284,13 +9313,16 @@ Semaphore *make_semaphore (int value)
 
 
 \clearemptydoublepage
-\subsection{Semaphore implementation}
+%\subsection{Semaphore implementation}
+\subsection{پیاده‌سازی سمافور}
 
-Here is my implementation of semaphores using Pthread's mutexes
-and condition variables:
+%Here is my implementation of semaphores using Pthread's mutexes
+%and condition variables:
+    پیاده‌سازی من از سمافورها با کمک میوتکس‌ها و متغیرهای شرطی \lr{Pthread} در ادامه آمده است:
 
 \begin{latin}
-\begin{lstlisting}[title={}]{}
+%\begin{lstlisting}[title={}]{}
+\begin{lstlisting}
 void sem_wait (Semaphore *semaphore)
 {
   mutex_lock (semaphore->mutex);                 (*\label{sementer}*)
@@ -9319,27 +9351,38 @@ void sem_signal (Semaphore *semaphore)
 \end{lstlisting}
 \end{latin}
 
-Most of this is straightforward; the only thing that might be 
-tricky is the {\tt do...while} loop at Line~\ref{dowhile}.
-This is an unusual way to use a condition variable, but in
-this case it is necessary.
+%Most of this is straightforward; the only thing that might be 
+%tricky is the {\tt do...while} loop at Line~\ref{dowhile}.
+%This is an unusual way to use a condition variable, but in
+%this case it is necessary.
+    غالب این کد سر راست است؛ تنهای چیزی که ممکن است کمی پیچیدگی داشته باشد حلقه {\tt do...while} در خط~\ref{dowhile} است. 
+    این کاربردی غیر معمول از یک متغیر شرطی است، امّا در اینجا ضروری است. 
 
-Puzzle: why can't we replace this {\tt do...while} loop
-with a {\tt while} loop?
+%Puzzle: why can't we replace this {\tt do...while} loop
+%with a {\tt while} loop?
+    معمّا: چرا نمی‌توانیم حلقه {\tt do...while} را با یک حلقه {\tt while}  جایگزین نماییم؟
 
 \clearemptydoublepage
-\subsection{Semaphore implementation detail}
+%\subsection{Semaphore implementation detail}
+\subsection{جزئیات پیاده‌سازی سمافور}
 
-With a {\tt while} loop, this implementation would not have
-Property 3.  It would be possible for a thread to signal
-and then run around and catch its own signal.
+%With a {\tt while} loop, this implementation would not have
+%Property 3.  It would be possible for a thread to signal
+%and then run around and catch its own signal.
+    با یک حلقه {\tt while}، این پیاده‌سازی خصوصیت ۳ را نخواهد داشت. ممکن است یک نخ سیگنال داده و در ادامه اجرا سیگنال خودش 
+    را بگیرد. 
 
-With the {\tt do...while} loop, it is guaranteed\footnote{Well,
-  almost.  It turns out that a well-timed spurious wakeup (see
-  \url{http://en.wikipedia.org/wiki/Spurious_wakeup}) can violate this
-  guarantee.} that when a thread signals, one of the waiting threads
-will get the signal, even if another thread gets the mutex at
-Line~\ref{sementer} before one of the waiting threads resumes.
+%With the {\tt do...while} loop, it is guaranteed\footnote{Well,
+%  almost.  It turns out that a well-timed spurious wakeup (see
+%  \url{http://en.wikipedia.org/wiki/Spurious_wakeup}) can violate this
+%  guarantee.} that when a thread signals, one of the waiting threads
+%will get the signal, even if another thread gets the mutex at
+%Line~\ref{sementer} before one of the waiting threads resumes.
+    با حلقه {\tt do...while}، زمانیکه یک نخ سیگنال می‌دهد تضمین می‌شود که یکی از نخ‌های در حال انتظار، سیگنال را دریافت نماید 
+    حتی اگر نخ دیگری  پیش از ادامه یافتن یکی از نخ‌های منتظر، میوتکس را در خط~\ref{sementer} بگیرد\footnote{
+    البته این تضمین تقریبی است. چرا که یک بیداری بهنگام می‌تواند این تضمین را خدشه‌دار کند. برای توضیحات بیشتر لینک 
+    \url{http://en.wikipedia.org/wiki/Spurious_wakeup} را مطالعه نمایید. 
+    }.
 
 
 \bibliographystyle{plain}
