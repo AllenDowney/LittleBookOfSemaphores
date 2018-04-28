@@ -9380,6 +9380,7 @@ void sem_signal (Semaphore *semaphore)
 %Line~\ref{sementer} before one of the waiting threads resumes.
     با حلقه {\tt do...while}، زمانیکه یک نخ سیگنال می‌دهد تضمین می‌شود که یکی از نخ‌های در حال انتظار، سیگنال را دریافت نماید 
     حتی اگر نخ دیگری  پیش از ادامه یافتن یکی از نخ‌های منتظر، میوتکس را در خط~\ref{sementer} بگیرد\footnote{
+<<<<<<< HEAD
     البته این تضمین تقریبی است. چرا که یک بیداری نادرست در زمانی مناسب می‌تواند این تضمین را خدشه‌دار کند. برای توضیحات بیشتر لینک 
     \url{http://en.wikipedia.org/wiki/Spurious_wakeup} را مطالعه نمایید. 
     }.
@@ -9389,6 +9390,13 @@ void sem_signal (Semaphore *semaphore)
 %%%Wed 18 Apr 2018 06:34:17 PM +0430
 
 \setLTRbibitems
+=======
+    البته این تضمین تقریبی است. چرا که یک بیداری بهنگام می‌تواند این تضمین را خدشه‌دار کند. برای توضیحات بیشتر لینک 
+    \url{http://en.wikipedia.org/wiki/Spurious_wakeup} را مطالعه نمایید. 
+    }.
+
+
+>>>>>>> 8c9eaa401c95ae1e29a2252a49250fbf34f929a1
 \bibliographystyle{plain}
 \bibliography{book}
 
