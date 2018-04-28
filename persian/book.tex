@@ -9380,34 +9380,46 @@ void sem_signal (Semaphore *semaphore)
 %Line~\ref{sementer} before one of the waiting threads resumes.
     با حلقه {\tt do...while}، زمانیکه یک نخ سیگنال می‌دهد تضمین می‌شود که یکی از نخ‌های در حال انتظار، سیگنال را دریافت نماید 
     حتی اگر نخ دیگری  پیش از ادامه یافتن یکی از نخ‌های منتظر، میوتکس را در خط~\ref{sementer} بگیرد\footnote{
-    البته این تضمین تقریبی است. چرا که یک بیداری بهنگام می‌تواند این تضمین را خدشه‌دار کند. برای توضیحات بیشتر لینک 
+    البته این تضمین تقریبی است. چرا که یک بیداری نادرست در زمانی مناسب می‌تواند این تضمین را خدشه‌دار کند. برای توضیحات بیشتر لینک 
     \url{http://en.wikipedia.org/wiki/Spurious_wakeup} را مطالعه نمایید. 
     }.
+    %%%%% ترجمه فوق بازبینی لازم  دارد. 
 
 
+%%%Wed 18 Apr 2018 06:34:17 PM +0430
+
+\setLTRbibitems
 \bibliographystyle{plain}
 \bibliography{book}
 
 \appendix
 
-\chapter{Cleaning up Python threads}
+%\chapter{Cleaning up Python threads}
+\chapter{تمیزکاری نخ‌های پایتون}
 \label{cleanup}
 
-Compared to a lot of other threading environments, Python threads are
-pretty good, but there are a couple of features that annoy me.
-Fortunately, you can fix them with a little clean-up code.
+%Compared to a lot of other threading environments, Python threads are
+%pretty good, but there are a couple of features that annoy me.
+%Fortunately, you can fix them with a little clean-up code.
+    در مقایسه با  بسیاری از محیط‌های چندنخی، نخ‌های پایتون خیلی خوب هستند، امّا چند تا ویژگی وجود دارد که مرا آزار می‌دهد. 
+    خوشبختانه،‌ با یک کد کوچک تمیزکاری می‌توان این مساله را برطرف نمود. 
 
-\section{Semaphore methods}
+%\section{Semaphore methods}
+\section{متدهای سمافور}
 
-First, the methods for Python semaphores are called {\tt acquire}
-and {\tt release}, which is a perfectly reasonable choice, but
-after working on this book for a couple of years, I am used
-to {\tt signal} and {\tt wait}.  Fortunately, I can have it
-my way by subclassing the version of Semaphore in the
-{\tt threading} module:
+%First, the methods for Python semaphores are called {\tt acquire}
+%and {\tt release}, which is a perfectly reasonable choice, but
+%after working on this book for a couple of years, I am used
+%to {\tt signal} and {\tt wait}.  Fortunately, I can have it
+%my way by subclassing the version of Semaphore in the
+%{\tt threading} module:
+    در ابتدا متدهای سمافورهای پایتون {\tt acquire} و {\tt release} نامیده می شد که انتخابی کاملاً معقول است، امّا پس 
+    از چندین سال کار روی این کتاب، به {\tt signal} و {\tt wait} عادت کرده‌ام. خوشبختانه می‌توانم با تعریف زیرکلاس 
+    نسخه سمافور موجود در ماژول {\tt threading} شیوه خودم را  داشته باشم. 
 
 \begin{latin}
-\begin{lstlisting}[title={Semaphore name change}]{}
+%\begin{lstlisting}[title={Semaphore name change}]{}
+\begin{lstlisting}[title=\rl{تغییر نام سمافور}]{}
 import threading
  
 class Semaphore(threading._Semaphore):
@@ -9416,25 +9428,31 @@ class Semaphore(threading._Semaphore):
 \end{lstlisting}
 \end{latin}
 
-Once this class is defined, you can create and manipulate Semaphores
-using the syntax in this book.
+%Once this class is defined, you can create and manipulate Semaphores
+%using the syntax in this book.
+    زمانیکه این کلاس تعریف شده باشد، می‌توانید با استفاده از نحو این کتاب به ایجاد و دستکاری سمافورها بپردازید. 
 
 \begin{latin}
-\begin{lstlisting}[title={Semaphore example}]{}
+%\begin{lstlisting}[title={Semaphore example}]{}
+\begin{lstlisting}[title=\rl{مثال سمافور}]{}
 mutex = Semaphore()
 mutex.wait()
 mutex.signal()
 \end{lstlisting}
 \end{latin}
 
-\section{Creating threads}
+%\section{Creating threads}
+\section{ایجاد نخ‌}
 
-The other feature of the {\tt threading} module that annoys
-me is the interface for creating and starting threads.  The
-usual way requires keyword arguments and two steps:
+%The other feature of the {\tt threading} module that annoys
+%me is the interface for creating and starting threads.  The
+%usual way requires keyword arguments and two steps:
+    ویژگی دیگری از  ماژول {\tt threading} که مرا می‌رنجاند، واسط\LTRfootnote{interface} ایجاد و شروع نخ‌ها است. 
+    شیوه معمول، متغیرهای کلمه‌کلیدی و دو گام نیاز دارد. 
 
 \begin{latin}
-\begin{lstlisting}[title={Thread example (standard way)}]{}
+%\begin{lstlisting}[title={Thread example (standard way)}]{}
+\begin{lstlisting}[title=\rl{مثال نخ (شیوه معمول)}]{}
 import threading
 
 def function(x, y, z):
@@ -9445,19 +9463,24 @@ thread.start()
 \end{lstlisting}
 \end{latin}
 
-In this example, creating the thread has no immediate effect.
-But when you invoke {\tt start}, the new thread executes
-the target function with the given arguments.
-This is great if you need to do something with the thread
-before it starts, but I almost never do.
-Also, I think the keyword arguments {\tt target} and {\tt args}
-are awkward.
+%In this example, creating the thread has no immediate effect.
+%But when you invoke {\tt start}, the new thread executes
+%the target function with the given arguments.
+%This is great if you need to do something with the thread
+%before it starts, but I almost never do.
+%Also, I think the keyword arguments {\tt target} and {\tt args}
+%are awkward.
+    در این مثال، ایجاد نخ هیچ اثر فوری ندارد. امّا زمانیکه  {\tt start} را فراخوانی می‌کنید، نخ جدید، تابع هدف را با آرگومان‌های داده شده اجرا می‌نماید. 
+    این شیوه در زمانیکه شما باید کاری را روی نخ پیش از شروع آن انجام دهید عالی است،‌ ولی من تقریباً  هرگز چنین نمی‌کنم. 
+    همچنین گمان می‌کنم که آرگومان‌های {\tt target} و {\tt args} نازیبا است. 
 
-Fortunately, we can solve both of these problems with four
-lines of code.
+%Fortunately, we can solve both of these problems with four
+%lines of code.
+    خوشبختانه هر دوی این مسائل را می‌توانیم با چهار خط کد حل نماییم. 
 
 \begin{latin}
-\begin{lstlisting}[title={Cleaned-up Thread class}]{}
+%\begin{lstlisting}[title={Cleaned-up Thread class}]{}
+\begin{lstlisting}[title=\rl{کلاس  نخ تمیزکاری  شده}]{}
 class Thread(threading.Thread):
     def __init__(self, t, *args):
         threading.Thread.__init__(self, target=t, args=args)
@@ -9465,36 +9488,49 @@ class Thread(threading.Thread):
 \end{lstlisting}
 \end{latin}
 
-Now we can create threads with a nicer interface, and they
-start automatically:
+%Now we can create threads with a nicer interface, and they
+%start automatically:
+    اکنون می‌توانیم نخ‌ها را با یک واسط زیباتر ایجاد نماییم و  آن‌ها به طور خودکار شروع می‌شوند. 
 
 \begin{latin}
-\begin{lstlisting}[title={Thread example (my way)}]{}
+%\begin{lstlisting}[title={Thread example (my way)}]{}
+\begin{lstlisting}[title=\rl{مثال نخ (به روش من)
+}]{}
 thread = Thread(function, 1, 2, 3)
 \end{lstlisting}
 \end{latin}
 
-This also lends itself to an idiom I like, which is to create
-multiple Threads with a list comprehension:
+%This also lends itself to an idiom I like, which is to create
+%multiple Threads with a list comprehension:
+    این روش وامدار شیوه‌ای است که می‌پسندم  و آن ایجاد چندین نخ با یک ادراک لیست است. 
+    
+    
 
 \begin{latin}
-\begin{lstlisting}[title={Multiple thread example}]{}
+%\begin{lstlisting}[title={Multiple thread example}]{}
+\begin{lstlisting}[title=\rl{مثال چند نخی}]{}
 threads = [Thread(function, i, i, i) for i in range(10)]
 \end{lstlisting}
 \end{latin}
 
-\section{Handling keyboard interrupts}
+%\section{Handling keyboard interrupts}
+\section{کنترل وقفه‌های صفحه کلید}
 
-One other problem with the {\tt threading} class is that 
-{\tt Thread.join} can't be interrupted by Ctrl-C, which
-generates the signal {\tt SIGINT}, which Python translates
-into a KeyboardInterrupt.
+%One other problem with the {\tt threading} class is that 
+%{\tt Thread.join} can't be interrupted by Ctrl-C, which
+%generates the signal {\tt SIGINT}, which Python translates
+%into a KeyboardInterrupt.
+    یکی دیگر از مشکلات کلاس {\tt threading} این است که {\tt Thread.join} با کلیدهای {\tt Ctrl-C} --که سیگنال  {\tt SIGINT} را تولید می‌نماید 
+     و  پایتون آن را به یک {\tt KeyboardInterrupt} ترجمه می‌نماید-- دچار وقفه نمی‌شود. 
+    
 
 \newpage
-So, if you write the following program:
+%So, if you write the following program:
+    لذا اگر کد زیر را بنویسید: 
 
 \begin{latin}
-\begin{lstlisting}[title={Unstoppable program}]{}
+%\begin{lstlisting}[title={Unstoppable program}]{}
+\begin{lstlisting}[title=\rl{برنامه توقف‌ناپذیر}]{}
 import threading, time
 
 class Thread(threading.Thread):
@@ -9515,17 +9551,24 @@ parent_code()
 \end{lstlisting}
 \end{latin}
 
-You will find that it cannot be interrupted with Ctrl-C or
-a {\tt SIGINT}\footnote{At the time of this writing, this
-bug had been reported and assigned number 1167930, but it was
-open and unassigned (\url{https://sourceforge.net/projects/python/}).}.
-
-My workaround for this problem uses {\tt os.fork} and {\tt os.wait},
-so it only works on UNIX and Macintosh.  Here's how it works:
-before creating new threads, the program invokes {\tt watcher},
-which forks a new process.  The new process returns and executes
-the rest of the program.  The original process waits for the
-child process to complete, hence the name {\tt watcher}:
+%You will find that it cannot be interrupted with Ctrl-C or
+%a {\tt SIGINT}\footnote{At the time of this writing, this
+%bug had been reported and assigned number 1167930, but it was
+%open and unassigned (\url{https://sourceforge.net/projects/python/}).}.
+    درخواهید یافت که کد فوق با {\tt Ctrl-C} یا {\tt SIGINT} دچار وقفه نمی‌شود\footnote{
+    در زمان این نگارش، این باگ به شماره 1167930 گزارش شده است ولی هنوز باز بوده و وضعیت آن نامشخص است.  
+    }.
+%My workaround for this problem uses {\tt os.fork} and {\tt os.wait},
+%so it only works on UNIX and Macintosh.  Here's how it works:
+%before creating new threads, the program invokes {\tt watcher},
+%which forks a new process.  The new process returns and executes
+%the rest of the program.  The original process waits for the
+%child process to complete, hence the name {\tt watcher}:
+    راه حل من برای این مساله از {\tt os.fork} و {\tt os.wait} استفاده می‌کند لذا این راه حل تنها روی سیستم‌های \lr{UNIX} و \lr{Macintosh} 
+    کار می‌کند. شیوه کار بدین صورت است:‌ پیش از ایجاد نخ‌های جدید، برنامه  تابع  {\tt watcher} را که یک فرآیند جدید را ایجاد می‌کند فراخوانی می‌نماید. 
+    فرآیند جدید برمی‌گردد و  مابقی برنامه را اجرا می‌کند. 
+    فرآیند اصلی منتظر تکمیل فرآیند فرزند می‌ماند، از این رو نام آن   {\tt watcher} است. 
+    
 
 \begin{latin}
 \begin{lstlisting}[title={The watcher}]{}
@@ -9559,6 +9602,8 @@ watcher()
 parent_code()
 \end{lstlisting}
 \end{latin}
+
+%%%%Sat 28 Apr 2018 06:18:50 PM +0430   
 
 If you run this version of the program, you should be able
 to interrupt it with Ctrl-C.  I am not sure, but I think it
