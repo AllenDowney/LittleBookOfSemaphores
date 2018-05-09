@@ -9390,13 +9390,6 @@ void sem_signal (Semaphore *semaphore)
 %%%Wed 18 Apr 2018 06:34:17 PM +0430
 
 \setLTRbibitems
-=======
-    البته این تضمین تقریبی است. چرا که یک بیداری بهنگام می‌تواند این تضمین را خدشه‌دار کند. برای توضیحات بیشتر لینک 
-    \url{http://en.wikipedia.org/wiki/Spurious_wakeup} را مطالعه نمایید. 
-    }.
-
-
->>>>>>> 8c9eaa401c95ae1e29a2252a49250fbf34f929a1
 \bibliographystyle{plain}
 \bibliography{book}
 
@@ -9613,54 +9606,72 @@ parent_code()
 
 %%%%Sat 28 Apr 2018 06:18:50 PM +0430   
 
-If you run this version of the program, you should be able
-to interrupt it with Ctrl-C.  I am not sure, but I think it
-is guaranteed that the {\tt SIGINT} is delivered to the
-watcher process, so that's one less thing the
-parent and child threads have to deal with.
+%If you run this version of the program, you should be able
+%to interrupt it with Ctrl-C.  I am not sure, but I think it
+%is guaranteed that the {\tt SIGINT} is delivered to the
+%watcher process, so that's one less thing the
+%parent and child threads have to deal with.
+    اگر این نسخه از برنامه را اجرا کنید،‌ باید بتوانید با استفاده از \lr{ Ctrl-C} آن را دچار وقفه نمایید. 
+    مطمئن نیستم ولی گمان می‌کنم که  ارسال {\tt SIGINT} به فرآیند {\tt watcher} تضمین شده است لذا 
+    این یکی از آن مسائلی است که نخ‌های والد و فرآیند باید با آن برخورد نمایند. 
 
-I keep all this code in a file named {\tt threading\_cleanup.py},
-which you can download from
-\url{greenteapress.com/semaphores/threading\_cleanup.py}
+%I keep all this code in a file named {\tt threading\_cleanup.py},
+%which you can download from
+%\url{greenteapress.com/semaphores/threading\_cleanup.py}
+    تمامی این کد را در فایلی تحت نام {\tt threading\_cleanup.py} قرار داده‌ام که شما می‌توانید آن را از 
+    \url{greenteapress.com/semaphores/threading\_cleanup.py} دانلود نمایید. 
 
 
-The examples in Chapter~\ref{pysync} are presented with the understanding
-that this code executes prior to the example code.
+%The examples in Chapter~\ref{pysync} are presented with the understanding
+%that this code executes prior to the example code.
+    مثال‌های فصل~\ref{pysync} با درک این نکته که این کد پیش از کد مثال، اجرا می‌گردد ارائه شده است. 
 
 
-\chapter{Cleaning up POSIX threads}
+%\chapter{Cleaning up POSIX threads}
+\chapter{تمیزکاری نخ‌های  \lr{POSIX}}
 \label{ccleanup}
 
-In this section, I present some utility code I use to make
-multithreading in C a little more pleasant.  The examples in
-Section~\ref{csync} are based on this code.
+%In this section, I present some utility code I use to make
+%multithreading in C a little more pleasant.  The examples in
+%Section~\ref{csync} are based on this code.
+    در این بخش، چند کد کاربردی که از آن‌ به منظور خوشایندتر نمودن چند نخی در \lr{C} استفاده می‌کنم را ارائه می‌دهم. 
+    مثال‌های بخش~\ref{csync} بر پایه این کد هستند. 
 
-Probably the most popular threading standard used with C is
-POSIX Threads, or Pthreads for short.  The POSIX standard defines
-a thread model and an interface for creating and controlling
-threads.  Most versions of UNIX provide an implementation of
-Pthreads.
+%Probably the most popular threading standard used with C is
+%POSIX Threads, or Pthreads for short.  The POSIX standard defines
+%a thread model and an interface for creating and controlling
+%threads.  Most versions of UNIX provide an implementation of
+%Pthreads.
+    احتمالاً محبوب‌ترین استاندارد چندنخی که در  \lr{C} استفاده می‌شود \lr{POSIX Threads} یا به اختصار \lr{Pthreads} است. 
+    استاندارد  \lr{POSIX} یک مدل نخ و یک واسط برای ایجاد و کنترل نخ‌ها تعریف می‌نماید. 
+    غالب نسخه‌های  \lr{UNIX} یک پیاده‌سازی از \lr{Pthreads} را فراهم می‌نمایند. 
 
-\section{Compiling Pthread code}
+%\section{Compiling Pthread code}
+\section{کامپایل کد \lr{Pthreads} }
 
-Using Pthreads is like using most C libraries:
+%Using Pthreads is like using most C libraries:
+    استفاده از  \lr{Pthreads}  شبیه استفاده از غالب کتاب‌های \lr{C}  است: 
+
 
 \begin{itemize}
 
-\item You include headers files at the beginning of your
-program.
+\item %You include headers files at the beginning of your program.
+    در ابتدای برنامه‌تان باید فایل‌های سرآمد\LTRfootnote{headers files} را وارد نمایید. 
 
-\item You write code that calls functions defined by Pthreads.
+\item %You write code that calls functions defined by Pthreads.
+    کدی می‌نویسید که توابع تعریف‌شده توسط \lr{Pthreads} را فراخوانی می‌نماید. 
 
-\item When you compile the program, you link it with the
-Pthread library.
+\item %When you compile the program, you link it with the Pthread library.
+    با کامپایل برنامه، آن را به کتابخانه \lr{Pthreads} متصل می‌نمایید. 
 
 \end{itemize}
 
-For my examples, I include the following headers:
+%For my examples, I include the following headers:
+    من در مثال‌هایم از سرآمدهای زیر استفاده می‌کنم:
 
 \begin{latin}
-\begin{lstlisting}[title={Headers}]{}
+%\begin{lstlisting}[title={Headers}]{}
+\begin{lstlisting}[title=\rl{سرآمدها}]{}
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
@@ -9668,29 +9679,39 @@ For my examples, I include the following headers:
 \end{lstlisting}
 \end{latin}
 
-The first two are standard; the third is for Pthreads and
-the fourth is for semaphores.
-To compile with the Pthread library in {\tt gcc}, you
-can use the {\tt -l}
-option on the command line:
+%The first two are standard; the third is for Pthreads and
+%the fourth is for semaphores.
+%To compile with the Pthread library in {\tt gcc}, you
+%can use the {\tt -l}
+%option on the command line:
+    دوتای اول سرآمدهای استاندارد هستند؛ سرآمد سوم برای \lr{Pthreads} و چهارمی هم برای سمافورها. 
+    به منظور کامپایل با کتابخانه \lr{Pthreads} در {\tt gcc}، می‌توانید از گزینه {\tt -l} در خط فرمان استفاده نمایید: 
 
 \begin{latin}
-\begin{lstlisting}[title={}]{}
+%\begin{lstlisting}[title={}]{}
+\begin{lstlisting}
 gcc -g -O2 -o array array.c -lpthread
 \end{lstlisting}
 \end{latin}
 
-This compiles {\tt array.c} with debugging info and optimization,
-links with the Pthread library, and generates an executable
-named {\tt array}.
+%This compiles {\tt array.c} with debugging info and optimization,
+%links with the Pthread library, and generates an executable
+%named {\tt array}.
+    دستور فوق  {\tt array.c} را با اطلاعات اشکال‌زدایی و بهینه‌سازی کامپایل نموده، به کتابخانه \lr{Pthreads} متصل کرده و 
+    فایل اجرایی با نام {\tt array} ایجاد می‌نماید. 
 
-If you are used to a language like Python that provides exception
-handling, you will probably be annoyed with languages like C that
-require you to check for error conditions explicitly.  I often
-mitigate this hassle by wrapping library function calls
-together with their error-checking code inside my own functions.
-For example, here is a version of {\tt malloc}
-that checks the return value.
+%If you are used to a language like Python that provides exception
+%handling, you will probably be annoyed with languages like C that
+%require you to check for error conditions explicitly.  I often
+%mitigate this hassle by wrapping library function calls
+%together with their error-checking code inside my own functions.
+%For example, here is a version of {\tt malloc}
+%that checks the return value.
+    اگر شما به زبانی مانند پایتون که مکانیزم مدیریت استثناء را فراهم می‌آورد عادت دارید، احتمالاً زبان‌هایی نظیر \lr{C} که 
+    برای بررسی شرایط خطا نیاز به تصریح دارند برای شما آزار دهنده خواهند بود. 
+%    اغلب با جمع‌کردن فراخوانی توابع کتابخانه‌ای همراه با کد بررسی خطای آن‌ها درون توابع خودم،  این مشکل را کاهش می‌دهم. 
+    اغلب برای کمتر کردن این مشکل، درون توابع خودم، فراخوانی‌ توابع کتابخانه‌ای را همراه با کد بررسی خطای آن‌‌ها، مجمتع می‌نمایم. 
+    برای نمونه، نسخه {\tt malloc} که مقدار خروجی را بررسی می‌نماید در ادامه آمده است. 
 
 \begin{latin}
 \begin{lstlisting}[title={}]{}
@@ -9706,6 +9727,7 @@ void *check_malloc(int size)
 \end{lstlisting}
 \end{latin}
 
+%%%Wed 09 May 2018 06:07:41 PM +0430
 
 \section{Creating threads}
 
