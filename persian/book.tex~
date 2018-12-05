@@ -199,7 +199,7 @@ numbers=left, numberstyle=\tiny, numbersep=10pt}
 
 \item 
     \lr{Se Won} 
-    تصحیحی کوچکی --لکن مهم-- را در ارائه راه حل \lr{Tanenbaum} نسب به مسالهٔ فیلسوف‌های در حال غذا خوردن ارسال نمود.
+    تصحیحی کوچک --لکن مهم-- را در ارائه راه حل \lr{Tanenbaum} نسبت به مسالهٔ فیلسوف‌های در حال غذا خوردن ارسال نمود.
 
 %\item Daniel Zingaro punched a hole in the Dancer's problem, which
 %provoked me to rewrite that section.  I can only hope that it makes more
