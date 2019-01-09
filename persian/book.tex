@@ -128,7 +128,7 @@ numbers=left, numberstyle=\tiny, numbersep=10pt}
 
 در زمانی که سیستم‌عامل را در کالج ولزلی\LTRfootnote{Wellesley College} تدریس کردم این شانس را داشتم تا این رهیافت را بیازمایم. 
 اولین نسخهٔ \emph{کتاب کوچک سمافورها} را در کنار یکی از کتب درسی استاندارد بکار بردم و همگام‌سازی را به صورت موازی با درس اصلی تدریس می کردم.
-هر هفته به دانشجویان چند صفحه از کتاب را می دادم که با یک معما تمام می‌شد و گاهی اوقات یه راهنمایی مختصر نیز داشت. 
+هر هفته به دانشجویان چند صفحه از کتاب را می دادم که با یک معمّا تمام می‌شد و گاهی اوقات یه راهنمایی مختصر نیز داشت. 
 به آن‌ها می‌گفتم که به راهنمایی نگاه نکنند مگر اینکه گیر افتاده باشند.
 
 همچنین به آن‌ها ابزارهایی برای تست راه حل‌هایشان دادم: 
@@ -136,7 +136,7 @@ numbers=left, numberstyle=\tiny, numbersep=10pt}
 
 نتیجه بسیار چشمگیر بود. 
 هر چه زمان بیشتری در اختیار دانشجویان می‌گذاشتم، عمق فهمشان بیشتر می‌شد که تا قبل این ندیده بودم. 
-    مهمتر اینکه غالبشان قادر به حل بیشتر معماها بودند.
+    مهمتر اینکه غالبشان قادر به حل بیشتر معمّاها بودند.
     در برخی موارد،‌ همان راه‌حل‌های کلاسیک را می‌یافتند و در مواردی به رهیافت‌های خلاقانه جدیدی می‌رسیدند. 
     
 وقتی که به کالج اُلین\LTRfootnote{Olin College} منتقل شدم،‌ 
@@ -166,7 +166,7 @@ numbers=left, numberstyle=\tiny, numbersep=10pt}
 در مواردی که از ویژگی‌های مشخص زبان پایتون استفاده می‌نمایم، نحو زبان  و معنای آن را شرح می‌دهم. امیدوارم این تغییرات کتاب را خواناتر نماید.
 
 صفحه بندی این کتاب ممکن است کمی عجیب به نظر آید،  امّا برای صفحات خالی نیز متدی وجود دارد. 
-بعد از هر معما، فضای خالی کافی برای راهنمایی که در صفحه بعد می‌آید و نیز راه‌حلی که در صفحه بعد از آن می‌آید را قرار داده‌ام. 
+بعد از هر معمّا، فضای خالی کافی برای راهنمایی که در صفحه بعد می‌آید و نیز راه‌حلی که در صفحه بعد از آن می‌آید را قرار داده‌ام. 
 زمانی که این کتاب را در کلاسم بکار می‌برم، صفحاتی چند را در یک زمان به ایشان می‌دهم و آنان نیز آن صفحات را در کلاسور جمع‌آوری می‌نمایند. 
 سیستم صفحه‌بندی، این امکان را فراهم می‌سازد تا مسائل را بدون صفحات  راهنمایی و راه‌حل توزیع نمایم. 
 گاهی اوقات صفحات راهنمایی را تا کرده و منگنه می‌زنم و همراه مساله به دانشجویان می‌دهم تا خودشان تصمیم بگیرند که آیا به آن راهنمایی 
@@ -434,15 +434,15 @@ b3 > b2 > a4 > a3
 %%Sun 20 Aug 2017 06:48:49 PM +0430
 %%Wed 02 Jan 2019 06:19:17 PM +0330    revision
 \newpage
-%\section {Non-determinism}
 \section{عدم قطعیت}
 
 %Concurrent programs are often {\bf non-deterministic}, which means it
 %is not possible to tell, by looking at the program, what will happen
 %when it executes.  Here is a simple example of a
 %non-deterministic program:
-    برنامه‌های همروند اغلب \textbf{غیر قطعی}\LTRfootnote{non-determinism} هستند به این معنی که با نگاه به برنامه 
-    امکان اینکه بگوییم با اجرای آن چه چیزی رخ خواهد داد، وجود ندارد. در ادامه یک برنامه سادهٔ غیر قطعی آمده است:
+    برنامه‌های همروند اغلب \textbf{غیر قطعی}\LTRfootnote{non-deterministic} هستند به این معنی که 
+    با نگاه به برنامه نمی‌توانیم بگوییم آن زمانی که برنامه اجرا می‌شود چه اتفاقی خواهد افتاد. 
+    در ادامه یک برنامه سادهٔ غیر قطعی آمده است:
 
 \begin{latin}
 \begin{minipage}[t]{2in}
@@ -462,69 +462,36 @@ print "no"
 \end{minipage}
 \end{latin}
 
-%Because the two threads run concurrently, the order of
-%execution depends on the scheduler.  During any given run
-%of this program, the output might be ``yes no'' or ``no yes''.
     از آنجایی که دو نخ به صورت همروند اجرا می‌شوند، ترتیب اجرا بستگی به زمان‌بند دارد. در هر اجرای این برنامه، خروجی ممکن است 
-    \lr{`yes no''}  یا \lr{``no yes''}
+    \lr{``yes no''}  یا \lr{``no yes''}
      باشد. 
      
-%Non-determinism is one of the things that makes concurrent
-%programs hard to debug.  A program might work correctly
-%1000 times in a row, and then crash on the 1001st run, depending
-%on the particular decisions of the scheduler.
     عدم قطعیت یکی از مواردی است که اشکال‌زدایی برنامه‌های همروند را مشکل می‌سازد. برنامه‌ای ممکن است $1000$ بار بر روی یک سطر به درستی 
     کار کرده و سپس در اجرای $1001$ام بسته به تصمیمات خاص زمان‌بند با مشکل مواجه شده و اجرای برنامه متوقف شود. 
     
-%These kinds of bugs are almost impossible to find by testing;
-%they can only be avoided by careful programming.
-    تقریبا پیدا کردن این نوع خطاها با بررسی کد ناممکن است؛  این نوع  خطاها تنها از طریق دقت در برنامه‌نویسی قابل اجتناب هستند. 
+    پیدا کردن این نوع خطاها با بررسی کد تقریباً ناممکن است؛  این نوع  خطاها تنها از طریق برنامه‌نویسی دقیق قابل اجتناب هستند. 
 
 
-%\section {Shared variables}
 \section {متغیرهای اشتراکی}
 \label{shared}
 
-%Most of the time, most variables in most threads are {\bf local},
-%meaning that they belong to a single thread and no other threads
-%can access them.  As long as that's true, there tend to be few
-%synchronization problems, because threads just don't interact.
     بیشتر مواقع، غالب متغیرها در اکثر نخ‌ها \textbf{محلی}\LTRfootnote{local} هستند، بدین معنی که تنها به یک نخ تعلق دارند و 
-    سایر نخ‌ها نمی‌توانند به آن‌ها دسترسی داشته باشند. تا زمانیکه این نکته برقرار است، مشکلات همگام‌سازی کمی وجود خواهد داشت زیرا که 
+    سایر نخ‌ها نمی‌توانند به آن‌ها دسترسی داشته باشند. تا زمانیکه این نکته برقرار است، مشکلات همگام‌سازی کمی وجود دارد زیرا که 
     نخ‌ها دخالتی در آن متغیرها ندارند. 
 
-%But usually some variables are {\bf shared} among two or more
-%threads; this is one of the ways threads interact with each other.
-%For example, one way to communicate information between threads is
-%for one thread to read a value written by another thread.
-    امّا گاهی اوقات برخی متغیرها بین دو یا چند نخ به صورت \textbf{اشتراکی}\LTRfootnote{shared} هستند؛ این 
+    امّا گاهی اوقات برخی متغیرها بین دو یا چند نخ به صورت \textbf{اشتراکی}\LTRfootnote{shared} در دسترس هستند؛ این 
     یکی از شیوه‌های تعامل نخ‌ها با یکدیگر است. برای مثال، یک راهِ  تبادل اطلاعات بین نخ‌ها، این است که نخی مقداری را بخواند و نخ دیگر آن را بنویسد. 
     
-%If the threads are unsynchronized, then we cannot tell by looking at
-%the program whether the reader will see the value the writer writes
-%or an old value that was already there.
-%Thus many applications enforce the constraint that the reader
-%should not read until after the writer writes.  This is exactly
-%the serialization problem in Section~\ref{serialization}.
-    اگر نخ‌ها ناهمگام باشند آنگاه با نگاه کردن به کد نمی‌توانیم بگوییم که آیا نخ خواننده مقداری را که نویسنده نوشته است می‌بیند یا همان مقدار قبلی را خواهد دید. 
-    لذا بسیاری از برنامه‌ها محدودیت‌هایی را بر روی خواننده‌ها اعمال می‌نمایند تا زمانیکه نویسنده مقدار را ننوشته است چیزی را نخواند. 
-    این دقیقا همان مساله تسلسل است که در بخش~\ref{serialization} آمده است. 
-%Other ways that threads interact are
-%concurrent writes (two or more writers) and concurrent updates
-%(two or more threads performing a read followed by a write).
-%The next two sections deal with these interactions.  The other
-%possible use of a shared variable, concurrent
-%reads, does not generally create a synchronization problem.
+    اگر نخ‌ها ناهمگام باشند آنگاه با نگاه کردن به کد نمی‌توانیم بگوییم که آیا نخ خواننده، مقداری را که نویسنده نوشته است می‌بیند یا همان مقدار قبلی را خواهد دید. 
+    لذا بسیاری از برنامه‌ها محدودیت‌هایی را بر روی خواننده‌ها اعمال می‌نمایند؛ تا زمانیکه نویسنده مقدار را ننوشته است چیزی را نخواند. 
+    این دقیقاً همان مساله تسلسل است که در بخش~\ref{serialization} آمده است. 
     نوشتن همروند (دو یا بیشتر نویسنده) و بروزرسانی همروند (دو یا بیشتر نخ که خواندنی پس از نوشتن دارند)، شیوه‌های دیگری از تعامل 
-    نخ‌ها با یکدیگر است. دو بخش بعدی با این تعاملات سر و کار خواهد داشت. خواندن همروند متغیرهای اشتراکی که گونه دیگری از این تعامل است 
+    نخ‌ها با یکدیگر است. دو بخش بعدی با این تعاملات سر و کار خواهد داشت. خواندن همروند متغیرهای اشتراکی که گونهٔ دیگری از این تعامل است 
     عموماً مشکل همگام‌سازی تولید نمی‌نماید. 
 
 
-%\subsection {Concurrent writes}
 \subsection {نوستن‌های همروند}
-%In the following example, {\tt x} is a shared variable accessed
-%by two writers.
-در این مثال، \lr{\texttt{x}} یک متغیر اشتراکی است که دو خواننده به آن دسترسی دارند. 
+در مثال بعد، \lr{\texttt{x}} یک متغیر اشتراکی است که دو خواننده به آن دسترسی دارند. 
 
 \begin{latin}
 \begin{minipage}[t]{2in}
@@ -545,51 +512,29 @@ x = 7
 \end{minipage}
 \end{latin}
 
-
-%What value of {\tt x} gets printed?  What is the final value of {\tt
-%x} when all these statements have executed?  It depends on the order
-%in which the statements are executed, called the {\bf execution path}.
-%One possible path is $a1 < a2 < b1$, in which case the output of the
-%program is {\tt 5}, but the final value is {\tt 7}.
 کدام مقدار \lr{\texttt{x}} چاپ خواهد شد؟ در پایان اجرای تمام این دستورات، مقدار \lr{\texttt{x}} چیست؟ 
-این بستگی به ترتیب اجرای هر یک از دستورات، که به آن \textbf{مسیر اجرا}\LTRfootnote{execution path} گفته می‌شود، دارد. 
+این بستگی به ترتیب اجرای هر یک از دستورات دارد که به آن \textbf{مسیر اجرا}\LTRfootnote{execution path} گفته می‌شود. 
 $a1 < a2 < b1$ یکی از مسیرهای ممکن است که در آن خروجی برنامه 
 \texttt{$5$} است، درحالی‌که مقدار نهایی \texttt{$7$} خواهد بود. 
 
 
-%Puzzle: What path yields output {\tt 5} and final
-%value {\tt 5}? 
-معما: چه مسیری منجر به خروجی و مقدار نهایی \texttt{$5$} می‌شود؟
+معمّا: چه مسیری منجر به خروجی \texttt{$5$} و مقدار نهایی \texttt{$5$} می‌شود؟
 
+معمّا: چه مسیری منجر به خروجی \texttt{$7$} و مقدار نهایی \texttt{$7$} می‌شود؟
 
-%Puzzle: What path yields output {\tt 7} and final
-%value {\tt 7}?
-معما: چه مسیری منجر به خروجی و مقدار نهایی \texttt{$7$} می‌شود؟
+معمّا: آیا مسیری وجود دارد که منجر به خروجی \texttt{$7$} و مقدار نهایی \texttt{$5$} شود؟ می توانید جواب خود را ثابت کنید؟
 
-%Puzzle: Is there a path that yields output {\tt 7} and final
-%value {\tt 5}?  Can you prove it?
-معما: آیا مسیری وجود دارد که منجر به خروجی \texttt{$7$} و مقدار نهایی \texttt{$5$} شود؟ می توانید جواب خود را ثابت کنید؟
-
-%Answering questions like these is an important part of concurrent
-%programming:  What paths are possible and what are the
 %possible effects?  Can we prove that a given (desirable) effect is
 %necessary or that an (undesirable) effect is impossible?
-پاسخ به چنین سوالاتی یکی از بخش‌های مهم برنامه‌نویسی همروند است: مسیرهای ممکن کدام‌ها هستد و هر یک از این مسیرها چه تاثیراتی دارند؟ 
-    آیا می‌توان ثابت نمود که اثری (خواسته) ضروری است و یا اینکه اثری (ناخواسته) غیر ممکن است. 
+پاسخ به چنین سوالاتی یکی از بخش‌های مهم برنامه‌نویسی همروند است: مسیرهای ممکن کدام‌ها هستند و هر یک از این مسیرها چه تاثیراتی دارند؟ 
+    آیا می‌توان ثابت نمود که اثری (خواسته) ضروری است و یا اینکه اثری (ناخواسته) غیر ممکن است؟
 %%    Wed 23 Aug 2017 06:55:53 PM +0430
 
 
-%\subsection {Concurrent updates}
 \subsection {بروزرسانی‌های همروند}
 
-%An update is an operation that reads the value of a variable, computes
-%a new value based on the old value, and writes the new value.
-%The most common kind of update is an increment, in which the
-%new value is the old value plus one.  The following example
-%shows a shared variable, {\tt count}, being updated concurrently
-%by two threads.
     بروزرسانی عملی است که مقدار متغیری را خوانده، یک مقدار جدید را بر مبنای مقدار قبلی محاسبه نموده و سپس مقدار جدید را می‌نویسد. 
-    رایج‌ترین نوع بروزرسانی، یک افزایش\LTRfootnote{increment}  است که مقدار جدید، مقدار قبلی به اضافه یک واحد است. 
+    رایج‌ترین نوع بروزرسانی، یک افزایش\LTRfootnote{increment}  است که مقدار جدید برابر مقدار قبلی به اضافه یک واحد است. 
     مثال بعد متغیر اشتراکی \texttt{count} را نشان می‌دهد که بوسیله دو نخ به صورت همزمان بروزرسانی می‌گردد. 
 
 \begin{latin}
@@ -610,19 +555,11 @@ count = count + 1
 \end{minipage}
 \end{latin}
 
-%At first glance, it is not obvious that there is a synchronization
-%problem here.  There are only two execution paths, and they
-%yield the same result.
     در نگاه اول، اینکه یک مشکل همگام‌سازی در اینجا وجود دارد اینقدر واضح نیست. 
     تنها دو مسیر اجرا وجود دارد و هر دو، نتیجه‌ای یکسان تولید می‌نمایند. 
     
-%The problem is that these operations are translated into
-%machine language before execution, and in machine language
-%the update takes two steps, a read and a write.
-%The problem is more obvious if we rewrite the code with a temporary
-%variable, {\tt temp}.
     مشکل این است که این دستورات قبل از اجرا به زبان ماشین ترجمه می‌شوند و در زبان ماشین، یک بروزرسانی شامل دو گام است: یک خواندن 
-    و یک نوشتن. اگر کد را، با یک متغیر موقتی \lr{\texttt{temp}} بازنویسی نماییم، این مشکل واضح‌تر خواهد شد. 
+    و یک نوشتن. اگر کد را، با یک متغیر موقتی \texttt{temp} بازنویسی نماییم، این مشکل واضح‌تر خواهد شد. 
 
 \begin{latin}
 \begin{minipage}[t]{2in}
@@ -644,61 +581,32 @@ count = temp + 1
 \end{minipage}
 \end{latin}
 
-%Now consider the following execution path 
     اکنون مسیر اجرای زیر را در نظر بگیرید
     
 \[  a1 < b1 < b2 < a2  \]
 
-%Assuming that the
-%initial value of {\tt x} is {\tt 0},
-%what is its final value?  Because
-%both threads read the same initial value, they write
-%the same value.  The variable is only incremented once, which
-%is probably not what the programmer had in mind.
     اگر مقدار اولیه \lr{\texttt{x}} برابر \texttt{$0$} باشد، مقدار نهایی چند است؟
     از آنجایی که هر دو نخ مقدار اولیه یکسانی را می‌خوانند، هر دو مقدار یکسانی را می‌نویسند. 
     این متغیر تنها یک مرتبه افزایش می‌یابد که احتمالاً آن چیزی نیست که برنامه‌نویس در ذهن خود داشته است. 
 
-%This kind of problem is subtle because it is not always possible to
-%tell, looking at a high-level program, which operations are
-%performed in a single step and which can be interrupted.
-%In fact, some computers provide an increment instruction that
-%is implemented in hardware and cannot be interrupted.
-%An operation that cannot be interrupted is said to be
-%{\bf atomic}.
     چنین مسائلی از ظرافت بالایی برخودار هستند 
-    زیرا که     همیشه این امکان وجود ندارد که با نگاه کردن به یک برنامه سطح‌بالا 
+    زیرا که     همیشه این امکان وجود ندارد که با نگاه کردن به یک برنامهٔ سطح‌بالا 
     بگوییم کدام عملیات در یک گام انجام شده و کدام‌ها وقفه‌پذیر هستند. 
-    در واقع،‌ برخی کامپیوترها دستور افزایشی را فراهم می‌آورند که به صورت سخت‌افزاری پیاده‌سازی شده است و وقفه‌پذیر نیست. 
+    در واقع،‌ برخی کامپیوترها نوعی دستور افزایشی را فراهم می‌آورند که به صورت سخت‌افزاری پیاده‌سازی شده است و وقفه‌پذیر نیست. 
     عملی که وقفه‌پذیر نباشید \textbf{اتمی}\LTRfootnote{atomic} گفته می‌شود. 
 
-%So how can we write concurrent programs if we don't know which
-%operations are atomic?  One possibility is to collect specific
-%information about each operation on each hardware platform.
-%The drawbacks of this approach are obvious.
     خوب اگر ندانیم چه اعمالی اتمی هستند چگونه می توانیم برنامه‌هایی همروند بنویسیم؟
-    یک روش، جمع‌آوری اطلاعات مشخصی درباره در عمل بر روی هر سکوی سخت‌افزاری است. 
+    یک روش، جمع‌آوری اطلاعات مشخصی درباره هر عمل بر روی هر سکوی سخت‌افزاری است. 
     ایرادات این رهیافت  واضح است. 
 
-%The most common alternative is to make the conservative
-%assumption that all updates and all writes are not atomic,
-%and to use synchronization constraints to control concurrent
-%access to shared variables.
     رایج‌ترین جایگزین این است که محتاطانه فرض کنیم تمامی بروزرسانی‌ها و نوشتن‌ها اتمی نیستند و 
     از محدودیت‌های همگام‌سازی به منظور کنترل دسترسی همروند به متغیرهای اشتراکی استفاده نماییم. 
 
-%The most common constraint is mutual exclusion, or mutex,
-%which I mentioned in Section~\ref{synch}.  Mutual exclusion guarantees
-%that only one thread accesses a shared variable at a time,
-%eliminating the kinds of synchronization errors in this section.
     معمول‌ترین محدودیت انحصار متقابل\LTRfootnote{mutual exclusion} یا \lr{mutex} است که 
     در بخش~\ref{synch}  اشاره شد. انحصار متقابل تضمین می‌نماید در یک زمان خاص  فقط یک نخ به متغیر اشتراکی دسترسی دارد 
     که موجب برطرف شدن این نوع خطاهای همگام‌سازی مطرح شده در این بخش می‌گردد. 
     
-%Puzzle: Suppose that 100 threads run the following program concurrently
-%(if you are not familiar with Python, the {\tt for} loop runs the update
-%100 times.):
-    معمّا: فرض کنید $100$ تا نخ برنامه زیر را به صورت همزمان اجرا می‌نمایند (اگر با زبان پایتون آشنا نیستند حلقهٔ \texttt{for} یکصد مرتبه 
+    معمّا: فرض کنید $100$ تا نخ، برنامه زیر را به صورت همزمان اجرا می‌نمایند (اگر با زبان پایتون آشنا نیستند حلقهٔ \texttt{for} یکصد مرتبه 
     بروزرسانی انجام می‌دهد.):
 
 \begin{latin}
@@ -711,38 +619,24 @@ for i in range(100):
 \end{latin}
 \end{latin}
 
-%What is the largest possible value of {\tt count} after all threads
-%have completed?  What is the smallest possible value?
-    بزرگترین مقدار ممکن \lr{\texttt{count}} پس از اجرای تمام نخ‌ها چقدر است؟ کوچکترین مقدار ممکن چقدر است؟ 
+    بزرگترین مقدار ممکن \texttt{count} پس از اجرای تمام نخ‌ها چقدر است؟ کوچکترین مقدار ممکن چقدر است؟ 
     
 
-%Hint: the first question is easy; the second is not.
     راهنمایی: سوال اول ساده ولی دومی به آن سادگی نیست. 
 
-%\subsection {Mutual exclusion with messages}
 \subsection {انحصار متقابل با تبادل پیام}
 
 
-%Like serialization, mutual exclusion
-%can be implemented using message passing.  For example, imagine that
-%you and Bob operate a nuclear reactor that you monitor from remote
-%stations.  Most of the time, both of you are watching for warning
-%lights, but you are both allowed to take a break for lunch.  It
-%doesn't matter who eats lunch first, but it is very important that
-%you don't eat lunch at the same time, leaving the reactor unwatched!
     همانند تسلل، انحصار متقابل می‌تواند با استفاده از تبادل پیام پیاده‌سازی شود. برای مثال، فرض کنید شما و باب 
-    با یک راکتور هسته‌ای سر و کار دارد و آن را از راه دور کنترل می‌نمایید. غالب زمان‌ها، هر دو شما چراغ‌های اخطار را مشاهده می‌نمایید 
+    با یک راکتور هسته‌ای سر و کار دارد و آن را از راه دور تحت نظر دارید. غالب زمان‌ها، هر دوی شما چراغ‌های اخطار را زیر نظر دارید 
     امّا هر دو اجازه دارید برای ناهار  دست از کار بکشید. 
-    اینکه چه کسی اول ناهار می‌خورد اهمیتی ندارد امّا مهم است که ناهار هر دوی شما همزمان نباشد تا راکتور بدون نظارات باقی نماند!
+    اینکه چه کسی اول ناهار می‌خورد اهمیتی ندارد امّا مهم است که ناهار هر دوی شما همزمان نباشد تا راکتور بدون نظارت باقی نماند!
 
-%Puzzle: Figure out a system of message passing (phone calls) that
-%enforces these restraints.  Assume there are no clocks, and you
-%cannot predict when lunch will start or how long it will last.  What
-%is the minimum number of messages that is required?
     معمّا: فرض کنید از یک سیستم تبادل پیام (تماس‌های تلفنی) برای اعمال این محدودیت‌ها استفاده می‌کنید. 
-    هیچ ساعتی وجود ندرد و شما نمی‌توانید زمان شروع ناهار یا مدت زمان صرف ناهار را پیش‌بینی کنید. 
+    هیچ ساعتی وجود ندارد و شما نمی‌توانید زمان شروع ناهار یا مدت زمان صرف ناهار را پیش‌بینی کنید. 
     حداقل تعداد تماس‌های لازم چقدر است؟
     %%Sun 27 Aug 2017 06:10:15 PM +0430   
+%%%    Wed 09 Jan 2019 06:22:32 PM +0330    revision
     
 \clearemptydoublepage
 %\chapter{Semaphores}
@@ -1325,7 +1219,7 @@ statement b2
     
 %Puzzle: Add semaphores to the following example to
 %enforce mutual exclusion to the shared variable {\tt count}.
-    معما: سمافورهایی به مثال زیر بیفزایید تا انحصار متقابل متغیر اشتراکی \lr{\texttt{count}} را اعمال نمایند. 
+    معمّا: سمافورهایی به مثال زیر بیفزایید تا انحصار متقابل متغیر اشتراکی \lr{\texttt{count}} را اعمال نمایند. 
     
 \begin{latin}
 \begin{minipage}[t]{2in}
@@ -1457,7 +1351,7 @@ mutex.signal()
 %enforces an upper limit on the number of concurrent threads.  In other
 %words, no more than {\tt n} threads can run in the critical section at
 %the same time.
-    معما: راه حل قبل را چنان تعمیم دهید که به چند نخ اجازه دهد به صورت همزمان در ناحیه بحرانی اجرا شوند اما یک حدّ بالا روی تعداد 
+    معمّا: راه حل قبل را چنان تعمیم دهید که به چند نخ اجازه دهد به صورت همزمان در ناحیه بحرانی اجرا شوند اما یک حدّ بالا روی تعداد 
     نخ‌های همروند اعمال شود. به عبارت دیگر، بیش از \lr{\texttt{n}} نخ به صورت همزمان در ناحیه بحرانی اجرا نشود. 
     
 %This pattern is called a {\bf multiplex}.  In real life, the multiplex
@@ -2242,11 +2136,11 @@ barrier.wait()              # wait at a barrier
 
     به طور مشابه، زمانیکه یک دنباله‌رو می‌رسد، او ابتدا چک می‌کند که آیا جلوداری وجود دارد یا خیر و منطبق با داخل شده یا صبر می‌نماید. 
 
-    معما:  کدی بنویسید برای جلو‌دارها و دنباله‌رو‌ها که این شرایط در آن صدق کند.
+    معمّا:  کدی بنویسید برای جلو‌دارها و دنباله‌رو‌ها که این شرایط در آن صدق کند.
 
 
 \clearemptydoublepage
-\subsection {راهنمایی برای معما}
+\subsection {راهنمایی برای معمّا}
 
     در اینجا متعیرهایی آمده است که در راه حل خود بکار برده‌ام: 
 
@@ -2309,7 +2203,7 @@ dance()
     فراخواند و بالعکس. به عبارت دیگر، باید با کسی که شما را آورده است برقصید\footnote{متن آهنگ اجرا شده توسط \lr{Shania Twain}}. 
 %برای اینکه جالب تر باشد، فرض کنید یک شرط اضافه را به هر کدام از جلودار‌ها که می توانند {\tt dance} را به شکل همزمان صدا بزنند با تنها یک دنباله‌رو و برعکس، اضافه کنیم. به معنی دیگر شما می توانید برقصید با کسی که شما را آورده است\footnote{ترانه توسط شاینا تیواین}.
 
-    معما: یک راه حل برای این مساله «صف انحصاری» ارائه کنید.
+    معمّا: یک راه حل برای این مساله «صف انحصاری» ارائه کنید.
 
 \clearemptydoublepage
 \subsection {راهنمای صف انحصاری}
@@ -2519,7 +2413,7 @@ event.process()
 
 %Puzzle: Add synchronization statements to the producer and
 %consumer code to enforce the synchronization constraints.
-    معما: دستورات همگام‌سازی را به کد تولید‌کننده و مصرف‌کننده بیفزایید تا محدودیت‌های همگام‌سازی اعمال شود.
+    معمّا: دستورات همگام‌سازی را به کد تولید‌کننده و مصرف‌کننده بیفزایید تا محدودیت‌های همگام‌سازی اعمال شود.
 
 \clearemptydoublepage
 %\subsection{Producer-consumer hint}
