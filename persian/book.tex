@@ -639,119 +639,74 @@ for i in range(100):
 %%%    Wed 09 Jan 2019 06:22:32 PM +0330    revision
     
 \clearemptydoublepage
-%\chapter{Semaphores}
 \chapter{سمافورها}
 
-%In real life a semaphore is a system of signals used to communicate
-%visually, usually with flags, lights, or some other mechanism.  In
-%software, a semaphore is a data structure that is useful for solving a
-%variety of synchronization problems.
-    در دنیای واقعی، سمافور یک سیستم از سیگنال‌هایی است که به منظور ارتباط بصری بکار می‌رود این سیگنال‌ها معمولا پرچم،‌ نور یا مکانیزم دیگری است. 
+    در دنیای واقعی، سمافور یک سیستم از سیگنال‌هایی است که به منظور ارتباط بصری بکار می‌رود این سیگنال‌ها معمولاً پرچم،‌ نور یا مکانیزم دیگری هستند. 
     در نرم‌افزار، سمافور ساختمان داده‌ای است که برای حل انوع گوناگونی از مسائل همگام‌سازی مفید است.
 
-%Semaphores were invented by Edsger Dijkstra, a famously eccentric
-%computer scientist.  Some of the details have changed since the
-%original design, but the basic idea is the same.
+%Semaphores were invented by Edsger Dijkstra, a famously eccentric computer scientist.  
     سمافورها توسط \lr{Edsger Dijkstra} --دانشمند مشهور و اعجوبه کامپیوتر-- ابداع گردیده است. 
-    از زمان طراحی اولیه برخی از جزئیات تغییر کرده است ولی ایدهٔ اصلی یکسان است. 
+    از زمان طراحی اولیه، برخی از جزئیات تغییر کرده است ولی ایدهٔ اصلی یکسان است. 
 
-%\section{Definition}
 \section{تعریف}
-
 %A semaphore is like an integer, with three differences:
-    سمافور شبیه یک عدد صحیح منتهی با سه تفاوت است: 
+    سمافور شبیه یک عدد صحیح است امّا با سه تفاوت: 
 
 \begin{enumerate}
 
 \item 
-%When you create the semaphore, you can initialize its value to
-%any integer, but after that the only operations you are allowed to
-%perform are increment (increase by one) and decrement (decrease by
-%one).  You cannot read the current value of the semaphore.
-    زمانیکه سمافوری را ایجاد می‌نمایید مقدار اولیه آن را می‌توانید هر عدد صحیحی قرار دهید، امّا پس از آن تنها اعمال مجاز، افزایش و کاهش آن هم 
-    به اندازه یک واحد است و مقدار جاری سمافور را نمی‌تواند بخوانید. 
+    زمانیکه سمافوری را ایجاد می‌نمایید مقدار اولیه آن را می‌توانید هر عدد صحیحی قرار دهید، 
+    امّا پس از آن تنها اعمال مجاز، افزایش و کاهش، آن هم 
+    به اندازه یک واحد است و مقدار جاری سمافور را نمی‌توانید بخوانید. 
 
 \item 
-%When a thread decrements the semaphore, if the result is
-%negative, the thread blocks itself and cannot continue until another
-%thread increments the semaphore.
-    زمانیکه نخی سمافوری را کاهش می‌دهد اگر نتیجه  مقداری منفی باشد، نخ خودش را مسدود\LTRfootnote{block} نموده 
+    زمانیکه یک نخ، سمافور را کاهش می‌دهد اگر نتیجه  مقداری منفی باشد، نخ \space خودش را مسدود\LTRfootnote{block} نموده 
     و تا زمانیکه نخ دیگری آن سمافور را افزایش ندهد نمی‌تواند ادامه دهد. 
 \item 
-%When a thread increments the semaphore, if there are other
-%threads waiting, one of the waiting threads gets unblocked.
     زمانیکه یک نخ مقدار سمافور را افزایش می‌دهد، اگر نخ‌های دیگری در انتظار باشند آنگاه یکی از نخ‌های در حال انتظار،‌ از حالت انسداد خارج می‌شود. 
 
 \end{enumerate}
 
-%To say that a thread blocks itself (or simply ``blocks'') is to say
-%that it notifies the scheduler that it cannot proceed.  The scheduler
-%will prevent the thread from running until an event occurs that causes
-%the thread to become unblocked.  In the tradition of mixed metaphors
-%in computer science, unblocking is often called ``waking''.
-    وقتی می‌گوییم یک نخ خود را مسدود کرده است %(یا ساده‌تر ''مسدوده شده``) 
+%In the tradition of mixed metaphors in computer science, unblocking is often called ``waking''.
+    وقتی می‌گوییم یک نخ خود را مسدود کرده است 
     منظور این است که به زمان‌بند اعلام می‌نماید که دیگر نمی‌تواند ادامه دهد. 
-    تا زمانیکه واقع‌ای سبب رفع انسداد نخ نگردد زمان‌بند مانع اجرای نخ می‌گردد. 
+    تا زمانیکه رخدادی سبب رفع انسداد نخ نگردد زمان‌بند مانع اجرای نخ می‌گردد. 
     در استعارات رایج علم کامپیوتر رفع انسداد اغلب بیدار شدن\LTRfootnote{waking} گفته می‌شود.
 
 %That's all there is to the definition, but there are some
 %consequences of the definition you might want to think about.
     تمام تعریف همین است،‌  
-    امّا این تعریف پی‌آمدهای در پی دارد که ممکن است بخواهید درباره آن‌ها بیندیشید. 
+    امّا این تعریف پی‌آمدهایی در پی دارد که ممکن است بخواهید درباره آن‌ها بیندیشید. 
 
 \begin{itemize}
 
 \item 
-%In general, there is no way to know before a thread decrements a
-%semaphore whether it will block or not (in specific cases you might
-%be able to prove that it will or will not).
-    به طور کلی، نمی‌توان از قبل گفت که کاهش سمافور توسط یک نخ منجر به مسدود شدن آن می‌شود یا نه 
-%     پیش از اینکه سمافوری توسط یک نخ کاهش داده شود هیچ راهی نداریم که پیشاپیش بدانیم این کاهش سبب انسداد خواهد شد یا خیر 
-    (در حال‌ت‌های خاص ممکن است بتوانید ثابت کنید که مسدود می‌شود یا خیر).
+    به طور کلی، نمی‌توان از قبل گفت که کاهش سمافور توسط یک نخ منجر به مسدود شدن آن نخ می‌شود یا نه 
+    (در حالت‌های خاص ممکن است بتوانید ثابت کنید که مسدود می‌شود یا خیر).
 
 
 \item 
-%After a thread increments a semaphore and another thread gets
-%woken up, both threads continue running concurrently.  There is no way
-%to know which thread, if either, will continue immediately.
+%There is no way to know which thread, if either, will continue immediately.
     پس از اینکه نخی یک سمافور را افزایش داد و نخ دیگری بیدار شد، هر دو نخ به صورت همروند اجرای خود را ادامه می‌دهند. 
-    هیچ راهی وجود ندارد که بدانیم کدام از این دو نخ، بلافاصله ادامه می‌یابد. 
+    هیچ راهی وجود ندارد که بدانیم کدامیک از این دو نخ، بلافاصله ادامه می‌یابد. 
 
 \item 
-%When you signal a semaphore, you don't necessarily know whether
-%another thread is waiting, so the number of unblocked threads may
-%be zero or one.
     زمانیکه به یک سمافور سیگنال می‌دهید ضرورتاً نمی‌دانید که آیا نخی در حالت انتظار هست یا نه؟ لذا تعداد نخ‌های رفع انسداد شده ممکن است 
     صفر یا یک باشد. 
 
 \end{itemize}
 
-%Finally, you might want to think about what the value of the
-%semaphore means.  If the value is positive, then it represents the
-%number of threads that can decrement without blocking.  If it
-%is negative, then it represents the number of threads that have
-%blocked and are waiting.  If the value is zero, it means there
-%are no threads waiting, but if a thread tries to decrement, it
-%will block.
-    نهایتاً، ممکن است فکر کنید مقدار سمافور چه معنایی دارد؟ %بخواهید درباره معنای مقدار سمافور بیندیشید. 
+    نهایتاً، ممکن است فکر کنید مقدار سمافور چه معنایی دارد؟ 
     اگر مقدار مثبت باشد نشانگر تعداد نخ‌هایی است که می‌توانند بدون بلاک شدن کاهش یابند. 
-    اگر مقدار منفی باشد نشانگر تعداد نخ‌هایی است که مسدوده شده و در حالت انتظار هستند. 
-    اگر مقدار صفر باشد به این معنی است که نخ در حالت انتظار نیست امّا اگر نخی سمافور را کاهش دهد، مسدود خواهد شد.
+    اگر مقدار منفی باشد نشانگر تعداد نخ‌هایی است که مسدود شده و در حالت انتظار هستند. 
+    اگر مقدار صفر باشد به این معنی است که هیچ نخی در حالت انتظار نیست امّا اگر نخی سمافور را کاهش دهد، مسدود خواهد شد.
     
 
-%\section{Syntax}
 \section{نحو}
 
-%In most programming environments, an implementation of semaphores is
-%available as part of the programming language or the operating system.
-%Different implementations sometimes offer slightly different
-%capabilities, and usually require different syntax.
     در بیشتر محیط‌های برنامه‌نویسی، پیاده‌سازی سمافور به صورت بخشی از زبان برنامه‌نویسی یا سیستم‌عامل موجود است. 
     گاهی اوقات پیاده‌سازی‌های مختلف،‌ اندک توانایی‌های متفاوتی را فراهم آورده و نحو متفاوتی را نیاز دارند.
 
-%In this book I will use a simple pseudo-language to demonstrate
-%how semaphores work.  The syntax for creating a new semaphore
-%and initializing it is
     در این کتاب از یک شبه زبان\LTRfootnote{pseudo-language} ساده به منظور نمایش شیوهٔ عملکرد سمافورها استفاده می‌کنیم. 
     نحوِ ایجاد یک سمافور و مقداردهی اولیه آن در ادامه آمده است.
 %
@@ -764,14 +719,9 @@ fred = Semaphore(1)
 \end{latin}
 \end{latin}
 %
-%The function {\tt Semaphore} is a constructor; it creates and
-%returns a new Semaphore.  The initial value of the semaphore
-%is passed as a parameter to the constructor.
-    تابع \lr{\texttt{Semaphore}} سازنده‌ای\LTRfootnote{constructor} است که یک سمافور را ایجاد نموده 
+    تابع \texttt{Semaphore} سازنده‌ای\LTRfootnote{constructor} است که یک سمافور را ایجاد نموده 
     و آن را بر می‌گرداند. مقدار اولیه سمافور به عنوان یک پارامتر به سازنده ارسال می‌گردد. 
 
-%The semaphore operations go by different names in different environments.
-%The most common alternatives are 
     اعمال سمافور در محیط‌های مختلف نام‌های گوناگونی دارند. رایج‌ترین آن‌ها عبارت است از:
 %
 \begin{latin}
@@ -810,32 +760,19 @@ fred.P()
 \end{latin}
 \end{latin}
 %
-%It may be surprising that there are so many names, but there is a
-%reason.  {\tt increment} and {\tt decrement}
-%describe what the operations {\em do}.  {\tt signal} and {\tt wait}
-%describe what they are often {\em used for}.  And {\tt V} and {\tt P} were
-%the original names proposed by Dijkstra, who wisely realized that a
-%meaningless name is better than a misleading name\footnote{If you speak
-%Dutch, {\tt V} and {\tt P} aren't completely meaningless.}.
-    وجود این همه نام ممکن تعجب بر انگیز باشد امّا بی‌دلیل نیست. 
-    \lr{\texttt{increment}} و \lr{\texttt{decrement}}
+    وجود این همه نام ممکن است تعجب بر انگیز باشد امّا بی‌دلیل نیست. 
+    \texttt{increment} و \texttt{decrement}
     بیان می‌نمایند که این اعمال چه انجام می‌دهند. 
-    \lr{\texttt{signal}} و \lr{\texttt{wait}}
-    شرح می‌دهند که به اغلب به چه هدفی به کار می‌روند. و
-    \lr{\texttt{V}} و \lr{\texttt{P}}
-    نام‌های پیشنهادی \lr{Dijkstra} هستند و او به خوبی می‌دانست که یک نام بی‌معنی بهتر از نامی گمراه کننده است\footnote{
-    اگر زبان شما هلندی باشد \lr{\texttt{V}} و \lr{\texttt{P}} آنقدرها هم بی‌معنی نیستند.}. 
+    \texttt{signal} و \texttt{wait}
+    شرح می‌دهند که اغلب به چه هدفی به کار می‌روند. و
+    \texttt{V} و \texttt{P}
+    نام‌های پیشنهادی \lr{Dijkstra} هستند و او به خوبی می‌دانست که یک نام بی‌معنی بهتر از نامی گمراه کننده است\footnote{%
+    اگر زبان شما هلندی باشد \texttt{V} و \texttt{P} آنقدرها هم بی‌معنی نیستند.}. 
 
-%I consider the other pairs misleading because {\tt increment} and {\tt
-%decrement} neglect to mention the possibility of blocking and waking,
-%and semaphores are often used in ways that have nothing to do with
-%{\tt signal} and {\tt wait}.
-    بقیه‌ٔ اسامی را گمراه کننده می‌دانم زیرا که  \lr{\texttt{increment}} و \lr{\texttt{decrement}} 
-    هیچ اشاره‌ای به امکان انسداد و رفع انسداد ندارند و سمافورها اغلب به گونه‌ای استفاده می‌شوند که کاری با 
-    \lr{\texttt{signal}} و \lr{\texttt{wait}}
+    بقیه‌ٔ اسامی را گمراه کننده می‌دانم زیرا که  \texttt{increment} و \texttt{decrement}
+    هیچ اشاره‌ای به امکان انسداد و رفع انسداد ندارند و سمافورها اغلب به گونه‌ای استفاده می‌شوند که کاری با \texttt{signal} و \texttt{wait}
     ندارند. 
     
-%If you insist on meaningful names, then I would suggest these:
     اگر اصرار به نام‌هایی با معنی دارید، نام‌های زیر را به شما پیشنهاد می‌کنم:
     
 
@@ -849,15 +786,11 @@ fred.decrement_and_block_if_the_result_is_negative()
 \end{latin}
 \end{latin}
 
-%I don't think the world is likely to embrace either of these names
-%soon.  In the meantime, I choose (more or less arbitrarily) to use
-%{\tt signal} and {\tt wait}.
-    گمان نمی‌کنم کسی به این زود‌ی این اسامی را بپذیرد. با این وجود، به منظور استفاده، 
-    \lr{\texttt{signal}} و \lr{\texttt{wait}} را انتخاب می‌کنم.
+    گمان نمی‌کنم کسی به این زود‌ی این اسامی را بپذیرد. فعلاً تا آن زمان، \texttt{signal} و \texttt{wait}
+     را برای استفاده انتخاب می‌کنم.
     
 
-
-%\section{Why semaphores?}
+%%%Wed 16 Jan 2019 05:32:23 PM +0330  :revision
 \section{چرا سمافورها؟}
 
 %Looking at the definition of semaphores, it is not at all obvious why
@@ -1132,7 +1065,7 @@ statement b2
 %case it blocks, allowing A to reach its {\tt signal}, after
 %which both threads can proceed.
     اگر اول   \lr{A}  برسد باید منتظر   \lr{B} بماند. زمانیکه   \lr{B}  رسید   \lr{A}   را بیدار نموده و ممکن است بلافاصله 
-    ادامه یافته و به   \lr{\texttt{wait}} برسد و مسدود شود تا اجازه دهد که  \lr{A}    به  \lr{\texttt{signal}} برسد که پس از آن 
+    ادامه یافته و به   \texttt{wait} برسد و مسدود شود تا اجازه دهد که  \lr{A}    به  \texttt{signal} برسد که پس از آن 
     هر دو نخ بتواند ادامه یابد. 
 
 %Think about the other possible paths through this code and
@@ -1177,7 +1110,7 @@ statement b2
 %able to signal {\tt aArrived}.  At this point, neither thread
 %can proceed, and never will.
     اگر چنین است، امیدوارم خیلی سریع آن را رد کنید، زیرا که این طراحی مشکلی جدی دارد. فرض کنید ابتدا \lr{A} برسد 
-    در خط \lr{\texttt{wait}} مسدود می‌شود. وقتیکه \lr{B}  برسد، آن نیز مسدود خواهد شد زیرا که \lr{A} نمی‌تواند به \lr{\texttt{aArrived}} 
+    در خط \texttt{wait} مسدود می‌شود. وقتیکه \lr{B}  برسد، آن نیز مسدود خواهد شد زیرا که \lr{A} نمی‌تواند به \lr{\texttt{aArrived}} 
     پیام دهد. این این نقطه، هیچکدام از نخ‌ها ادامه نیافته و هرگز نیز ادامه نمی‌یابند. 
 
 %This situation is called a {\bf deadlock} and, obviously, it is
@@ -1288,8 +1221,8 @@ mutex.signal()
 %Of course, the act of waiting on the semaphore has the effect
 %of decrementing it, so the second thread to
 %arrive will have to wait until the first signals.
-    از آنجایی که مقدار اولیه  \lr{mutex}  $1$ است، اولین نخی که \lr{\texttt{wait}} در کد خود می‌رسد می‌تواند بلافاصله ادامه یابد.
-    البته عمل انتظار روی سمافور موجب کاهش مقدار آن می‌گردد لذا دومین نخ به  \lr{\texttt{wait}} می‌رسد باید منتظر پیام‌دهی نخ اول بماند. 
+    از آنجایی که مقدار اولیه  \lr{mutex}  $1$ است، اولین نخی که \texttt{wait} در کد خود می‌رسد می‌تواند بلافاصله ادامه یابد.
+    البته عمل انتظار روی سمافور موجب کاهش مقدار آن می‌گردد لذا دومین نخ به  \texttt{wait} می‌رسد باید منتظر پیام‌دهی نخ اول بماند. 
 
 %I have indented the update operation to show that it is contained
 %within the mutex.
@@ -1434,7 +1367,7 @@ multiplex.signal()
 %tokens are available when a thread arrives, it waits until
 %another thread releases one.
     با در نظر گرفتن تعابیر گذشته،‌ در این حالت بهتر است سمافورها به صورت مجموعه‌ای از توکن‌ها دیده شود (تا یک قفل). 
-    هر نخ که \lr{\texttt{wait}} را فراخوانی نماید،  یکی از توکن‌ها را در اختیار می گیرد؛‌ زمانی که \lr{\texttt{signal}} را فراخواند 
+    هر نخ که \texttt{wait} را فراخوانی نماید،  یکی از توکن‌ها را در اختیار می گیرد؛‌ زمانی که \texttt{signal} را فراخواند 
     آن توکن را رها می‌نماید. فقط نخی که توکنی در اختیار دارد می‌تواند به اتاق وارد شود.  زمانی که یک نخ می‌رسد اگر هیچ توکنی موجود نباشد 
     باید تا زمانی که نخ دیگری توکنی را رها نماید، منتظر بماند. 
 
@@ -1622,14 +1555,14 @@ critical point
 %The only change is another {\tt signal} after waiting
 %at the barrier.  Now as each thread passes, it signals the
 %semaphore so that the next thread can pass.
-    تنها تغییر، یک \lr{\texttt{signal}} دیگر پس از انتظار برای حصار است. 
+    تنها تغییر، یک \texttt{signal} دیگر پس از انتظار برای حصار است. 
     اکنون، پس از اینکه هر نخ عبور کرد، به سمافور پیام می‌دهد که نخ بعدی می‌تواند عبور کند. 
 
 %This pattern, a {\tt wait} and a {\tt signal} in rapid
 %succession, occurs often enough that it has a name;
 %it's called a {\bf turnstile}, because it allows one thread to pass
 %at a time, and it can be locked to bar all threads.
-    این الگو --یک \lr{\texttt{wait}} و یک \lr{\texttt{signal}} بلافاصله پشت سر هم-- آنقدر رایج است که یک نام دارد: \lr{turnstile}
+    این الگو --یک \texttt{wait} و یک \texttt{signal} بلافاصله پشت سر هم-- آنقدر رایج است که یک نام دارد: \lr{turnstile}
     \LTRfootnote{turnstile}، 
     زیرا که در یک زمان به تنها یک نخ اجازه عبور می‌دهد و می‌تواند قفل شود تا تمام نخ‌ها را نگه دارد. 
     
@@ -1776,7 +1709,7 @@ if count == 0: turnstile.wait()         (*\label{problem2}*)
 
 %Similarly, at Line~\ref{problem2} it is possible for multiple
 %threads to {\tt wait}, which will cause a deadlock.
-    به طور مشابه در خط ~\ref{problem2} ممکن است چندین نخ \lr{\texttt{wait}}  را اجرا نماید که منجر به بن‌بست خواهد شد. 
+    به طور مشابه در خط ~\ref{problem2} ممکن است چندین نخ \texttt{wait}  را اجرا نماید که منجر به بن‌بست خواهد شد. 
 
 %Puzzle: Fix the problem.
     معمّا: مشکل را حل نمایید. 
@@ -1994,7 +1927,7 @@ turnstile2.signal()
 %The only thing to keep in mind is that the multiple signals are not
 %atomic; that is, the signaling thread might be interrupted in the
 %loop.  But in this case that is not a problem.
-    نحو مورد استفاده در اینجا فرض می‌کند که \lr{\texttt{signal}} می‌تواند پارامتری دریافت دارد که تعداد سیگنال‌ها را مشخص می‌نماید. 
+    نحو مورد استفاده در اینجا فرض می‌کند که \texttt{signal} می‌تواند پارامتری دریافت دارد که تعداد سیگنال‌ها را مشخص می‌نماید. 
     این، یک ویژگی استاندارد نیست، امّا پیاده‌سازی آن با یک حلقه، آسان خواهد بود. تنها چیزی که باید در ذهن داشت این است که سیگنال‌های چندگانه 
     اتمی نیستند؛ بدین معنی که نخ علامت دهنده ممکن است در میانه حلقه با وقفه روبرو شود. لکن در اینجا مشکلی نیست.
 
@@ -2088,7 +2021,7 @@ class Barrier:
 %to invoke {\tt wait} before the Barrier opens.
     زمانیکه یک شیء \lr{\texttt{Barrier}} ایجاد می‌گردد 
     متد \lr{\texttt{\_\_init\_\_}} اجرا می‌شود و متغیرهای نمونه را مقداردهی اولیه می‌نماید. 
-    پارامتر \lr{\texttt{n}} تعداد نخ‌هایی است که باید پیش از اینکه حصار باز شود \lr{\texttt{wait}}  را فراخوانند. 
+    پارامتر \lr{\texttt{n}} تعداد نخ‌هایی است که باید پیش از اینکه حصار باز شود \texttt{wait}  را فراخوانند. 
 %    Barrier باید با حرف کوچک باشد.  report
     
 
