@@ -1131,62 +1131,34 @@ mutex.signal()
 %%    Tue 12 Sep 2017 05:59:11 PM +0430
 %%%Wed 23 Jan 2019 06:51:03 PM +0330: revision
 
-
 \section{Multiplex}
     
-%Puzzle: Generalize the previous solution so that it allows multiple
-%threads to run in the critical section at the same time, but it
-%enforces an upper limit on the number of concurrent threads.  In other
-%words, no more than {\tt n} threads can run in the critical section at
-%the same time.
     معمّا: راه‌حل قبل را چنان تعمیم دهید که به چند نخ اجازه دهد به صورت همزمان در ناحیه بحرانی اجرا شوند اما یک حدّ بالا روی تعداد 
-    نخ‌های همروند اعمال شود. به عبارت دیگر، بیش از \lr{\texttt{n}} نخ به صورت همزمان در ناحیه بحرانی اجرا نشود. 
+    نخ‌های همروند اعمال شود. به عبارت دیگر، بیش از \texttt{n} نخ به صورت همزمان در ناحیه بحرانی اجرا نشود. 
     
-%This pattern is called a {\bf multiplex}.  In real life, the multiplex
-%problem occurs at busy nightclubs where there is a maximum number of
-%people allowed in the building at a time, either to maintain fire
-%safety or to create the illusion of exclusivity.
     این  الگو یک مالتی‌پلکس\LTRfootnote{multiplex} نامیده می‌شود. در دنیای واقعی، مساله مالتی‌پلکس در یک کلوپ شبانهٔ شلوغ
-    زمانی رخ می‌دهد که یک حداکثر، برای تعداد افرادی که مجاز به حضور در ساختمان در یک زمان هستند وجود دارد؛ خواه به منظور تامین ایمنی آتش‌سوزی
+    رخ می‌دهد زمانی که برای تعداد افرادی که مجاز به حضور در ساختمان در یک زمان هستند یک حداکثر وجود دارد؛ خواه به منظور تامین ایمنی آتش‌سوزی
     یا به منظور ایجاد یک انحصار. %illusion of exclusivity.
     
 
-%At such places a bouncer usually enforces the synchronization
-%constraint by keeping track of the number of people inside
-%and barring arrivals when the room is at capacity.  Then,
-%whenever one person leaves another is allowed to enter.
     معمولاً در چنین اماکنی یک مأمور،  با نگاه‌داشتن تعداد افرادی که داخل هستند و 
     جلوگیری از ورود افراد جدید زمانی که اتاق به ظرفیت خود برسد محدودیت همزمانی را تضمین می‌کند.
-    سپس، هر زمان که یک فرد خارج شود فردی دیگری اجازه ورود می‌یابد. 
+    سپس، هر زمان که یک فرد خارج شود فرد دیگری اجازه ورود می‌یابد. 
 
-%Enforcing this constraint with semaphores may sound difficult, but it
-%is almost trivial.
-    تضمین این محدودیت با سمافورها ممکن است مشکل به نظر برسد امّا تقریباً بدیهی است. 
+    تضمین این محدودیت با سمافورها ممکن است سخت به نظر آید امّا تقریباً بدیهی است. 
 
 
 \clearemptydoublepage
-%\subsection{Multiplex solution}
 \subsection{ راه‌حل مالتی‌پلکس}
 
 
 
-%To allow multiple threads to run in the critical section, just
-%initialize the semaphore to {\tt n}, which is the maximum number
-%of threads that should be allowed.
-    به منظور اینکه  اجرای چند نخ را در ناحیه بحرانی ممکن سازیم تنها مقدار اولیه سمافور را \lr{\texttt{n}}--حداکثر تعداد نخ‌های مجاز-- قرار می‌دهیم.
+    به منظور اینکه  اجرای چند نخ را در ناحیه بحرانی ممکن سازیم، کافی است مقدار اولیه سمافور را \texttt{n}--حداکثر تعداد نخ‌های مجاز-- قرار دهیم.
     
-%At any time, the value of the semaphore represents the
-%number of additional threads that may enter.  If the value is zero,
-%then the next thread will block until one of the threads inside
-%exits and signals.  When all threads have exited the value of the
-%semaphore is restored to {\tt n}.
     در هر زمان، مقدار سمافور نشانگر تعداد نخ‌هایی است که می‌توانند داخل شوند. اگر این مقدار صفر باشد آنگاه 
-    نخ بعدی تا زمانی که یک از نخ‌های درونی خارج شده و پیام‌دهی نماید مسدود می‌گردد. هنگامی که تمام نخ‌ها از ناحیه بحرانی 
-    خارج شوند مقدار سمافور دوباره \lr{\texttt{n}} می‌شود. 
+    نخ بعدی تا زمانی که یکی از نخ‌های درونی خارج شده و پیام‌دهی نماید مسدود می‌گردد. هنگامی که تمام نخ‌ها از ناحیه بحرانی 
+    خارج شوند مقدار سمافور دوباره \texttt{n} می‌شود. 
     
-%Since the solution is symmetric, it's conventional to show only one
-%copy of the code, but you should imagine multiple copies of the code
-%running concurrently in multiple threads.
     از آنجایی که این راه‌حل متقارن است، به طور قراردادی تنها یک کپی از کد نمایش داده می‌شود امّا شما باید چندین کپی از کد را که به صورت همروند 
     در چندین نخ اجرا می‌شود در نظر بگیرید. 
 
@@ -1200,55 +1172,31 @@ multiplex.signal()
 \end{latin}
 \end{latin}
 
-%What happens if the critical section is occupied and more than one
-%thread arrives?  Of course, what we want is for all the arrivals to
-%wait.  This solution does exactly that.  Each time an arrival joins
-%the queue, the semaphore is decremented, so that the value of the
-%semaphore (negated) represents the number of threads in queue.
     اگر ناحیه بحرانی پر شده باشد و بیش از یک نخ سر برسند چه اتفاقی می‌افتد؟ البته چیزی که می‌خواهیم این است که تمامی آن‌ها منتظر بمانند. 
     این راه‌حل دقیقاً همین کار را انجام می‌دهد. هر زمان که یک نخ تازه به صف ملحق شود، سمافور کاهش می‌یابد لذا مقدار سمافور که 
     منفی است نشانگر تعداد نخ‌هایی است که در صف هستند. 
     
-%When a thread leaves, it signals the semaphore, incrementing
-%its value and allowing one of the waiting threads to proceed.
-    زمانی که یک نخ ناحیه بحرانی را ترک می‌کند، به سمافور پیام‌داده و مقدار آن را افزایش می‌دهد که این کار اجازه یکی از نخ‌های در حال انتظار ادامه یابد. 
+    زمانی که یک نخ ناحیه بحرانی را ترک می‌کند، به سمافور پیام‌داده و مقدار آن را افزایش می‌دهد که این کار اجازه می‌دهد یکی از نخ‌های در حال انتظار ادامه یابد. 
 
-%Thinking again of metaphors, in this case I find it useful
-%to think of the semaphore as a set of tokens (rather than
-%a lock).
-%As each thread invokes {\tt wait}, it picks up one of
-%the tokens; when it invokes {\tt signal} it releases one.
-%Only a thread that holds a token can enter the room.  If no
-%tokens are available when a thread arrives, it waits until
-%another thread releases one.
     با در نظر گرفتن تعابیر گذشته،‌ در این حالت بهتر است سمافورها به صورت مجموعه‌ای از توکن‌ها دیده شود (تا یک قفل). 
     هر نخ که \texttt{wait} را فراخوانی نماید،  یکی از توکن‌ها را در اختیار می گیرد؛‌ زمانی که \texttt{signal} را فراخواند 
     آن توکن را رها می‌نماید. فقط نخی که توکنی در اختیار دارد می‌تواند به اتاق وارد شود.  زمانی که یک نخ می‌رسد اگر هیچ توکنی موجود نباشد 
     باید تا زمانی که نخ دیگری توکنی را رها نماید، منتظر بماند. 
 
-%In real life, ticket windows sometimes use a system like
-%this.  They hand out tokens (sometimes poker chips) to
-%customers in line.  Each token allows the holder to buy a ticket.
-    در دنیای واقع، گاهی  اوقات باجه‌های بلیط فروشی سیستمی مشابه این را بکار می‌برند. 
-    به مشتری‌هایی که در صف هستند هستند توکن‌هایی داده می‌شود. هر توکن به دارنده آن اجازه خرید یک بلیط را می‌دهد. 
+    در دنیای واقعی، گاهی  اوقات باجه‌های بلیط فروشی سیستمی مشابه را بکار می‌برند. 
+    به مشتری‌هایی که در صف هستند توکن‌هایی داده می‌شود. هر توکن به دارنده آن اجازه خرید یک بلیط را می‌دهد. 
 
 
 
-%\section{Barrier}
 \section{حصار\LTRfootnote{Barrier}}
 
-%Consider again the Rendezvous problem from Section~\ref{rendezvous}.
-%A limitation of the solution we presented is that it does
-%not work with more than two threads.
-    دوباره مساله قرار ملاقات از بخش~\ref{rendezvous} در نظر بگیرید. 
-    یک محدودیت راه حلی که ارائه دادیم این است که برای بیشتر از دو نخ کار نمی‌کند. 
+    دوباره مساله قرار ملاقات را از بخش~\ref{rendezvous} در نظر بگیرید. 
+    راه‌حلی که ارائه دادیم یک محدودیت دارد و آن این است که برای بیشتر از دو نخ کار نمی‌کند. 
+%    یک محدودیت راه حلی که ارائه دادیم این است که برای بیشتر از دو نخ کار نمی‌کند. 
 
-%Puzzle: Generalize the rendezvous solution.  Every thread should
-%run the following code:
     معمّا: راه‌حل قرار ملاقات را تعمیم دهید. هر نخ باید کد زیر را اجرا نماید:
 \begin{latin}
 \begin{latin}
-%\begin{lstlisting}[title={Barrier code}]{}
 \begin{lstlisting}[title=\rl{ کد حصار}]{}
 rendezvous
 critical point
@@ -1256,36 +1204,22 @@ critical point
 \end{latin}
 \end{latin}
 
-%The synchronization requirement is that
-%no thread executes {\tt critical point} until after all
-%threads have executed {\tt rendezvous}.
     لازمه همگام‌سازی این است که هیچ نخی \lr{\texttt{critical point }} را اجرا ننماید مگر اینکه تمامی نخ‌ها \lr{\texttt{rendezvous}}
     را اجرا نموده باشند. 
 
-%You can assume that there are $n$
-%threads and that this value is stored in a variable, {\tt n},
-%that is accessible from all threads.
-    فرض کنید که $n$ نخ وجود دارد و این مقدار در یک متغیر برای   \lr{\texttt{n}} ذخیره  شده است و تمامی نخ‌ها به آن دسترسی دارند. 
+    فرض کنید که $n$ نخ وجود دارد و این مقدار در یک متغیر با نام \texttt{n} ذخیره  شده است و تمامی نخ‌ها به آن دسترسی دارند. 
 
-%When the first $n-1$ threads arrive they should block until the $n$th
-%thread arrives, at which point all the threads may proceed.
-    زمانی که $n-1$ نخ اول می‌رسند آن‌ها باید تا زمان رسیدن $n$‌امین نخ مسدود شوند و پس از %رسیدن آن نخ،‌ 
-    آن، همگی می‌توانند ادامه یابند. 
+    زمانی که $n-1$ نخِ اول می‌رسند باید تا زمان رسیدن $n$‌امین نخ، مسدود شوند و پس از آن، همگی می‌توانند ادامه یابند. 
 
 
 \clearemptydoublepage
-%\subsection {Barrier hint}
 \subsection {راهنمای حصار}
 
 
-%For many of the problems in this book I will provide hints
-%by presenting the variables I used in my solution and
-%explaining their roles.
-    برای بسیاری از مسائل این کتاب، با ارائه متغیرهایی که در راه  حل‌هایم  بکار بردم و توضیح قوانین آن‌ها، راهنمایی‌هایی را فراهم خواهم آورد. 
+    برای بسیاری از مسائل این کتاب، با ارائه متغیرهایی که در راه‌حل‌هایم  بکار برده‌ام و توضیح قوانین آن‌ها، راهنمایی‌هایی را فراهم خواهم آورد. 
 
 \begin{latin}
 \begin{latin}
-%\begin{lstlisting}[title={Barrier hint}]{}
 \begin{lstlisting}[title=\rl{راهنمای حصار}]{}
 n = the number of threads
 count = 0
@@ -1298,29 +1232,22 @@ barrier = Semaphore(0)
 %{\tt count} keeps track of how many threads have arrived.
 %{\tt mutex} provides exclusive access to {\tt count} so that
 %threads can increment it safely.
-    \lr{\texttt{count}} تعداد نخ‌های رسیده را نگاه می‌دارد. 
-    \lr{\texttt{mutex}} دسترسی انحصاری به \lr{\texttt{count}} را 
+    \texttt{count} تعداد نخ‌های رسیده را نگاه می‌دارد. 
+    \texttt{mutex} دسترسی انحصاری به \texttt{count} را 
     به گونه‌ای فراهم می‌آورد که نخ‌ها بتوانند به صورت ایمن آن را افزایش دهند. 
 
-%{\tt barrier} is locked
-%(zero or negative) until all threads arrive; then it should
-%be unlocked (1 or more).
-    \lr{\texttt{barrier}}
+    \texttt{barrier}
     تا زمانی که تمامی نخ‌ها برسند قفل شده است (صفر یا منفی)؛ سپس باید باز شود (یک یا بیشتر). 
 
 \clearemptydoublepage
-%\subsection {Barrier non-solution}
-\subsection {نا راه‌حل حصار}
+\subsection 
+{ناراه‌حل حصار}
 
-%First I will present a solution that is not quite right, because
-%it is useful to examine incorrect solutions and figure out what
-%is wrong.
-    ابتدا راه حلی را ارائه می‌دهیم که به طور کامل درست نمی‌باشد چرا که بررسی چنین راه حل‌هایی برای فهم اینکه چه چیزی نادرست است مفید است.
+    ابتدا راه‌حلی را ارائه می‌دهیم که به طور کامل درست نمی‌باشد، چرا که بررسی راه‌حل‌های ناصحیح برای فهم اینکه چه چیزی نادرست است مفید است.
 
 \begin{latin}
 \begin{latin}
-%\begin{lstlisting}[title={Barrier non-solution}]{}
-\begin{lstlisting}[title=\rl{نا راه‌حل حصار}]{}
+\begin{lstlisting}[title=\rl{ناراه‌حل حصار}]{}
 rendezvous
 
 mutex.wait()
@@ -1336,18 +1263,13 @@ critical point
 \end{latin}
 \end{latin}
 
-%Since {\tt count} is protected by a mutex, it counts the number of
-%threads that pass.  The first $n-1$ threads wait when they get to the
-%barrier, which is initially locked.  When the $n$th thread arrives, it
-%unlocks the barrier.
-     از آنجایی که \lr{\texttt{count}} به وسیله یک \lr{mutex} محافظت می‌شود، تعداد نخ‌هایی که رد می‌شود را می‌شمرد.
-     $n-1$ 
-     نخ اول زمانی که به حصار می‌رسد منتظر می‌مانند چرا در ابتدا قفل است. زمانی که $n$امین نخ می‌رسد حصار را باز می‌نماید. 
+     از آنجایی که \texttt{count} به وسیله یک \lr{mutex} محافظت می‌شود، تعداد نخ‌هایی که رد می‌شود را می‌شمارد. $n-1$ 
+     نخ اول زمانی که به حصار می‌رسند منتظر می‌مانند، چرا که حصار در ابتدا قفل است. زمانی که $n$امین نخ می‌رسد حصار را باز می‌نماید. 
      
-%Puzzle:  What is wrong with this solution?
     معمّا: مشکل این راه‌حل چیست؟
     
 %%%    Sun 17 Sep 2017 06:47:32 PM +0430
+%%% Wed 27 Feb 2019 06:33:35 PM +0330%%revision
 \clearemptydoublepage
 %\subsection{Deadlock \#2}
 \subsection{بن‌بست \#2}
@@ -1502,7 +1424,7 @@ critical point
 
 \clearemptydoublepage
 %\subsection {Reusable barrier non-solution \#1}
-\subsection{ نا راه‌حل حصار با قابلیت استفاده مجدد  \#1}
+\subsection{ ناراه‌حل حصار با قابلیت استفاده مجدد  \#1}
 
 %Once again, we will start with a simple attempt at a solution
 %and gradually improve it:
@@ -1511,7 +1433,7 @@ critical point
 \begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Reusable barrier non-solution}]{} 
-\begin{lstlisting}[title=\rl{  نا راه‌حل حصار با قابلیت استفاده مجدد}]{} 
+\begin{lstlisting}[title=\rl{  ناراه‌حل حصار با قابلیت استفاده مجدد}]{} 
 
 rendezvous
 
@@ -1571,7 +1493,7 @@ if count == 0: turnstile.wait()         (*\label{problem2}*)
 
 \clearemptydoublepage
 %\subsection {Reusable barrier non-solution \#2}
-\subsection {  نا راه‌حل حصار با قابلیت استفاده مجدد \#2}
+\subsection {  ناراه‌حل حصار با قابلیت استفاده مجدد \#2}
 
 %This attempt fixes the previous error, but a subtle problem
 %remains.
@@ -1580,7 +1502,7 @@ if count == 0: turnstile.wait()         (*\label{problem2}*)
 \begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Reusable barrier non-solution}]{}
-\begin{lstlisting}[title=\rl{ نا راه‌حل حصار با قابلیت استفاده مجدد}]{} 
+\begin{lstlisting}[title=\rl{ ناراه‌حل حصار با قابلیت استفاده مجدد}]{} 
 rendezvous
 
 mutex.wait()
@@ -2107,7 +2029,7 @@ rendezvous.signal()
 %For the most part, though, these problems do not happen in the
 %real world, or if they do, the real-world solutions are not much
 %like the kind of synchronization code we are working with.
-    گرچه برای اکثر موارد، این مسائل در دنیای واقع رخ نمی‌دهد یا اگر هم رخ دهد راه حل‌های دنیای واقع چندان شبیه کد همگام‌سازی 
+    گرچه برای اکثر موارد، این مسائل در دنیای واقعی رخ نمی‌دهد یا اگر هم رخ دهد راه حل‌های دنیای واقع چندان شبیه کد همگام‌سازی 
     که با آن کار می‌کنیم نیست. 
 
 %The reason we are interested in these problems
@@ -3655,7 +3577,7 @@ forks = [Semaphore(1) for i in range(5)]
 \begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Dining philosophers non-solution}]{}
-\begin{lstlisting}[title=\rl{نا راه‌حل غذا خوردن فیلسوف}]{}
+\begin{lstlisting}[title=\rl{ناراه‌حل غذا خوردن فیلسوف}]{}
 def get_forks(i):
     fork[right(i)].wait()
     fork[left(i)].wait()
@@ -3775,7 +3697,7 @@ def put_forks(i):
 %first.  But what happens if Philosopher 0 is a leftie?
     این راه‌حل نشان می‌دهد که با کنترل کردن تعداد فیلسوف‌ها، می‌توانیم از بن‌بست اجتناب نماییم. 
     راه دیگر برای اجتناب از بن‌بست تغییر دادن ترتیبی است  که فیلسوف‌ها چنگال‌ها را بر می‌دارند. 
-    در نا راه‌حل اولیه، فیلسوف‌ها "راست‌دست``\LTRfootnote{} هستند؛ به این معنی که ابتدا چنگال سمت راست را بر می‌دارند. 
+    در ناراه‌حل اولیه، فیلسوف‌ها "راست‌دست``\LTRfootnote{} هستند؛ به این معنی که ابتدا چنگال سمت راست را بر می‌دارند. 
     امّا اگر فیلسوف ۰ "چپ‌دست``\LTRfootnote{} باشد چه اتفاقی می‌افتد؟‌
 
 %Puzzle: prove that if there is at least one leftie and at least one
@@ -6511,7 +6433,7 @@ must_wait = False
 
 \clearemptydoublepage
 %\subsection {Sushi bar non-solution}
-\subsection{نا راه‌حل بار سوشی}
+\subsection{ناراه‌حل بار سوشی}
 
 %Here is an incorrect solution Reek uses to illustrate one
 %of the difficulties of this problem.
@@ -6519,7 +6441,7 @@ must_wait = False
 
 \begin{latin}
 %\begin{lstlisting}[title={Sushi bar non-solution}]{}
-\begin{lstlisting}[title=\rl{نا راه‌حل بار سوشی}]{}
+\begin{lstlisting}[title=\rl{ناراه‌حل بار سوشی}]{}
 mutex.wait()
 if must_wait:
     waiting += 1
@@ -6551,7 +6473,7 @@ mutex.signal()
 
 \clearemptydoublepage
 %\subsection {Sushi bar non-solution}
-\subsection{نا راه‌حل بار سوشی}
+\subsection{ناراه‌حل بار سوشی}
 
 %The problem is at Line~\ref{sushi1}.  If a customer arrives
 %while the bar is full, he has to give up the mutex while he
