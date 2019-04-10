@@ -1319,46 +1319,27 @@ critical point
     تنها تغییر، یک \texttt{signal} دیگر پس از انتظار برای حصار است. 
     اکنون، پس از اینکه هر نخ عبور کرد، به سمافور پیام می‌دهد که نخ بعدی می‌تواند عبور کند. 
 
-%This pattern, a {\tt wait} and a {\tt signal} in rapid
-%succession, occurs often enough that it has a name;
-%it's called a {\bf turnstile}, because it allows one thread to pass
-%at a time, and it can be locked to bar all threads.
-
 %%%%    Wed 13 Mar 2019 07:04:52 PM +0330 # revision
 
     این الگو (یک \texttt{wait} و یک \texttt{signal} بلافاصله پشت سر هم) آنقدر رایج است که یک نام دارد: ترن‌استایل\footnote{%
     \lr{turnstile}: 
     تیرکی که معمولاً سه بازوی گردنده دارد و هرکس می‌خواهد از آن بگذرد کوپن خود را در سوراخ آن انداخته و آن‌ را چرخانده وارد می‌شود. 
     معمولاً در ورودی ایستگاه‌های مترو و یا فروشگاه‌ها وجود دارد.}، 
-    زیرا که در یک زمان به تنها یک نخ اجازه عبور می‌دهد و می‌تواند قفل شود تا تمام نخ‌ها را نگه دارد. 
+    زیرا که در یک زمان به تنها یک نخ اجازه عبور می‌دهد و می‌تواند قفل گردد تا تمام نخ‌ها را نگه دارد. 
     
-%In its initial state (zero), the turnstile is locked.  The $n$th
-%thread unlocks it and then all $n$ threads go through.
     در وضعیت آغازین (صفر)، ترن‌استایل قفل است. نخ  $n$ام آن را بار نموده و سپس تمام  $n$ نخ از آن عبور می‌کنند. 
 
-%It might seem dangerous to read the value of {\tt count} outside the
-%mutex.  In this case it is not a problem, but in general it is
-%probably not a good idea.  We will clean this up in a few pages, but
-%in the meantime, you might want to consider these questions: After the
-%$n$th thread, what state is the turnstile in?  Is there any way the
-%barrier might be signaled more than once?
-    ممکن است خواندن مقدار \texttt{count} بیرون از \lr{mutex} مخاطره‌ آمیز به نظر رسد. در اینجا، مشکلی وجود ندارد 
-    امّا به طور کلی احتمالاً ایده خوبی هم نیست. چند صفحه بعد کد تمیزتری ارائه می‌دهیم امّا فعلاً ممکن است بخواهید این سوالات را در نظر بگیرید:
+    ممکن است خواندن مقدار \texttt{count} بیرون از \lr{mutex} مخاطره‌ آمیز به نظر رسد؛ اگر چه در اینجا مشکلی وجود ندارد،
+    امّا به طور کلی احتمالاً ایدهٔ خوبی هم نیست. چند صفحه بعد کد تمیزتری ارائه می‌دهیم امّا فعلاً ممکن است بخواهید این سوالات را در نظر بگیرید:
     پس از $n$امین نخ، ترن‌استایل در چه وضعیتی است؟ آیا راهی وجود دارد که ممکن باشد حصار بیش از یکبار پیام دهی شود؟
 
 \clearemptydoublepage
-%\subsection {Deadlock \#3}
 \subsection {بن‌بست \#3}
 
-%Since only one thread at a time can pass through the
-%mutex, and only one thread at a time can pass through
-%the turnstile, it might seen reasonable to put the
-%turnstile inside the mutex, like this:
-    از آنجایی که در هر زمان تنها یک نخ می‌تواند از \lr{mutex} عبور کند و نیز در هر زمان تنها یک نخ می‌تواند از \lr{turnstile} عبور کند، 
-    ممکن است که قرار دادن \lr{turnstile} درون \lr{mutex} منطقی به نظر آید، مانند زیر: 
+    از آنجایی که در هر زمان تنها یک نخ می‌تواند از میوتکس عبور کند و نیز در هر زمان تنها یک نخ می‌تواند از ترن‌استایل عبور کند، 
+    ممکن است قرار دادن ترن‌استایل درون میوتکس منطقی به نظر آید، مانند زیر: 
 \begin{latin}
 \begin{latin}
-%\begin{lstlisting}[title={Bad barrier solution}]{}
 \begin{lstlisting}[title=\rl{راه حل بدِ حصار}]{}
 rendezvous
 
@@ -1375,53 +1356,30 @@ critical point
 \end{latin}
 \end{latin}
 
-%This turns out to be a bad idea because it can cause a
-%deadlock.
     این ایدهٔ بدی است زیرا که می‌تواند سبب بن‌بست گردد. 
 
-%Imagine that the first thread enters the
-%mutex and then blocks when it reaches the turnstile.
-%Since the mutex is locked, no other threads can enter,
-%so the condition, {\tt count==n}, will never be true and
-%no one will ever unlock the turnstile.
-    تصور کنید اولین نخ وارد \lr{\texttt{mutex}} شده و پس از رسیدن به تر‌ن‌استایل مسدود می‌گردد. 
-    از آنجایی که \lr{\texttt{mutex}} قفل شده است، هیچ نخ دیگری نمی‌تواند وارد گردد، لذا شرط \lr{\texttt{condition==n}}
+    تصور کنید اولین نخ وارد \texttt{mutex} شده و پس از رسیدن به تر‌ن‌استایل مسدود می‌گردد. 
+    از آنجایی که \texttt{mutex} قفل شده است، هیچ نخ دیگری نمی‌تواند وارد گردد، لذا شرط \lr{\texttt{condition==n}}
      هرگز درست نبوده و هیچ نخی ترن‌استایل را باز نخواهد کرد. 
 
-%In this case the deadlock is fairly obvious, but it
-%demonstrates a
-%common source of deadlocks: blocking on a semaphore while
-%holding a mutex.
-    در اینجا، بن‌بست کاملاً واضح است، امّا یک منبع رایجِ بن‌بست‌ها را نشان می‌دهد: مسدود شدن روی یک سمافور در حالیکه یک 
-     \lr{\texttt{mutex}} در اختیار دارد. 
+    در اینجا، بن‌بست کاملاً واضح است، امّا یک منشأ رایجِ بن‌بست‌ها را نشان می‌دهد: مسدود شدن روی یک سمافور در حالیکه یک \texttt{mutex} در اختیار دارد. 
 
 %%    Tue 19 Sep 2017 05:46:43 PM +0430
-%\section {Reusable barrier}
 \section {حصار با قابلیت استفاده مجدد}
 \label{rebar}
 
-%Often a set of cooperating threads will perform a series of steps
-%in a loop and synchronize at a barrier after each step.  For this
-%application we need a reusable barrier that locks itself after
-%all the threads have passed through.
-    اغلب، مجموعهٔ نخ‌های همکار، یک سری از گام‌های یک حلقه را اجرا نموده و پس از هر گام نزد یک حصار همگام‌سازی می‌شوند.
+    اغلب، مجموعهٔ نخ‌های همکار، یک سری از گام‌های یک حلقه را اجرا نموده و پس از هر گام نزدِ یک حصار همگام‌سازی می‌شوند.
     برای این کاربرد، به یک حصار با قابلیت استفاده مجدد نیاز داریم که پس از عبور تمامی نخ‌ها از آن، خود را قفل نماید.  
 
-%Puzzle: Rewrite the barrier solution so that after all the threads
-%have passed through, the turnstile is locked again.
     معمّا: راه‌حل حصار را چنان بازنویسی کنید که پس از عبور تمام نخ‌ها، ترن‌استایل دوباره قفل شود.
 
 \clearemptydoublepage
-%\subsection {Reusable barrier non-solution \#1}
 \subsection{ ناراه‌حل حصار با قابلیت استفاده مجدد  \#1}
 
-%Once again, we will start with a simple attempt at a solution
-%and gradually improve it:
-    دوباره با یک تلاش ساده برای رسیدن به راه‌حل شروع نموده و به تدریج آن را بهبود می‌دهیم:
+    دوباره با یک تلاش ساده برای رسیدن به راه‌حل، شروع نموده و به تدریج آن را بهبود می‌دهیم:
 
 \begin{latin}
 \begin{latin}
-%\begin{lstlisting}[title={Reusable barrier non-solution}]{} 
 \begin{lstlisting}[title=\rl{  ناراه‌حل حصار با قابلیت استفاده مجدد}]{} 
 
 rendezvous
@@ -1446,51 +1404,31 @@ if count == 0: turnstile.wait()         (*\label{problem2}*)
 \end{latin}
 \end{latin}
 
-%Notice that the code after the turnstile is pretty much the same as
-%the code before it.  Again, we have to use the mutex to protect access
-%to the shared variable {\tt count}.
-%Tragically, though, this code is not quite correct.
-    توجه کنید که کد پس از تر‌ن‌استایل بسیار شبیه کد قبل از آن است. دوباره لازم است که دسترسی به متغیر اشتراکی \lr{\texttt{count}} را 
-    با استفاده از \lr{mutex} محافظت کنیم. با اینحال متاسفانه این کد به طور کامل صحیح نیست. 
+    توجه کنید که کدِ پس از تر‌ن‌استایل بسیار مشابه کدِ قبل از آن است. دوباره لازم است که دسترسی به متغیر اشتراکی \texttt{count} را 
+    با استفاده از میوتکس محافظت کنیم. با این‌حال متاسفانه این کد به طور کامل صحیح نیست. 
 
-%Puzzle: What is the problem?
     معمّا: مشکل چیست؟
 
 
 \clearemptydoublepage
-%\subsection {Reusable barrier problem \#1}
-\subsection 
-{ مساله حصار با قابلیت استفاده مجدد  \#1}
+\subsection{ مساله حصار با قابلیت استفاده مجدد  \#1}
 
-%There is a problem spot at Line~\ref{problem} of the previous code.
-    یک مشکلی در خط ~\ref{problem} کد قبل وجود دارد. 
+  مشکلی در خط ~\ref{problem} کد قبل وجود دارد. 
 
-%If the $n-1$th thread is interrupted at this point,
-%and then the $n$th thread comes through the mutex,
-%both threads will find that {\tt count==n} and both
-%threads will signal the turnstile.  In fact, it is even
-%possible that {\em all} the threads will signal the turnstile.
-    اگر $n-1$امین نخ در این نقطه با یک وقفه مواجه شود، و سپس $n$امین نخ وارد \lr{mutex} شود، هر دو نخ  \lr{\texttt{count=n}}
+    اگر $n-1$امین نخ در این نقطه با یک وقفه مواجه شود، و سپس $n$امین نخ وارد میوتکس شود، هر دو نخ  \lr{\texttt{count=n}}
     را صحیح یافته و هر دو به ترن‌استایل پیام خواهند داد. در حقیقت حتی این امکان وجود دارد که تمام نخ‌ها به ترن‌استایل پیام دهند. 
 
-%Similarly, at Line~\ref{problem2} it is possible for multiple
-%threads to {\tt wait}, which will cause a deadlock.
     به طور مشابه در خط ~\ref{problem2} ممکن است چندین نخ \texttt{wait}  را اجرا نماید که منجر به بن‌بست خواهد شد. 
 
-%Puzzle: Fix the problem.
     معمّا: مشکل را حل نمایید. 
 
 \clearemptydoublepage
-%\subsection {Reusable barrier non-solution \#2}
 \subsection {  ناراه‌حل حصار با قابلیت استفاده مجدد \#2}
 
-%This attempt fixes the previous error, but a subtle problem
-%remains.
-    این تلاش خطای قبل را حل نموده ولی یک مشکل ظریف باقی می‌ماند. 
+    تلاش ذیل، خطای قبل را حل نموده ولی یک مشکل ظریف باقی می‌ماند. 
 
 \begin{latin}
 \begin{latin}
-%\begin{lstlisting}[title={Reusable barrier non-solution}]{}
 \begin{lstlisting}[title=\rl{ ناراه‌حل حصار با قابلیت استفاده مجدد}]{} 
 rendezvous
 
@@ -1512,24 +1450,15 @@ mutex.signal()
 \end{latin}
 \end{latin}
 
-%In both cases the check is inside the mutex so that
-%a thread cannot be interrupted after changing the counter
-%and before checking it.
-    در هر دو حالت بررسی درون \lr{mutex} صورت می‌گیرد لذا یک نخ نمی‌تواند بعد از تغییر شمارنده و قبل از بررسی آن با وقفه مواجه شود. 
+    در هر دو حالت بررسی درون میوتکس صورت می‌گیرد لذا یک نخ نمی‌تواند بعد از تغییر شمارنده و قبل از بررسی آن با وقفه مواجه شود. 
 
-%Tragically, this code is {\em still} not correct.
-%Remember that this barrier will be inside a loop.  So, after
-%executing the last line, each thread will go back
-%to the rendezvous.
     متاسفانه این کد هنوز صحیح نیست. فراموش نکنید که این کد حصار درون یک حلقه قرار دارد. لذا پس از اجرای آخرین خط 
     هر نخ به \lr{rendezvous} باز می‌گردد. 
 
-%Puzzle: Identify and fix the problem.
     معمّا: مشکل را بیابید و آن را رفع نمایید. 
 
 
 \clearemptydoublepage
-%\subsection {Reusable barrier hint}
 \subsection {راهنمای حصار با قابلیت استفاده مجدد}
 
 %As it is currently written, this code
@@ -1537,16 +1466,17 @@ mutex.signal()
 %then loop around and pass through the first mutex and the
 %turnstile, effectively getting ahead of the other threads by
 %a lap.
-    همانطوری که تا کنون نیز نوشته شده است، این کد به نخی که زودتر از ناحیه بحرانی خود خارج می‌شود 
-    اجازه عبور از \lr{mutex} دوم را داده و سپس در حلقه کد خود از \lr{mutex} 
+%    همانطوری که در حال حاضر نوشته شده است، 
+    همانطوری که مشاهده نمودید،
+    این کد به نخی که زودتر از ناحیه بحرانی خود خارج می‌شود اجازه عبور از میوتکس دوم را داده و سپس در حلقه کد خود از  میوتکس 
     اول و ترن‌استایل عبور می‌نماید، که در عمل همین نکته سبب می‌شود آن نخ، یک دور جلوتر از دیگر نخ‌ها قرار گیرد. 
 
-%To solve this problem we can use two turnstiles.
     برای رفع این مساله می‌توانیم از دو ترن‌استایل استفاده نماییم. 
+
+%%%    Wed 10 Apr 2019 06:28:18 PM +0430 revision
 
 \begin{latin}
 \begin{latin}
-%\begin{lstlisting}[title={Reusable barrier hint}]{}
 \begin{lstlisting}[title=\rl{ راهنمای حصار با قابلیت استفاده مجدد}]{} 
 turnstile = Semaphore(0)
 turnstile2 = Semaphore(1)
@@ -1960,7 +1890,7 @@ mutex.signal()
 
     زمانی که یک جلو‌دار می‌رسد، میوتکسی که  \lr{\texttt{leaders}} و \lr{\texttt{followers}} را محافظت می‌کند می‌گیرد. 
     اگر یک دنباله‌رو منتظر باشد، جلو‌دار مقدار {\tt followers} را کاهش می‌دهد،  به یک جلو‌دار سیگنال می‌دهد و سپس {\tt dance} را فرا می‌خواند، 
-    تمام این‌ کارها  قبل از آزادسازی \lr{\texttt{mutex}} انجام می‌شود. 
+    تمام این‌ کارها  قبل از آزادسازی \texttt{mutex} انجام می‌شود. 
     این تضمین می‌کند که تنها یک نخ دنباله‌رو وجود دارد که \lr{\texttt{dance}} را به طور همزمان اجرا نماید. 
     اگر هیچ دنباله‌روی در حالت انتظار نباشد، جلو‌دار باید میوتکس را قبل از انتظار روی \lr{\texttt{leaderQueue}} رها کند. 
 
@@ -1986,7 +1916,7 @@ rendezvous.signal()
 \end{latin}
     زمانی که یک دنباله‌رو می‌رسد، چک می‌کند که آیا جلو‌داری در حالت انتظار هست. 
     اگر یکی وجود داشته باشد، دنباله‌رو مقدار {\tt leaders} را کاهش می‌دهد، به جلودار سیگنال می‌دهد، و {\tt dance} را اجرا می‌کند، 
-    تمامی این‌ کارها بدون آزادسازی \lr{\texttt{mutex}} انجام می‌شود. 
+    تمامی این‌ کارها بدون آزادسازی \texttt{mutex} انجام می‌شود. 
     در حقیقت در این مورد دنباله‌رو {\em هرگز} {\tt mutex} را رها نمی‌کند؛‌ جلودار این کار را انجام می‌دهد. 
     لازم نیست نخی که میوتکس را دارد رد گیری کنیم زیرا که می‌دانیم یکی از آن‌ها میوتکس را دارد و هر کدام از آن دو نخ می‌تواند آن را آزاد کند. 
     در راه‌حل من همیشه یک جلودار این کار را انجام می‌دهد. 
