@@ -610,13 +610,11 @@ count = temp + 1
     بروزرسانی انجام می‌دهد.):
 
 \begin{latin}
-\begin{latin}
 \begin{lstlisting}[]{}
 for i in range(100):
     temp = count
     count = temp + 1
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
     بزرگترین مقدار ممکن \texttt{count} پس از اجرای تمام نخ‌ها چقدر است؟ کوچکترین مقدار ممکن چقدر است؟ 
@@ -711,12 +709,10 @@ for i in range(100):
     نحوِ ایجاد یک سمافور و مقداردهی اولیه آن در ادامه آمده است.
 %
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Semaphore initialization syntax}]{}
 \begin{lstlisting}[title=\rl{نحوِ مقداردهی اولیه سمافور}]{}
 fred = Semaphore(1)
 \end{lstlisting}
-\end{latin}
 \end{latin}
 %
     تابع \texttt{Semaphore} سازنده‌ای\LTRfootnote{constructor} است که یک سمافور را ایجاد نموده 
@@ -725,19 +721,16 @@ fred = Semaphore(1)
     اعمال سمافور در محیط‌های مختلف نام‌های گوناگونی دارند. رایج‌ترین آن‌ها عبارت است از:
 %
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Semaphore operations}]{}
 \begin{lstlisting}[title=\rl{اعمال سمافور}]{}
 fred.increment()
 fred.decrement()	
 \end{lstlisting}
 \end{latin}
-\end{latin}
 %
 %and
 و
 %
-\begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Semaphore operations}]{}
 \begin{lstlisting}[title=\rl{اعمال سمافور}]{}
@@ -745,19 +738,16 @@ fred.signal()
 fred.wait()	
 \end{lstlisting}
 \end{latin}
-\end{latin}
 %
 %and
 و
 %
-\begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Semaphore operations}]{}
 \begin{lstlisting}[title=\rl{اعمال سمافور}]{}
 fred.V()
 fred.P()	
 \end{lstlisting}
-\end{latin}
 \end{latin}
 %
     وجود این همه نام ممکن است تعجب بر انگیز باشد امّا بی‌دلیل نیست. 
@@ -777,13 +767,11 @@ fred.P()
     
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Semaphore operations}]{}
 \begin{lstlisting}[title=\rl{اعمال سمافور}]{}
 fred.increment_and_wake_a_waiting_process_if_any()
 fred.decrement_and_block_if_the_result_is_negative()	
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
     گمان نمی‌کنم کسی به این زود‌ی این اسامی را بپذیرد. فعلاً تا آن زمان، \texttt{signal} و \texttt{wait}
@@ -1163,13 +1151,11 @@ mutex.signal()
     در چندین نخ اجرا می‌شود در نظر بگیرید. 
 
 \begin{latin}
-\begin{latin}
 \begin{lstlisting}[title=\rl{ راه‌حل مالتی‌پلکس}]{}
 multiplex.wait()
     critical section 
 multiplex.signal()      
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
     اگر ناحیه بحرانی پر شده باشد و بیش از یک نخ سر برسند چه اتفاقی می‌افتد؟ البته چیزی که می‌خواهیم این است که تمامی آن‌ها منتظر بمانند. 
@@ -1196,12 +1182,10 @@ multiplex.signal()
 
     معمّا: راه‌حل قرار ملاقات را تعمیم دهید. هر نخ باید کد زیر را اجرا نماید:
 \begin{latin}
-\begin{latin}
 \begin{lstlisting}[title=\rl{ کد حصار}]{}
 rendezvous
 critical point
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
     لازمه همگام‌سازی این است که هیچ نخی \lr{\texttt{critical point }} را اجرا ننماید مگر اینکه تمامی نخ‌ها \lr{\texttt{rendezvous}}
@@ -1219,14 +1203,12 @@ critical point
     برای بسیاری از مسائل این کتاب، با ارائه متغیرهایی که در راه‌حل‌هایم  بکار برده‌ام و توضیح قوانین آن‌ها، راهنمایی‌هایی را فراهم خواهم آورد. 
 
 \begin{latin}
-\begin{latin}
 \begin{lstlisting}[title=\rl{راهنمای حصار}]{}
 n = the number of threads
 count = 0
 mutex = Semaphore(1)
 barrier = Semaphore(0)
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %{\tt count} keeps track of how many threads have arrived.
@@ -1246,7 +1228,6 @@ barrier = Semaphore(0)
     ابتدا راه‌حلی را ارائه می‌دهیم که به طور کامل درست نمی‌باشد، چرا که بررسی راه‌حل‌های ناصحیح برای فهم اینکه چه چیزی نادرست است مفید است.
 
 \begin{latin}
-\begin{latin}
 \begin{lstlisting}[title=\rl{ناراه‌حل حصار}]{}
 rendezvous
 
@@ -1260,7 +1241,6 @@ barrier.wait()
 
 critical point
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
      از آنجایی که \texttt{count} به وسیله یک \lr{mutex} محافظت می‌شود، تعداد نخ‌هایی که رد می‌شود را می‌شمارد. $n-1$ 
@@ -1298,7 +1278,6 @@ critical point
     بالاخره، کد راه‌حل صحیح مساله حصار در ادامه آمده است:	
 
 \begin{latin}
-\begin{latin}
 \begin{lstlisting}[title=\rl{راه حل حصار}]{}
 rendezvous
 
@@ -1313,7 +1292,6 @@ barrier.signal()
 
 critical point
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
     تنها تغییر، یک \texttt{signal} دیگر پس از انتظار برای حصار است. 
@@ -1339,7 +1317,6 @@ critical point
     از آنجایی که در هر زمان تنها یک نخ می‌تواند از میوتکس عبور کند و نیز در هر زمان تنها یک نخ می‌تواند از ترن‌استایل عبور کند، 
     ممکن است قرار دادن ترن‌استایل درون میوتکس منطقی به نظر آید، مانند زیر: 
 \begin{latin}
-\begin{latin}
 \begin{lstlisting}[title=\rl{راه حل بدِ حصار}]{}
 rendezvous
 
@@ -1353,7 +1330,6 @@ mutex.signal()
 
 critical point
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
     این ایدهٔ بدی است زیرا که می‌تواند سبب بن‌بست گردد. 
@@ -1379,7 +1355,6 @@ critical point
     دوباره با یک تلاش ساده برای رسیدن به راه‌حل، شروع نموده و به تدریج آن را بهبود می‌دهیم:
 
 \begin{latin}
-\begin{latin}
 \begin{lstlisting}[title=\rl{  ناراه‌حل حصار با قابلیت استفاده مجدد}]{} 
 
 rendezvous
@@ -1401,7 +1376,6 @@ mutex.signal()
 
 if count == 0: turnstile.wait()         (*\label{problem2}*)
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
     توجه کنید که کدِ پس از تر‌ن‌استایل بسیار مشابه کدِ قبل از آن است. دوباره لازم است که دسترسی به متغیر اشتراکی \texttt{count} را 
@@ -1428,7 +1402,6 @@ if count == 0: turnstile.wait()         (*\label{problem2}*)
     تلاش ذیل، خطای قبل را حل نموده ولی یک مشکل ظریف باقی می‌ماند. 
 
 \begin{latin}
-\begin{latin}
 \begin{lstlisting}[title=\rl{ ناراه‌حل حصار با قابلیت استفاده مجدد}]{} 
 rendezvous
 
@@ -1447,7 +1420,6 @@ mutex.wait()
     if count == 0: turnstile.wait()
 mutex.signal()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
     در هر دو حالت بررسی درون میوتکس صورت می‌گیرد لذا یک نخ نمی‌تواند بعد از تغییر شمارنده و قبل از بررسی آن با وقفه مواجه شود. 
@@ -1476,13 +1448,11 @@ mutex.signal()
 %%%    Wed 10 Apr 2019 06:28:18 PM +0430 revision
 
 \begin{latin}
-\begin{latin}
 \begin{lstlisting}[title=\rl{ راهنمای حصار با قابلیت استفاده مجدد}]{} 
 turnstile = Semaphore(0)
 turnstile2 = Semaphore(1)
 mutex = Semaphore(1)
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
     در ابتدا ترن‌استایل اوّلی قفل و دوّمی باز است. زمانی که تمامی نخ‌ها به ترن‌استایل اوّل برسند، آن دوّمی را قفل  و اوّلی را باز می‌نماییم. 
@@ -1495,7 +1465,6 @@ mutex = Semaphore(1)
 \subsection {   راه‌حل حصار با قابلیت استفادهٔ مجدد}
 
 
-\begin{latin}
 \begin{latin}
 \begin{lstlisting}[title=\rl{ راهنمای حصار با قابلیت استفادهٔ مجدد}]{} 
 # rendezvous
@@ -1522,7 +1491,6 @@ mutex.signal()
 turnstile2.wait()                # second turnstile
 turnstile2.signal()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
     گاهی اوقات به این راه حل، \textbf{حصار دو-فاز} گفته می‌شود زیرا که تمامی نخ‌ها را دوبار مجبور به انتظار می‌کند: یکبار برای اینکه تمام نخ‌ها برسند و 
@@ -1581,7 +1549,6 @@ turnstile2.signal()
     اتمی نیستند؛ بدین معنی که نخ علامت دهنده ممکن است در میانه حلقه با وقفه روبرو شود. لکن در اینجا، این مساله مشکلی محسوب نمی‌شود.
 
 \begin{latin}
-\begin{latin}
 \begin{lstlisting}[title=\rl{راه حل حصار با قابلیت استفادهٔ مجدد}]{}
 # rendezvous
 
@@ -1604,7 +1571,6 @@ mutex.signal()
 turnstile2.wait()                # second turnstile
 \end{lstlisting}
 \end{latin}
-\end{latin}
 
     زمانیکه $n$امین نخ می‌رسد، ترن‌استایل اوّل را با یک سیگنال بازای هر نخ از پیش بارگذاری می‌نماید.
     زمانیکه $n$امین نخ از ترن‌استایل عبور می‌نماید ''آخرین توکن را در اختیار گرفته`` و ترن‌استایل را دوباره قفل می‌نماید. 
@@ -1614,17 +1580,12 @@ turnstile2.wait()                # second turnstile
 
 %%%Wed 17 Apr 2019 06:07:33 PM +0430 %revision
 \newpage
-%\subsection {Barrier objects}
 \subsection {اشیاء حصار}
 
-%It is natural to encapsulate a barrier in an object.  I will
-%borrow the Python syntax for defining a class:
-    به طور معمول، یک حصار را درون یک شیء محصور\LTRfootnote{encapsulate} می‌نمایند. 
-    در اینجا برای تعریف کلاس، نحو پایتون را بکار می‌بریم. 
+    طبیعی است که یک حصار را درون یک شیء محصور\LTRfootnote{encapsulate} نماییم. 
+    برای تعریف یک کلاس در اینجا، نحو پایتون را بکار می‌بریم. 
 
 \begin{latin}
-\begin{latin}
-%\begin{lstlisting}[title={Barrier class}]{}
 \begin{lstlisting}[title=\rl{کلاس \lr{Barrier} }]{}
 class Barrier:
     def __init__(self, n):
@@ -1655,122 +1616,96 @@ class Barrier:
         self.phase2()
 \end{lstlisting}
 \end{latin}
-\end{latin}
 
 %The {\tt \_\_init\_\_} method runs when we create a new
 %{\tt Barrier} object, and initializes the instance variables.
 %The parameter {\tt n} is the number of threads that have
 %to invoke {\tt wait} before the Barrier opens.
-    زمانیکه یک شیء \lr{\texttt{Barrier}} ایجاد می‌گردد 
-    متد \lr{\texttt{\_\_init\_\_}} اجرا می‌شود و متغیرهای نمونه را مقداردهی اولیه می‌نماید. 
-    پارامتر \lr{\texttt{n}} تعداد نخ‌هایی است که باید پیش از اینکه حصار باز شود \texttt{wait}  را فراخوانند. 
-%    Barrier باید با حرف کوچک باشد.  report
+    زمانیکه یک شیء \texttt{Barrier} ایجاد می‌گردد 
+    متد \texttt{\_\_init\_\_} اجرا می‌شود و متغیرهای نمونه را مقداردهی اولیه می‌نماید. 
+    پارامتر \texttt{n} تعداد نخ‌هایی است که باید پیش از اینکه حصار باز شود \texttt{wait}  را فراخوانند. 
+%    Barrier باید با حرف کوچک باشد.  report (دومی)
     
 
-%The variable {\tt self} refers to the object the method
-%is operating on.  Since each barrier object has its own
-%mutex and turnstiles, {\tt self.mutex} refers to the specific
-%mutex of the current object.
-    متغیر \lr{\texttt{self}} به شیئی اشاره دارد که متد روی آن عمل می‌نماید. 
-    از آنجایی که هر شیء حصار، \lr{mutex} و ترن‌استایل‌های خود را دارد، \lr{\texttt{self.mutex}} به \lr{mutex} شیء جاری اشاره می‌نماید. 
+    متغیر \texttt{self} به شیئی اشاره دارد که متدْ روی آن عمل می‌نماید. 
+    از آنجایی که هر شیء حصار، میوتکس و ترن‌استایل‌های خود را دارد، \lr{\texttt{self.mutex}} به میوتکس شیء جاری اشاره می‌نماید. 
 
-%Here is an example that creates a {\tt Barrier}
-%object and waits on it:
-    در اینجا مثالی مشاهده می‌نمایید که یک شیء \lr{\texttt{Barrier}} را ایجاد نموده و روی آن منتظر می‌ماند:
+    در اینجا مثالی مشاهده می‌نمایید که یک شیء \texttt{Barrier} را ایجاد نموده و روی آن منتظر می‌ماند:
 
 \begin{latin}
-\begin{latin}
-%\begin{lstlisting}[title={Barrier interface}]{}
 \begin{lstlisting}[title={Barrier \rl{واسط}}]{}
 barrier = Barrier(n)        # initialize a new barrier
 barrier.wait()              # wait at a barrier
 \end{lstlisting}
 \end{latin}
-\end{latin}
 
-%Optionally, code that uses a barrier can call {\tt phase1} and
-%{\tt phase2} separately, if there is something else that
-%should be done in between.
-        کدی که حصار را بکار می‌برد می‌تواند \lr{\texttt{phase1}} و \lr{\texttt{phase2}} را به صورت مجزا فراخواند
-        اگر چیزی وجود داشته باشد که لازم باشد در آن بین اجرا شود. 
-
+        کدی که حصار را بکار می‌برد می‌تواند \texttt{phase1} و \texttt{phase2} را 
+        اگر چیزی وجود داشته باشد که می‌بایست در آن بین اجرا شود، به صورت مجزا فراخواند. 
 
 
 \section{صف}
 \label{dancers}
 
-    سمافور‌ها می توانند به عنوان یک صف نیز استفاده شوند. 
-    در این حالت، مقدار اولیه \lr{\texttt{0}} است
-    و معمولاً کد به گونه‌ای  نوشته شده است که امکان علامت‌دهی وجود ندارد 
-    مگر اینکه یک نخ، در حال انتظار وجود داشته باشد، لذا مقدار سمافور هیچگاه مثبت نیست.
+    سمافور‌ها می توانند برای نمایاندن یک صف نیز استفاده شوند. 
+    در این حالت، مقدار اولیه \texttt{0} است
+    و معمولاً کد به گونه‌ای  نوشته می‌شود که سیگنال‌دهی ممکن نباشد 
+    مگر اینکه یک نخ در حال انتظار وجود داشته باشد؛ لذا مقدار سمافور هیچگاه مثبت نیست.
 
-    به عنوان مثال، تصور کنید که نخ‌ها، نمایشگر رقصنده‌هایی باشند و دو نوع رقاص --جلودار و  دنباله‌رو--
+    به عنوان مثال، تصور کنید که نخ‌ها، نمایانگر رقصنده‌هایی باشند و دو نوع رقاص --جلودار و  دنباله‌رو--
     در دو صف، پیش از ورود به اتاق رقص منتظر هستند. 
     هنگامی که که یک جلودار می‌رسد، بررسی می‌کند که آیا هیچ دنباله‌روئی منتظر هست یا خیر. 
     اگر چنین باشد، هر دو می‌توانند داخل شوند در غیر اینصورت می بایست منتظر بماند.
 
-    به طور مشابه، زمانیکه یک دنباله‌رو می‌رسد، او ابتدا چک می‌کند که آیا جلوداری وجود دارد یا خیر و منطبق با داخل شده یا صبر می‌نماید. 
+    به طور مشابه، زمانیکه یک دنباله‌رو می‌رسد، چک می‌کند که آیا جلوداری وجود دارد یا خیر و بر طبق آن،  وارد شده یا صبر می‌نماید. 
 
     معمّا:  کدی بنویسید برای جلو‌دارها و دنباله‌رو‌ها که این شرایط در آن صدق کند.
 
 
 \clearemptydoublepage
-\subsection {راهنمایی برای معمّا}
+\subsection {راهنمای صف}
 
-    در اینجا متعیرهایی آمده است که در راه‌حل خود بکار برده‌ام: 
+    متغیرهایی که در راه‌حل خود بکار برده‌ام، در اینجا آمده است:
 
 \begin{latin}
-\begin{latin}
-%\begin{lstlisting}[title={Queue hint}]{}
-\begin{lstlisting}[title=\rl{راهنمایی صف}]{}
+\begin{lstlisting}[title=\rl{راهنمای صف}]{}
 leaderQueue = Semaphore(0)
 followerQueue = Semaphore(0)
 \end{lstlisting}
 \end{latin}
-\end{latin}
 
-\lr{\texttt{ leaderQueue }}
-     صف حاوی جلو‌دارهای منتظر هست و
-\lr{\texttt{  followerQueue }} صف حاوی دنباله‌رو‌های منتظر هست.
+\texttt{ leaderQueue }     صف حاوی جلو‌دارهای منتظر و
+\texttt{  followerQueue } صف حاوی دنباله‌رو‌های منتظر می‌باشد.
 
 
 
 \clearemptydoublepage
-\subsection {راه حل صف}
+\subsection {راه‌حل صف}
 
-    کد مربوط به جلو‌دارها را در اینجا آمده است:
+    کد مربوط به جلو‌دارها در ادامه آمده است:
 
 \begin{latin}
-\begin{latin}
-%\begin{lstlisting}[title={Queue solution (leaders)}]{}
-\begin{lstlisting}[title=\rl{راه حل صف (جلودارها)}]{}
+\begin{lstlisting}[title=\rl{راه‌حل صف (جلودارها)}]{}
 followerQueue.signal()
 leaderQueue.wait()
 dance()
 \end{lstlisting}
 \end{latin}
-\end{latin}
 
     و در این قسمت کد مربوط به دنباله‌روها را مشاهده می‌نمایید:
 
 \begin{latin}
-\begin{latin}
-%\begin{lstlisting}[title={Queue solution (followers)}]{}
-\begin{lstlisting}[title=\rl{راه حل صف (دنباله‌روها)}]{}
+\begin{lstlisting}[title=\rl{راه‌حل صف (دنباله‌روها)}]{}
 leaderQueue.signal()
 followerQueue.wait()
 dance()
 \end{lstlisting}
 \end{latin}
-\end{latin}
 %%        Mon 25 Sep 2017 07:02:12 PM +0330
-
-    این راه‌حل به همان اندازه که نشان می‌دهد ساده‌ است، تنها یک قرار ملاقات است. 
-    هر جلودار دقیقاً به یک دنباله‌رو علامت می‌دهد و هر دنباله‌رو به یک جلودار علامت می‌دهد، لذا این ضمانت می‌کند که جلو‌دارها و دنباله‌روها تنها 
-    به صورت جفت جفت اجازه اقدام داشته باشند.  امّا اینکه آیا آ‌ن‌ها واقعاً به صورت جفت جفت وارد عمل می‌شوند واضح نیست. 
-%    هر سیگنال از جلودار دقیقا یک دنباله‌رو دارد و هر سیگنال دنباله‌رو یک جلو‌دار دارد، لذا این ضمانت می‌کند که جلو‌دار و دنباله‌رو هر دو به شکل همزمان وارد عملیات می‌شوند(می‌رقصند!!!). 
-%    اگرچه  آنها هر دو وارد عملیات شده اند اما این ممکن است که نخ‌ها قبل از اجرای {\tt dance} انباشته شوند، و در نتیجه امکان دارد که تعدادی از جلو‌دارهای {\tt dance} قبل از دنباله‌رو‌ها وارد عمل شوند. بر اساس مفهوم {\tt dance} که ممکن است گیج کننده باشد!
-    برای هر تعداد از نخ‌ها امکان تجمیع قبل از اجرای \lr{\texttt{dance}} وجود دارد و لذا برای هر تعداد از جلودارها \lr{\texttt{dance}}
+%%  Wed 24 Apr 2019 06:20:48 PM +0430 %%revision
+    این راه‌حل به همان اندازه که نشان می‌دهد ساده‌ است؛ زیرا که تنها یک قرار ملاقات است. 
+    هر جلودار دقیقاً به یک دنباله‌رو سیگنال می‌دهد و هر دنباله‌رو به یک جلودار سیگنال می‌دهد، لذا تضمین می‌کند که جلو‌دارها و دنباله‌روها تنها 
+    به صورت جفت جفت اجازه اجرا داشته باشند.  امّا اینکه آیا آ‌ن‌ها واقعاً به صورت جفت جفت وارد عمل می‌شوند یا خیر واضح نیست. 
+    قبل از اجرای \texttt{dance}  امکان تجمّع  برای هر تعدادی از نخ‌ها وجود دارد و لذا برای هر تعداد از جلودارها \texttt{dance}
     پیش از دنباله‌روها ممکن است. 
     بسته به معنای \lr{\texttt{dance}} این رفتار ممکن است مشکل‌ساز باشد و یا نباشد. 
 
@@ -1787,7 +1722,6 @@ dance()
     متغیرهایی را که در راه‌حل خود بکار برده‌ام در ادامه مشاهده می‌نمایید:
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Queue hint}]{}
 \begin{lstlisting}[title={\rl{راهنمای صف}}]{}
 leaders = followers = 0
@@ -1796,7 +1730,6 @@ leaderQueue = Semaphore(0)
 followerQueue = Semaphore(0)
 rendezvous = Semaphore(0)
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
     \lr{\texttt{leaders}} و \lr{\texttt{followers}}
@@ -1815,7 +1748,6 @@ rendezvous = Semaphore(0)
     قطعه کد مربوط به جلو‌دارها:
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Queue solution (leaders)}]{}
 \begin{lstlisting}[title=\rl{راه حل صف (جلودارها)}]{}
 mutex.wait()
@@ -1832,7 +1764,6 @@ rendezvous.wait()
 mutex.signal()
 \end{lstlisting}
 \end{latin}
-\end{latin}
 
     زمانی که یک جلو‌دار می‌رسد، میوتکسی که  \lr{\texttt{leaders}} و \lr{\texttt{followers}} را محافظت می‌کند می‌گیرد. 
     اگر یک دنباله‌رو منتظر باشد، جلو‌دار مقدار {\tt followers} را کاهش می‌دهد،  به یک جلو‌دار سیگنال می‌دهد و سپس {\tt dance} را فرا می‌خواند، 
@@ -1842,7 +1773,6 @@ mutex.signal()
 
     کدمربوط به دنباله‌روها نیز مشابه است:
 
-\begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Queue solution (followers)}]{}
 \begin{lstlisting}[title=\rl{راه حل صف (دنباله‌روها)}]{}
@@ -1858,7 +1788,6 @@ else:
 dance()
 rendezvous.signal()
 \end{lstlisting}
-\end{latin}
 \end{latin}
     زمانی که یک دنباله‌رو می‌رسد، چک می‌کند که آیا جلو‌داری در حالت انتظار هست. 
     اگر یکی وجود داشته باشد، دنباله‌رو مقدار {\tt leaders} را کاهش می‌دهد، به جلودار سیگنال می‌دهد، و {\tt dance} را اجرا می‌کند، 
@@ -1957,26 +1886,22 @@ rendezvous.signal()
     فرض کنید که تولیدکننده‌ها عملیات زیر را بارها و بارها انجام می‌دهند:
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Basic producer code}]{}
 \begin{lstlisting}[title=\rl{کد پایه تولیدکننده}]{}
 event = waitForEvent()
 buffer.add(event)
 \end{lstlisting}
 \end{latin}
-\end{latin}
 
 %Also, assume that consumers perform the following operations:
     همچنین فرض کنید مصرف کننده‌ها عملیات زیر را اجرا می‌کنند:
 
-\begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Basic consumer code}]{}
 \begin{lstlisting}[title=\rl{کد پایه مصرف‌کننده}]{}
 event = buffer.get()
 event.process()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %As specified above, access to the buffer has to be exclusive,
@@ -1998,14 +1923,12 @@ event.process()
     در اینجا متغیرهایی آمده است که ممکن است بخواهید استفاده کنید:
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Producer-consumer initialization}]{}
 \begin{lstlisting}[title=\rl{مقداردهی اولیه تولیدکننده-مصرف‌کننده}]{}
 mutex = Semaphore(1)
 items = Semaphore(0)
 local event
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %Not surprisingly, {\tt mutex} provides exclusive access to
@@ -2094,7 +2017,6 @@ mutex.signal()
     کد مصرف‌کننده نیز مشابه است. 
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Consumer solution}]{}
 \begin{lstlisting}[title=\rl{راه حل مصرف‌کننده}]{}
 items.wait()
@@ -2103,7 +2025,6 @@ mutex.wait()
 mutex.signal()
 event.process()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %Again, the buffer operation is protected by a mutex,
@@ -2132,7 +2053,6 @@ event.process()
     مسدودسازی و رفع انسداد، اعمال نسبتاً پر هزینه‌ای هستند: 
     انجام غیرضروری آن‌ها می‌تواند به کارایی برنامه آسیب زند. لذا احتمالاً بازنویسی کد تولیدکننده به صورت زیر بهتر باشد. 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Improved producer solution}]{}
 \begin{lstlisting}[title=\rl{راه حل بهبود یافتهٔ تولیدکننده}]{}
 event = waitForEvent()
@@ -2141,7 +2061,6 @@ mutex.wait()
 mutex.signal()
 items.signal()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %Now we don't bother unblocking a consumer until we know it can proceed
@@ -2166,7 +2085,6 @@ items.signal()
     ممکن آن را بخواهیم بوسیله چک کردن بافر را درون میوتکس مدیریت کنیم: 
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Broken consumer solution}]{}
 \begin{lstlisting}[title=\rl{راه حل معیوب مصرف‌کننده}]{}
 mutex.wait()
@@ -2175,7 +2093,6 @@ mutex.wait()
 mutex.signal()
 event.process()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %This is a bad idea.
@@ -2194,7 +2111,6 @@ event.process()
     اگر مصرف‌کنند کد زیر را اجرا نماید
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Broken consumer solution}]{}
 \begin{lstlisting}[title=\rl{راه حل معیوب مصرف‌کننده}]{}
 mutex.wait()
@@ -2204,7 +2120,6 @@ mutex.signal()
 
 event.process()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 %
 %it can cause a deadlock.  Imagine that the buffer is empty.
@@ -2258,13 +2173,11 @@ event.process()
     کدی به صورت زیر بنویسیم.
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Broken finite buffer solution}]{}
 \begin{lstlisting}[title=\rl{راه حل معیوب بافر محدود}]{}
 if items >= bufferSize:
     block()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %But we can't.  Remember that we can't check the current
@@ -2286,14 +2199,12 @@ if items >= bufferSize:
 %available spaces in the buffer.
     سمافور دیگری را به منظور نگهداری تعداد فضای موجود در بافر  بیفزایید. 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Finite-buffer producer-consumer initialization}]{}
 \begin{lstlisting}[title=\rl{مقداردهی اولیه بافر محدود تولیدکننده-مصرف‌کننده}]{}
 mutex = Semaphore(1)
 items = Semaphore(0)
 spaces = Semaphore(buffer.size())
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %When a consumer removes an item it should signal {\tt spaces}.
@@ -2311,7 +2222,6 @@ spaces = Semaphore(buffer.size())
     و امّا راه حل. 
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Finite buffer consumer solution}]{}
 \begin{lstlisting}[title=\rl{راه حل  بافر محدود  مصرف‌کننده}]{}
 items.wait()
@@ -2323,12 +2233,10 @@ spaces.signal()
 event.process()
 \end{lstlisting}
 \end{latin}
-\end{latin}
 
 %The producer code is symmetric, in a way:
     کد تولیدکننده  تا حدودی متقارن است: 
 
-\begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Finite buffer producer solution}]{}
 \begin{lstlisting}[title=\rl{راه حل  بافر محدود تولیدکننده}]{}
@@ -2340,7 +2248,6 @@ mutex.wait()
 mutex.signal()
 items.signal()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %In order to avoid deadlock, producers and consumers check
@@ -2410,14 +2317,12 @@ items.signal()
     مجموعه متغیرهایی که برای حل مساله کافی هستند در ادامه آمده است. 
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Readers-writers initialization}]{}
 \begin{lstlisting}[title=\rl{مقداردهی اولیه خوانندگان-نویسندگان}]{}
 int readers = 0
 mutex = Semaphore(1)
 roomEmpty = Semaphore(1)
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %The counter {\tt readers} keeps track of how many readers
@@ -2446,14 +2351,12 @@ roomEmpty = Semaphore(1)
     به عمل می‌آید. 
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Writers solution}]{}
 \begin{lstlisting}[title=\rl{ راه‌حل  نویسندگان}]{}
 roomEmpty.wait()
     critical section for writers
 roomEmpty.signal()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %When the writer exits, can it be sure that the room is
@@ -2482,7 +2385,6 @@ roomEmpty.signal()
     اگر زمانیکه یک نویسنده در اتاق است خواننده‌ای برسد روی {\tt roomEmpty} منتظر می‌ماند. از آنجاییکه 
     میوتکس را در اختیار گرفته، هر خوانندهٔ بعدی روی  {\tt mutex} تشکیل صف می‌دهند. 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Readers solution}]{}
 \begin{lstlisting}[title=\rl{راه حل خوانندگان}]{}
 mutex.wait()
@@ -2499,7 +2401,6 @@ mutex.wait()
         roomEmpty.signal()   # last out unlocks
 mutex.signal()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %The code after the critical section is similar.  The last reader
@@ -2547,7 +2448,6 @@ mutex.signal()
     را قفل می‌نماید) و آخرین نفری که از اتاق خارج می‌شود آن را خاموش می‌نماید (میوتکس را باز می‌کند).
     در ادامه تعریف کلاس {\bf Lightswitch} آمده است: 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Lightswitch definition}]{}
 \begin{lstlisting}[title={\rl{تعریف} Lightswitch }]{}
 class Lightswitch:
@@ -2569,7 +2469,6 @@ class Lightswitch:
                 semaphore.signal()
         self.mutex.signal()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %{\tt lock} takes one parameter, a semaphore that it will check and
@@ -2599,13 +2498,11 @@ class Lightswitch:
     با کمک این توابع، می‌توانیم کد خواننده را کمی ساده‌تر بازنویسی نماییم: 
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Readers-writers initialization}]{}
 \begin{lstlisting}[title=\rl{مقدار دهی اولیه خوانندگان-نویسندگان}]{}
 readLightswitch = Lightswitch()
 roomEmpty = Semaphore(1)
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %{\tt readLightswitch} is a shared {\tt Lightswitch} object whose counter
@@ -2615,14 +2512,12 @@ roomEmpty = Semaphore(1)
 
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Readers-writers solution (reader)}]{}
 \begin{lstlisting}[title=\rl{راه حل خوانندگان-نویسندگان (خواننده)}]{}
 readLightswitch.lock(roomEmpty)
 # critical section
 readLightswitch.unlock(roomEmpty)
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %The code for writers is unchanged.
@@ -2698,14 +2593,12 @@ readLightswitch.unlock(roomEmpty)
     خواننده ناحیه بحرانی را ترک نمود، می‌توانیم مطمئن باشیم که حداقل یک نویسنده در ادامه وارد می‌شود (قبل از آنکه خوانندگان در صف بتوانند ادامه یابند).
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={No-starve readers-writers initialization}]{}
 \begin{lstlisting}[title=\rl{مقدار دهی اولیه خوانندگان-نویسندگان بدون قحطی}]{}
 readSwitch = Lightswitch()
 roomEmpty = Semaphore(1)
 turnstile = Semaphore(1)
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %{\tt readSwitch} keeps track of how many readers are in the room;
@@ -2729,7 +2622,6 @@ turnstile = Semaphore(1)
     کد نویسنده در ادامه آمده است: 
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={No-starve writer solution}]{}
 \begin{lstlisting}[title=\rl{راه حل نویسنده بدون قحطی}]{}
 turnstile.wait()
@@ -2740,7 +2632,6 @@ turnstile.signal()
 roomEmpty.signal()
 \end{lstlisting}
 \end{latin}
-\end{latin}
 
 %If a writer arrives while there are readers in the room, it
 %will block at Line~\ref{stuck}, which means that the turnstile will
@@ -2749,7 +2640,6 @@ roomEmpty.signal()
     اگر یک نویسنده آن زمانیکه چندین خواننده در اتاق وجود دارد برسد، در خط~\ref{stuck} مسدود می‌گردد، بدین معنی که ترن‌استایل قفل شده است. 
     این کار، مانع ورود خوانندگان تا زمانیکه یک نویسنده در صف است می‌گردد. کد خواننده در ادامه آمده است: 
 
-\begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={No-starve reader solution}]{}
 \begin{lstlisting}[title=\rl{راه حل خواننده بدون قحطی}]{}
@@ -2760,7 +2650,6 @@ readSwitch.lock(roomEmpty)
     # critical section for readers
 readSwitch.unlock(roomEmpty)
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %When the last reader leaves, it signals {\tt roomEmpty},
@@ -2824,7 +2713,6 @@ readSwitch.unlock(roomEmpty)
     طبق معمول،‌ راهنمایی در قالب متغیرهای مورد استفاده در راه‌حل آمده است. 
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Writer-priority readers-writers initialization}]{}
 \begin{lstlisting}[title=\rl{مقداردهی اولیه خوانندگان-نویسندگان با اولویت نویسنده}]{}
 readSwitch = Lightswitch()
@@ -2832,7 +2720,6 @@ writeSwitch = Lightswitch()
 noReaders = Semaphore(1)
 noWriters = Semaphore(1)
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %%%    Mon 23 Oct 2017 06:38:02 PM +0330
@@ -2847,7 +2734,6 @@ noWriters = Semaphore(1)
     کد خواننده در ادامه آمده است:
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Writer-priority reader solution}]{}
 \begin{lstlisting}[title=\rl{راه حل خواننده با اولویت نویسنده}]{}
 noReaders.wait()
@@ -2858,7 +2744,6 @@ noReaders.signal()
 
 readSwitch.unlock(noWriters)
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %If a reader is in the critical section, it holds
@@ -2876,7 +2761,6 @@ readSwitch.unlock(noWriters)
     کد نویسنده: 
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Writer-priority writer solution}]{}
 \begin{lstlisting}[title=\rl{راه حل نویسنده با اولویت نویسنده}]{}
 writeSwitch.lock(noReaders)
@@ -2885,7 +2769,6 @@ writeSwitch.lock(noReaders)
     noWriters.signal()
 writeSwitch.unlock(noReaders)
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %When a writer is in the critical section it holds both
@@ -3031,7 +2914,6 @@ writeSwitch.unlock(noReaders)
     برای مثال، سه نخ که در حال اجرای کد زیر هستند را تصویر نمایید:
     
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Mutex loop}]{}
 \begin{lstlisting}[title=\rl{حلقه میوتکس}]{}
 while True:
@@ -3039,7 +2921,6 @@ while True:
     # critical section 
     mutex.signal()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %The {\tt while} statement is an infinite loop; in other words,
@@ -3137,7 +3018,6 @@ while True:
     در ادامه متغیرهایی که در راه‌حل بکار بردم آمده است (در تلاش برای واضح‌تر ساختن ساختار، نام‌هایی را که \lr{Morris} بکار برده بود، تغییر دادم). 
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={No-starve mutex hint}]{}
 \begin{lstlisting}[title=\rl{راهنمایی میوتکس بدون قحطی}]{}
 room1 = room2 = 0
@@ -3145,7 +3025,6 @@ mutex = Semaphore(1)
 t1 = Semaphore(1)
 t2 = Semaphore(0)
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %{\tt room1} and {\tt room2} keep track of how many threads are in the
@@ -3164,7 +3043,6 @@ t2 = Semaphore(0)
 %Here is Morris's solution.
     در ادامه راه‌حل \lr{Morris} آمده است. 
 
-\begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Morris's algorithm}]{}
 \begin{lstlisting}[title=\rl{الگوریتم  \lr{Morris}}]{}
@@ -3194,7 +3072,6 @@ t2.wait()                  (*\label{wait2}*)
     else:
         t2.signal()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %Before entering the critical section, a thread has to pass two
@@ -3322,7 +3199,6 @@ t2.wait()                  (*\label{wait2}*)
     
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Basic philosopher loop}]{}
 \begin{lstlisting}[title=\rl{حلقه پایه فیلسوف}]{}
 while True:
@@ -3331,7 +3207,6 @@ while True:
    eat()
    put_forks()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %The forks represent resources that the threads have to hold
@@ -3399,13 +3274,11 @@ while True:
     برای اینکه ارجاع فیلسوف‌ها به چنگال‌هایشان را ساده نماییم می‌توانیم از توابع {\tt left} و {\tt right} استفاده کنیم. 
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Which fork?}]{}
 \begin{lstlisting}[title=\rl{کدام چنگال؟}]{}
 def left(i): return i
 def right(i): return (i + 1) % 5
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %The {\tt \%} operator wraps around when it gets to 5, so
@@ -3419,12 +3292,10 @@ def right(i): return (i + 1) % 5
     در ابتدا تمامی چنگال‌ها موجودند. 
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Variables for dining philosophers}]{}
 \begin{lstlisting}[title=\rl{متغیرهای غذا خوردن فیلسوف‌ها}]{}
 forks = [Semaphore(1) for i in range(5)]
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %This notation for initializing a list might be unfamiliar to
@@ -3440,7 +3311,6 @@ forks = [Semaphore(1) for i in range(5)]
     تلاشی ابتدایی برای  {\tt get\_fork} و {\tt put\_fork} در ادامه آمده است:
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Dining philosophers non-solution}]{}
 \begin{lstlisting}[title=\rl{ناراه‌حل غذا خوردن فیلسوف}]{}
 def get_forks(i):
@@ -3451,7 +3321,6 @@ def put_forks(i):
     fork[right(i)].signal()
     fork[left(i)].signal()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %It's clear that this solution satisfies the first constraint, but
@@ -3515,7 +3384,6 @@ def put_forks(i):
     راه‌حل مشابه زیر است: 
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Dining philosophers solution \#1}]{}
 \begin{lstlisting}[title=\rl{راه حل غذا خوردن فیلسوف‌ها \#1}]{}
 def get_forks(i):
@@ -3528,7 +3396,6 @@ def put_forks(i):
     fork[left(i)].signal()
     footman.signal()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %In addition to avoiding deadlock, this solution also guarantees that
@@ -3639,14 +3506,12 @@ def put_forks(i):
     یک سمافور که نشان می‌دهد آیا فیلسوف می‌تواند غذا خوردن را آغاز نماید نیز وجود دارد. 
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Variables for Tanenbaum's solution}]{}
 \begin{lstlisting}[title=\rl{متغیرهای راه‌حل تننبام}]{}
 state = ['thinking'] * 5
 sem = [Semaphore(0) for i in range(5)]
 mutex = Semaphore(1)
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %The initial value of {\tt state} is a list of 5 copies of {\tt
@@ -3656,7 +3521,6 @@ mutex = Semaphore(1)
     یک لیست ۵ تایی از سمافورهایی است با مقدار اولیه ۰. 
     و امّا کد: 
 
-\begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Tanenbaum's solution}]{}
 \begin{lstlisting}[title=\rl{ راه‌حل تننبام}]{}
@@ -3681,7 +3545,6 @@ def test(i):
         state[i] = 'eating'
         sem[i].signal()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 % NOTE: need to fix this; see email from David Furcy.
@@ -3858,7 +3721,6 @@ def test(i):
     طبیعتاً بر روی نسخه جالب تمرکز می‌نمایم. برای تکمیل بیان مساله، باید کد عامل را مشخص نماییم. عامل، سمافورهای زیر را بکار می‌برد:
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Agent semaphores}]{}
 \begin{lstlisting}[title=\rl{سمافورهای عامل}]{}
 agentSem = Semaphore(1)
@@ -3866,7 +3728,6 @@ tobacco = Semaphore(0)
 paper = Semaphore(0)
 match = Semaphore(0)
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %The agent is actually made up of three concurrent
@@ -3878,7 +3739,6 @@ match = Semaphore(0)
     هر کدام از آن‌ها روی {\tt agentSem} منتظر می‌مانند؛ هر گاه که {\tt agentSem} سیگنالی دریافت کند، یکی از عامل‌ها بر می‌خیزد و 
     از طریق سیگنال‌دهی به دو سمافور، مواد مورد نیاز را فراهم می‌آورد. 
 
-\begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Agent A code}]{}
 \begin{lstlisting}[title=\rl{کد عامل \lr{A}}]{}
@@ -3906,14 +3766,12 @@ tobacco.signal()
 match.signal()
 \end{lstlisting}
 \end{latin}
-\end{latin}
 
 %This problem is hard because the natural solution does not
 %work.  It is tempting to write something like:
     این مساله آنقدرها هم ساده نیست و راه‌حل طبیعی آن کار نمی‌کند. نوشتن کدی مانند زیر، وسوسه انگیز است: 
     
 
-\begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Smoker with matches}]{}
 \begin{lstlisting}[title=\rl{سیگاری با کبریت}]{}
@@ -3939,7 +3797,6 @@ tobacco.wait()
 match.wait()
 agentSem.signal()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %What's wrong with this solution?
@@ -3976,7 +3833,6 @@ agentSem.signal()
     متغیرها و سمافورهای اضافی به شرح زیر است: 
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Smokers problem hint}]{}
 \begin{lstlisting}[title=\rl{راهنمایی مساله سیگاری‌ها}]{}
 isTobacco = isPaper = isMatch = False
@@ -3984,7 +3840,6 @@ tobaccoSem = Semaphore(0)
 paperSem = Semaphore(0)
 matchSem = Semaphore(0)
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %The boolean variables indicate whether or not an ingredient
@@ -4002,7 +3857,6 @@ matchSem = Semaphore(0)
     کد یکی از فروشندگان در ادامه آمده است:‌
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Pusher A}]{}
 \begin{lstlisting}[title=\rl{فروشنده \lr{A}}]{}
 tobacco.wait()
@@ -4017,7 +3871,6 @@ mutex.wait()
         isTobacco = True
 mutex.signal()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %This pusher wakes up any time there is tobacco on the
@@ -4040,7 +3893,6 @@ mutex.signal()
     فروشنده‌های دیگر نیز چنین هستند. از آنجایی که  تمام کار اصلی را فروشنده‌ها انجام می‌دهند، کد سیگاری بدیهی می‌شود.
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Smoker with tobacco}]{}
 \begin{lstlisting}[title=\rl{فرد سیگاری با تنباکو}]{}
 tobaccoSem.wait()
@@ -4048,7 +3900,6 @@ makeCigarette()
 agentSem.signal()
 smoke()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %Parnas presents a similar solution that assembles the
@@ -4091,11 +3942,9 @@ smoke()
     به اعداد صحیح برای شمارش آن‌ها نیاز داریم. 
 
 \begin{latin}
-\begin{latin}
 \begin{lstlisting}[title=\rl{راهنمای تعمیم مساله سیگاری‌ها}]
 numTobacco = numPaper = numMatch = 0
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 
@@ -4107,7 +3956,6 @@ numTobacco = numPaper = numMatch = 0
 %Here is the modified code for Pusher A:
     کد تغییر یافته فروشنده \lr{A} در ادامه آمده است: 
 
-\begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Pusher A}]{}
 \begin{lstlisting}[title={\rl{فروشنده} A}]{}
@@ -4123,7 +3971,6 @@ mutex.wait()
         numTobacco += 1
 mutex.signal()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %One way to visualize this problem is to imagine that when an
@@ -4191,7 +4038,6 @@ mutex.signal()
     هر تعداد نخ وحشی می‌تواند کد زیر را اجرا نماید:
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Unsynchronized savage code}]{}
 \begin{lstlisting}[title=\rl{کد ناهمگام یک وحشی}]{}
 while True:
@@ -4199,19 +4045,16 @@ while True:
     eat()
 \end{lstlisting}
 \end{latin}
-\end{latin}
 
 %And one cook thread runs this code:
     و نخ یک آشپز کد زیر را اجرا می‌نماید:
 
-\begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Unsynchronized cook code}]{}
 \begin{lstlisting}[title=\rl{کد ناهمگام آشپز}]{}
 while True:
     putServingsInPot(M)
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %The synchronization constraints are:
@@ -4258,7 +4101,6 @@ while True:
     متغیرهایی را که به کار برده‌ایم در ادامه مشاهده می‌نمایید:
 
 \begin{latin}
-\begin{latin}
 \begin{lstlisting}[title={Dining Savages hint}]{}
 \begin{lstlisting}[title=\rl{راهنمایی غذاخوردن وحشی‌ها}]{}
 servings = 0
@@ -4266,7 +4108,6 @@ mutex = Semaphore(1)
 emptyPot = Semaphore(0)
 fullPot = Semaphore(0)
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %Not surprisingly, {\tt emptyPot} indicates that the pot is empty and
@@ -4283,7 +4124,6 @@ fullPot = Semaphore(0)
     راه‌حل در اینجا ترکیبی از الگوی جدول امتیاز با یک قرار ملاقات است.  کد آشپز در ادامه آمده است. 
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Dining Savages solution (cook)}]{}
 \begin{lstlisting}[title=\rl{راه‌ حل غذاخوردن وحشی‌ها (آشپز)}]{}
 while True:
@@ -4291,7 +4131,6 @@ while True:
     putServingsInPot(M)
     fullPot.signal()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %The code for the savages is only a little more complicated.
@@ -4301,7 +4140,6 @@ while True:
     کد وحشی‌ها تنها کمی پیچیده‌تر است. از آنجایی که هر وحشی از میوتکس می‌گذرد، دیگ را بررسی می‌نماید. 
     اگر دیگ خالی باشد، به آشپز سیگنال داده و منتظر می‌ماند و الا  {\tt servings} را کاهش داده و پرسی را از دیگ بر می‌دارد. 
 
-\begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Dining Savages solution (savage)}]{}
 \begin{lstlisting}[title=\rl{راه‌ حل غذاخوردن وحشی‌ها (وحشی)}]{}
@@ -4317,7 +4155,6 @@ while True:
 
     eat()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %It might seem odd that the savage, rather than the cook, sets
@@ -4855,7 +4692,6 @@ while True:
 \subsection {راهنمایی مساله بابا نوئل}
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Santa problem hint}]{}
 \begin{lstlisting}[title=\rl{راهنمایی مساله بابا نوئل}]{}
 elves = 0
@@ -4865,7 +4701,6 @@ reindeerSem = Semaphore(0)
 elfTex = Semaphore(1)
 mutex = Semaphore(1)
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %{\tt elves} and {\tt reindeer} are counters, both protected
@@ -4896,7 +4731,6 @@ mutex = Semaphore(1)
     کد بابا نوئل بسیار آسان است. به یاد داشته باشید که کد او همیشه در حلقه اجرا می‌شود. 
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Santa problem solution (Santa)}]{}
 \begin{lstlisting}[title=\rl{راه حل مساله بابا نوئل (بابا نوئل)}]{}
 santaSem.wait()
@@ -4909,7 +4743,6 @@ mutex.wait()
         helpElves()
 mutex.signal()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %When Santa wakes up, he checks which of the two conditions
@@ -4935,7 +4768,6 @@ mutex.signal()
     کد گوزن‌ها در ادامه آمده است: 
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Santa problem solution (reindeer)}]{}
 \begin{lstlisting}[title=\rl{راه حل مساله بابا نوئل (گوزن‌ها)}]{}
 mutex.wait()
@@ -4947,7 +4779,6 @@ mutex.signal()
 reindeerSem.wait()
 getHitched()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %The ninth reindeer signals Santa and then joins the other
@@ -4964,7 +4795,6 @@ getHitched()
     کد پری‌‌ها نیز مشابه است، بجز اینکه زمانیکه سومین پری می‌رسد باید ورود پری بعدی را مانع شود تا آن هنگامی که سه تای اول {\tt getHelp} را اجرا نمایند. 
 
 \newpage
-\begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Santa problem solution (elves)}]{}
 \begin{lstlisting}[title=\rl{راه حل مساله بابا نوئل (پری‌ها)}]{}
@@ -4985,7 +4815,6 @@ mutex.wait()
        elfTex.signal()
 mutex.signal()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %The first two elves release {\tt elfTex} at the same time they release
@@ -5067,7 +4896,6 @@ mutex.signal()
     متغیرهایی که در راه‌حل بکار برده‌ام را در زیر مشاهده می‌نمایید:
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Water building hint}]{}
 \begin{lstlisting}[title=\rl{راهنمایی ساخت آب}]{}
 mutex = Semaphore(1)
@@ -5077,7 +4905,6 @@ barrier = Barrier(3)
 oxyQueue = Semaphore(0)
 hydroQueue = Semaphore(0)
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %{\tt oxygen} and {\tt hydrogen} are counters, protected by {\tt mutex}.
@@ -5112,7 +4939,6 @@ hydroQueue = Semaphore(0)
     به دو هیدروژن اجازه ادامه کار دهد. سپس نخ اکسیژن منتظر نخ‌های هیدروژن می‌ماند تا برسند. 
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Oxygen code}]{}
 \begin{lstlisting}[title=\rl{ کد اکسیژن}]{}
 mutex.wait()
@@ -5131,7 +4957,6 @@ bond()
 barrier.wait()
 mutex.signal()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %As each oxygen thread enters, it gets the mutex and checks the scoreboard.
@@ -5152,7 +4977,6 @@ mutex.signal()
     کد هیدروژن نیز مشابه است: 
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Hydrogen code}]{}
 \begin{lstlisting}[title=\rl{کد هیدروژن}]{}
 mutex.wait()
@@ -5170,7 +4994,6 @@ bond()
 
 barrier.wait()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %An unusual feature of this solution is that
@@ -5255,7 +5078,6 @@ barrier.wait()
     متغیرهایی که در حل مساله بکار برده‌ام در ادامه آمده است:‌
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={River crossing hint}]{}
 \begin{lstlisting}[title=\rl{راهنمایی عبور از رودخانه}]{}
 barrier = Barrier(4)
@@ -5266,7 +5088,6 @@ hackerQueue = Semaphore(0)
 serfQueue = Semaphore(0)
 local isCaptain = False
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %{\tt hackers} and {\tt serfs} count the number of hackers
@@ -5309,7 +5130,6 @@ local isCaptain = False
     کد هکرها را ارائه خواهم کرد؛ کد کارمندان مایکروسافت هم قرینه آن است (البته بجز اینکه ۱۰۰۰ بار بزرگتر، پر از باگ، و شامل یک مرورگر توکار است.)
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={River crossing solution}]{}
 \begin{lstlisting}[title=\rl{راه حل عبور از رودخانه}]{}
 mutex.wait()
@@ -5336,7 +5156,6 @@ if isCaptain:
     rowBoat()
     mutex.signal()          # captain releases the mutex
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %As each thread files through the mutual exclusion section, it
@@ -5408,7 +5227,6 @@ if isCaptain:
 \subsection{راهنمایی ترن هوایی}
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Roller Coaster hint}]{}
 \begin{lstlisting}[title=\rl{راهنمایی ترن هوایی}]{}
 mutex = Semaphore(1)
@@ -5420,7 +5238,6 @@ unboardQueue = Semaphore(0)
 allAboard = Semaphore(0)
 allAshore = Semaphore(0)
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %{\tt mutex} protects {\tt passengers}, which counts the number of
@@ -5443,7 +5260,6 @@ allAshore = Semaphore(0)
     کد نخ ماشین در ادامه آمده است: 
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Roller Coaster solution (car)}]{}
 \begin{lstlisting}[title=\rl{راه حل ترن هوایی (ماشین)}]{} 
 load()
@@ -5457,7 +5273,6 @@ unboardQueue.signal(C)
 allAshore.wait()
 \end{lstlisting}
 \end{latin}
-\end{latin}
 
 %When the car arrives, it signals $C$ passengers,
 %then waits for the last one to signal {\tt allAboard}.
@@ -5465,7 +5280,6 @@ allAshore.wait()
 %then waits for {\tt allAshore}.
     زمانیکه ماشین می‌رسد، به $C$  رهگذر سیگنال می‌دهد، سپس منتظر آخرین رهگذر می‌شود که به {\tt allAboard} سیگنال می‌دهد. 
     پس از حرکت، به $C$ اجازه پیاده‌شدن را می‌دهد و سپس منتظر {\tt allAshore} می‌گردد. 
-\begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Roller Coaster solution (passenger)}]{}
 \begin{lstlisting}[title=\rl{راه حل ترن هوایی (رهگذر)}]{} 
@@ -5489,7 +5303,6 @@ mutex2.wait()
        unboarders = 0
 mutex2.signal()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %Passengers wait for the car before boarding, naturally, and wait for
@@ -5554,7 +5367,6 @@ mutex2.signal()
     بعدی در خط سیگنال می‌دهد. 
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Multi-car Roller Coaster hint}]{}
 \begin{lstlisting}[title=\rl{راهنمایی ترن هوایی چند ماشینی}]{}
 loadingArea = [Semaphore(0) for i in range(m)]
@@ -5563,7 +5375,6 @@ unloadingArea = [Semaphore(0) for i in range(m)]
 unloadingArea[0].signal()
 \end{lstlisting}
 \end{latin}
-\end{latin}
 %%%typo: loadingArea[1].signal() -> loadingArea[0].signal(), unloadingArea[1].signal() -> unloadingArea[0].signal()
 
 %The function {\tt next} computes the identifier of the next
@@ -5571,13 +5382,11 @@ unloadingArea[0].signal()
     تابع {\tt next}  شناسه ماشین بعدی در دنباله را محاسبه می‌نماید (بعد از $m-1$ به ۰ باز می‌گردد):
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Implementation of {\tt next}}]{}
 \begin{lstlisting}[title=\rl{پیاده‌سازی  {\tt next}}]{}
 def next(i):
     return (i + 1) % m
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 
@@ -5589,7 +5398,6 @@ def next(i):
 %Here is the modified code for the cars:
     کد تغییر یافته ماشین در ادامه آمده است: 
 
-\begin{latin}
 \begin{latin}
 %\begin{lstlisting}[title={Multi-car Roller Coaster solution (car)}]{}
 \begin{lstlisting}[title=\rl{راه حل ترن هوایی  چند ماشینی (ماشین)}]{} 
@@ -5607,7 +5415,6 @@ unboardQueue.signal(C)
 allAshore.wait()
 unloadingArea[next(i)].signal()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %The code for the passengers is unchanged.
@@ -5657,7 +5464,6 @@ unloadingArea[next(i)].signal()
 \subsection{راهنمایی جستجو-درج-حذف}
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Search-Insert-Delete hint}]{}
 \begin{lstlisting}[title=\rl{راهنمایی جستجو-درج-حذف}]{}
 insertMutex = Semaphore(1)
@@ -5666,7 +5472,6 @@ noInserter = Semaphore(1)
 searchSwitch = Lightswitch()    
 insertSwitch = Lightswitch()
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %{\tt insertMutex} ensures that only one inserter is in its critical
@@ -5693,14 +5498,12 @@ insertSwitch = Lightswitch()
     راه‌حل در ادامه آمده است: 
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Search-Insert-Delete solution (searcher)}]{}
 \begin{lstlisting}[title={راه حل جستجو-درج-حذف (جستجوگر)}]{}
 searchSwitch.wait(noSearcher)
 # critical section
 searchSwitch.signal(noSearcher)
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %The only thing a searcher needs to worry about is a deleter.
@@ -5710,7 +5513,6 @@ searchSwitch.signal(noSearcher)
     اولین جستجوگری که وارد می‌شود {\tt noSearcher} را گرفته و آخرینی که خارج می‌شود آن را آزاد می‌نماید. 
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Search-Insert-Delete solution (inserter)}]{}
 \begin{lstlisting}[title={راه حل جستجو-درج-حذف (درج‌کننده)}]{}
 insertSwitch.wait(noInserter)
@@ -5719,7 +5521,6 @@ insertMutex.wait()
 insertMutex.signal()
 insertSwitch.signal(noInserter)
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %Similarly, the first inserter takes {\tt noInserter} and the last one
@@ -5734,7 +5535,6 @@ insertSwitch.signal(noInserter)
     باشند. امّا {\tt insertMutex} تضمین می‌نماید که تنها یک درج کننده در یک لحظه‌ در ناحیه بحرانی باشد. 
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Search-Insert-Delete solution (deleter)}]{}
 \begin{lstlisting}[title={راه حل جستجو-درج-حذف (حذف کننده)}]{}
 noSearcher.wait()
@@ -5744,7 +5544,6 @@ noInserter.signal()
 noSearcher.signal()
 
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %Since the deleter holds both {\tt noSearcher} and {\tt noInserter},
@@ -5818,7 +5617,6 @@ noSearcher.signal()
     متغیرهایی که در راه‌حل بکار برده‌ام در ادامه آمده است:
 
 \begin{latin}
-\begin{latin}
 %\begin{lstlisting}[title={Unisex bathroom hint}]{}
 \begin{lstlisting}[title=\rl{راهنمایی سرویس بهداشتی عمومی}]{}
 empty = Semaphore(1)
@@ -5827,7 +5625,6 @@ femaleSwitch = Lightswitch()
 maleMultiplex = Semaphore(3)
 femaleMultiplex = Semaphore(3)
 \end{lstlisting}
-\end{latin}
 \end{latin}
 
 %{\tt empty} is 1 if the room is empty and 0 otherwise.
@@ -6726,7 +6523,7 @@ mutex.signal()
 %signal it if possible.
     وقتی کودکان وارد می‌شوند، بررسی می‌نمایند که آیا به اندازه کافی بزرگسال وجود دارد و یا  (1) {\tt children} را یک واحد افزایش داده و وارد می‌شود و 
     یا (2) {\tt waiting}  را یک واحد افزایش داده و مسدود می‌گردد. زمانیکه کودکان خارج می‌شوند، بررسی می‌نمایند که آیا نخ بزرگسالی در انتظار برای خروج 
-    وجود دارد و اگر مقدور باشد به آن سینگال می‌دهند. 
+    وجود دارد و اگر مقدور باشد به آن سیگنال می‌دهند. 
     
 \newpage
 %Here is the code for adults:
@@ -6969,7 +6766,7 @@ mutex.wait()
 %In all three cases, it is understood that the mutex passes from the
 %student to the Dean.
     سه حالت وجود دارد که ممکن است یک دانشجو مجبور شود به مدیر سیگنال دهد. 
-    اگر مدیر در حال انتظار است،  پنجاهمین دانشجویی که وارد می‌شود یا آخرین دانشجویی که خارج می‌شود باید  به {\tt lieIn} سینگال دهد.
+    اگر مدیر در حال انتظار است،  پنجاهمین دانشجویی که وارد می‌شود یا آخرین دانشجویی که خارج می‌شود باید  به {\tt lieIn} سیگنال دهد.
     اگر مدیر داخل اتاق است (و در حالیکه منتظر است تا تمامی دانشجویان خارج شوند)، آخرین دانشجویی که خارج می‌شود باید به {\tt clear} سیگنال دهد. 
     در تمامی سه حالت، قابل درک است که میوتکس از یک دانشجو به مدیر منتقل می‌گردد. 
 
