@@ -1812,122 +1812,72 @@ rendezvous.signal()
 
 
 \clearemptydoublepage
-%\chapter{Classical synchronization problems}
 \chapter{مسائل همگام‌سازی کلاسیک}
 
-
-%In this chapter we examine the classical problems that appear
-%in nearly every operating systems textbook.  They
-%are usually presented in terms of real-world problems, so
-%that the statement of the problem is clear and so that students
-%can bring their intuition to bear.
-    مسائل کلاسیک همگام‌سازی، که تقریباً در هر کتاب درسی سیستم‌عامل وجود دارد را در این فصل بررسی می‌نماییم. 
-    این مسائل معمولاً در غالب مسائل جهان واقع ارائه می‌گردد، لذا بیان مساله واضح است و بنابراین دانشجویان می‌توانند شهود خود را بکار بندند. 
+    در این فصل مسائل کلاسیک همگام‌سازی را که تقریباً در هر کتاب درسی سیستم‌عامل وجود دارد بررسی می‌نماییم. 
+    آن‌ها معمولاً در غالب مسائل جهان واقع ارائه می‌گردد، لذا بیان مساله واضح است و بنابراین دانشجویان می‌توانند شهود خود را بکار بندند. 
     
-%For the most part, though, these problems do not happen in the
-%real world, or if they do, the real-world solutions are not much
-%like the kind of synchronization code we are working with.
-    گرچه برای اکثر موارد، این مسائل در دنیای واقعی رخ نمی‌دهد یا اگر هم رخ دهد راه حل‌های دنیای واقع چندان شبیه کد همگام‌سازی 
+    گرچه در اکثر موارد، این مسائل در دنیای واقعی رخ نمی‌دهد یا اگر هم رخ دهد راه حل‌های دنیای واقع چندان شبیه کد همگام‌سازی 
     که با آن کار می‌کنیم نیست. 
 
-%The reason we are interested in these problems
-%is that they are analogous to common problems that operating
-%systems (and some applications) need to solve.  For each classical
-%problem I will present the classical formulation, and also explain
-%the analogy to the corresponding OS problem.
-    دلیل علاقه‌مندی ما، به اینگونه مسائل این است که شبیه مسائل رایجی هستند که سیستم‌عامل‌ها  (و برخی برنامه‌ها) نیاز به حل آن‌ها دارند. 
-    برای هر مساله کلاسیک، یک فرمول‌بندی کلاسیک ارائه می‌دهیم و همچنین شباهات آن را به مساله متناظر در سیستم‌عامل  بیان می‌نمایی. 
+    دلیل علاقه‌مندی ما به اینگونه مسائل این است که شبیه مسائل رایجی هستند که سیستم‌عامل‌ها  (و برخی برنامه‌ها) نیاز به حل آن‌ها دارند. 
+    برای هر مساله کلاسیک، یک فرمول‌بندی کلاسیک ارائه می‌دهیم و همچنین شباهت آن را به مساله متناظر در سیستم‌عامل  بیان می‌نماییم. 
 
-%\section{Producer-consumer problem}
 \section{مسئله تولیدکننده-مصرف‌کننده}
 
-%In multithreaded programs there is often a division of labor between
-%threads.  In one common pattern, some threads are producers and some
-%are consumers.  Producers create items of some kind and add them to a
-%data structure; consumers remove the items and process them.
-    در برنامه‌های چندنخی اغلب یک تقسیم‌بندی از کار بین نخ‌ها وجود دارد. در یک الگوی رایج، برخی نخ‌ها تولیدکننده و برخی مصرف‌کننده هستند. 
-    تولیدکننده‌ها عناصری از برخی نوع‌ها را ایجاد نموده و آن‌ها را به یک ساختمان داده می‌افزاید؛ مصرف‌کننده‌ها عناصر را حذف نموده و پردازش می‌کنند.
+    در برنامه‌های چندنخی اغلب یک تقسیم‌بندی از کار، بین نخ‌ها وجود دارد. در یک الگوی رایج، برخی نخ‌ها تولیدکننده و برخی مصرف‌کننده هستند. 
+    تولیدکننده‌ها عناصری از برخی نوع‌ها را ایجاد نموده و آن‌ها را به یک ساختمان داده می‌افزایند؛ مصرف‌کننده‌ها عناصر را حذف نموده و پردازش می‌کنند.
 
-
-%Event-driven programs are a good example.  An ``event'' is something
-%that happens that requires the program to respond: the user presses a
-%key or moves the mouse, a block of data arrives from the disk, a
-%packet arrives from the network, a pending operation completes.
     برنامه‌های رویداد-محور مثال‌های خوبی هستند. یک "رویداد``\LTRfootnote{event}، رخدادی است که به پاسخ برنامه نیاز دارد: 
-    کاربر کلیدی را فشار می‌دهد یا ماوس را جابجا می‌کند، یک بلوک داده از دیسک می‌رسد، یک بسته از شبکه می‌رسد، یک عمل در‌حال انتظار تکمیل می‌شود.
-
-%Whenever an event occurs, a producer thread creates an event
-%object and adds it to the event buffer.  Concurrently, consumer
-%threads take events out of the buffer and process them.
-%In this case, the consumers are called ``event handlers.''
+    کاربر کلیدی را فشار می‌دهد یا ماوس را جابجا می‌کند، یک بلوک داده از دیسک می‌رسد، یک بسته از شبکه می‌رسد، یک عملِ در‌حال انتظار تکمیل می‌شود.
 
     هر زمان که یک رویداد رخ می‌دهد، یک نخ تولید‌کننده یک شیئ رویداد را ایجاد نموده و آن را به بافر رویداد می‌افزاید. 
     به طور همزمان، نخ مصرف‌کننده، رویدادها را از بافر خارج کرده و آن‌ها را پردازش می‌کند. 
     در این حالت، مصرف‌کننده ها "مدیریت‌کنندهٔ رویداد``\LTRfootnote{event handler} نامیده می‌شوند.
 
-%There are several synchronization constraints that we need to
-%enforce to make this system work correctly:
-    چندین محدودیت همگام‌سازی وجود دارد که برای درست کار کردن سیستم نیاز به تحمیل آن‌ها داریم.
+    چندین محدودیت همگام‌سازی وجود دارد که می‌بایست آن‌ها را اعمال کرد تا سیستم به درستی کار کند. 
 
 \begin{itemize}
 
 \item 
-%While an item is being added to or removed from the buffer,
-%the buffer is in an inconsistent state.  Therefore, threads must
-%have exclusive access to the buffer.
     زمانی که یک عنصر به بافر افزوده شده یا از آن حذف می‌گردد، بافر در وضعیتی ناپایدار است.
     بنابراین نخ‌ها باید دسترسی انحصاری به بافر داشته باشند.
     
 \item 
-%If a consumer thread arrives while the buffer is empty, it
-%blocks until a producer adds a new item.
     اگر یک نخ مصرف‌کننده در زمانی که بافر خالی است سر برسد، تا زمانی که یک تولید کننده عنصر جدیدی را بیفزاید مسدود می‌گردد.
 
 \end{itemize}
 
-%Assume that producers perform the following operations over and
-%over:
     فرض کنید که تولیدکننده‌ها عملیات زیر را بارها و بارها انجام می‌دهند:
 
 \begin{latin}
-%\begin{lstlisting}[title={Basic producer code}]{}
-\begin{lstlisting}[title=\rl{کد پایه تولیدکننده}]{}
+\begin{lstlisting}[title=\rl{کد پایهٔ تولیدکننده}]{}
 event = waitForEvent()
 buffer.add(event)
 \end{lstlisting}
 \end{latin}
 
-%Also, assume that consumers perform the following operations:
     همچنین فرض کنید مصرف کننده‌ها عملیات زیر را اجرا می‌کنند:
 
 \begin{latin}
-%\begin{lstlisting}[title={Basic consumer code}]{}
-\begin{lstlisting}[title=\rl{کد پایه مصرف‌کننده}]{}
+\begin{lstlisting}[title=\rl{کد پایهٔ مصرف‌کننده}]{}
 event = buffer.get()
 event.process()
 \end{lstlisting}
 \end{latin}
 
-%As specified above, access to the buffer has to be exclusive,
-%but {\tt waitForEvent} and {\tt event.process}
-%can run concurrently.
     همانطوری که در بالا مشخص شده، دسترسی به بافر باید انحصاری باشد، 
     اما {\tt waitForEvent} و {\tt event.process} می‌توانند به طور همزمان اجرا شوند.
     
 
-%Puzzle: Add synchronization statements to the producer and
-%consumer code to enforce the synchronization constraints.
     معمّا: دستورات همگام‌سازی را به کد تولید‌کننده و مصرف‌کننده بیفزایید تا محدودیت‌های همگام‌سازی اعمال شود.
 
 \clearemptydoublepage
-%\subsection{Producer-consumer hint}
-\subsection{راهنمای تولیدکننده-مصرف‌کننده}
+\subsection{راهنمایی تولیدکننده-مصرف‌کننده}
 
-%Here are the variables you might want to use:
-    در اینجا متغیرهایی آمده است که ممکن است بخواهید استفاده کنید:
+    در اینجا متغیرهایی آمده است که ممکن است بکار بندید:
 
 \begin{latin}
-%\begin{lstlisting}[title={Producer-consumer initialization}]{}
 \begin{lstlisting}[title=\rl{مقداردهی اولیه تولیدکننده-مصرف‌کننده}]{}
 mutex = Semaphore(1)
 items = Semaphore(0)
@@ -1935,69 +1885,44 @@ local event
 \end{lstlisting}
 \end{latin}
 
-%Not surprisingly, {\tt mutex} provides exclusive access to
-%the buffer.  When {\tt items} is positive, it indicates the
-%number of items in the buffer.  When it is negative, it
-%indicates the number of consumer threads in queue.
-
-    بدون تعجب، {\tt mutex} دسترسی انحصاری را به بافر فراهم می‌آورد. 
+    {\tt mutex} دسترسی انحصاری را به بافر فراهم می‌آورد. 
     هنگامی که {\tt items} مثبت است، تعداد عناصر موجود در بافر را نشان می‌دهد. 
     زمانی که منفی است، نشان‌دهندهٔ تعداد نخ‌های مصرف‌کنندهٔ در صف می‌باشد. 
 
-%{\tt event} is a {\bf local variable}, which in this context means
-%that each thread has its own version.
-%So far we have been assuming that all threads have access
-%to all variables, but we will sometimes find it useful to
-%attach a variable to each thread.
-    {\tt event}
-    یک \textbf{متغیر محلی}\LTRfootnote{local variable} است، که در اینجا بدین معنی است که هر نخ نسخهٔ خود را دارد.
-    تاکنون فرض کرده‌ایم که تمام نخ‌ها به تمام متغیرها دسترسی دارند، اما گاهی اوقات بهتر است که به هر نخ یک متغیر الحاق شود.
+    در اینجا {\tt event}
+    یک \textbf{متغیر محلی}\LTRfootnote{local variable} است بدین معنی که هر نخ نسخهٔ خود را دارد.
+    تاکنون فرض کرده‌ایم که تمام نخ‌ها به تمام متغیرها دسترسی دارند، امّا گاهی اوقات بهتر است که به هر نخ یک متغیر الحاق شود.
 
-%There are a number of ways this can be implemented in different
-%environments:
     راه‌های مختلفی برای پیاده‌سازی این نکته در محیط‌های گوناگون وجود دارد:
     
 \begin{itemize}
 
 \item 
-%If each thread has its own run-time stack, then any variables
-%allocated on the stack are thread-specific.
     اگر هر نخ پشتهٔ زمان اجرای خودش را داشته باشد، آنگاه هر متغیر تخصیص داده شده در پشته، 
-    مخصوص به نخ\LTRfootnote{thread-specific} است.
+    مختصّ به نخ\LTRfootnote{thread-specific} است.
 
 \item 
-%If threads are represented as objects, we can add an attribute
-%to each thread object.
-    اگر نخ ها به عنوان اشیا نشان داده شوند، می‌توانیم به هر شیئ نخ یک خصیصه اضافه نماییم.
+    اگر نخ‌ها به صورت اشیائی نشان داده شوند، می‌توانیم به هر شیئ نخ یک خصیصه اضافه نماییم.
 
 \item 
-%If threads have unique IDs, we can use the IDs as an index
-%into an array or hash table, and store per-thread data there.
     اگر نخ ها \lr{ID}های یکتا داشته باشند، می‌توانیم \lr{ID} را به عنوان اندیس یک آرایه یا جدول درهم سازی به کار بریم، 
     و داده‌های هر نخ را در آن ذخیره کنیم.
 
 \end{itemize}
 
-%In most programs, most variables are local unless declared otherwise,
-%but in this book most variables are shared, so we will assume that
-%that variables are shared unless they are explicitly declared {\tt
-%local}.
     در بیشتر برنامه‌ها، اغلب متغیرها محلی هستند مگر اینکه به صورت دیگری اعلان شوند، 
-    اما در این کتاب بیشتر متغیرها اشتراکی اند، لذا پیش فرض متغیرها اشتراکی هستند مگر اینکه به صراحت به صورت 
+    اما در این کتاب بیشتر متغیرها اشتراکی‌اند، لذا پیش فرض متغیرها اشتراکی هستند مگر اینکه به صراحت به صورت 
     {\tt local} اعلان شوند.
 
 %%    Sun 08 Oct 2017 06:02:27 PM +0330   
 
 \clearemptydoublepage
-%\subsection{Producer-consumer solution}
-\subsection{راه حل تولیدکننده-مصرف‌کننده}
+\subsection{راه‌حل تولیدکننده-مصرف‌کننده}
 
-%Here is the producer code from my solution.
-    کد تولیدکننده از راه‌حل من در ادامه آمده است. 
+    کد تولیدکننده راه‌حل من در ادامه آمده است. 
 
 \begin{latin}
-%\begin{lstlisting}[title={Producer solution}]{}
-\begin{lstlisting}[title=\rl{راه حل تولیدکننده}]{}
+\begin{lstlisting}[title=\rl{راه‌حل تولیدکننده}]{}
 event = waitForEvent()
 mutex.wait()
     buffer.add(event)
@@ -2006,23 +1931,16 @@ mutex.signal()
 \end{lstlisting}
 \end{latin}
 
-%The producer doesn't have to get exclusive access to the buffer
-%until it gets an event.  Several threads can run {\tt waitForEvent}
-%concurrently.
     تولیدکننده تا زمان دریافت یک رویداد، نباید دسترسی انحصاری به بافر داشته باشد. 
     چندین نخ به صورت همزمان می‌توانند  {\tt waitForEvent} را اجرا نمایند. 
     
-%The {\tt items} semaphore keeps track of the
-%number of items in the buffer.  Each time the producer adds an
-%item, it signals {\tt items}, incrementing it by one.
-    سمافور {\tt items} تعداد عناصر موجود در بافر را در خود نگاه می‌دارد. هر زمان که تولیدکننده یک عنصر بیفزاید، با {\tt items}
-    دادن سیگنال یک واحد آن را افزایش می‌دهد. 
-%The consumer code is similar.
+    سمافور {\tt items} تعداد عناصر موجود در بافر را در خود نگاه می‌دارد. هر زمان که تولیدکننده یک عنصر بیفزاید، با سیگنال دادن  
+    به {\tt items} یک واحد آن را افزایش می‌دهد. 
+
     کد مصرف‌کننده نیز مشابه است. 
 
 \begin{latin}
-%\begin{lstlisting}[title={Consumer solution}]{}
-\begin{lstlisting}[title=\rl{راه حل مصرف‌کننده}]{}
+\begin{lstlisting}[title=\rl{راه‌حل مصرف‌کننده}]{}
 items.wait()
 mutex.wait()
     event = buffer.get()
@@ -2031,34 +1949,18 @@ event.process()
 \end{lstlisting}
 \end{latin}
 
-%Again, the buffer operation is protected by a mutex,
-%but before the consumer gets to it, it has to decrement
-%{\tt items}.  If {\tt items} is zero or negative, the
-%consumer blocks until a producer signals.
     دوباره، عملیات بافر توسط یک میوتکس حفاظت می‌شود امّا پیش از اینکه مصرف‌کننده به آن برسد باید {\tt items} را کاهش دهد. 
     اگر {\tt items} مقدار صفر یا منفی داشته باشد، مصرف‌کننده تا زمانی که یک تولیدکننده سیگنال دهد مسدود می‌گردد. 
 
-%Although this solution is correct, there is an opportunity
-%to make one small improvement to its performance.  Imagine
-%that there is at least one consumer in queue when a producer
-%signals {\tt items}.  If the scheduler allows the consumer
-%to run, what happens next?  It immediately blocks on the
-%mutex that is (still) held by the producer.
     اگرچه این راه‌حل درست است، این امکان وجود دارد که کارایی آن را قدری بهبود بخشید. 
-%    یک فرصت برای اعمال یک بهبود کوچک در کارایی آن وجود دارد. 
-    تصور کنید زمانیکه یک تولید به {\tt items} سیگنال می‌دهد حداقل یک مصرف‌کننده در صف قرار دارد. 
+    تصور کنید زمانیکه یک تولیدکننده به {\tt items} سیگنال می‌دهد حداقل یک مصرف‌کننده در صف قرار دارد. 
     اگر زمان‌بند به مصرف‌کننده اجازه اجرا را بدهد، پس از آن چه اتفاقی می‌افتد؟
     بلافاصله روی میوتکس که (هنوز) در اختیار تولیدکننده است مسدود می‌شود. 
 
-%Blocking and waking up are moderately expensive operations;
-%performing them unnecessarily can impair the performance of
-%a program.  So it would probably be better to rearrange the
-%producer like this:
     مسدودسازی و رفع انسداد، اعمال نسبتاً پر هزینه‌ای هستند: 
     انجام غیرضروری آن‌ها می‌تواند به کارایی برنامه آسیب زند. لذا احتمالاً بازنویسی کد تولیدکننده به صورت زیر بهتر باشد. 
 \begin{latin}
-%\begin{lstlisting}[title={Improved producer solution}]{}
-\begin{lstlisting}[title=\rl{راه حل بهبود یافتهٔ تولیدکننده}]{}
+\begin{lstlisting}[title=\rl{راه‌حل بهبود یافتهٔ تولیدکننده}]{}
 event = waitForEvent()
 mutex.wait()
     buffer.add(event)
@@ -2067,30 +1969,18 @@ items.signal()
 \end{lstlisting}
 \end{latin}
 
-%Now we don't bother unblocking a consumer until we know it can proceed
-%(except in the rare case that another producer beats it to the mutex).
     اکنون تا زمانیکه بدانیم یک مصرف‌کننده می‌تواند به کار خود ادامه دهد برای رفع انسداد آن خود را بزحمت نمی‌اندازیم 
     (بجز موردی نادر که تولید‌کننده‌ دیگری در گرفتن میوتکس، از مصرف‌کننده پیشی می‌گیرد).
     
-%There's one other thing about this solution that might bother
-%a stickler.  In the hint section I claimed that the {\tt items}
-%semaphore keeps track of the number of items in queue.  But looking
-%at the consumer code, we see the possibility that several consumers
-%could decrement {\tt items} before any of them gets the mutex
-%and removes an item from the buffer.  At least for a little while,
-%{\tt items} would be inaccurate.
     یک چیز دیگری در رابطه با این راه‌حل وجود دارد که ممکن است یک فرد دقیق را آزار دهد. 
     در بخش راهنمایی ادعا کردیم که سمافور {\tt items} تعداد عناصر موجود در صف را در خود نگاه می‌دارد. امّا با نگاه به کد مصرف‌کننده، 
     در می‌یابیم این امکان وجود دارد که چندین مصرف‌کننده بتوانند پیش از اینکه میوتکس را بگیرند و یک عنصر را از بافر بردارند، {\tt items} را  کاهش دهند. 
-    حداقل برای یک زمان کوتاه، {\tt items} را  می‌تواند نادقیق باشد. 
+    حداقل برای یک زمان کوتاه، {\tt items}  می‌تواند نادقیق باشد. 
 
-%We might try to address that by checking the buffer inside the
-%mutex:
-    ممکن آن را بخواهیم بوسیله چک کردن بافر را درون میوتکس مدیریت کنیم: 
+    ممکن است بخواهیم این مشکل را بوسیله چک کردن بافر درون میوتکس، حل کنیم: 
 
 \begin{latin}
-%\begin{lstlisting}[title={Broken consumer solution}]{}
-\begin{lstlisting}[title=\rl{راه حل معیوب مصرف‌کننده}]{}
+\begin{lstlisting}[title=\rl{راه‌حل معیوب مصرف‌کننده}]{}
 mutex.wait()
     items.wait()
     event = buffer.get()
@@ -2099,24 +1989,19 @@ event.process()
 \end{lstlisting}
 \end{latin}
 
-%This is a bad idea.
     این ایدهٔ بدی است. 
 
-%Puzzle: why?
     معمّا: چرا؟
 
 
 \clearemptydoublepage
-%\subsection{Deadlock \#4}
 \subsection{بن‌بست \#4}
 
 
-%If the consumer is running this code
-    اگر مصرف‌کنند کد زیر را اجرا نماید
+    اگر مصرف‌کننده کد زیر را اجرا نماید
 
 \begin{latin}
-%\begin{lstlisting}[title={Broken consumer solution}]{}
-\begin{lstlisting}[title=\rl{راه حل معیوب مصرف‌کننده}]{}
+\begin{lstlisting}[title=\rl{راه‌حل معیوب مصرف‌کننده}]{}
 mutex.wait()
     items.wait()
     event = buffer.get()
@@ -2126,108 +2011,67 @@ event.process()
 \end{lstlisting}
 \end{latin}
 %
-%it can cause a deadlock.  Imagine that the buffer is empty.
-%A consumer arrives, gets the mutex, and then blocks on
-%{\tt items}.  When the producer arrives, it blocks on
-%{\tt mutex} and the system comes to a grinding halt.
-    می‌تواند سبب بروز بن‌بست گردد. تصور نمایید که بافر خالی است. یک مصرف‌کننده سر رسیده و میوتکس را گرفته و سپس روی {\tt items}
-    مسدود می‌گردد. زمانیکه تولید‌کننده سر می‌رسد،‌ روی {\tt mutex} مسدود شده و سیستم وارد یک توقف تمام اعیار گردد. 
+    این کد می‌تواند سبب بروز بن‌بست گردد. تصور نمایید که بافر خالی است. یک مصرف‌کننده سر رسیده و میوتکس را گرفته و سپس روی {\tt items}
+    مسدود می‌گردد. زمانیکه تولید‌کننده سر می‌رسد،‌ روی {\tt mutex} مسدود شده و سیستم وارد یک توقف تمام عیار گردد. 
 
-%This is a common error in synchronization code: any time
-%you wait for a semaphore while holding a mutex, there is
-%a danger of deadlock.  When you are checking a solution to
-%a synchronization problem, you should check for this kind
-%of deadlock.
-    این مشکل یک خطای رایج در کد همگام‌سازی است: هر زمان که برای یک سمافور منتظر می‌مانید در حالیکه یک میوتکس را در دست دارید، 
-    خطر بن‌بست وجود دارد. زمانیکه یک راه‌حل را نسبت به مساله همگام‌سازی بررسی می‌نمایید، باید این نوع از بن‌بست را مد نظر داشته باشید .
+    این مشکل، یک خطای رایج در کد همگام‌سازی است: هر زمان که برای یک سمافور منتظر می‌مانید در حالیکه یک میوتکس را در دست دارید، 
+    خطر بن‌بست وجود دارد. زمانیکه یک راه‌حل را نسبت به مساله همگام‌سازی بررسی می‌نمایید، باید این نوع از بن‌بست را مدّ نظر داشته باشید .
 
 
-%\subsection{Producer-consumer with a finite buffer}
 \subsection{تولیدکننده-مصرف‌کننده با یک بافر متناهی}
 
-%In the example I described above, event-handling threads,
-%the shared buffer is usually infinite (more accurately, it is
-%bounded by system resources like physical memory and swap
-%space).
     در این مثالی که بالا توضیح داده شد (نخ‌های کنترل‌کننده رویداد)، بافر اشتراکی معمولاً نامتناهی است (به طور دقیق‌تر، 
     با منابع سیستم نظیر حافظه فیزیکی و فضای مبادله\LTRfootnote{swap space} محدود شده است).
 
-%In the kernel of the operating system, though, there are
-%limits on available space.  Buffers for things like disk
-%requests and network packets are usually fixed size.  In
-%situations like these, we have an additional synchronization
-%constraint:
     گرچه در هستهٔ سیستم‌عامل، محدودیت‌هایی روی فضای موجود نیز وجود دارد. بافرهایی نظیر درخواست دیسک یا بسته‌های شبکه معمولاً سایز ثابتی دارند. 
     در این گونه موارد،‌ یک محدودیت همگام‌سازی دیگر نیز داریم:
 
 \begin{itemize}
 
 \item 
-%If a producer arrives when the buffer is full, it
-%blocks until a consumer removes an item.
     اگر زمانیکه بافر پر است یک تولیدکننده برسد، تا زمانیکه یک مصرف‌کننده عنصری را از بافر حذف کند مسدود می‌گردد. 
 
 \end{itemize}
 
-%Assume that we know the size of the buffer.  Call it
-%{\tt bufferSize}.  Since we have a semaphore that is keeping
-%track of the number of items, it is tempting to write something
-%like 
-    فرض کنید که اندازه بافر را می‌دانیم. آن {\tt bufferSize} بنامید. از آنجاییکه سمافوری داریم که تعداد عناصر را نگاه می‌دارد،‌ وسوسه می‌شویم 
+    فرض کنید که اندازه بافر را می‌دانیم. آن را {\tt bufferSize} بنامید. از آنجاییکه سمافوری داریم که تعداد عناصر را نگاه می‌دارد،‌ وسوسه می‌شویم 
     کدی به صورت زیر بنویسیم.
 
 \begin{latin}
-%\begin{lstlisting}[title={Broken finite buffer solution}]{}
-\begin{lstlisting}[title=\rl{راه حل معیوب بافر محدود}]{}
+\begin{lstlisting}[title=\rl{راه‌حل معیوب بافر محدود}]{}
 if items >= bufferSize:
     block()
 \end{lstlisting}
 \end{latin}
 
-%But we can't.  Remember that we can't check the current
-%value of a semaphore; the only operations are {\tt wait}
-%and {\tt signal}.
-    امّا نمی‌توانیم چنین کنیم. به یاد آورید مقدار جاری یک سمافور را نمی‌توان بررسی نمود؛ {\tt wait} و {\tt signal} تنها  عملیات ما هستند. 
+    امّا نمی‌توانیم چنین کنیم. به یاد آورید مقدار جاری یک سمافور را نمی‌توان بررسی نمود؛ {\tt wait} و {\tt signal} تنها  اعمال ممکن ما هستند. 
     
-%Puzzle: write producer-consumer code that handles the finite-buffer
-%constraint.
     معمّا: کد تولیدکننده-مصرف‌کننده‌ای بنویسید که محدودیت بافر-متناهی را مدیریت کند. 
     
 %%%%        Sat 14 Oct 2017 05:36:04 PM +0330
 
 \clearemptydoublepage
-%\subsection{Finite buffer producer-consumer hint}
-\subsection{ راهنمای بافر محدود تولیدکننده-مصرف‌کننده }
+\subsection{ راهنمایی بافر محدود تولیدکننده-مصرف‌کننده }
 
-%Add a second semaphore to keep track of the number of
-%available spaces in the buffer.
     سمافور دیگری را به منظور نگهداری تعداد فضای موجود در بافر  بیفزایید. 
 \begin{latin}
-%\begin{lstlisting}[title={Finite-buffer producer-consumer initialization}]{}
-\begin{lstlisting}[title=\rl{مقداردهی اولیه بافر محدود تولیدکننده-مصرف‌کننده}]{}
+\begin{lstlisting}[title=\rl{مقداردهی اولیهٔ بافر محدود تولیدکننده-مصرف‌کننده}]{}
 mutex = Semaphore(1)
 items = Semaphore(0)
 spaces = Semaphore(buffer.size())
 \end{lstlisting}
 \end{latin}
 
-%When a consumer removes an item it should signal {\tt spaces}.
-%When a producer arrives it should decrement {\tt spaces}, at
-%which point it might block until the next consumer signals.
     زمانیکه مصرف‌کننده عنصری را حذف می‌کند باید به {\tt spaces} سیگنال دهد. 
-    زمانیکه تولیدکننده می‌رسد باید {\tt spaces} را کاهش دهد، که در این نقطه ممکن است تا آن هنگامیکه مصرف‌کننده بعدی سیگنال دهد مسدود گردد. 
+    زمانیکه تولیدکننده می‌رسد باید {\tt spaces} را کاهش دهد، که در این نقطه ممکن است تا آن هنگامیکه مصرف‌کنندهٔ بعدی سیگنال دهد مسدود گردد. 
 
 
 \clearemptydoublepage
-%\subsection{Finite buffer producer-consumer solution}
 \subsection{ راه‌حل بافر محدود تولیدکننده-مصرف‌کننده }
 
-%Here is a solution.
     و امّا راه حل. 
 
 \begin{latin}
-%\begin{lstlisting}[title={Finite buffer consumer solution}]{}
-\begin{lstlisting}[title=\rl{راه حل  بافر محدود  مصرف‌کننده}]{}
+\begin{lstlisting}[title=\rl{راه‌حل  بافر محدود  مصرف‌کننده}]{}
 items.wait()
 mutex.wait()
     event = buffer.get()
@@ -2238,12 +2082,10 @@ event.process()
 \end{lstlisting}
 \end{latin}
 
-%The producer code is symmetric, in a way:
     کد تولیدکننده  تا حدودی متقارن است: 
 
 \begin{latin}
-%\begin{lstlisting}[title={Finite buffer producer solution}]{}
-\begin{lstlisting}[title=\rl{راه حل  بافر محدود تولیدکننده}]{}
+\begin{lstlisting}[title=\rl{راه‌حل  بافر محدود تولیدکننده}]{}
 event = waitForEvent()
 
 spaces.wait()
@@ -2254,12 +2096,10 @@ items.signal()
 \end{lstlisting}
 \end{latin}
 
-%In order to avoid deadlock, producers and consumers check
-%availability before getting the mutex.  For best performance,
-%they release the mutex before signaling.
-    به منظور اجتناب از بن‌بست، تولیدکننده‌ها و مصرف‌کننده‌ها پیش از گرفتن میوتکس موجود بودنش بررسی می‌نماید. 
+    به منظور اجتناب از بن‌بست، تولیدکننده‌ها و مصرف‌کننده‌ها پیش از گرفتن میوتکس، موجود بودنش را بررسی می‌نمایند. 
     برای بهترین کارایی، آن‌ها میوتکس را پیش از سیگنال‌دهی آزاد می‌نمایند. 
 
+%%%       Wed 10 Jul 2019 06:23:46 PM +0430 %%revision 3
 
 %\section{Readers-writers problem} 
 \section{مساله خوانندگان-نویسندگان}
