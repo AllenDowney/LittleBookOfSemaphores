@@ -2284,64 +2284,32 @@ readLightswitch.unlock(roomEmpty)
 %%%        Wed 24 Jul 2019 06:28:41 PM +0430   % revision3
 \subsection{قحطی}
 
-%In the previous solution, is there any danger of deadlock?
-%In order for a deadlock to occur, it must be possible for a
-%thread to wait on a semaphore while holding another, and thereby
-%prevent itself from being signaled.
-    آیا خطر بن‌بست در راه‌حل قبل وجود دارد؟ 
+    آیا در راه‌حل قبل خطر بن‌بست وجود دارد؟ 
     برای اینکه بن‌بستی رخ دهد، باید این امکان برای یک نخ وجود داشته باشد که بر  روی یک سمافور منتظر بماند در حالیکه سمافور دیگر را در اختیار دارد و 
     به موجب آن مانع از این شود که خودش سیگنالی دریافت نماید. 
 
-%In this example, deadlock is not possible, but there is a related
-%problem that is almost as bad: it is possible for a writer to
-%starve.
-    در این مثال، بن‌بست ممکن نیست، امّا یک مشکل مرتبط وجود دارد که تقریبا به همان اندازه بد است:‌ ممکن است نویسنده دچار قحطی شود. 
+    در این مثال، بن‌بست ممکن نیست، امّا یک مشکل مرتبط وجود دارد که تقریباً به همان اندازه بد است:‌ ممکن است نویسنده دچار قحطی شود. 
 
-%If a writer arrives while there are readers in the critical section,
-%it might wait in queue forever while readers come and go.  As long
-%as a new reader arrives before the last of the current readers
-%departs, there will always be at least one reader in the room.
     اگر نویسنده‌ای آن زمان که چندین خواننده در ناحیه بحرانی قرار دارند سر برسد ممکن است برای همیشه در صف منتظر بماند در حالیکه خوانندگان 
     می‌آیند و می‌روند. تا زمانیکه یک خواننده جدید پیش از اینکه آخرین خواننده از خواننده‌های جاری خارج شود برسد، همیشه حداقل یک خواننده در اتاق 
     وجود خواهد داشت. 
     
-
-%This situation is not a deadlock, because some threads are making
-%progress, but it is not exactly desirable.  A program like this
-%might work as long as the load on the system is low, because then there
-%are plenty of opportunities for the writers.  But as the load
-%increases the behavior of the system would deteriorate quickly
-%(at least from the point of view of writers).
-    این وضعیت یک بن‌بست نیست زیرا که برخی نخ‌ها در حال پیشروی هستند، امّا این به طور کامل مطلوب نیست. 
+    این وضعیت یک بن‌بست نیست زیرا که برخی نخ‌ها در حال پیشروی هستند، امّا این به طور دقیق وضعیت مطلوبی نیست. 
     برنامه‌ای نظیر این ممکن است تا زمانیکه بار روی سیستم کم است کار کند، زیرا که فرصت‌های زیادی برای نویسندگان وجود دارد. 
-    امّا همانطوری که بار سیسیتم افزایش یابد رفتار سیستم ممکن است به سرعت به زوال گراید (حداقل از دید نویسندگان). 
+    امّا همانطوری که بار سیستم افزایش یابد رفتار سیستم ممکن است به سرعت به زوال گراید (حداقل از دید نویسندگان). 
 
-%Puzzle: Extend this solution so that when a writer arrives,
-%the existing readers can finish, but no additional readers
-%may enter.
     معمّا: این راه‌حل را به گونه‌ای توسعه دهید تا زمانیکه یک نویسنده می‌رسد، خوانندگان موجود بتوانند خاتمه یابند ولی هیچ خوانندهٔ جدیدی نتواند وارد شود. 
 
 
 \clearemptydoublepage
-%\subsection {No-starve readers-writers hint}  
 \subsection {راهنمایی خوانندگان-نویسندگان بدون قحطی}  
 
-%Here's a hint.  You can add a turnstile for the readers and
-%allow writers to lock it.  The writers have to pass through
-%the same turnstile, but they should check the {\tt roomEmpty}
-%semaphore while they are inside the turnstile.  If a writer
-%gets stuck in the turnstile it has the effect of forcing the
-%readers to queue at the turnstile.  Then when the last reader
-%leaves the critical section, we are guaranteed that at least
-%one writer enters next (before any of the queued readers can
-%proceed).
     راهنمایی در ادامه آمده است. می‌توانید یک ترن‌استایل برای خوانندگان بیفزایید و به نویسندگان اجازه دهید آن را قفل نمایند. 
-    نویسندگان باید از طریق ترن‌استایل مشابهی گذر نمایند، امّا تا زمانیکه داخل آن هستند باید سمافور {\tt roomEmpty} را بررسی نمایند. 
+    نویسندگان باید از طریق همان ترن‌استایل گذر نمایند، امّا تا زمانیکه داخل آن هستند باید سمافور {\tt roomEmpty} را بررسی نمایند. 
     اگر یک نویسنده در ترن‌استایل گیر افتد اثر آن این است که خوانندگان را مجبور می‌نماید روی ترن‌استایل تشکیل صف دهند. سپس زمانیکه آخرین 
     خواننده ناحیه بحرانی را ترک نمود، می‌توانیم مطمئن باشیم که حداقل یک نویسنده در ادامه وارد می‌شود (قبل از آنکه خوانندگان در صف بتوانند ادامه یابند).
 
 \begin{latin}
-%\begin{lstlisting}[title={No-starve readers-writers initialization}]{}
 \begin{lstlisting}[title=\rl{مقدار دهی اولیه خوانندگان-نویسندگان بدون قحطی}]{}
 readSwitch = Lightswitch()
 roomEmpty = Semaphore(1)
@@ -2349,29 +2317,21 @@ turnstile = Semaphore(1)
 \end{lstlisting}
 \end{latin}
 
-%{\tt readSwitch} keeps track of how many readers are in the room;
-%it locks {\tt roomEmpty} when the first reader
-%enters and unlocks it when the last reader exits.
     {\tt readSwitch} 
     تعداد خوانندگان موجود در اتاق را نگاه می‌دارد؛ زمانیکه اوّلین خواننده وارد شد  {\tt roomEmpty} را قفل نموده و زمانیکه آخرین خواننده خارج شد 
     آن را باز می‌نماید. 
 
-%{\tt turnstile} is a turnstile for readers and a 
-%mutex for writers.
     {\tt turnstile}
     برای خواننده‌ها یک ترن‌استایل  و برای نویسندگان یک میوتکس است. 
 
 
 \clearemptydoublepage
-%\subsection {No-starve readers-writers solution}
-\subsection{راه حل خوانندگان-نویسندگان بدون قحطی}  
+\subsection{راه‌حل خوانندگان-نویسندگان بدون قحطی}  
 
 %Here is the writer code:
-    کد نویسنده در ادامه آمده است: 
 
 \begin{latin}
-%\begin{lstlisting}[title={No-starve writer solution}]{}
-\begin{lstlisting}[title=\rl{راه حل نویسنده بدون قحطی}]{}
+\begin{lstlisting}[title=\rl{راه‌حل نویسنده بدون قحطی}]{}
 turnstile.wait()
     roomEmpty.wait()           (* \label{stuck} *)
     # critical section for writers
@@ -2381,16 +2341,11 @@ roomEmpty.signal()
 \end{lstlisting}
 \end{latin}
 
-%If a writer arrives while there are readers in the room, it
-%will block at Line~\ref{stuck}, which means that the turnstile will
-%be locked.  This will bar readers from entering while a writer
-%is queued.  Here is the reader code:
-    اگر یک نویسنده آن زمانیکه چندین خواننده در اتاق وجود دارد برسد، در خط~\ref{stuck} مسدود می‌گردد، بدین معنی که ترن‌استایل قفل شده است. 
+    اگر آن زمانیکه چندین خواننده در اتاق وجود دارد یک نویسنده برسد، در خط~\ref{stuck} مسدود می‌گردد، بدین معنی که ترن‌استایل قفل شده است. 
     این کار، مانع ورود خوانندگان تا زمانیکه یک نویسنده در صف است می‌گردد. کد خواننده در ادامه آمده است: 
 
 \begin{latin}
-%\begin{lstlisting}[title={No-starve reader solution}]{}
-\begin{lstlisting}[title=\rl{راه حل خواننده بدون قحطی}]{}
+\begin{lstlisting}[title=\rl{راه‌حل خواننده بدون قحطی}]{}
 turnstile.wait()
 turnstile.signal()
 
@@ -2400,68 +2355,35 @@ readSwitch.unlock(roomEmpty)
 \end{lstlisting}
 \end{latin}
 
-%When the last reader leaves, it signals {\tt roomEmpty},
-%unblocking the waiting writer.  The writer immediately
-%enters its critical section, since none of the waiting
-%readers can pass the turnstile.
     زمانیکه آخرین خواننده خارج می‌شود به {\tt roomEmpty} سیگنال داده و نویسنده در حال انتظار را رفع انسداد می‌نماید. 
     از آنجایی که هیچکدام از خوانندگان در حال انتظار نمی‌توانند از ترن‌استایل بگذرند، نویسنده بلافاصله وارد ناحیهٔ بحرانی خودش می‌شود. 
 
-%When the writer exits it signals {\tt turnstile}, which unblocks a
-%waiting thread, which could be a reader or a writer.  Thus, this
-%solution guarantees that at least one writer gets to proceed, but it
-%is still possible for a reader to enter while there are writers
-%queued.  
-    زمانیکه نویسنده خارج می‌شود  {\tt turnstile} را سیگنال می‌دهد که نخ‌ در حال انتظار اعم از خواننده یا نویسنده را رفع انسداد می‌نماید. 
+    زمانیکه نویسنده خارج می‌شود  به {\tt turnstile} سیگنال می‌دهد که نخ‌ در حال انتظار اعم از خواننده یا نویسنده را رفع انسداد می‌نماید. 
     بنابراین، این راه‌حل تضمین می‌نماید که حداقل یک نویسنده می‌تواند ادامه یابد، امّا هنوز این امکان برای یک خواننده وجود دارد آن زمان که 
     نویسندگانی در صف وجود دارند وارد شود. 
     
-%Depending on the application, it might be a good idea to
-%give more priority to writers.  For example, if writers are making
-%time-critical updates to a data structure, it is best
-%to minimize the number of readers that see the old data before
-%the writer has a chance to proceed.
-    بسته به کاربرد، اعطای اولویت بیشتر به نویسندگان ممکن ایده خوبی باشد. برای مثال، اگر خوانندگان ضرب العجلی در بروزرسانی‌های خود 
+    بسته به کاربرد، اعطای اولویت بیشتر به نویسندگان ممکن است ایده خوبی باشد. برای مثال، اگر نویسندگان ضرب العجلی در بروزرسانی‌های خود 
     نسبت به یک ساختمان داده‌ داشته باشند 
-    بهتر است که تعداد خوانندگانی که داده قدیمی را پیش از اینکه نویسنده تغییر خود را اعمال نمایند می‌بیند کمینه باشند. 
-%%%ترجمه فوق باید اصلاح شود. 
+    پیش از اینکه نویسنده تغییر خود را اعمال نماید بهتر است تعداد خوانندگانی که داده قدیمی را می‌بینند کمینه باشد. 
 
-%In general, though, it is up to the scheduler, not the programmer,
-%to choose which waiting thread to unblock.
-%Some schedulers use a first-in-first-out queue, which means
-%that threads are unblocked in the same order they queued.
-%Other schedulers choose at random, or according to
-%a priority scheme based on the properties of the waiting
-%threads.
-    گرچه عموماً، بر عهده زمان‌بند و نه برنامه‌نویس است که تعیین نماید کدام نخ در حال انتظار رفع انسداد گردد. 
-    برخی زمان‌بندها از یک صف \lr{FIFO}\LTRfootnote{First-In-First-Out} استفاده می‌کند و بدین معنی است که نخ‌ها بهمان ترتیبی که 
-    وارد صف شده‌اند رفع انسداد می‌شود. در دیگر زمان‌بندها، انتخاب ممکن است به صورت تصادفی، یا بر اساس الگوی اولویت  
-    بر مبنای اولویت نخ‌های در حال انتظار باشد. 
+    گرچه عموماً، بر عهدهٔ زمان‌بند و نه برنامه‌نویس است که تعیین نماید کدام نخ در حال انتظار رفع انسداد گردد. 
+    برخی زمان‌بندها از یک صف \lr{FIFO}\LTRfootnote{First-In-First-Out} استفاده می‌کنند بدین معنی است که نخ‌ها بهمان ترتیبی که 
+    وارد صف شده‌اند رفع انسداد می‌شوند. در دیگر زمان‌بندها، انتخاب ممکن است به صورت تصادفی، یا بر اساس الگوی اولویت  
+    بر مبنای خصوصیات نخ‌های در حال انتظار باشد. 
 
-%If your programming environment makes it possible to give
-%some threads priority over others, then that is a simple way
-%to address this issue.  If not, you will have to find another
-%way.
-    اگر محیط برنامه‌نویسی شما این امکان را بدهد که برخی نخ‌ها را نسبت به مابقی اولویت دهید، آنگاه برای رسیدگی به مسأله فوق، راه آسان استفاده از همین امکان است. 
+    اگر محیط برنامه‌نویسی شما این امکان را بدهد که برخی نخ‌ها را نسبت به مابقی اولویت دهید، آنگاه برای رسیدگی به مسأله فوق، یک راه آسان استفاده از همین امکان است. 
     و اگر محیط برنامه‌نویسی چنین امکانی را به شما ندهد باید بدنبال راه‌حل دیگری باشید. 
 
-%Puzzle: Write a solution to the readers-writers problem that gives
-%priority to writers.  That is, once a writer arrives, no readers
-%should be allowed to enter until all writers have left the system.
     معمّا: راه حلی برای مسأله خوانندگان-نویسندگان ارائه دهید که اولویت را به نویسندگان  دهد. به این معنی که اگر یک نویسنده رسید، هیچ خواننده‌ای  
     مجاز به ورود نباشد تا آن زمان که تمامی نویسندگان سیستم را ترک گفته باشند. 
 
 
 \clearemptydoublepage
-%\subsection{Writer-priority readers-writers hint}
 \subsection{راهنمایی خوانندگان-نویسندگان با اولویت نویسنده}
 
-%As usual, the hint is in the form of variables
-%used in the solution.
     طبق معمول،‌ راهنمایی در قالب متغیرهای مورد استفاده در راه‌حل آمده است. 
 
 \begin{latin}
-%\begin{lstlisting}[title={Writer-priority readers-writers initialization}]{}
 \begin{lstlisting}[title=\rl{مقداردهی اولیه خوانندگان-نویسندگان با اولویت نویسنده}]{}
 readSwitch = Lightswitch()
 writeSwitch = Lightswitch()
@@ -2474,16 +2396,13 @@ noWriters = Semaphore(1)
 
 
 \clearemptydoublepage
-%\subsection{Writer-priority readers-writers solution}
-\subsection{راه حل نویسندگان-خوانندگان با اولویت نویسنده}
+\subsection{راه‌حل نویسندگان-خوانندگان با اولویت نویسنده}
 
 
-%Here is the reader code:
     کد خواننده در ادامه آمده است:
 
 \begin{latin}
-%\begin{lstlisting}[title={Writer-priority reader solution}]{}
-\begin{lstlisting}[title=\rl{راه حل خواننده با اولویت نویسنده}]{}
+\begin{lstlisting}[title=\rl{راه‌حل خواننده با اولویت نویسنده}]{}
 noReaders.wait()
     readSwitch.lock(noWriters)
 noReaders.signal()
@@ -2494,23 +2413,15 @@ readSwitch.unlock(noWriters)
 \end{lstlisting}
 \end{latin}
 
-%If a reader is in the critical section, it holds
-%{\tt noWriters}, but it doesn't hold {\tt noReaders}.
-%Thus if a writer arrives it can lock {\tt noReaders},
-%which will cause subsequent readers to queue.
     اگر یک خواننده درون ناحیه بحرانی باشد، {\tt noWriters} را در اختیار می‌گیرد، امّا {\tt noReaders} را خیر. 
-    بنابراین اگر یک نویسنده برسد می‌تواند می‌تواند {\tt noReaders} را قفل نماید که سبب در صف قرار گرفتن خوانندگان بعدی می‌گردد. 
+    بنابراین اگر یک نویسنده برسد می‌تواند {\tt noReaders} را قفل نماید که سبب در صف قرار گرفتن خوانندگان بعدی می‌گردد. 
 
-%When the last reader exits, it signals {\tt noWriters},
-%allowing any queued writers to proceed.
     زمانیکه آخرین خواننده خارج می‌شود، با سیگنال دهی به {\tt noWriters} اجازه می‌دهد تا نویسندگانی که در صف قرار گرفته‌اند بکار خود ادامه دهند. 
 
-%The writer code:
     کد نویسنده: 
 
 \begin{latin}
-%\begin{lstlisting}[title={Writer-priority writer solution}]{}
-\begin{lstlisting}[title=\rl{راه حل نویسنده با اولویت نویسنده}]{}
+\begin{lstlisting}[title=\rl{راه‌حل نویسنده با اولویت نویسنده}]{}
 writeSwitch.lock(noReaders)
     noWriters.wait()
         # critical section for writers
@@ -2519,19 +2430,8 @@ writeSwitch.unlock(noReaders)
 \end{lstlisting}
 \end{latin}
 
-%When a writer is in the critical section it holds both
-%{\tt noReaders} and {\tt noWriters}.  This has the
-%(relatively obvious) effect of insuring that there are
-%no readers and no other writers in the critical section.
-%In addition, {\tt writeSwitch} has the (less obvious) effect of
-%allowing multiple writers to queue on {\tt noWriters},
-%but keeping {\tt noReaders} locked while they are
-%there.  Thus, many writers can pass through the critical
-%section without ever signaling
-%{\tt noReaders}.  Only when the last writer exits can
-%the readers enter.
     زمانیکه یک نویسنده در ناحیه بحرانی است هر دوی {\tt noReaders} و {\tt noWriters} را در اختیار می‌گیرد. 
-    نسبتاً واضح است که اثر این، تضمین نمودن این است که هیچ خواننده و نویسندهٔ دیگری در ناحیه بحرانی قرار ندارد. 
+    نسبتاً واضح است که این عمل تضمین می‌کند که هیچ خواننده و نویسندهٔ دیگری در ناحیه بحرانی قرار ندارد. 
     به علاوه، اثر کمتر واضح این است که {\tt writeSwitch} به چندین نویسنده اجازه می‌دهد تا روی {\tt noWriters} در صف قرار گیرند،‌ 
     امّا تا زمانیکه نویسندگان حضور دارند،   {\tt noReaders} را قفل نگاه می‌دارد. 
     فقط زمانیکه آخرین نویسنده خارج می‌شود، خوانندگان می‌توانند وارد شوند. 
@@ -2541,39 +2441,24 @@ writeSwitch.unlock(noReaders)
 %delays).  For some applications it might be better to get
 %obsolete data with predictable turnaround times.
     البته، یک اشکال این راه‌حل این است که اکنون ممکن است خوانندگان دچار قحطی شوند (یا حداقل با تاخیر طولانی مواجه شوند).  
-    برای برخی کاربردها شاید بهتر باشد که داده‌های قدیمی با زمان‌های بازگشتِ پیش‌بینی‌ پذیر، اخذ گردد. 
+%    برای برخی کاربردها شاید بهتر باشد که داده‌های قدیمی با زمان‌های بازگشتِ پیش‌بینی‌ پذیر، اخذ گردد. 
+%%%%    ترجمه باید بررسی گردد و نامفهوم است. 
 
 
 \clearemptydoublepage
-%\section{No-starve mutex}
 \section{میوتکس بدون قحطی}
 \label{props}
 
-%In the previous section, we addressed what I'll call
-%{\bf categorical starvation}, in which one category of threads
-%(readers) allows another category (writers) to starve.
-%At a more basic level, we have to address the issue of
-%{\bf thread starvation}, which is the possibility that one
-%thread might wait indefinitely while others proceed.
     در بخش قبل، با چیزی که من آن را \textbf{قحطی دسته‌ای} نامیدم مواجه شدیم، که در آن یک گروه از نخ‌ها (خوانندگان) 
-    سبب قحطی دسته دیگر (نویسندگان) می‌گردد. در  سطحی ابتدایی‌تر،‌ باید این موضوع \textbf{قحطی نخ} را بررسی نماییم (امکان 
-    اینکه یک نخ در حالیکه مابقی نخ‌ها به کار خود ادامه می‌دهند، به صورت نامتناهی منتظر بماند). 
+    سبب قحطی دستهٔ دیگر (نویسندگان) می‌گردد. در سطحی پایه‌ای‌تر،‌ باید مساله \textbf{قحطی نخ} را که در آن یک نخ ممکن است به صورت نامتناهی منتظر بماند در حالیکه مابقی نخ‌ها به کار خود ادامه می‌دهند را بررسی نماییم.
     
     
-%For most concurrent applications, starvation is unacceptable,
-%so we enforce the requirement of {\bf bounded waiting}, which
-%means that the time a thread waits on a semaphore (or anywhere
-%else, for that matter) has to be provably finite.
     برای غالب برنامه‌های کاربردی همروند، قحطی پذیرفتی نیست، لذا باید ضرورت \textbf{انتظار محدود}\LTRfootnote{bounded waiting}
-    را اعمال کنیم، بدین معنی که زمان انتظار نخ بر روی یک سمافور (یا هر جای دیگری به همان منظور) باید ثبوتاً متناهی باشد. 
+    را اعمال کنیم، بدین معنی که زمان انتظار نخ بر روی یک سمافور (یا هر جای دیگری به همان منظور) باید کاملاً متناهی باشد. 
 
-%In part, starvation is the responsibility of the scheduler.
-%Whenever multiple threads are ready to run, the scheduler decides
-%which one or, on a parallel processor, which set of threads gets
-%to run.  If a thread is never scheduled, then it will starve,
-%no matter what we do with semaphores.
-    تا حدّی، زمان‌بند مسبب قحطی است. هر زمان که چندین نخ آمادهٔ اجرا هستند، زمان‌بند تصمیم می‌گیرد که کدام یک، در یک پردازنده موازی،‌ کدام 
-    مجموعه از نخ‌ها، اجرا شوند. اگر یک نخ هرگز زمانبندی نشود آنگاه دچار قحطی خواهد شد، بدون توجه به اینکه ما با سمافورها چه می‌کنیم. 
+    تا حدّی، زمان‌بند مسبب قحطی است. هر زمان که چندین نخ آمادهٔ اجرا هستند، زمان‌بند تصمیم می‌گیرد که کدام یک یا 
+     کدام مجموعه از نخ‌ها (در یک پردازنده موازی)، اجرا شوند. اگر یک نخ هرگز زمانبندی نشود آنگاه دچار قحطی خواهد شد، بدون توجه به اینکه ما با سمافورها چه می‌کنیم. 
+%%%        Wed 31 Jul 2019 06:17:55 PM +0430   %%%revision 3
 
 %So in order to say anything about starvation, we have to start
 %with some assumptions about the scheduler.  If we are willing
