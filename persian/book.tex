@@ -2460,22 +2460,15 @@ writeSwitch.unlock(noReaders)
      کدام مجموعه از نخ‌ها (در یک پردازنده موازی)، اجرا شوند. اگر یک نخ هرگز زمانبندی نشود آنگاه دچار قحطی خواهد شد، بدون توجه به اینکه ما با سمافورها چه می‌کنیم. 
 %%%        Wed 31 Jul 2019 06:17:55 PM +0430   %%%revision 3
 
-%So in order to say anything about starvation, we have to start
-%with some assumptions about the scheduler.  If we are willing
-%to make a strong assumption, we can assume that the scheduler
-%uses one of the many algorithms that can be proven to enforce
-%bounded waiting.  If we don't know what algorithm the scheduler
-%uses, then we can get by with a weaker assumption:
-    لذا به منظور اینکه چیزی درباره قحطی بگوییم،‌ باید با تعدادی پیش‌فرض درباره زمان‌بند شروع نماییم. 
-    اگر تمایل به یک فرض قوی درباره زمان‌بند داریم، 
-    می‌توانیم تصویر نماییم که زمان‌بند یکی از الگوریتم‌های بسیاری که می‌تواند ثابت شود که انتظار محدود را اعمال می‌کند، استفاده می‌نماید. 
-    اگر نمی‌دانیم که زمان‌بند از چه الگوریتمی استفاده می‌نماید، سپس می‌توانیم یک فرض ضعیف‌تر در نظر بگیریم: 
+    لذا قبل از اینکه چیزی درباره قحطی بگوییم،‌ باید با تعدادی پیش‌فرض درباره زمان‌بند شروع نماییم. 
+    اگر بخواهیم که یک فرض قوی درباره زمان‌بند داشته باشیم، 
+    می‌توانیم تصور نماییم که زمان‌بند از یکی از چندین الگوریتمی  استفاده می‌‌کند که می‌توانند برای اعمال انتظار محدود به کار روند. 
+    اگر نمی‌دانیم که زمان‌بند از چه الگوریتمی استفاده می‌نماید، سپس می‌توانیم یک فرض ضعیف‌تر در نظر بگیریم:
 
 \begin{quote}
-%Property 1: if there is only one thread that is ready to
-%run, the scheduler has to let it run.
     خصوصیت ۱: اگر تنها یک نخ آماده اجرا هست، زمان‌بند باید اجازه اجرای آن را بدهد. 
 \end{quote}
+%%%         Wed 13 Nov 2019 06:05:27 PM +0330 %%%revision3
 
 %If we can assume Property 1, then we can build a system
 %that is provably free of starvation.  For example, if there
@@ -2483,9 +2476,10 @@ writeSwitch.unlock(noReaders)
 %a barrier cannot starve, since eventually all threads but one
 %will be waiting at the barrier, at which point the last thread
 %has to run.
-    اگر بتوانیم خصوصیت ۱ را فرض کنیم، سپس می‌توانیم سیستمی بدون قحطی بسازیم.
+%    اگر بتوانیم خصوصیت ۱ را فرض کنیم، سپس می‌توانیم سیستمی بدون قحطی بسازیم.
+    با فرض خصوصیت ۱ می‌توانیم سیستمی بدون قحطی بسازیم. 
     برای مثال، اگر یک تعداد متناهی از نخ‌ها وجود داشته باشد، سپس هر برنامه‌ای که شامل یک حصار باشد دچار قحطی نمی‌گردد، زیرا که 
-    نهایتاً تمامی نخ‌ها بجز یکی پشت حصار منتظر می‌ماند که در این نقطه آخرین نخ باید اجرا شود. 
+    نهایتاً تمامی نخ‌ها بجز یکی، پشت حصار منتظر می‌ماند که در این نقطه آخرین نخ باید اجرا شود. 
 
 %In general, though, it is non-trivial to write programs that
 %are free from starvation unless we make the stronger
