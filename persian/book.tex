@@ -2691,110 +2691,71 @@ while True:
 \end{lstlisting}
 \end{latin}
 
-%The forks represent resources that the threads have to hold
-%exclusively in order to make progress.  The thing that makes the
-%problem interesting, unrealistic, and unsanitary, is that the
-%philosophers need {\em two} forks to eat, so a hungry philosopher
-%might have to wait for a neighbor to put down a fork.
     چنگال‌ها، منابعی را نشان می‌دهند که نخ‌ها باید برای پیشرفت به صورت انحصاری آن‌ها را در اختیار داشته باشند.
-    آن چیزی که مسأله را جذاب، غیرواقعی و غیربهداشتی می‌نماید این است که فیلسوف‌ها برای  خوردن نیاز به دو تا چنگال دارند، لذا 
+    آن چیزی که مسأله را جذاب، غیرواقعی و غیربهداشتی می‌نماید این است که فیلسوف‌ها برای  خوردن نیاز به \textbf{دو} تا چنگال دارند، لذا 
     یک فیلسوف گرسنه باید منتظر همسایه‌اش بماند تا چنگال را زمین بگذارد. 
 
-%Assume that the philosophers have a local variable {\tt i} that
-%identifies each philosopher with a value in $(0..4)$.  Similarly,
-%the forks are numbered from 0 to 4, so that Philosopher $i$ has
-%fork $i$ on the right and fork $i+1$ on
-%the left.  Here is a diagram of the situation:
     تصور کنید که فیلسوف‌ها یک متغیر محلی {\tt i} دارند که هر کدام  از آن‌ها را با مقداری بین ۰ تا ۴ مشخص می‌کند. 
-    به طور مشابه، چنگال‌ها از ۰ تا ۴ شماره‌گذاری شده‌اند، لذا فیلسوف $i$ چنگال $i$ را در سمت راست خود دارد و چنگال  $i+1$  را در سمت چپ.
-    دیاگرام این وضعیت در تصویر آمده است: 
+    به طور مشابه، چنگال‌ها از ۰ تا ۴ شماره‌گذاری شده‌اند، 
+    لذا فیلسوف $i$ چنگال $i$ را در سمت راست و چنگال  $i+1$  را در سمت چپ خود دارد.
+    دیاگرام این وضعیت در ادامه آمده است: 
 
 \centerline{\includegraphics[height=2in]{table.eps}}
 
-%Assuming that the philosophers know how to {\tt think} and {\tt eat},
-%our job is to write a version of {\tt get\_forks} and {\tt put\_forks}
-%that satisfies the following constraints:
-    با فرض آنکه بدانیم فیلسوف‌ها چگونه {\tt think} و {\tt eat} می‌نمایند، وظیفه ما این است نسخه‌ای از {\tt get\_forks} و {\tt put\_forks}
-    را بنویسیم که شرایط زیر را برآورده سازد:
+    با فرض اینکه چگونگی {\tt think} و {\tt eat} فیلسوف‌ها را بدانیم، وظیفه ما این است که 
+    نسخه‌ای از {\tt get\_forks} و {\tt put\_forks}   را بنویسیم تا شرایط زیر را برآورده سازد:
 
 \begin{itemize}
 
 \item 
-%Only one philosopher can hold a fork at a time.
     در یک زمان تنها یک فیلسوف بتواند یک چنگال را در اختیار داشته باشد. 
 
 \item 
-%It must be impossible for a deadlock to occur.
     امکان بروز بن‌بست وجود نداشته باشد. 
 
 \item 
-%It must be impossible for a philosopher to starve waiting for a fork.
     یک فیلسوف نباید به واسطه انتظار برای به دست آوردن یک چنگال دچار قحطی شود. 
 
 \item 
-%It must be possible for more than one philosopher
-%to eat at the same time.
     این امکان وجود داشته باشد که بیش از یک فیلسوف بتوانند به صورت همزمان غذا خورند. 
 
 \end{itemize}
 
-%The last requirement is one way of saying that the solution
-%should be efficient; that is, it should allow the maximum amount
-%of concurrency.
-    آخرین نیازمندی، بیان دیگری از این مطلب است که راه‌حل باید کارا باشد؛ به این معنی که باید حداکثر مقدار همروندی را اجازه دهد. 
+    آخرین نیازمندی، بیان دیگری از این مطلب است که راه‌حل باید کارا باشد؛ به این معنی که باید حداکثر مقدار همروندی را ممکن سازد. 
 
-%We make no assumption about how long {\tt eat} and {\tt think} take,
-%except that {\tt eat} has to terminate eventually.  Otherwise, the
-%third constraint is impossible---if a philosopher keeps one of the
-%forks forever, nothing can prevent the neighbors from starving.
-    درباره اینکه {\tt eat} و {\tt think} چقدر طول می‌کشد هیچ فرضی  در نظر نمی‌گیریم، بجز آنکه {\tt eat}  باید در نهایت خاتمه یابد. 
-    در غیر اینصورت، اعمال محدودیت سوم ناممکن است---اگر یک فیلسوف یک از چنگال‌ها را تا ابد نگه دارد، هیچ چیز نمی‌تواند مانع قحطی همسایه‌ها شود. 
+    درباره اینکه {\tt eat} و {\tt think} چقدر طول می‌کشد هیچ فرضی  را در نظر نمی‌گیریم، بجز آنکه در نهایت، {\tt eat}  باید خاتمه یابد. 
+    در غیر اینصورت، إعمال محدودیت سوّم ناممکن است---اگر یک فیلسوف یکی از چنگال‌ها را تا ابد نگه دارد، 
+    هیچ چیز نمی‌تواند مانع قحطی همسایه‌ها شود. 
     
 
-%To make it easy for philosophers to refer to their forks,
-%we can use the functions {\tt left} and {\tt right}:
     برای اینکه ارجاع فیلسوف‌ها به چنگال‌هایشان را ساده نماییم می‌توانیم از توابع {\tt left} و {\tt right} استفاده کنیم. 
 
 \begin{latin}
-%\begin{lstlisting}[title={Which fork?}]{}
 \begin{lstlisting}[title=\rl{کدام چنگال؟}]{}
 def left(i): return i
 def right(i): return (i + 1) % 5
 \end{lstlisting}
 \end{latin}
 
-%The {\tt \%} operator wraps around when it gets to 5, so
-%{\tt (4 + 1) \% 5 = 0}.
-    اپراتور {\tt \%} زمانیکه مقدار به ۵ برسد آن به ۰ بر می‌گرداند؛ {\tt (4 + 1) \% 5 = 0}.
+    اپراتور {\tt \%} زمانیکه مقدار به ۵ برسد آن را به ۰ بر می‌گرداند؛ {\tt (4 + 1) \% 5 = 0}.
 
-%Since we have to enforce exclusive access to the forks,
-%it is natural to use a list of Semaphores, one for
-%each fork.  Initially, all the forks are available.
     از آنجایی که لازم است دسترسی انحصاری به چنگال‌ها را فراهم آوریم، طبیعی است که از لیستی از سمافورها استفاده کنیم، هر کدام برای یک چنگال. 
     در ابتدا تمامی چنگال‌ها موجودند. 
 
 \begin{latin}
-%\begin{lstlisting}[title={Variables for dining philosophers}]{}
 \begin{lstlisting}[title=\rl{متغیرهای غذا خوردن فیلسوف‌ها}]{}
 forks = [Semaphore(1) for i in range(5)]
 \end{lstlisting}
 \end{latin}
 
-%This notation for initializing a list might be unfamiliar to
-%readers who don't use Python.  The {\tt range} function returns
-%a list with 5 elements; for each element of this list, Python
-%creates a Semaphore with initial value 1 and assembles the
-%result in a list named {\tt forks}.    
     این نماد برای مقداردهی اولیه یک لیست ممکن است برای خوانندگانی که  پایتون را به کار نبرده‌اند ناآشنا باشد. 
-    تابع {\tt range}، لیستی با پنج عنصر بر‌ می‌گرداند؛ برای هر عنصر این لیست، پایتون یک سمافور با مقدار اولیه ۱ ساخته و نتیجه را در یک لیست 
-    به نام  {\tt forks} گرد می‌آورد.  
+    تابع {\tt range}، لیستی با پنج عنصر بر‌ می‌گرداند؛ برای هر عنصر این لیست، پایتون یک سمافور با مقدار اولیه ۱ ساخته 
+    و نتیجه را در یک لیست به نام  {\tt forks} گرد می‌آورد.  
 
-%Here is an initial attempt at {\tt get\_fork} and {\tt put\_fork}:
     تلاشی ابتدایی برای  {\tt get\_fork} و {\tt put\_fork} در ادامه آمده است:
 
 \begin{latin}
-%\begin{lstlisting}[title={Dining philosophers non-solution}]{}
-\begin{lstlisting}[title=\rl{ناراه‌حل غذا خوردن فیلسوف}]{}
+\begin{lstlisting}[title=\rl{ناراه‌حل غذا خوردن فیلسوف‌ها}]{}
 def get_forks(i):
     fork[right(i)].wait()
     fork[left(i)].wait()
@@ -2805,50 +2766,33 @@ def put_forks(i):
 \end{lstlisting}
 \end{latin}
 
-%It's clear that this solution satisfies the first constraint, but
-%we can be pretty sure it doesn't satisfy the other two, because
-%if it did, this wouldn't be an interesting problem and you would
-%be reading Chapter~\ref{next}.
-    واضح است که این راه‌حل اوّلین شرط را برآورده می‌نماید، امّا می‌توانیم مطمئن باشیم که دو شرط  بعدی برآورده نمی‌شود، زیرا که 
+    واضح است که این راه‌حل اوّلین شرط را برآورده می‌نماید، امّا می‌توانیم کاملاً مطمئن باشیم که دو شرط  بعدی برآورده نمی‌شود، زیرا که 
     اگر چنین بود، اصلاً مسأله جذابی نبوده و شما می‌توانستید به مطالعه فصل~\ref{next} بپردازید. 
 
-%Puzzle: what's wrong?
     معمّا:‌ مشکل کجاست؟
 
 
 \clearemptydoublepage
-%\subsection{Deadlock \#5}
 \subsection{بن‌بست \#5}
 
-%The problem is that the table is round.  As a result, each philosopher
-%can pick up a fork and then wait forever for the other fork.  Deadlock!
-    اشکال کار در این است که میز گرد است. در نتیجه، هر فیلسوف می‌تواند یک چنگال را بر گرفته و سپس برای همیشه منتظر چنگال دیگر بماند. بن‌بست! 
+    اشکال کار در این است که میز گرد است. در نتیجه، هر فیلسوف می‌تواند یک چنگال را بر گرفته 
+    و سپس برای همیشه منتظر چنگال دیگر بماند. بن‌بست! 
 
-%Puzzle: write a solution to this problem that prevents deadlock.
     معمّا: راه حلی برای این مسأله ارائه دهید که از بن‌بست جلوگیری نماید. 
 
-%Hint: one way to avoid deadlock is to think about the conditions
-%that make deadlock possible and then change one of those conditions.
-%In this case, the deadlock is fairly fragile---a very small change
-%breaks it.
     راهنمایی: یک راه اجتناب از بن‌بست این است که شرایطی که بن‌بست را ممکن می‌سازند را در نظر گرفته  و سپس یکی از آن‌ها را تغییر دهیم. 
-    در این مورد، بن‌بست خیلی شکننده است--یک تغییر خیلی کوچک آن را در هم می‌شکند. 
+    در این مساله، بن‌بست خیلی شکننده است--یک تغییر خیلی کوچک آن را در هم می‌شکند. 
 
 \clearemptydoublepage
-%\subsection{Dining philosophers hint \#1}
 \subsection{راهنمایی غذا خوردن فیلسوف‌ها \#1}
 
-%If only four philosophers are allowed at the table at a time,
-%deadlock is impossible.
     اگر تنها چهار فیلسوف در یک زمان مجاز به نشستن سر میز باشند، بن‌بست غیر ممکن می‌گردد. 
 
-%First, convince yourself that this claim is true, then write code that
-%limits the number of philosophers at the table.
-    ابتدا، خودتان را متقاعد نمایید که این ادعا درست است، سپس کدی بنویسید که تعداد فیلسوف‌ها را سر میز محدود نمایید. 
+    ابتدا، خودتان را متقاعد نمایید که این ادّعا درست است، سپس کدی بنویسید که تعداد فیلسوف‌ها را سر میز محدود نمایید. 
 
+%%  Wed 15 Jan 2020 06:02:19 PM +0330 : revision3
 
 \clearemptydoublepage
-%\subsection{Dining philosophers solution \#1}
 \subsection{راه حل غذا خوردن فیلسوف‌ها  \#1}
 
 %If there are only four philosophers at the table, then in the
