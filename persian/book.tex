@@ -3010,10 +3010,7 @@ def test(i):
 %%%%        Sat 18 Nov 2017 06:11:58 PM +0330
 %%%        Tue 28 Jan 2020 05:58:30 PM +0330; revision3
 
-%Naturally, we will focus on the interesting version.  To complete
-%the statement of the problem, we need to specify the agent code.
-%The agent uses the following semaphores:
-    طبیعتاً بر روی نسخه جالب تمرکز می‌نمایم. برای تکمیل بیان مسأله، باید کد عامل را مشخص نماییم. عامل، سمافورهای زیر را بکار می‌برد:
+    طبیعتاً روی نسخه جذّاب تمرکز می‌نمایم. برای تکمیل بیان مسأله، باید کد عامل را مشخص نماییم. عامل، سمافورهای زیر را بکار می‌برد:
 
 \begin{latin}
 %\begin{lstlisting}[title={Agent semaphores}]{}
@@ -3025,17 +3022,11 @@ match = Semaphore(0)
 \end{lstlisting}
 \end{latin}
 
-%The agent is actually made up of three concurrent
-%threads, Agent A, Agent B and Agent C.  Each waits on
-%{\tt agentSem}; each time {\tt agentSem} is signaled,
-%one of the Agents wakes up and provides ingredients by
-%signaling two semaphores.
-    عامل در واقع از سه نخ همروند تشکیل شده است:  عامل \lr{A}،  عامل \lr{B}،  عامل \lr{C}.
+    عامل در واقع از سه نخ همروند تشکیل شده است:  عامل \lr{A}،  عامل \lr{B} و عامل \lr{C}.
     هر کدام از آن‌ها روی {\tt agentSem} منتظر می‌مانند؛ هر گاه که {\tt agentSem} سیگنالی دریافت کند، یکی از عامل‌ها بر می‌خیزد و 
     از طریق سیگنال‌دهی به دو سمافور، مواد مورد نیاز را فراهم می‌آورد. 
 
 \begin{latin}
-%\begin{lstlisting}[title={Agent A code}]{}
 \begin{lstlisting}[title=\rl{کد عامل \lr{A}}]{}
 agentSem.wait()
 tobacco.signal()
@@ -3045,7 +3036,6 @@ paper.signal()
 
 
 \begin{latin}
-%\begin{lstlisting}[title={Agent B code}]{}
 \begin{lstlisting}[title=\rl{کد عامل \lr{B}}]{}
 agentSem.wait()
 paper.signal()
@@ -3054,7 +3044,6 @@ match.signal()
 \end{latin}
 
 \begin{latin}
-%\begin{lstlisting}[title={Agent C code}]{}
 \begin{lstlisting}[title=\rl{کد عامل \lr{C}}]{}
 agentSem.wait()
 tobacco.signal()
@@ -3062,14 +3051,14 @@ match.signal()
 \end{lstlisting}
 \end{latin}
 
-%This problem is hard because the natural solution does not
 %work.  It is tempting to write something like:
-    این مسأله آنقدرها هم ساده نیست و راه‌حل طبیعی آن کار نمی‌کند. نوشتن کدی مانند زیر، وسوسه انگیز است: 
+    این مسأله آنقدرها هم ساده نیست زیرا که راه‌حل طبیعی آن کار نمی‌کند.  ممکن است وسوسه شوید تا کدی مانند زیر بنویسید:
+%    نوشتن کدی مانند زیر، وسوسه انگیز است: 
     
 
 \begin{latin}
 %\begin{lstlisting}[title={Smoker with matches}]{}
-\begin{lstlisting}[title=\rl{سیگاری با کبریت}]{}
+\begin{lstlisting}[title=\rl{‌سیگاری کبریت‌دار}]{}
 tobacco.wait()
 paper.wait()
 agentSem.signal()
@@ -3078,7 +3067,7 @@ agentSem.signal()
 
 \begin{latin}
 %\begin{lstlisting}[title={Smoker with tobacco}]{}
-\begin{lstlisting}[title=\rl{سیگاری با تنباکو}]{}
+\begin{lstlisting}[title=\rl{سیگاری تنباکو‌دار}]{}
 paper.wait()
 match.wait()
 agentSem.signal()
@@ -3087,48 +3076,32 @@ agentSem.signal()
 
 \begin{latin}
 %\begin{lstlisting}[title={Smoker with paper}]{}
-\begin{lstlisting}[title=\rl{سیگاری با کاغذ}]{}
+\begin{lstlisting}[title=\rl{سیگاری کاغذدار}]{}
 tobacco.wait()
 match.wait()
 agentSem.signal()
 \end{lstlisting}
 \end{latin}
 
-%What's wrong with this solution?
     مشکل این  راه‌حل کجاست؟
 
 \clearemptydoublepage
-%\subsection{Deadlock \#6}
 \subsection{بن‌بست \#6}
 
-%The problem with the previous solution is the possibility
-%of deadlock.  Imagine that the agent puts out tobacco and
-%paper.  Since the smoker with matches is waiting on {\tt tobacco},
-%it might be unblocked.  But the smoker with tobacco is
-%waiting on {\tt paper}, so it is possible (even likely) that
-%it will also be unblocked.  Then the first thread will block
-%on {\tt paper} and the second will block on {\tt match}.
-%Deadlock!
-    مشکل راه‌حل قبل امکان وقوع بن‌بست است. تصور کنید که عامل تنباکو و کاغذ عرضه می‌نماید. از آنجایی که فرد  سیگاری‌ که در دست خود کبریت دارد 
+    مشکل راه‌حل قبل امکان وقوع بن‌بست است. تصور کنید که عامل، تنباکو و کاغذ عرضه می‌نماید. از آنجایی که فرد  سیگاری‌ که در دست خود کبریت دارد 
     منتظر {\tt tobacco} ممکن است رفع انسداد گردد. امّا آن فرد سیگاری که در دست خود تنباکو دارد منتظر {\tt paper} است، لذا ممکن است او نیز 
     رفع انسداد گردد (احتمال آن نیز زیاد است). سپس اوّلین نخ روی {\tt paper} مسدود گردیده و دومی نیز روی {\tt match} مسدود می‌گردد و بن‌بست!. 
 
 \clearemptydoublepage
-%\subsection{Smokers problem hint}
 \subsection{راهنمایی مسأله سیگاری‌ها}
 
-%The solution proposed by Parnas uses three helper threads
-%called ``pushers'' that respond to the signals from the agent,
-%keep track of the available ingredients, and signal the
-%appropriate smoker.
-    راه‌حل \lr{Parnas}، "سه نخ کمکی فروشندهٔ غیر مجاز``\LTRfootnote{pusher} را به کار می‌برد که آن‌ها به سیگنال‌هایی که از عامل‌
-    می‌رسد پاسخ می‌دهند، میزان موجود مواد مورد نیاز را نگه می‌دارند و به سیگاری مناسب سیگنال می‌دهند. 
+    راه‌حل \lr{Parnas}، 
+    سه نخ کمکی را  تحت عنوان "فروشندگان غیر مجاز``\LTRfootnote{pusher} به کار می‌برد که آن‌ها به سیگنال‌هایی که از عامل‌
+    می‌رسد پاسخ داده، میزان موجودی مواد مورد نیاز را نگاه داشته و به فرد سیگاری مناسب سیگنال می‌دهند. 
 
-%The additional variables and semaphores are
     متغیرها و سمافورهای اضافی به شرح زیر است: 
 
 \begin{latin}
-%\begin{lstlisting}[title={Smokers problem hint}]{}
 \begin{lstlisting}[title=\rl{راهنمایی مسأله سیگاری‌ها}]{}
 isTobacco = isPaper = isMatch = False
 tobaccoSem = Semaphore(0)
@@ -3137,18 +3110,13 @@ matchSem = Semaphore(0)
 \end{lstlisting}
 \end{latin}
 
-%The boolean variables indicate whether or not an ingredient
-%is on the table.  The pushers use {\tt tobaccoSem} to signal
-%the smoker with tobacco, and the other semaphores likewise.
-    متغیرهای بولی نشان می‌دهند که آیا یک ماده مورد نظر وجود دارد یا خیر. 
-    فروشنده‌‌ها {\tt tobaccoSem} را بکار برده تا به آن فرد سیگاری که تنباکو در دست دارد سیگنال بدهد و به طرقی مشابه به سمافورهای دیگر. 
+    متغیرهای بولی نشان می‌دهند که آیا یک مادهٔ مورد نیاز، وجود دارد یا خیر. 
+    فروشنده‌‌ها از {\tt tobaccoSem} استفاده نموده تا به آن فرد سیگاری که تنباکو در دست دارد سیگنال دهند و سمافورهای دیگر نیز به همین شیوه به کار می‌روند.
 
 
 \clearemptydoublepage
-%\subsection{Smoker problem solution}
 \subsection{راه حل مسأله سیگاری}
 
-%Here is the code for one of the pushers:
     کد یکی از فروشندگان در ادامه آمده است:‌
 
 \begin{latin}
@@ -3168,28 +3136,18 @@ mutex.signal()
 \end{lstlisting}
 \end{latin}
 
-%This pusher wakes up any time there is tobacco on the
-%table.  If it finds {\tt isPaper} true, it knows that
-%Pusher B has already run, so it can signal the smoker
-%with matches.  Similarly, if it finds a match on the
-%table, it can signal the smoker with paper.
-    این فروشنده هر زمان که تنباکو موجود باشد فعال می‌شود. اگر مقدار {\tt isPaper} برابر \lr{true} باشد، می‌داند که فروشندهٔ‌ \lr{B} نیز در حال 
+    این فروشنده هر زمان که تنباکو موجود باشد فعال می‌شود. اگر مقدار {\tt isPaper} برابر \lr{True} باشد، می‌داند که فروشندهٔ‌ \lr{B} نیز در حال 
     حاضر فعال است، لذا می‌تواند به آن فرد سیگاری که در دست خود کبریت دارد سیگنال دهد. به طور مشابه، اگر کبریت موجود باشد می‌تواند به آن فرد 
     سیگاری که در دست خود کاغذ دارد سیگنال دهد. 
 
-%But if Pusher A runs first, then it will find both
-%{\tt isPaper} and {\tt isMatch} false.  It cannot signal
-%any of the smokers, so it sets {\tt isTobacco}.
-    اگر نسخت فروشنده \lr{A} اجرا شود، سپس هر دوی {\tt isPaper} و  {\tt isMatch}  را \lr{false} می‌بیند و نمی‌تواند به هیچ‌کدام از افراد 
-    سیگاری سیگنال دهد لذا مقدار  {\tt isTobacco} را \lr{true}  می‌نماید. 
+    امّا اگر نخست فروشنده \lr{A} اجرا شود، سپس هر دوی {\tt isPaper} و  {\tt isMatch}  را \lr{False} می‌بیند و نمی‌تواند به هیچ‌کدام از افراد 
+    سیگاری سیگنال دهد لذا مقدار  {\tt isTobacco} را \lr{True}  می‌نماید. 
 
-%The other pushers are similar.  Since the pushers do all
-%the real work, the smoker code is trivial:
     فروشنده‌های دیگر نیز چنین هستند. از آنجایی که  تمام کار اصلی را فروشنده‌ها انجام می‌دهند، کد سیگاری بدیهی می‌شود.
 
 \begin{latin}
 %\begin{lstlisting}[title={Smoker with tobacco}]{}
-\begin{lstlisting}[title=\rl{فرد سیگاری با تنباکو}]{}
+\begin{lstlisting}[title=\rl{سیگاری تنباکو‌دار}]{}
 tobaccoSem.wait()
 makeCigarette()
 agentSem.signal()
@@ -3197,62 +3155,43 @@ smoke()
 \end{lstlisting}
 \end{latin}
 
-%Parnas presents a similar solution that assembles the
-%boolean variables, bitwise, into an integer, and then
-%uses the integer as an index into an array of semaphores.
-%That way he can avoid using conditionals (one of the
-%artificial constraints).  The resulting code is a bit
-%more concise, but its function is not as obvious.
     \lr{Parnas}
     راه‌حل مشابهی ارائه می‌دهد که متغیرهای بولی را به صورت بیتی در یک متغیر صحیح ذخیره نموده است و سپس عدد صحیح را به عنوان 
-    اندیس آرایه‌ای از سمافورها بکار می‌بندد. با این شیوه، راه‌حل او از شرط (یکی از محدودیت‌های تصنعی) اجتناب می‌نماید. 
+    اندیس آرایه‌ای از سمافورها بکار می‌برد. با این شیوه، راه‌حل او از بکاربردن عبارات شرطی اجتناب می‌نماید (یکی از محدودیت‌های ساختگی، عدم استفاده 
+    از عبارات شرطی و آرایه‌ای از سمافورها بود). 
     کد حاصل کمی خلاصه‌تر است، امّا عملکردش آنقدر واضح نیست. 
     
 %%%    Sun 26 Nov 2017 05:59:38 PM +0330
 
-%\subsection{Generalized Smokers Problem}
-\subsection{تعمیم مسأله سیگاری‌ها}
+\subsection{ مسألهٔ تعمیم یافتهٔ سیگاری‌ها}
 
-%Parnas suggested that the smokers problem becomes more
-%difficult if we modify the agent, eliminating the requirement
-%that the agent wait after putting out ingredients.  In this
-%case, there might be multiple instances of an ingredient on
-%the table.
-    \lr{Parnas} پیشنهاد نمود که اگر عامل را به این صورت دستکاری کنیم 
-    که نیازی نباشد که عامل پس از گذاشتن مواد لازم صبر نماید، آنگاه مسأله سیگاری‌ها دشوارتر خواهد می‌گردد. 
-    در این حالت، باید چند نمونه از یک ماده روی میز موجود باشد. 
+    \lr{Parnas}
+     پیشنهاد نمود که اگر عامل را به این صورت دستکاری کنیم
+     که نیازی نباشد تا عامل پس از گذاشتن مواد لازم صبر نماید، آنگاه مسأله سیگاری‌ها دشوارتر خواهد شد. 
+    در این حالت، باید چند نمونه از یک مادهٔ لازم روی میز موجود باشد. 
 
-%Puzzle: modify the previous solution to deal with this
-%variation.
     معمّا: راه‌حل قبل را به گونه‌ای دستکاری کنید که با این تغییر مطابقت داشته باشد. 
 
 \clearemptydoublepage
-%\subsection{Generalized Smokers Problem Hint}
-\subsection{راهنمای تعمیم مسأله سیگاری‌ها}
+\subsection{راهنمای مسألهٔ تعمیم یافتهٔ سیگاری‌ها}
 
-%If the agents don't wait for the smokers, ingredients might
-%accumulate on the table.  Instead of using boolean values to
-%keep track of ingredients, we need integers to count them.
     اگر عامل، منتظر سیگاری‌ها نماند، ممکن است موارد لازم روی میز انباشته شود. بجای استفاده از مقادیر بولی به منظور ردگیری موارد لازم، 
-    به اعداد صحیح برای شمارش آن‌ها نیاز داریم. 
+    به مقادیر صحیح برای شمارش آن‌ها نیاز داریم. 
 
 \begin{latin}
-\begin{lstlisting}[title=\rl{راهنمای تعمیم مسأله سیگاری‌ها}]
+\begin{lstlisting}[title=\rl{راهنمای  مسألهٔ تعمیم یافتهٔ سیگاری‌ها}]
 numTobacco = numPaper = numMatch = 0
 \end{lstlisting}
 \end{latin}
 
 
 \clearemptydoublepage
-%\subsection{Generalized Smokers Problem Solution}
-\subsection{راه حل تعمیم‌یافته مسأله سیگاری‌ها}
+\subsection{راه‌حل مسألهٔ تعمیم یافتهٔ سیگاری‌ها}
 \label{smoker}
 
-%Here is the modified code for Pusher A:
-    کد تغییر یافته فروشنده \lr{A} در ادامه آمده است: 
+    کد تغییر یافتهٔ فروشندهٔ \lr{A} در ادامه آمده است: 
 
 \begin{latin}
-%\begin{lstlisting}[title={Pusher A}]{}
 \begin{lstlisting}[title={\rl{فروشنده} A}]{}
 tobacco.wait()
 mutex.wait()
@@ -3268,30 +3207,18 @@ mutex.signal()
 \end{lstlisting}
 \end{latin}
 
-%One way to visualize this problem is to imagine that when an
-%Agent runs, it creates two pushers, gives each of them one ingredient,
-%and puts them in a room with all the other pushers.  Because of the
-%mutex, the pushers file into a room where there are
-%three sleeping smokers and a table.  One at a time, each pusher enters
-%the room and checks the ingredients on the table.  If he can
-%assemble a complete set of ingredients, he takes them off the table
-%and wakes the corresponding smoker.  If not, he leaves his ingredient
-%on the table and leaves without waking anyone.
-    یک راه تصویرسازی این مسأله این است که تصویر نمایید آنزمان که عاملی اجرا می‌شود‌، دو فروشنده ساخته و به هر کدام از آن‌ها یکی از مواد لازم را 
-    می‌دهد و آن‌ها را همراه با سایر فروشندگان در یک اتاق قرار می‌دهد. به سبب میوتکس، فروشنده‌ها در اتاقی که سه سیگاری خوابیده و یک میز وجود دارد 
+    یک راه تصویرسازی این مسأله این است که تصوّر نمایید آنزمان که عاملی اجرا می‌شود‌، دو فروشنده را ایجاد نموده و به هر کدام از آن‌ها یکی از مواد لازم را 
+    می‌دهد و آن‌ها را همراه با سایر فروشندگان در یک اتاق قرار می‌دهد. به خاطر وجود میوتکس، فروشنده‌ها در اتاقی که سه سیگاری خوابیده و یک میز وجود دارد 
     به ترتیب وارد می‌شوند. هر فروشنده یکی پس از دیگری وارد اتاق شده و مواد روی میز را بررسی می‌نماید. اگر او بتواند یک مجموعه کامل از مواد لازم سیگار را
     گرد آورد، آن‌ها از روی میز برداشته و سیگاری متناظر را بیدار می‌نماید. و اگر نتواند،‌ مواد همراه خود را روی میز رها کرده و اتاق را بدون اینکه کسی را 
     بیدار کند ترک می‌نماید. 
 
-%This is an example of a pattern we will see several times, which
-%I call a {\bf scoreboard}.  The variables {\tt numPaper}, {\tt numTobacco}
-%and {\tt numMatch} keep track of the state of the system.  As each
-%thread files through the mutex, it checks the state as if looking
-%at the scoreboard, and reacts accordingly.
     این مثالی از الگویی است که آن را «جدول امتیاز»\LTRfootnote{scoreboard} خوانده و بعداً چندین مرتبه آن را خواهیم دید.   
     متغیرهای     {\tt numPaper}، {\tt numTobacco} و  {\tt numMatch}    وضعیت سیستم را نگاه می‌دارند. 
     از آنجایی که هر نخ از طریق میوتکس به ترتیب وارد می‌شود، مثل اینکه به جدول امتیاز نگاه کرده باشد وضعیت را بررسی نموده و مطابق آن عکس العمل نشان می‌دهد. 
 
+
+%%%    Tue 04 Feb 2020 06:02:50 PM +0330 revision3
 
 \clearemptydoublepage
 %\chapter{Less classical synchronization problems}
