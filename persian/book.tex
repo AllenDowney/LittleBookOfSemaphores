@@ -3221,46 +3221,32 @@ mutex.signal()
 %%%    Tue 04 Feb 2020 06:02:50 PM +0330 revision3
 
 \clearemptydoublepage
-%\chapter{Less classical synchronization problems}
 \chapter{مسائل همگام‌سازی کمتر-کلاسیک}
 \label{next}
 
 
-%\section{The dining savages problem}
 \section{مسأله غذاخوردن وحشی‌ها}
 
-%This problem is from Andrews's 
-%{\em Concurrent Programming} \cite{andrews}.
     این مسأله از  \emph{برنامه‌نویسی همروند} \lr{Andrews}  اقتباس شده است\cite{andrews}. 
 
 \begin {quotation}
-%A tribe of savages eats communal dinners from a large pot that can
-%hold M servings of stewed missionary\footnote{This problem is based on
-%a cartoonish representation of the history of Western missionaries
-%among hunter-gatherer societies.  Some humor is intended by the
-%allusion to the Dining Philosophers problem, but the representation of
-%``savages'' here isn't intended to be any more realistic than the
-%previous representation of philosophers.  If you are interested in
-%hunter-gatherer societies, I recommend Jared Diamond's {\em Guns,
-%Germs and Steel}, Napoleon Chagnon's {\em The Yanomamo}, and Redmond
-%O'Hanlon's {\em In Trouble Again}, but not Tierney's {\em Darkness in
-%El Dorado}, which I believe is unreliable.}.  When a savage wants to
-%eat, he helps himself from the pot, unless it is empty.  If the pot is
-%empty, the savage wakes up the cook and then waits until the cook has
-%refilled the pot.
-    قبیله‌ای از وحشی‌ها، از یک دیگ بزرگ که می‌تواند \lr{M}  پرس ازمُبلّغ پخته شده را در خود نگاه دارد به صورت مشترک شام می‌خورند.
-%    \footnote{
-%    این مسأله برای پایه نمایش کارتونی تاریخ مبلغین غربی در میان جوامع تشکیل شده با محوریت شکار است. مقداری طنز با کنایه به مسأله غذاخوردن فلیسوف‌ها 
-%    تعمداً      }. 
+    قبیله‌ای از وحشی‌ها، از یک دیگ بزرگ که می‌تواند \lr{M}  
+    پرس از کشیش پخته شده را در خود نگاه دارد به صورت مشترک شام می‌خورند.\footnote{%
+    این مسأله بر پایهٔ تصویری کارتونی از تاریخ مبلغین غربی در میان جوامع تشکیل شده با محوریت شکار است. 
+    تعمداً مقداری طنز با کنایه به مسأله غذاخوردن فلیسوف‌ها به کار رفته است 
+    امّا در اینجا تصویر وحشی‌ها واقع‌بینانه‌تر از تصویر قبلی از فیلسوف‌ها نیست. 
+    اگر به جوامع شکار-محور علاقه‌مند هستید می‌توانید منابع زیر را مطالعه کنید:
+    \lr{\em Guns,Germs and Steel} از \lr{Jared Diamond}،
+    \lr{\em The Yanomamo} از \lr{Napoleon Chagnon} و یا 
+    \lr{\em In Trouble Again} از \lr{Redmond O'Hanlon}.
+    البته \lr{\em Darkness in El Dorado} از \lr{Tierney} را اکیداً توصیه نمی‌کنم زیرا که به نظرم غیر واقعی است.}
     زمانیکه یک وحشی می‌خواهد غذا بخورد، از درون دیگ از خود پذیرایی می‌کند مگر اینکه دیگ خالی باشد. 
-    اگر دیگ خالی بود، وحشی آشپز را بیدار نموده و سپس منتظر او می‌ماند تا دومرتبه دیگر را پر نماید.
+    اگر دیگ خالی بود، وحشی آشپز را بیدار نموده و سپس منتظر او می‌ماند تا دومرتبه دیگ را پر نماید.
 \end{quotation}
 
-%Any number of savage threads run the following code:
-    هر تعداد نخ وحشی می‌تواند کد زیر را اجرا نماید:
+    هر تعداد از نخ‌های وحشی می‌تواند کد زیر را اجرا نماید:
 
 \begin{latin}
-%\begin{lstlisting}[title={Unsynchronized savage code}]{}
 \begin{lstlisting}[title=\rl{کد ناهمگام یک وحشی}]{}
 while True:
     getServingFromPot()
@@ -3268,63 +3254,44 @@ while True:
 \end{lstlisting}
 \end{latin}
 
-%And one cook thread runs this code:
     و نخ یک آشپز کد زیر را اجرا می‌نماید:
 
 \begin{latin}
-%\begin{lstlisting}[title={Unsynchronized cook code}]{}
 \begin{lstlisting}[title=\rl{کد ناهمگام آشپز}]{}
 while True:
     putServingsInPot(M)
 \end{lstlisting}
 \end{latin}
 
-%The synchronization constraints are:
     محدودیت‌های همگام‌سازی عبارتند از:
 
 \begin{itemize}
 
 \item 
-%Savages cannot invoke {\tt getServingFromPot} if the
-%pot is empty.
     اگر دیگ خالی باشد وحشی‌ها نمی‌توانند {\tt getServingFromPot}  را فراخوانند. 
 
 \item 
-%The cook can invoke {\tt putServingsInPot} only if
-%the pot is empty.
     آشپز تنها در صورتی می‌تواند  {\tt putServingsInPot} را فراخواند که دیگ خالی باشد. 
 
 \end{itemize}
 
-%Puzzle: Add code for the savages and the cook that
-%satisfies the synchronization constraints.
     معمّا: کدی برای وحشی‌ها و آشپز اضافه نمایید که محدودیت‌های همگام‌سازی را برآورده نماید. 
 %%%Sat 02 Dec 2017 06:03:27 PM +0330
 
 \clearemptydoublepage
-%\subsection{Dining Savages hint}
 \subsection{راهنمایی غذاخوردن وحشی‌ها}
 
-%It is tempting to use a semaphore to keep track of the number of
-%servings, as in the producer-consumer problem.  But in order to signal
-%the cook when the pot is empty, a thread would have to know before
-%decrementing the semaphore whether it would have to wait, and we just
-%can't do that.
     همانند مسأله تولیدکننده-مصرف‌کننده  در اینجا نیز وسوسه می‌شویم که برای نگهداری تعداد پرس‌ها از سمافور استفاده نماییم. 
-    امّا به منظور سیگنال‌دهی به آشپز،‌ آن زمانی که دیگ خالی است، یک پیش از اینکه مقدار سمافور را کاهش دهد باید بداند که آیا باید منتظر بماند؟ و 
+    امّا به منظور سیگنال‌دهی به آشپز،‌ آن زمانی که دیگ خالی است، 
+    یک نخ پیش از اینکه مقدار سمافور را کاهش دهد باید بداند که آیا باید منتظر بماند؟ و 
     ما نمی‌توانیم چنین کاری کنیم. 
 
-%An alternative is to use a scoreboard to
-%keep track of the number of servings.  If a savage finds
-%the counter at zero, he wakes the cook and waits for a signal
-%that the pot is full.  Here are the variables I used:
-    یک جایگزین این است که جدول امتیاز را به منظور نگهداری تعداد پرس‌ها بکار بریم. 
+    بکارگیری جدول امتیاز به منظور نگهداری تعداد پرس‌ها می‌تواند به عنوان گزینه‌ای دیگر مطرح شود.
     اگر یک وحشی شمارنده را صفر بیابد، آشپز را بیدار نموده و منتظر دریافت سیگنال پرشدن دیگ می‌شود. 
     متغیرهایی را که به کار برده‌ایم در ادامه مشاهده می‌نمایید:
 
 \begin{latin}
 \begin{lstlisting}[title={Dining Savages hint}]{}
-\begin{lstlisting}[title=\rl{راهنمایی غذاخوردن وحشی‌ها}]{}
 servings = 0
 mutex = Semaphore(1)
 emptyPot = Semaphore(0)
@@ -3332,22 +3299,15 @@ fullPot = Semaphore(0)
 \end{lstlisting}
 \end{latin}
 
-%Not surprisingly, {\tt emptyPot} indicates that the pot is empty and
-%{\tt fullPot} indicates that the pot is full.
-    جای تعجب نیست که {\tt emptyPot} نشانگر خالی بودن دیگ است و {\tt fullPot} بیانگر پربودن دیگ است. 
+    {\tt emptyPot} نشانگر خالی بودن دیگ است و {\tt fullPot} بیانگر پربودن دیگ است. 
 
 \clearemptydoublepage
-%\subsection{Dining Savages solution}
 \subsection{راه‌ حل غذاخوردن وحشی‌ها}
 
-%My solution is a combination of the scoreboard pattern
-%with a rendezvous.
-%Here is the code for the cook:
-    راه‌حل در اینجا ترکیبی از الگوی جدول امتیاز با یک قرار ملاقات است.  کد آشپز در ادامه آمده است. 
+    راه‌حل،  ترکیبی از الگوی جدول امتیاز با یک قرار ملاقات است.  کد آشپز در ادامه آمده است. 
 
 \begin{latin}
-%\begin{lstlisting}[title={Dining Savages solution (cook)}]{}
-\begin{lstlisting}[title=\rl{راه‌ حل غذاخوردن وحشی‌ها (آشپز)}]{}
+\begin{lstlisting}[title=\rl{راه‌‌حل غذاخوردن وحشی‌ها (آشپز)}]{}
 while True:
     emptyPot.wait()
     putServingsInPot(M)
@@ -3355,16 +3315,11 @@ while True:
 \end{lstlisting}
 \end{latin}
 
-%The code for the savages is only a little more complicated.
-%As each savage passes through the mutex, he checks the pot.
-%If it is empty, he signals the cook and waits.  Otherwise,
-%he decrements {\tt servings} and gets a serving from the pot.
-    کد وحشی‌ها تنها کمی پیچیده‌تر است. از آنجایی که هر وحشی از میوتکس می‌گذرد، دیگ را بررسی می‌نماید. 
-    اگر دیگ خالی باشد، به آشپز سیگنال داده و منتظر می‌ماند و الا  {\tt servings} را کاهش داده و پرسی را از دیگ بر می‌دارد. 
+    کد وحشی‌ها کمی پیچیده‌تر است. از آنجایی که هر وحشی از میوتکس می‌گذرد لذا دیگ را بررسی می‌نماید. 
+    اگر دیگ خالی باشد، به آشپز سیگنال داده و منتظر می‌ماند و الّا  {\tt servings} را کاهش داده و پرسی را از دیگ بر می‌دارد. 
 
 \begin{latin}
-%\begin{lstlisting}[title={Dining Savages solution (savage)}]{}
-\begin{lstlisting}[title=\rl{راه‌ حل غذاخوردن وحشی‌ها (وحشی)}]{}
+\begin{lstlisting}[title=\rl{راه‌‌حل غذاخوردن وحشی‌ها (وحشی)}]{}
 while True:
     mutex.wait()
         if servings == 0:
@@ -3379,244 +3334,163 @@ while True:
 \end{lstlisting}
 \end{latin}
 
-%It might seem odd that the savage, rather than the cook, sets
-%{\tt servings = M}.  That's not really necessary; when the cook
-%runs {\tt putServingsInPot}, we know that the savage that holds
-%the mutex is waiting on {\tt fullPot}.  So the cook could
-%access {\tt servings} safely.  But in this case, I decided to
-%let the savage do it so that it is clear from looking at the
-%code that all accesses to {\tt servings} are inside the mutex.
-    اینکه وحشی بجای آشپز دستور {\tt servings = M} را اجرا می‌کند شاید کمی عجیب بنظر آید. واقعاً ضرورتی به اینکار نبود، زمانی که 
-    آشپز {\tt putServingsInPot} را اجرا می‌نماید، می‌دانیم آن وحشی که میوتکس را در اختیار دارد روی {\tt fullPot} منتظر می‌ماند. 
-    لذا آشپز به  {\tt servings} دسترسی اَمنی دارد.  امّا در این حالت،‌ تصمیم گرفتم که وحشی این کار را انجام دهد چنانکه با نگاه به کد نیز 
+    اینکه وحشی بجای آشپز دستور {\tt servings = M} را اجرا می‌کند شاید کمی عجیب بنظر آید. 
+    واقعاً ضرورتی به اینکار نبود، زمانی که 
+    آشپز {\tt putServingsInPot} را اجرا می‌نماید، می‌دانیم آن وحشی که میوتکس را در اختیار دارد 
+    روی {\tt fullPot} منتظر می‌ماند. 
+    لذا آشپز به  {\tt servings} دسترسی اَمنی دارد.  
+    امّا در این حالت،‌ تصمیم گرفتم که وحشی این کار را انجام دهد چنانکه با نگاه به کد نیز 
     واضح است که تمامی دسترسی‌های به  {\tt servings} درون میوتکس انجام می‌پذیرد. 
     
 
-%This solution is deadlock-free.  The only opportunity for
-%deadlock comes when the savage that holds {\tt mutex} waits
-%for {\tt fullPot}.  While he is waiting, other savages are
-%queued on {\tt mutex}.  But eventually the cook will run and
-%signal {\tt fullPot}, which allows the waiting savage
-%to resume and release the mutex.
-    این راه حل، بدون بن‌بست است. تنها امکان بن‌بست زمانی رخ می‌دهد که آن وحشی‌ای که {\tt mutex}  را نگاه داشته منتظر {\tt fullPot} می‌ماند. 
-    زمانیکه او منتظر است، سایر وحشی‌ها روی {\tt mutex} در صف انتظار قرار می‌گیرند. اما نهایتاً آشپز اجرا شده و به {\tt fullPot} سیگنال می‌دهد، 
-    و این منجر به این می‌شود که  وحشی منتظر ادامه یافته و میوتکس را آزاد نماید. 
+    این راه حل، بدون بن‌بست است. 
+    تنها شانس بن‌بست زمانی است که آن وحشی‌ای که {\tt mutex}  را نگاه داشته و منتظر {\tt fullPot} می‌ماند. 
+    زمانیکه او منتظر است، سایر وحشی‌ها روی {\tt mutex} در صف انتظار قرار می‌گیرند. 
+    امّا نهایتاً آشپز اجرا شده و به {\tt fullPot} سیگنال می‌دهد، 
+    و این منجر به این می‌شود که  وحشی منتظر، ادامه یافته و میوتکس را آزاد نماید. 
     
 
-%Does this solution assume that the pot is thread-safe, or does it
-%guarantee that {\tt putServingsInPot} and {\tt getServingFromPot}
-%are executed exclusively?
-    آیا این راه‌حل فرض نموده است است دیگ نخ-ایمن\footnote{
-    در برنامه‌نویسی چند نخی، کدی را نخ-ایمن گوییم که تضمین نماید ساختمان داده‌های اشتراکی بدون دخالت‌های ناخواسته دیگر نخ‌ها، به‌روزرسانی شود. 
+    آیا این راه‌حل فرض نموده است که دیگ، نخ-ایمن\footnote{%
+    در برنامه‌نویسی چند نخی، کدی را نخ-ایمن گوییم که تضمین نماید ساختمان داده‌های اشتراکی 
+    بدون دخالت‌های ناخواسته دیگر نخ‌ها، به‌روزرسانی شود.%
     }  است و یا تضمین می‌نماید که  {\tt putServingsInPot} و {\tt getServingFromPot} 
-    به صورت انحصاری انجام شوند.
+    به صورت انحصاری انجام شوند؟
 
 
 \clearemptydoublepage
-%\section{The barbershop problem}
 \section{مسأله آرایشگاه}
 
-%The original barbershop problem was proposed by
-%Dijkstra.  A variation of it appears in 
-%Silberschatz and Galvin's {\em Operating Systems Concepts}
-%\cite{silberschatz}.
-    مسأله اصلی آرایشگر بوسیله \lr{Dijkstra} پیشنهاد شد. یک گونه دیگر آن در کتاب اصول سیستم‌های عامل \lr{Silberschatz} و \lr{Galvin}
-    آمده است. 
+ب    مسأله اصلی آرایشگر بوسیله \lr{Dijkstra} پیشنهاد شد. 
+    یک گونهٔ دیگر آن در کتاب اصول سیستم‌های عامل \lr{Silberschatz} و \lr{Galvin}
+    آمده است\cite{silberschatz}. 
 
 \begin {quotation}
-%A barbershop consists of a waiting room with $n$ chairs, and the
-%barber room containing the barber chair.  If there are no customers to
-%be served, the barber goes to sleep.  If a customer enters the
-%barbershop and all chairs are occupied, then the customer leaves the
-%shop.  If the barber is busy, but chairs are available, then the
-%customer sits in one of the free chairs.  If the barber is asleep, the
-%customer wakes up the barber.  Write a program to coordinate the
-%barber and the customers.
-    یک آرایشگاه شامل یک صف انتظار با $n$ صندلی و اتاق آرایشگر با صندلی آرایشگر است. اگر هیچ مشتری وجود نداشته باشد 
-    آرایشگر می‌خوابد. اگر یک مشتری وارد آرایشگاه شود و تمامی صندلی‌ها اشغال شده باشد، آنگاه مشتری مغازه را ترک می‌نماید. 
-    اگر آرایشگر مشغول باشد، اما صندلی موجود باشد، مشتری روی یکی از صندلی‌های خالی می‌نشیند. اگر آرایشگر خواب باشد، مشتری او را بیدار می‌نماید. 
+    یک آرایشگاه شامل $n$ صندلی در اتاق انتظار و یک صندلی آرایش در اتاق آرایشگر است. 
+    اگر هیچ مشتری وجود نداشته باشد آرایشگر می‌خوابد. 
+    اگر یک مشتری وارد آرایشگاه شود و تمامی صندلی‌ها اشغال شده باشد، آنگاه مشتری مغازه را ترک می‌نماید. 
+    اگر آرایشگر مشغول باشد، امّا صندلی موجود باشد، مشتری روی یکی از صندلی‌های خالی می‌نشیند. 
+    اگر آرایشگر خواب باشد، مشتری او را بیدار می‌نماید. 
     برنامه‌ای بنویسید که آرایشگر و مشتری‌ها را هماهنگ نماید. 
 \end{quotation}
 
-%To make the problem a little more concrete, I added the
-%following information:
     برای اینکه مسأله را کمی واقعی‌تر نماییم، اطلاعات زیر را به آن می‌افزاییم: 
 
 \begin{itemize}
 
-\item %Customer threads should invoke a function named {\tt getHairCut}.
+\item
     نخ‌های مشتری باید تابعی به نام {\tt getHairCut} را فراخوانند. 
 
 \item 
-%If a customer thread arrives when the shop is full, 
-%it can invoke {\tt balk}, which does not return.
     اگر زمانیکه آرایشگاه پر است یک نخ مشتری برسد، می‌تواند {\tt balk} را که هیچ مقداری بر نمی‌گرداند،  فراخواند. 
 
-\item %The barber thread should invoke {\tt cutHair}.
+\item 
     نخ آرایشگر باید {\tt cutHair} را فراخواند. 
 
 \item 
-%When the barber invokes {\tt cutHair} there should
-%be exactly one thread invoking {\tt getHairCut} concurrently.
-    زمانیکه آرایشگر {\tt cutHair} را فرا می‌خواند،‌ باید دقیقاً تنها یک نخ باشد که به طور همزمان  {\tt getHairCut} را فرا می‌خواند. 
+    زمانیکه آرایشگر {\tt cutHair} را فرا می‌خواند،‌ 
+    باید دقیقاً تنها یک نخ باشد که به طور همزمان  {\tt getHairCut} را فرا می‌خواند. 
 
 \end{itemize}
 
-%Write a solution that guarantees these constraints.
-    راه حلی ارائه دهید  که شرایط فوق را تضمین نماید. 
+    راه‌حلی ارائه دهید  که شرایط فوق را تضمین نماید. 
 
 
 \clearemptydoublepage
-%\subsection{Barbershop hint}
 \subsection{راهنمایی آرایشگاه}
 
 \begin{latin}
-%\lstinputlisting[title=Barbershop hint]{../code/barber.py.0}
 \lstinputlisting[title=\rl{راهنمایی آرایشگاه}]{../code/barber.py.0}
 \end{latin}
 
-%{\tt n} is the total number of customers that can be in the shop:
-%three in the waiting room and one in the chair.
     {\tt n}    تعداد کل مشتری‌هایی است که می‌توانند در آرایشگاه باشند: سه نفر در اتاق انتظار و یک نفر روی صندلی آرایش. 
 
-%{\tt customers} counts the number of customers in the shop;
-%it is protected by {\tt mutex}.
     {\tt customers}        تعداد مشتری‌های درون آرایشگاه را می‌شمرد و بوسیله  {\tt mutex} حفاظت می‌ شود. 
     
 
-%The barber waits on {\tt customer} until a customer enters the
-%shop, then the customer waits on {\tt barber} until the barber
-%signals him to take a seat.
-    آرایشگر روی {\tt customer} منتظر می‌ماند تا یک مشتری وارد شده و سپس مشتری روی  {\tt barber} می‌ماند تا زمانیکه آرایشگر 
-    به او سیگنال نشتن روی صندلی آرایش را بدهد. 
+    آرایشگر روی {\tt customer} منتظر می‌ماند تا یک مشتری وارد شود، 
+    سپس مشتری روی  {\tt barber} می‌ماند تا زمانیکه آرایشگر به او سیگنال نشستن روی صندلی آرایش را بدهد. 
 
-%After the haircut, the customer signals {\tt customerDone} and
-%waits on {\tt barberDone}.
     پس از آرایش مو، مشتری به  {\tt customerDone}  سیگنال می‌دهد و روی {\tt barberDone} منتظر می‌ماند. 
 
 \clearemptydoublepage
-%\subsection{Barbershop solution}
-\subsection{راه حل آرایشگاه}
+\subsection{راه‌حل آرایشگاه}
 
-%This solution combines a scoreboard and two rendezvouses\footnote{The
-%  plural of rendezvous is rare, and not all dictionaries agree about
-%  what it is.  Another possibility is that the plural is also spelled
-%  ``rendezvous,'' but the final ``s'' is pronounced.}.  Here is the
-%code for customers:
     این راه‌حل یک جدول امتیاز و دو قرار ملاقات را ترکیب می‌نماید. کد مشتری‌ها در ادامه آمده است. 
 
 \begin{latin}
-%\lstinputlisting[title=Barbershop solution (customer)]{../code/barber.py.1}
-\lstinputlisting[title=\rl{راه حل آرایشگاه (مشتری)}]{../code/barber.py.1}
+\lstinputlisting[title=\rl{راه‌حل آرایشگاه (مشتری)}]{../code/barber.py.1}
 \end{latin}
 
-%If there are $n$ customers in the shop any customers that
-%arrive immediately invoke {\tt balk}.
-%Otherwise each customer signals {\tt customer} and waits on
-%{\tt barber}.
-    اگر  $n$ مشتری در آرایشگاه وجود داشته باشد، هر مشتری که می‌رسد بلافاصله {\tt balk} را فرا می‌خواند و الّا هر مشتری به {\tt customer}
-    سیگال داده و روی {\tt barber} منتظر می‌ماند. 
+    اگر  $n$ مشتری در آرایشگاه وجود داشته باشد، هر مشتری که می‌رسد بلافاصله {\tt balk} را فرا می‌خواند 
+    و الّا هر مشتری به {\tt customer} سینگال داده و روی {\tt barber} منتظر می‌ماند. 
 
-    % type: barbers -> barber
+    % typo: barbers -> barber
 %Here is the code for barbers:
     کد آرایشگر در ادامه آمده است. 
 
 \begin{latin}
-%\lstinputlisting[title=Barbershop solution (barber)]{../code/barber.py.2}
-\lstinputlisting[title=\rl{راه حل آرایشگاه (آرایشگر)}]{../code/barber.py.2}
+\lstinputlisting[title=\rl{راه‌حل آرایشگاه (آرایشگر)}]{../code/barber.py.2}
 \end{latin}
 
-%Each time a customer signals,
-%the barber wakes, signals {\tt barber}, and gives one
-%hair cut.  If another customer arrives while the barber
-%is busy, then on the next iteration the barber will pass
-%the {\tt customer} semaphore without sleeping.
     هر زمان که  یک مشتری سیگنال می‌دهد، آرایشگر بیدار شده، به  {\tt barber} سیگنال می‌دهد، و مشغول آرایش یک نفر می‌شود. 
-    اگر آن زمانیکه آرایشگر مشغول است مشتری دیگری برسد، آنگاه در تکرار بعدی آرایشگر بدون اینکه بخوابد از سمافور {\tt customer} می‌گذرد. 
+    اگر آن زمانیکه آرایشگر مشغول است مشتری دیگری برسد، 
+    آنگاه در تکرار بعدی آرایشگر بدون اینکه بخوابد از سمافور {\tt customer} می‌گذرد. 
 
-%The names for {\tt customer} and {\tt barber} are based on
-%the naming convention for a rendezvous, so {\tt customer.wait()}
-%means ``wait for a customer,'' not ``customers wait here.''
     اسامی {\tt customer} و {\tt barber} بر مبنای قرارداد نامگذاری یک قرار ملاقات هستند، لذا {\tt customer.wait()} 
     به معنای ''انتظار برای یک مشتری`` است و نه اینکه ''مشتری‌های در اینجا منتظرند``. 
 
-%The second rendezvous, using {\tt customerDone} and {\tt barberDone},
-%ensures that the hair cut is done before the barber loops around to
-%let the next customer into the critical section.
     قرار ملاقات دوم با استفاده از  {\tt customerDone} و {\tt barberDone}، تضمین می‌نماید کار آرایش فعلی تمام شده باشد
-    پیش از اینکه آرایشگر به ابتدای حلقه برگردد و به مشتری بعدی اجازه ورود به ناحیه بحرانی دهد. 
+    پیش از اینکه آرایشگر به ابتدای حلقه برگردد و به مشتری بعدی اجازه ورود به ناحیه بحرانی را بدهد. 
 
-%This solution is in \verb"sync_code/barber.py" (see~\ref{sync.py}).
     این راه‌حل در \verb"sync_code/barber.py" آمده است (ر.ک.~\ref{sync.py}).
 %%%    Mon 04 Dec 2017 06:21:40 PM +0330
-
+%%% Tue 07 Apr 2020 06:36:26 PM +0430   revision: #3
 \clearemptydoublepage
-%\section{The FIFO barbershop}
 \section{آرایشگاه FIFO}
 
-%In the previous solution there is no guarantee that customers are
-%served in the order they arrive.  Up to {\tt n} customers can pass
-%the turnstile, signal
-%{\tt customer} and wait on {\tt barber}.  When the barber signal
-%{\tt barber}, any of the customers might proceed.
     در راه‌حل قبل تضمینی وجود ندارد که مشتریان به همان ترتیبی که می‌رسند سرویس دریافت کنند.
     تا سقف {\tt n} مشتری می‌توانند از ترن‌استایل گذر کنند، به {\tt customer} سیگنال داده، 
     و روی {\tt barber} منتظر بمانند. زمانیکه آرایشگر به {\tt barber} سیگنال دهد، هر یک از 
     مشتریان ممکن است ادامه دهد.
 
-%Modify this solution so that customers are served in the order they
-%pass the turnstile.
 	این راه‌حل را به گونه‌ای تغییر دهید که مشتریان به همان ترتیبی که از ترن‌استایل عبور می‌کنند سرویس دریافت نمایند.
   
-%Hint: you can refer to the current thread as {\tt self}, so if you
-%write {\tt self.sem = Semaphore(0)}, each thread gets its own
-%semaphore.
 	راهنمایی: می‌توانید به نخ جاری به صورت {\tt self} ارجاع دهید، 
 	لذا وقتی می‌نویسد {\tt self.sem = Semaphore(0)}، هر نخ سمافور خودش را می‌گیرد.
 
 
 \clearemptydoublepage
-%\subsection{FIFO barbershop hint}
 \subsection{راهنمایی آرایشگاه FIFO}
 
-%My solution uses a list of semaphores named {\tt queue}.
 	من از لیستی از سمافورها به نام {\tt queue} در راه‌حل خود استفاده می‌کنم.
 
 \begin{latin}
-%\lstinputlisting[title=FIFO barbershop hint]{../code/barber2.py.0}
 \lstinputlisting[title=\rl{راهنمایی آرایشگاه \lr{FIFO}}]{../code/barber2.py.0}
 \end{latin}
 
+%%%%typo: a thread -> a semophore
 %As each thread passes the turnstile, it creates a thread and puts it
 %in the queue.
-	زمانی‌که هر یک از نخ‌ها از ترن‌استایل عبور می‌کند، یک نخ ساخته و آن را در صف قرار می‌دهد.
+	زمانی‌که هر یک از نخ‌ها از ترن‌استایل عبور می‌کند، یک سمافور ساخته و آن را در صف قرار می‌دهد.
 
-%Instead of waiting on {\tt barber}, each thread waits on its own
-%semaphore.  When the barber wakes up, he removes a thread from the queue and
-%signals it.
 	به جای انتظار روی {\tt barber}، هر نخ روی سمافور خودش منتظر می‌ماند. 
-	وقتیکه آرایشگر بیدار می‌شود، یک نخ را از صف خارج کرده و به آن سیگنال می‌دهد.
+	وقتیکه آرایشگر بیدار می‌شود، یک سمافور را از صف خارج کرده و به آن سیگنال می‌دهد.
 
 
 \clearemptydoublepage
-%\subsection{FIFO barbershop solution}
-\subsection{راه حل آرایشگاه FIFO}
+\subsection{راه‌حل آرایشگاه FIFO}
 
-%Here is the modified code for customers:
 	در ادامه کد تغییریافتهٔ مشتریان آمده است:
 
 \begin{latin}
-%\lstinputlisting[title=FIFO barbershop solution (customer)]
-\lstinputlisting[title=\rl{راه حل آرایشگاه \lr{FIFO} (مشتری)}]
+\lstinputlisting[title=\rl{راه‌حل آرایشگاه \lr{FIFO} (مشتری)}]
 {../code/barber2.py.1}
 \end{latin}
 
-%And the code for barbers:
 	و کد آرایشگر به این صورت است:
 
 \begin{latin}
-%\lstinputlisting[title=FIFO barbershop solution (barber)]
-\lstinputlisting[title=\rl{راه حل آرایشگاه \lr{FIFO} (آرایشگر)}]
+\lstinputlisting[title=\rl{راه‌حل آرایشگاه \lr{FIFO} (آرایشگر)}]
 {../code/barber2.py.2}
 \end{latin}
 
