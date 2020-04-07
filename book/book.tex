@@ -599,7 +599,7 @@ Now consider the following execution path
 \[  a1 < b1 < b2 < a2  \]
 
 Assuming that the
-initial value of {\tt x} is {\tt 0},
+initial value of {\tt count} is {\tt 0},
 what is its final value?  Because
 both threads read the same initial value, they write
 the same value.  The variable is only incremented once, which
@@ -3767,7 +3767,7 @@ sigmals that a barber has accepted payment.
 \subsection {Hilzer's barbershop solution}
 
 This solution is considerably more complex than I expected.  I
-am not if Hilzer had something simpler in mind, but here is the
+am not sure if Hilzer had something simpler in mind, but here is the
 best I could do.
 
 \lstinputlisting[title=Hilzer's barbershop solution (customer)]
