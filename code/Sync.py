@@ -20,7 +20,7 @@ import time
 CURRENT_THREAD = None
 
 def noop(*args):
-    """A handy function that does nothing.""" 
+    """A handy function that does nothing."""
 
 def balk():
     """Jumps to the top of the column."""
@@ -123,8 +123,8 @@ from Gui import Gui, GuiCanvas
 
 ALL_THREAD_NAMES = string.ascii_uppercase + string.ascii_lowercase
 
-COURIER = ("Courier", 12)
-FSU = 9                     # FSU, the fundamental Sync unit,
+FONT = ("Ubuntu Mono", 24)
+FSU = 24                    # FSU, the fundamental Sync unit,
                             # determines the size of most things.
 
 class Sync(Gui):
@@ -137,7 +137,7 @@ class Sync(Gui):
 
         self.locals = SIM_LOCALS
         self.globals = SIM_GLOBALS
-        
+
         # views is a map from a variable name to the row that
         # should be updated when the variable changes
         self.views = {}
@@ -195,18 +195,18 @@ class Sync(Gui):
         self.topcol = Column(self, n=5)
         self.colfr = self.fr()
         self.cols = [Column(self, LEFT, n=5) for i in range(2)]
-        self.bu(side=RIGHT, text='Add\ncolumn', command=self.add_col)
+        self.bu(side=RIGHT, text='Add\ncolumn', font=FONT, command=self.add_col)
         self.endfr()
         self.buttons()
 
     def buttons(self):
         """Makes the buttons."""
         self.row([1, 1, 1, 1, 1])
-        self.bu(text='Run', command=self.run)
-        self.bu(text='Random Run', command=self.random_run)
-        self.bu(text='Stop', command=self.stop)
-        self.bu(text='Step', command=self.step)
-        self.bu(text='Random Step', command=self.random_step)
+        self.bu(text='Run', font=FONT, command=self.run)
+        self.bu(text='Random Run', font=FONT, command=self.random_run)
+        self.bu(text='Stop', font=FONT, command=self.stop)
+        self.bu(text='Step', font=FONT, command=self.step)
+        self.bu(text='Random Step', font=FONT, command=self.random_step)
         self.endfr()
 
     def register(self, thread):
@@ -224,7 +224,7 @@ class Sync(Gui):
     def random_run(self):
         """Runs the simulator with random scheduling."""
         self.run_helper(self.random_step)
-        
+
     def run_helper(self, step=None):
         """Runs the threads until someone clears self.running."""
         self.running = True
@@ -235,7 +235,7 @@ class Sync(Gui):
 
     def step(self):
         """Advances all the threads in order"""
-        for thread in self.threads:            
+        for thread in self.threads:
             thread.step_loop()
 
     def random_step(self):
@@ -293,13 +293,13 @@ class Sync(Gui):
 
         side = LEFT if self.options.initside else TOP
         self.topcol = TopColumn(self, side=side)
-            
+
         self.topcol.add_rows(self.blocks[0])
 
         self.colfr = self.fr()
         self.cols = []
         self.endfr()
-        
+
         for block in self.blocks[1:]:
             col = self.add_col(0)
             col.add_rows(block)
@@ -411,16 +411,16 @@ def trim_block(block):
     while block and not block[-1].strip():
         block.pop(-1)
 
-    
+
 """
 The following classes define the composite objects that make
 up the display: Row, TopRow, Column and TopColumn.  They are
 all subclasses of Widget.
 """
-        
+
 class Widget:
     """Superclass of all display objects.
- 
+
     Each Widget keeps a reference to its immediate parent Widget (p)
     and to the top-most thing (w).
     """
@@ -441,7 +441,7 @@ class Row(Widget):
         self.fr = self.w.row([0, 0, 1])
         self.queued = self.w.qu(side=LEFT, n=3)
         self.runnable = self.w.qu(side=LEFT, n=3, label='Run')
-        self.en = self.w.en(side=LEFT, font=COURIER)
+        self.en = self.w.en(side=LEFT, font=FONT)
         self.en.bind('<Key>', self.keystroke)
         self.w.endrow()
         self.put(text)
@@ -463,7 +463,7 @@ class Row(Widget):
     def keystroke(self, event=None):
         "resize the entry whenever the user types a character"
         self.entry_size()
-        
+
     def entry_size(self):
         "resize the entry"
         text = self.get()
@@ -514,9 +514,9 @@ class Column(Widget):
         self.rows = [self.row_factory(self) for i in range(n)]
 
         self.buttons = self.w.row([1, 1], side=BOTTOM)
-        self.bu1 = self.w.bu(text='Create thread',
-                                 command=self.create_thread)
-        self.bu2 = self.w.bu(text='Add row',
+        self.bu1 = self.w.bu(text='Create thread', font=FONT,
+                             command=self.create_thread)
+        self.bu2 = self.w.bu(text='Add row', font=FONT,
                              command=self.add_row)
         self.w.endrow()
         self.w.endfr()
@@ -559,8 +559,8 @@ class TopColumn(Column):
     """
     def setup(self, side=TOP, n=0, row_factory=TopRow):
         Column.setup(self, side, n, row_factory)
-        self.bu1.configure(text='Run initialization',
-                                 command=self.p.run_init)
+        self.bu1.configure(text='Run initialization', font=FONT,
+                           command=self.p.run_init)
 
 class QueueCanvas(GuiCanvas):
     """Displays the runnable and queued threads."""
@@ -573,10 +573,10 @@ class QueueCanvas(GuiCanvas):
                            transforms=[])
         self.threads = []
         self.setup()
-        
+
     def setup(self):
-        self.text([3, 15], self.label, font=COURIER, anchor=W, fill='white')
-        
+        self.text([3, 15], self.label, font=FONT, anchor=W, fill='white')
+
     def add_thread(self, thread):
         self.undraw_queue()
         self.threads.append(thread)
@@ -597,7 +597,7 @@ class QueueCanvas(GuiCanvas):
             if x > self.get_width():
                 x = FSU
                 y += 1.5*r
-        
+
     def undraw_queue(self):
         for thread in self.threads:
             self.delete(thread.tag)
@@ -605,7 +605,7 @@ class QueueCanvas(GuiCanvas):
     def draw_thread(self, thread, x=FSU, y=FSU, r=0.9*FSU):
         thread.tag = 'Thread' + thread.name
         self.circle([x, y], r, fill=thread.color, tags=thread.tag)
-        font = ('Courier', int(r+3))
+        font = ('FONT', int(r+3))
         self.text([x, y], thread.name, font=font, tags=thread.tag)
         self.tag_bind(thread.tag, '<Button-1>', thread.step_loop)
 
@@ -617,7 +617,7 @@ class QueueCanvas(GuiCanvas):
 
         text: string
         """
-        tag = self.text([15, 15], text, font=COURIER)
+        tag = self.text([15, 15], text, font=FONT)
         return tag
 
 
@@ -642,7 +642,7 @@ class Namer(object):
             return name, color
         else:
             return name, 'white'
-        
+
 
 class Namespace:
     """Used to store thread-local variables.
@@ -738,7 +738,7 @@ class Thread:
             line_indent = self.count_spaces(source)
             if line_indent <= head_indent:
                 break
-            
+
 
     def count_spaces(self, source):
         """Returns the number of leading spaces after expanding tabs."""
@@ -802,7 +802,7 @@ class Thread:
             if the line is an if statement, returns the result of
             evaluating the condition
         """
-        global CURRENT_THREAD 
+        global CURRENT_THREAD
         CURRENT_THREAD = self
 
         sync.globals['self'] = self.namespace
@@ -890,7 +890,7 @@ class Thread:
         self.step()
         if self.row == None:
             self.start()
-        
+
     def run(self):
         while True:
             self.step()
