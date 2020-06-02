@@ -3494,187 +3494,121 @@ while True:
 {../code/barber2.py.2}
 \end{latin}
 
-%Notice that the barber has to get {\tt mutex} to access the
-%queue.
 	توجه نمایید که آرایشگر باید {\tt mutex} را بگیرد تا به صف دسترسی داشته باشد.
 
-%This solution is in \verb"sync_code/barber2.py" (see~\ref{sync.py}).
 	این راه‌حل در \verb"sync_code/barber2.py" آمده است (ر.ک.~\ref{sync.py}).
 
 \clearemptydoublepage
 %\section {Hilzer's Barbershop problem}
 \section {مسألهٔ آرایشگاه هیلزر}
 
-%William Stallings \cite{stallings} presents a more complicated version
-%of the barbershop problem, which he attributes to Ralph Hilzer at the
-%California State University at Chico.
-	ویلیام استالینگز \cite{stallings}  یک نسخهٔ پیچیده‌تر از مسألهٔ آرایشگاه را ارائه می‌دهد، 
-	که آن را مدیون رالف هیلزر در داشنگاه ایالتی کالیفرنیا در چیکو می‌داند.
+	ویلیام استالینگز\LTRfootnote{William Stallings} \cite{stallings}  
+	یک نسخهٔ پیچیده‌تر از مسألهٔ آرایشگاه را ارائه می‌دهد، 
+	که آن را مدیون رالف هیلزر\LTRfootnote{Ralph Hilzer} در دانشگاه ایالتی کالیفرنیا در چیکو می‌داند.
 
 \begin{quotation}
-%Our barbershop has three chairs, three barbers, and a waiting
-%area that can accommodate four customers on a sofa and that has
-%standing room for additional customers.  Fire codes limit the
-%total number of customers in the shop to 20.
     آرایشگاه ما سه تا صندلی،‌ سه تا آرایشگر و اتاق انتظاری دارد که  چهار مشتری می‌توانند روی یک کاناپه قرار گیرند و مابقی بایستند. 
     طبق قوانین آتش‌نشانی تعداد کل مشتری‌های داخل آرایشگاه نباید از ۲۰ تا تجاوز نماید. 
     
-
-%A customer will not enter the shop if it is filled to capacity with
-%other customers.  Once inside, the customer takes a seat on the sofa
-%or stands if the sofa is filled.  When a barber is free, the customer
-%that has been on the sofa the longest is served and, if there are any
-%standing customers, the one that has been in the shop the longest
-%takes a seat on the sofa.  When a customer's haircut is finished, any
-%barber can accept payment, but because there is only one cash
-%register, payment is accepted for one customer at a time.  The barbers
-%divide their time among cutting hair, accepting payment, and sleeping
-%in their chair waiting for a customer.
-    اگر ظرفیت مشتری‌های داخل آرایشگاه تکمیل باشد، مشتری جدید وارد مغازه نخواهد شد. 
-    زمانیکه داخل است اگر روی کاناپه جا باشد می‌نشیند در غیر اینصورت می‌ایستد. 
+    اگر ظرفیت داخل آرایشگاه تکمیل باشد، مشتری جدید وارد مغازه نخواهد شد. 
+    زمانیکه مشتری داخل است اگر روی کاناپه جا باشد می‌نشیند در غیر اینصورت می‌ایستد. 
     زمانیکه یک آرایشگر آزاد باشد، آن مشتری که بیشترین زمان را روی کاناپه بوده  سرویس دریافت می‌کند و اگر مشتریان ایستاده وجود داشته باشند 
     آن فردی که مدت زمان بیشتری را در آرایشگاه بوده است جای او را روی کاناپه خواهد گرفت. 
     زمانیکه آرایش یک مشتری تمام شد،‌ هر آرایشگر می‌تواند اجرت را دریافت دارد،‌ امّا از آنجایی که تنها یک صندوق وجود دارد
-    در هر زمان تنها یک مشتری می‌تواند پرداخت خود را انجام دهد. آرایشگران زمان خود را بین آرایش، دریافت وجه و خوابیدن روی صندلی در انتظار مشتری 
-    تقسیم می‌نمایند. 
+    در هر زمان تنها یک مشتری می‌تواند پرداخت خود را انجام دهد. 
+    آرایشگران زمان خود را اینچنین تقسیم می‌نمایند: آرایش، دریافت وجه و خوابیدن روی صندلی در حالیکه منتظر مشتری هستند.
 \end{quotation}
 
-
-%In other words, the following synchronization constraints apply:
     به عبارت دیگر، محدودیت‌های همگام‌سازی زیر اعمال می‌شود:
 
 \begin{itemize}
 
 \item 
-%Customers invoke the following functions in order:
     مشتریان توابع زیر را به ترتیب فرا می‌خوانند:
 {\tt enterShop}, {\tt sitOnSofa},
 {\tt getHairCut}, {\tt pay}.   
 %%typo: ,and for the last one. 
 
 \item 
-%Barbers invoke {\tt cutHair} and {\tt acceptPayment}.
     آرایشگران  {\tt cutHair} و {\tt acceptPayment} را فرا می‌خوانند. 
 
 \item 
-%Customers cannot invoke {\tt enterShop} if the shop
-%is at capacity.
-    مشتریان اگر ظرفیت آرایشگاه پر باشد نمی‌توانند {\tt enterShop}  را فراخوانند. 
+     اگر ظرفیت آرایشگاه پر باشد مشتریان نمی‌توانند {\tt enterShop}  را فراخوانی نمایند. 
 
 \item 
-%If the sofa is full, an arriving customer cannot invoke 
-%{\tt sitOnSofa}.
     اگر کاناپه پر باشد، مشتری‌ تازه وارد نمی‌تواند {\tt sitOnSofa} را فراخواند. 
 
 \item 
-%When a customer invokes {\tt getHairCut} there should be
-%a corresponding barber executing {\tt cutHair} concurrently,
-%and vice versa.
     زمانیکه یک مشتری {\tt getHairCut} را فرا می‌خواند متناظراً  یک آرایشگر باید {\tt cutHair} را به صورت همزمان اجرا نماید و بالعکس. 
 
 \item 
-%It should be possible for up to three customers to execute
-%{\tt getHairCut} concurrently, and up to three barbers to execute
-%{\tt cutHair} concurrently.
     فراخوانی {\tt getHairCut} به صورت همزمان حداکثر توسط سه مشتری  و اجرای {\tt cutHair} به طور همزمان توسط حداکثر 
     سه آرایشگر  ممکن باشد.
 
 \item 
-%The customer has to {\tt pay} before the barber can
-%{\tt acceptPayment}.
     مشتری باید قبل از اینکه آرایشگر بتواند {\tt acceptPayment} را فراخواند،  {\tt pay}  را اجرا نماید. 
 
 \item 
-%The barber must {\tt acceptPayment} before the customer can
-%exit.
-    آرایشگر قبل از خروج مشتری باید  {\tt acceptPayment} را اجرا نماید. 
+    آرایشگر می‌بایست  {\tt acceptPayment} را قبل از خروج مشتری  اجرا نماید. 
 
 \end{itemize}
 
-%Puzzle: Write code that enforces the synchronization
-%constraints for Hilzer's barbershop.
     معمّا: کدی بنویسید که محدودیت‌های همگام‌سازی آرایشگاه هیلزر را اعمال نماید. 
 
 
-%\subsection {Hilzer's barbershop hint}
 \subsection{راهنمایی آرایشگاه هیلزر}
 
-%Here are the variables I used in my solution:
     متغیرهایی که در راه‌حل بکار رفته در ادامه آمده است:‌
 
 \begin{latin}
-%\lstinputlisting[title=Hilzer's barbershop hint]
 \lstinputlisting[title=\rl{راهنمایی آرایشگاه هیلزر}]
 {../code/barber3.py.0}
 \end{latin}
 
-%{\tt mutex} protects {\tt customers}, which keeps track of the
-%number of customers in the shop, and {\tt queue1} which is a list
-%of semaphores for threads waiting for a seat on the sofa.
     {\tt mutex}
     از {\tt customers} که تعداد مشتری‌های درون آرایشگاه را در خود دارد و  از {\tt queue1} که لیست سمافورهای نخ‌های منتظر برای نشستن 
-    روی کاناپه است حفاظت می‌نماید. 
+    روی کاناپه است حفاظت می‌نماید. 	
 
 %{\tt mutex2} protects {\tt queue2}, which is a list
 %of semaphores for threads waiting for a chair.
     {\tt mutex2} 
-    از {\tt queue2} که لیست سمافورهای نخ‌های منتظر صندلی است حفاظت می‌کند. 
+    از {\tt queue2} (یک لیست از سمافورهای نخ‌های در انتظار صندلی) حفاظت می‌کند. 
 
-
-%{\tt sofa} is a multiplex that enforces the maximum number of customers
-%on the sofa.
     {\tt sofa} 
-    یک مالتی‌پلکس است که حداکثر تعداد مشتری‌های روی کاناپه را اعمال می‌کند. 
+    یک مالتی‌پلکس است که حداکثر تعداد مشتری‌های روی کاناپه را کنترل می‌کند.
 
-%{\tt customer1} signals that there is a customer in {\tt queue1}, and
-%{\tt customer2} signals that there is a customer in {\tt queue2}.
     {\tt customer1}
     پیغام می‌دهد که یک مشتری در  {\tt queue1} وجود دارد و {\tt customer2} پیغام می‌دهد که یک مشتری در  {\tt queue2} وجود دارد. 
 
-
-%{\tt payment} signals that a customer has paid, and {\tt receipt}
-%sigmals that a barber has accepted payment.
      {\tt payment}
     پیغام می‌دهد که یک مشتری پرداخت داشته است و {\tt receipt} پیغام می‌دهد که آرایشگر اجرت را دریافت کرده است. 
 
 
 \clearemptydoublepage
-%\subsection {Hilzer's barbershop solution}
-\subsection {راه حل آرایشگاه هیلزر}
+\subsection {راه‌حل آرایشگاه هیلزر}
 
-%This solution is considerably more complex than I expected.  I
-%am not if Hilzer had something simpler in mind, but here is the
-%best I could do.
     این راه‌حل به طور قابل توجهی از آنچه انتظار داشتم پیچیده‌تر است. شاید در ذهن هیلزر راه‌حل ساده‌تری وجود داشته است لکن 
     این بهترین چیزی است که می‌توانستم ارائه دهم. 
 
 \begin{latin}
-%\lstinputlisting[title=Hilzer's barbershop solution (customer)]
-\lstinputlisting[title=\rl{راه حل آرایشگاه هیلزر (مشتری)}]
+\lstinputlisting[title=\rl{راه‌حل آرایشگاه هیلزر (مشتری)}]
 {../code/barber3.py.1}
 \end{latin}
 
-%The first paragraph is the same as in the previous solution.  When
-%a customer arrives, it checks the counter and either balks or adds
-%itself to the queue.  Then it signals a barber.
     اوّلین پاراگراف مشابه راه‌حل قبلی است. زمانیکه یک مشتری می‌رسد، شمارنده را بررسی نموده آنگاه یا از ورود امتناع ورزیده و یا خودش را به 
     صف می‌افزاید. سپس به آرایشگر سیگنال می‌دهد. 
 
-%When the customer gets out of queue, it enters the multiplex,
-%sits on the couch and adds itself to the second queue.
-    زمانیکه مشتری از صف خارج می‌شود، وارد مالتی‌پلکس می‌گردد، روی مبل می‌نشیند و خود را به صف دوم افزاید. 
+    زمانیکه مشتری از صف خارج می‌شود، وارد مالتی‌پلکس می‌گردد، روی مبل می‌نشیند و خود را به صف دوم می‌افزاید. 
 
-%When it gets out of {\em that} queue, it gets a haircut, pays,
-%and then exits.
-    زمانیکه از آن صف خارج می‌شود، آرایش شده، پرداخت انجام داده و خارج می‌شود.
+    زمانیکه از \textbf{آن} صف خارج می‌شود، آرایش شده، پرداخت انجام داده و خارج می‌شود.
 
 \begin{latin}
-%\lstinputlisting[title=Hilzer's barbershop solution (barber)]
-\lstinputlisting[title=\rl{راه حل آرایشگاه هیلزر (آریشگر)}]
+\lstinputlisting[title=\rl{راه‌حل آرایشگاه هیلزر (آرایشگر)}]
 {../code/barber3.py.2}
 \end{latin}
 
 %%%    Sat 09 Dec 2017 06:03:07 PM +0330
+%%%Tue 02 Jun 2020 06:01:43 PM +0430 revision 3
 
 %Each barber waits for a customer to enter, signals the customer's
 %semaphore to get it out of queue, then waits for it to claim a seat
