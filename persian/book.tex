@@ -3902,57 +3902,32 @@ barrier.wait()
 %%%    Sun 17 Dec 2017 06:36:45 PM +0330
 %%%% Sun 13 Nov 2022 07:17:26 PM +0330
     
-%\section {River crossing problem}
 \section {مسأله عبور از رودخانه}
 
-%This is from a problem set written by Anthony Joseph
-%at U.C. Berkeley, but I don't know if he is the original author.
-%It is similar to the H$_2$O problem in the sense that it is
-%a peculiar sort of barrier that only allows threads to pass
-%in certain combinations.
-    این مسأله از مجموعه مسائل نوشته توسط انتونی ژوزف\LTRfootnote{Anthony Joseph} در دانشگاه برکلی\LTRfootnote{U.C. Berkeley}
-    است، امّا اینکه نویسندهٔ اصلی خود او است یا نه را نمی‌دانم. این مسأله از این جنبه که یک گونه خاص از حصار در آن وجود دارد که تنها در ترکیب‌های 
-    معینی، به نخ‌ها اجازه عبور می‌دهد مشابه مسأله \lr{H$_2$O} است. 
+    این مسأله از مجموعه مسائل نوشته شده توسط آنتونی ژوزف\LTRfootnote{Anthony Joseph} در دانشگاه برکلی\LTRfootnote{U.C. Berkeley}
+    است، امّا اینکه نویسندهٔ اصلی خود او است یا نه را نمی‌دانم. این مسأله از این جنبه که یک گونهٔ خاص از حصار در آن وجود دارد که تنها در ترکیب‌های 
+    معیّنی، به نخ‌ها اجازه عبور می‌دهد مشابه مسأله \lr{H$_2$O} است. 
 
-%Somewhere near Redmond, Washington there is a rowboat that is used by
-%both Linux hackers and Microsoft employees (serfs) to cross a river.  The
-%ferry can hold exactly four people; it won't leave the shore with more
-%or fewer.  To guarantee the safety of the passengers, it is not
-%permissible to put one hacker in the boat with three serfs, or to
-%put one serf with three hackers.  Any other combination is safe.
-    یک جایی نزدیک ردموند\LTRfootnote{Redmond} ایالت واشنگتن، یک قایق پارویی وجود دارد که بوسیله هر دوی هکرهای لینوکس و 
-    کارمندان مایکروسافت برای عبور از یک رودخانه بکار می‌رود.  قایق دقیقاً چهار نفر در خود جا می‌دهد و ساحل رودخانه را با تعداد بیشتر یا کمتری ترک نخواهد کرد. 
+    یک جایی نزدیک ردموند\LTRfootnote{Redmond} ایالت واشنگتن، یک قایق پارویی وجود دارد که هم هکرهای لینوکس و 
+    هم کارمندان مایکروسافت برای عبور از یک رودخانه از آن استفاده می‌کنند.  قایق دقیقاً چهار نفر در خود جا می‌دهد و ساحل رودخانه را با تعداد بیشتر یا کمتری ترک نخواهد کرد. 
     به منظور تضمین امنیت مسافران، همنشینی یک هکر با سه کارمند مایکروسافت مجاز نمی‌باشد و بالعکس. هر ترکیب دیگری امن است. 
 
-%As each thread boards the boat it should invoke a function
-%called {\tt board}.  You must guarantee that all four threads
-%from each boatload invoke {\tt board} before any of the threads
-%from the next boatload do.
     هر نخ که سوار قایق می‌شود باید تابع  {\tt board} را صدا زند. تضمین نمایید که تمامی چهار نخ سوار بر قایق،  {\tt board} را 
     پیش از هر نخ دیگری که متعلق به سری بعدی است صدا زند. 
     
 
-%After all four threads have invoked {\tt board}, exactly one of
-%them should call a function named {\tt rowBoat}, indicating
-%that that thread will take the oars.  It doesn't matter which thread
-%calls the function, as long as one does.
-    پس از اینکه هر چهار نخ  {\tt board} را صدا زدند، دقیقاً یکی از آن‌ها باید تابع {\tt rowBoat} را فراخواند تا نشان دهد که آن نخ 
-    پاروها را خواهد گرفت. اینکه کدام نخ این تابع را صدا می‌زند تا آن زمانیکه یکی اینکار انجام می‌دهد اهمیتی ندارد. 
+    پس از اینکه هر چهار نخ،  {\tt board} را صدا زدند، دقیقاً یکی از آن‌ها باید تابع {\tt rowBoat} را فراخواند تا نشان دهد که آن نخ 
+    پاروها را خواهد گرفت. اینکه کدام نخ این تابع را صدا می‌زند تا آن زمانیکه یکی اینکار را انجام می‌دهد اهمیتی ندارد. 
 
-%Don't worry about the direction of travel.  Assume we are
-%only interested in traffic going in one of the directions.
-    نگران جهت حرکت سفر نباشید. فرض کنید که تنها رفت آمد از یک جهت مورد توجه ما است. 
+    نگران جهت حرکت سفر نباشید. فرض کنید که تنها رفت و آمد از یک جهت مورد توجه ما است. 
 
 
 \clearemptydoublepage
-%\subsection {River crossing hint}
 \subsection {راهنمایی عبور از رودخانه}
 
-%Here are the variables I used in my solution:
     متغیرهایی که در حل مسأله بکار برده‌ام در ادامه آمده است:‌
 
 \begin{latin}
-%\begin{lstlisting}[title={River crossing hint}]{}
 \begin{lstlisting}[title=\rl{راهنمایی عبور از رودخانه}]{}
 barrier = Barrier(4)
 mutex = Semaphore(1)
@@ -3964,22 +3939,12 @@ local isCaptain = False
 \end{lstlisting}
 \end{latin}
 
-%{\tt hackers} and {\tt serfs} count the number of hackers
-%and serfs waiting to board.  Since they are both protected by
-%{\tt mutex}, we can check the condition of both variables without
-%worrying about an untimely update.  This is another example
-%of a scoreboard.
     {\tt hackers} و {\tt serfs}
-    تعداد هکرها و کارمندان منتظر سوار شدن را می‌شمرد. از آنجایی که هر دو اینها بوسیله {\tt mutex} محافظت می‌شوند، می‌توانیم شرایط هر دو متغیر را 
-    بدون نگرانی درباره به‌روزرسانی‌ نابهنگام بررسی نماییم. این یک مثال دیگری از یک جدول امتیاز است. 
-
-%{\tt hackerQueue} and {\tt serfQueue} allow us to control the number
-%of hackers and serfs that pass.  The barrier
-%makes sure that all four threads have invoked
-%{\tt board} before the captain invokes {\tt rowBoat}.
+    تعداد هکرها و کارمندان منتظر سوار شدن را می‌شمرد. از آنجایی که هر دوی این‌ها بوسیلهٔ {\tt mutex} محافظت می‌شوند، می‌توانیم شرایط هر دو متغیر را 
+    بدون نگرانی دربارهٔ به‌روزرسانی‌ نابهنگام بررسی نماییم. این مثال دیگری از یک جدول امتیاز است. 
 
     {\tt hackerQueue} و {\tt serfQueue}
-    به ما اجازه می‌دهند که تعداد هکرها و کارمندانی که گذر می‌نمایند را کنترل نماییم. {\tt barrier} تضمین می‌کند که تمامی چهار نخ، پیش از اینکه 
+    به ما اجازه می‌دهند که تعداد هکرها و کارمندانی را که گذر می‌کنند کنترل نماییم. {\tt barrier} تضمین می‌کند که تمامی چهار نخ، پیش از اینکه 
     کاپیتان  {\tt rowBoat} را فراخواند  {\tt board}  را فراخوانند. 
 
 %{\tt isCaptain} is a local variable that
@@ -3988,38 +3953,29 @@ local isCaptain = False
     {\tt isCaptain} یک متغیر محلی است که نشان می‌دهد کدام نخ باید {\tt rowBoat} را فراخواند. 
 
 \clearemptydoublepage
-%\subsection {River crossing solution}
 \subsection {راه حل عبور از رودخانه}
 
-%The basic idea of this solution is that each arrival updates
-%one of the counters and then checks whether it makes a
-%full complement, either by being the fourth of its kind or
-%by completing a mixed pair of pairs.
     ایده اصلی این راه‌حل این است که هر نخ ورودی یکی از شمارنده‌ها را به‌روزرسانی نموده و سپس بررسی می‌نماید که آیا مجموعه را تکمیل می‌نماید، خواه 
     اینکه چهارمین نخ از همنوعان خودش باشد و یا اینکه یک جفت ترکیبی از جفت‌‌های ممکن را تکمیل نماید. 
 
-%I'll present the code for hackers; the serf code is
-%symmetric (except, of course, that it is 1000 times bigger,
-%full of bugs, and it contains an embedded web browser):
-    کد هکرها را ارائه خواهم کرد؛ کد کارمندان مایکروسافت هم قرینه آن است (البته بجز اینکه ۱۰۰۰ بار بزرگتر، پر از باگ، و شامل یک مرورگر توکار است.)
+    کد هکرها را ارائه خواهم کرد؛ کد کارمندان مایکروسافت نیز قرینهٔ آن است (البته بجز اینکه ۱۰۰۰ بار بزرگتر، پر از باگ، و شامل یک مرورگر توکار است):
 
 \begin{latin}
-%\begin{lstlisting}[title={River crossing solution}]{}
 \begin{lstlisting}[title=\rl{راه حل عبور از رودخانه}]{}
 mutex.wait()
     hackers += 1
     if hackers == 4:
         hackerQueue.signal(4)                
-	hackers = 0
-	isCaptain = True
+	    hackers = 0
+	    isCaptain = True
     elif hackers == 2 and serfs >= 2:
         hackerQueue.signal(2)                
         serfQueue.signal(2)                  
-	serfs -= 2
-	hackers = 0
-	isCaptain = True
+	    serfs -= 2
+	    hackers = 0
+    	isCaptain = True
     else:
-        mutex.signal()      # captain keeps the mutex
+        mutex.signal()      # (*\rl{کاپیتان میوتکس را می‌گیرد}*)
 
 hackerQueue.wait()           
 
@@ -4028,27 +3984,21 @@ barrier.wait()
 
 if isCaptain:
     rowBoat()
-    mutex.signal()          # captain releases the mutex
+    mutex.signal()          # (*\rl{کاپیتان میوتکس را رها می‌کند}*)
 \end{lstlisting}
 \end{latin}
 
-%As each thread files through the mutual exclusion section, it
-%checks whether a complete crew is ready to board.  If so, it
-%signals the appropriate threads, declares itself captain, and
-%holds the mutex in order to bar additional threads until the
-%boat has sailed.
-    از آنجایی که هر نخ از طریق بخش انحصار متقابل به ترتیب وارد می‌شود، 
-    بررسی می‌نماید که یک خدمه کامل آماده سوار شدن قایق هست یا خیر؟ اگر چنین بود، به نخ‌های متناسب سیگنال داده، خودش را به عنوان کاپیتان 
-    معرفی نموده، و میوتکس می‌گیرد تا مانع نخ‌های اضافی شود تا آن زمان که قایق رانده شود. 
+    هر نخی که از \textt{mutex.wait()} عبور می‌کند،‌ 
+    بررسی می‌نماید که یک خدمهٔ کامل آماده سوار شدن قایق هست یا خیر؟ اگر چنین بود، به نخ‌های متناسب سیگنال داده، خودش را به عنوان کاپیتان 
+    معرفی نموده، میوتکس را می‌گیرد و تا آن زمان که قایق رانده شود مانع [ورود] نخ‌های اضافی می‌شود. 
 
-%The barrier keeps track of how many threads have boarded.
-%When the last thread arrives, all threads proceed.
 %The captain invoked {\tt row} and then (finally) releases the mutex.
 % typo  {\tt row}  -> {\tt rowBoat} 
-    تعداد نخ‌هایی که سوار شده‌اند را حصار نگاه می‌دارد. زمانیکه آخرین نخ می‌رسد، تمامی نخ‌ها با هم ادامه می‌یابند. 
+    حصار، تعداد نخ‌هایی که سوار شده‌اند را نگاه می‌دارد. زمانیکه آخرین نخ می‌رسد، تمامی نخ‌ها با هم ادامه می‌یابند. 
     کاپیتان  {\tt rowBoat} را فراخوانده و در نهایت میوتکس را آزاد می‌نماید. 
     
-%%%    Mon 18 Dec 2017 06:02:36 PM +0330 
+%%%    Mon 18 Dec 2017 06:02:36 PM +0330
+%%%% Sun 20 Nov 2022 07:04:51 PM +0330 
 
 
 \clearemptydoublepage
