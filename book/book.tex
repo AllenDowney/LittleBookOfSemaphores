@@ -599,7 +599,7 @@ Now consider the following execution path
 \[  a1 < b1 < b2 < a2  \]
 
 Assuming that the
-initial value of {\tt x} is {\tt 0},
+initial value of {\tt count} is {\tt 0},
 what is its final value?  Because
 both threads read the same initial value, they write
 the same value.  The variable is only incremented once, which
@@ -1350,7 +1350,7 @@ barrier might be signaled more than once?
 
 Since only one thread at a time can pass through the
 mutex, and only one thread at a time can pass through
-the turnstile, it might seen reasonable to put the
+the turnstile, it might seem reasonable to put the
 turnstile inside the mutex, like this:
 
 \begin{lstlisting}[title={Bad barrier solution}]{}
@@ -3120,7 +3120,7 @@ thread to wait forever while other threads come and go
 
 Imagine that we are trying to starve Philosopher 0.  Initially,
 2 and 4 are at the table and 1 and 3 are hungry.  Imagine that 2 gets up and
-1 sit downs; then 4 gets up and 3 sits down.
+1 sits down; then 4 gets up and 3 sits down.
 Now we are in the mirror image of the starting position.
 
 If 3 gets up and 4 sits
@@ -3162,7 +3162,7 @@ a cigarette, and then signal the agent.
 To explain the premise, the agent represents an operating system that
 allocates resources, and the smokers represent applications that need
 resources.  The problem is to make sure that if resources are
-available that would allow one more applications to proceed,
+available that would allow one or more applications to proceed,
 those applications should be woken up.  Conversely, we want to avoid
 waking an application if it cannot proceed.
 
@@ -3767,7 +3767,7 @@ sigmals that a barber has accepted payment.
 \subsection {Hilzer's barbershop solution}
 
 This solution is considerably more complex than I expected.  I
-am not if Hilzer had something simpler in mind, but here is the
+am not sure if Hilzer had something simpler in mind, but here is the
 best I could do.
 
 \lstinputlisting[title=Hilzer's barbershop solution (customer)]
@@ -4878,7 +4878,7 @@ must_wait = False
 {\tt eating} and {\tt waiting} keep track of the number of
 threads sitting at the bar and waiting.  {\tt mutex} protects
 both counters.  {\tt must\_wait} indicates that the bar is (or
-has been) full, som incoming customers have to block
+has been) full, so incoming customers have to block
 on {\tt block}.
 
 
