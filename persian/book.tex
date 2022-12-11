@@ -526,7 +526,7 @@ $a1 < a2 < b1$ یکی از مسیرهای ممکن است که در آن خرو�
 
 %possible effects?  Can we prove that a given (desirable) effect is
 %necessary or that an (undesirable) effect is impossible?
-پاسخ به چنین سوالاتی یکی از بخش‌های مهم برنامه‌نویسی همروند است: مسیرهای ممکن کدام‌ها هستند و هر یک از این مسیرها چه تاثیراتی دارند؟ 
+پاسخ به چنین سوالاتی یکی از بخش‌های مهم برنامه‌نویسی همروند است: مسیرهای ممکن کدام‌ها هستند و هر یک از این مسیرها چه تأثیراتی دارند؟ 
     آیا می‌توان ثابت نمود که اثری (خواسته) ضروری است و یا اینکه اثری (ناخواسته) غیر ممکن است؟
 %%    Wed 23 Aug 2017 06:55:53 PM +0430
 
@@ -4288,56 +4288,37 @@ noSearcher.signal()
 
 %%%% Sun 04 Dec 2022 07:05:46 PM +0330
 
-%\section{The unisex bathroom problem}
 \section{مسأله سرویس بهداشتی عمومی}
 
-%I wrote this problem\footnote{Later I learned that a nearly
-%identical problem appears in Andrews's 
-%{\em Concurrent Programming}\cite{andrews}} when a friend of mine
-%left her position teaching physics at Colby College
-%and took a job at Xerox.
     این مسأله را زمانی که یکی از دوستانم موقعیت خود را در تدریس فیزیک در کالج کالبی\LTRfootnote{Colby College} رها نمود 
     و در زیراکس\LTRfootnote{Xerox} مشغول به کار شد نوشتم%
     \footnote{بعداً دریافتم که مسأله‌ای تقریبا یکسان با این مسأله در کتاب «برنامه‌نویسی همروند» اندرو وجود دارد \cite{andrews}.}. 
 
-%She was working in a cubicle in the basement of a
-%concrete monolith, and the nearest women's bathroom was two floors up.
-%She proposed to the Uberboss that they convert the men's bathroom
-%on her floor to a unisex bathroom, sort of like on Ally McBeal.
-    او در یک اتاقک در زیرزمین یک ساختمان کار می‌کرد و نزدیک‌تریم توالت زنانه دو طبقه بالاتر بود.
-    او به رئیس خود پیشنهاد داد که توالت مردانه طبقه خودشان مختص به جنس خاصی نباشد. 
+    او  در یک اتاقک در زیرزمین یک ساختمان کار می‌کرد و نزدیک‌ترین توالت زنانه دو طبقه بالاتر بود.
+    او به رئیس خود پیشنهاد داد که توالت مردانه طبقه خودشان مختص به جنس خاصّی نباشد. 
 
-%The Uberboss agreed, provided that the following synchronization
-%constraints can be maintained:
-    رئیس موافقت نمود در صورتیکه محدودیت همگام‌سازی زیر بتواند فراهم آید: 
+    رئیس موافقت نمود در صورتیکه محدودیت‌های همگام‌سازی زیر فراهم آید: 
 
 \begin {itemize}
 
-\item %There cannot be men and women in the bathroom at the same time.
+\item
     مردها و زن‌ها به طور همزمان نمی‌توانند با هم در دستشویی باشند. 
 
-\item %There should never be more than three
-%employees squandering company time in the bathroom.
+\item
     هرگز نباید بیش از سه کارمند ساعت کاری خود را در دستشویی تلف کنند. 
 \end{itemize}
 
-%Of course the solution should avoid deadlock.  For now, though, don't
-%worry about starvation.  You may assume that the bathroom is equipped
-%with all the semaphores you need.
-    البته راه‌حل باید از بن‌بست جلوگیری نماید. گرچه فعلاً نگران قحطی نباشید. می‌توانید فرض کنید که با سرویس بهداشتی تمام سمافورهای 
+    البته راه‌حل باید از بن‌بست جلوگیری نماید. فعلاً نگران قحطی نباشید. می‌توانید فرض کنید که با سرویس بهداشتی تمام سمافورهای 
     مورد نیاز شما فراهم آمده است. 
 
 %%%%Mon 25 Dec 2017 06:23:01 PM +0330
 
 \clearemptydoublepage
-%\subsection {Unisex bathroom hint}
 \subsection{راهنمایی سرویس بهداشتی عمومی}
 
-%Here are the variables I used in my solution:
     متغیرهایی که در راه‌حل بکار برده‌ام در ادامه آمده است:
 
 \begin{latin}
-%\begin{lstlisting}[title={Unisex bathroom hint}]{}
 \begin{lstlisting}[title=\rl{راهنمایی سرویس بهداشتی عمومی}]{}
 empty = Semaphore(1)
 maleSwitch = Lightswitch()
@@ -4347,32 +4328,22 @@ femaleMultiplex = Semaphore(3)
 \end{lstlisting}
 \end{latin}
 
-%{\tt empty} is 1 if the room is empty and 0 otherwise.
-     اگر اتاق خالی باشد مقدار {\tt empty} برابر ۰ است در غیر اینصورت ۱. 
-%{\tt maleSwitch} allows men to bar women from the room.
-%When the first male enters, the lightswitch locks {\tt empty}, barring women;
-%When the last male exits, it unlocks {\tt empty}, allowing women
-%to enter.  Women do likewise using {\tt femaleSwitch}.
+     اگر اتاق خالی باشد مقدار {\tt empty} برابر ۱ است در غیر اینصورت ۰. 
     {\tt maleSwitch} 
-    این امکان را به مردان می‌دهند که مانع ورود زن‌ها به اتاق شوند. زمانیکه اوّلین مرد وارد می‌شود، لایت‌سوئیچ، {\tt empty} را قفل نموده تا 
-    مانع وروود بانوان گردد؛ زمانیکه آخرین مرد خارج می‌شود، {\tt empty} را باز نموده تا ورود بانوان را ممکن سازد. بانوان نیز 
+    این امکان را به مردان می‌دهد که مانع ورود زن‌ها به اتاق شوند. زمانیکه اوّلین مرد وارد می‌شود، لایت‌سوئیچ، {\tt empty} را قفل نموده تا 
+    مانع ورود بانوان گردد؛ زمانیکه آخرین مرد خارج می‌شود، {\tt empty} را باز نموده تا ورود بانوان را ممکن سازد. بانوان نیز 
     عملی مشابه با استفاده از {\tt femaleSwitch} انجام می‌دهند.
 
-%{\tt maleMultiplex} and {\tt femaleMultiplex} ensure that there are no
-%more than three men and three women in the system at a time.
     {\tt maleMultiplex} و {\tt femaleMultiplex}  
-    تضمین می‌نمایند که بیش از سه زن یا سه مزد در یک لحظه در سیستم نباشند. 
+    تضمین می‌نمایند که بیش از سه زن یا سه مرد در یک لحظه در سیستم نباشند. 
 
 
 \clearemptydoublepage
-%\subsection {Unisex bathroom solution}
 \subsection{راه‌حل سرویس بهداشتی عمومی}
 
-%Here is the female code:
     کد بانوان در ادامه آمده است: 
 
 \begin{latin}
-%\begin{lstlisting}[title={Unisex bathroom solution (female)}]{}
 \begin{lstlisting}[title=\rl{راه‌حل سرویس بهداشتی عمومی (بانوان)}]{}
 femaleSwitch.lock(empty)
     femaleMultiplex.wait()
@@ -4382,36 +4353,24 @@ female Switch.unlock(empty)
 \end{lstlisting}
 \end{latin}
 
-%The male code is similar.
     کد آقایان نیز مشابه است. 
 
-%Are there any problems with this solution?
-    آیا با این راه‌حل مشکلی دارد؟
+    آیا این راه‌حل مشکلی دارد؟
 
 \clearemptydoublepage
-%\subsection {No-starve unisex bathroom problem}
 \subsection{مسأله سرویس بهداشتی عمومی بدون قحطی}
 
-%The problem with the previous solution is that it allows starvation.
-%A long line of women can arrive and enter while there is a man
-%waiting, and vice versa.
-    مشکل راه‌حل قبلی این است که قحطی را ممکن می‌سازد. در حالیکه یک مرد منتظر ورود است  ممکن است یک صف طولانی از بانوان و وارد شوند و بالعکس. 
+    مشکل راه‌حل قبلی این است که قحطی را ممکن می‌سازد. در حالیکه یک مرد منتظر ورود است  ممکن است یک صف طولانی از بانوان وارد شوند و بالعکس. 
 
-%Puzzle: fix the problem.
     معمّا: مشکل را حل کنید: 
 
 
 \clearemptydoublepage
-%\subsection {No-starve unisex bathroom solution}
 \subsection{راه‌حل سرویس بهداشتی عمومی بدون قحطی}
 
-%As we have seen before, we can use a turnstile to allow one
-%kind of thread to stop the flow of the other kind of thread.
-%This time we'll look at the male code:
     همانطوری که پیش از این دیدیم، می‌توانیم از ترن‌استایل استفاده کنیم تا یک نوعِ نخ‌ مانع جریان دیگر انواع نخ گردد. این مرتبه به کد آقایان نگاه خواهیم انداخت: 
 
 \begin{latin}
-%\begin{lstlisting}[title={No-starve unisex bathroom solution (male)}]{}
 \begin{lstlisting}[title=\rl{راه‌حل سرویس بهداشتی عمومی  بدون قحطی(آقایان)}]{}
 turnstile.wait()
     maleSwitch.lock(empty)
@@ -4425,117 +4384,59 @@ maleSwitch.unlock (empty)
 \end{lstlisting}
 \end{latin}
 
-%As long as there are men in the room, new arrivals will pass
-%through the turnstile and enter.  If there are women in the room
-%when a male arrives, the male will block inside the turnstile,
-%which will bar all later arrivals (male and female) from entering
-%until the current occupants leave.  At that point the male in
-%the turnstile enters, possibly allowing additional males to enter.
     تا زمانیکه مردانی در اتاق وجود دارند، مردان تازه از راه رسیده از ترن‌استایل عبور خواهند نمود و وارد می‌شوند. آن زمانیکه یک مرد  می‌رسد اگر یک تعدادی خانم 
     داخل اتاق باشند، مرد مورد نظر درون ترن‌استایل مسدود شده و از ورود تمامی کسانی که پس از او می‌رسند (اعم از زن یا مرد) جلوگیری خواهد شد تا زمانیکه
     افراد داخل اتاق آنجا را ترک نمایند. در این نقطه، مردی که درون ترن‌استایل هست وارد شده و ورود سایر مردان را نیز ممکن می‌سازد. 
 
-%The female code is similar, so if there are men in the room an
-%arriving female will get stuck in the turnstile, barring additional
-%men.
     کد بانوان نیز مشابه است، لذا اگر مردانی درون اتاق باشند و یک خانم برسد، آن خانم درون ترن‌استایل گیر خواهد افتاد و مانع ورود مردان دیگر می‌شود. 
 
-%This solution may not be efficient.  If
-%the system is busy, then there will often be several threads, male and
-%female, queued on the turnstile.  Each time {\tt empty} is signaled,
-%one thread will leave the turnstile and another will enter.  If the
-%new thread is the opposite gender, it will promptly block, barring
-%additional threads.  Thus, there will usually be only 1-2 threads in
-%the bathroom at a time, and the system will not take full advantage
-%of the available concurrency.
     این راه‌حل ممکن است کارا نباشد. اگر سیستم مشغول باشد، اغلب چندین نخ مرد و زن وجود خواهد داشت که روی ترن‌استایل صف بسته‌اند. 
-    هر زمان که {\tt empty} سیگنال داده می‌شود، یک نخ ترن‌استایل را ترک نموده و نخ دیگر وارد خواهد شد. اگر نخ جدید از جنس مخالف باشد 
+    هر زمان که به {\tt empty} سیگنال داده می‌شود، یک نخ ترن‌استایل را ترک نموده و نخ دیگر وارد خواهد شد. اگر نخ جدید از جنس مخالف باشد 
     آن نخ بی‌درنگ مسدود خواهد شد و مانع نخ‌های دیگر می‌گردد. بنابراین معمولاً  در هر زمان تنها ۱ تا ۲ نخ در سرویس بهداشتی هستند و سیستم از تمام 
     ظرفیت همزمانی موجود بهره نخواهد برد. 
 
 
-%\section{Baboon crossing problem}
-\section{مسأله عبورکردن میمون}
+\section{مسأله عبور میمون}
 
-%This problem is adapted from Tanenbaum's {\em Operating Systems:
-%Design and Implementation} \cite{tanenbaum}.
-%There is a deep canyon somewhere in
-%Kruger National Park, South Africa, and a single rope that spans the
-%canyon.  Baboons can cross the canyon by swinging hand-over-hand on
-%the rope, but if two baboons going in opposite directions meet in the
-%middle, they will fight and drop to their deaths.  Furthermore,
-%the rope is only strong enough to hold 5 baboons.  If there are
-%more baboons on the rope at the same time, it will break.
     این مسأله از کتاب «سیستم‌های عامل: طراحی و پیاده‌سازی» تننبام اخذ شده است \cite{tanenbaum}.
     یک جایی در پارک ملی کروگر در افریقای جنوبی\LTRfootnote{Kruger National Park, South Africa}
-    یک دره عمیق با یک تک طناب که بین این دره کشیده شده است وجود دارد. میمون‌ها می‌توانند با کمک دست‌هایشان با آویزان شدن از آن طناب 
+    یک دره عمیق با یک تک طناب که روی این دره کشیده شده است وجود دارد. میمون‌ها می‌توانند با کمک دست‌هایشان با آویزان شدن از آن طناب 
     از روی دره عبور نمایند، امّا اگر دو میمون در دو جهت مخالف در میانه راه به یکدیگر برسند، تا سر حد مرگ خواهند جنگید. 
     علاوه بر این،‌ طناب تنها تحمل وزن ۵ میمون را دارد. اگر میمون‌های بیشتری به طور همزمان روی طناب باشند پاره خواهد شد. 
 
-%Assuming that we can teach the baboons to use semaphores, we
-%would like to design a synchronization scheme with the following
-%properties:
     تصور کنید که می‌توانیم  استفاده از سمافورها را به میمون‌ها آموزش دهیم، دوست داریم که یک برنامه همگام‌سازی با ویژگی‌های زیر طراحی نماییم:
 
 \begin{itemize}
 
 \item 
-%Once a baboon has begun to cross, it is guaranteed
-%to get to the other side without running into a baboon going
-%the other way.
-    هنگامیکه یک میمون شروع به عبور نموده است، تضمین شده باشد بدون اینکه با میمونی از روبرو مواجه شود به طرف دیگر برسد. 
+     تضمین شود هنگام عبور یک میمون، بدون اینکه با میمونی از روبرو مواجه شود به طرف دیگر برسد. 
 
-\item %There are never more than 5 baboons on the rope.
+\item
     هیچگاه بیشتر از ۵ میمون روی طناب نباشد. 
 
-\item %A continuing stream of baboons crossing in one direction
-%should not bar baboons going the other way indefinitely
-%(no starvation).
+\item
     یک جریان پیوسه از میمون‌ها که در یک جهت عبور می‌کند نباید برای همیشه مانع میمون‌های جهت مخالف شود (بدون قحطی). 
 
 \end{itemize}
 
-%I will not include a solution to this problem for reasons that
-%should be clear.
     به دلایلی که واضح است راه‌حل این مسأله را نخواهم گفت. 
 
 
-%\section{The Modus Hall Problem}
 \section{مسأله تالار \lr{Modus} }
 
-%This problem was written by Nathan Karst, one of the Olin students
-%living in Modus Hall\footnote{Modus Hall is one of several nicknames
-%for the modular buildings, aka Mods, that some students lived in while
-%the second residence hall was being built.} during the winter of 2005.
     این مسأله توسط \lr{Nathan Karst} یکی از دانشجویان \lr{Olin} که طی زمستان ۲۰۰۵ در تالار \lr{Modus}\footnote{
     تالار \lr{Modus} یکی از چندین نام مستعار برای ساختمان‌های ماژولار است که همچنین به نام \lr{Mods} نیز شناخته می‌شود و جایی است که 
-    برخی دانشجویان در زمانی که تالار اقامتی دوم در حال ساخته شدن است در آنجا زندگی می‌کنند. 
-    } زندگی می‌کرده نوشته شده است. 
+    برخی دانشجویان در زمانی که تالار اقامتی دوم در حال ساخته شدن است در آنجا زندگی می‌کنند.} 
+    زندگی می‌کرده نوشته شده است. 
 
 \begin{quote}
-%After a particularly heavy snowfall this winter, the denizens of Modus
-%Hall created a trench-like path between their cardboard shantytown and
-%the rest of campus.  Every day some of the residents walk to and from
-%class, food and civilization via the path; we will ignore the
-%indolent students who chose daily to drive to Tier 3.  We will also
-%ignore the direction in which pedestrians are traveling.  For some
-%unknown reason, students living in West Hall would occasionally find it
-%necessary to venture to the Mods.
-    زمستان، خصوصاً پس از یک بارش سنگین برف، ساکنان تالار  \lr{Modus} یک مسیر خندق مانند بین محل اقامت مقوایی‌شان  و بقیه محوطه کالج 
+    پس از یک بارش سنگین برف در زمستان آن سال، ساکنان تالار  \lr{Modus} یک مسیر خندق مانند بین محل اقامت مقوایی‌شان  و بقیه محوطه کالج 
     ایجاد نمودند. هر روز برخی از ساکنین  برای رفت و آمد بین کلاس‌ها، غذا خوردن و معاشرت از طریق این مسیر اقدام می‌نمایند؛ از دانشجویان 
     تنبلی که روزانه  برای رفتن به  \lr{Tier 3}  از ماشین استفاده می‌کنند صرف نظر می‌کنیم. همچنین از جهت عابرین در حال حرکت نیز چشم‌پوشی می‌کنیم. 
     به دلایلی نامعلومی، دانشجویانی که در تالار غربی زندگی می‌کنند گاهی اوقات، زندگی در \lr{Mods} را ضروری می‌دانند. 
     
 %%%    Sat 06 Jan 2018 06:02:41 PM +0330 
 
-%Unfortunately, the path is not wide enough to allow two people
-%to walk side-by-side.  If two Mods persons meet at some point on the
-%path, one will gladly step aside into the neck high drift to accommodate
-%the other.  A similar situation will occur if two ResHall inhabitants
-%cross paths.  If a Mods heathen and a ResHall prude meet, however, a
-%violent skirmish will ensue with the victors determined solely by
-%strength of numbers; that is, the faction with the larger population will
-%force the other to wait.
     متاسفانه، مسیر آنقدر عریض نیست که دو نفر بتوانند در کنار هم راه بروند. اگر دو نفر از \lr{Mods} در یک نقطه از مسیر همدیگر را ببینند، 
     یک نفر از آن‌ها با خوشحالی از مسیر خارج شده داخل برف می‌رود تا جا به دیگری دهد. وضعیت مشابهی برای دو ساکن \lr{ResHall}
     در عبور از مسیر‌ها رخ خواهد داد. گرچه اگر یک نفر از \lr{Mods} (\r{heathen}) 
@@ -4544,41 +4445,25 @@ maleSwitch.unlock (empty)
     وادار به انتظار می‌نماید. 
 \end{quote}
 
-%This is similar to the Baboon Crossing problem (in more ways than
-%one), with the added twist that control of the critical section is
-%determined by majority rule.  This has the potential to be an
-%efficient and starvation-free solution to the categorical exclusion
-%problem.
     این مسأله شبیه مسأله عبور میمون‌ها است (منتهی با بیش از یک راه)، به همراه یک پیچیدگی مضاعف
      که کنترل ناحیه بحرانی بوسیله قانون اکثریت تعیین می‌شود. این قانون، پتانسیل یک راه‌حل کارا و بدون قحطی را نسبت به مسأله 
      انحصار دسته‌ای دارد. 
 
-%Starvation is avoided because while one faction controls the critical
-%section, members of the other faction accumulate in queue until they
-%achieve a majority.  Then they can bar new opponents from entering
-%while they wait for the critical section to clear.  I expect this
-%solution to be efficient because it will tend to move threads through
-%in batches, allowing maximum concurrency in the critical section.
-    قحطی ممکن نیست زیرا تا زمانیکه یک دسته، ناحیه بحرانی را کنترل می‌نماید، اعضای دسته دیگر به صف می‌پیوندند تا زمانیکه 
-    تبدیل به اکثریت شوند. سپس آن‌ها می‌توانند تا زمانیکه منتظر خالی شدن ناحیه بحرانی هستند مانع ورود رقیبان جدید گردند.
+    قحطی ممکن نیست زیرا تا زمانیکه یک دسته، ناحیه بحرانی را کنترل می‌نماید، اعضای دسته دیگر به صف می‌پیوندند تا اینکه 
+    تبدیل به اکثریت شوند. سپس آن‌ها می‌توانند تا آن هنگامی که منتظر خالی شدن ناحیه بحرانی هستند مانع ورود رقیبان جدید گردند.
     انتظار می‌رود این راه‌حل، کارا باشد زیرا  که نخ‌ها را در قالب دسته‌ها عبور داده لذا حداکثر همروندی در 
     ناحیه بحرانی را ممکن می‌سازد. 
 
-%Puzzle: write code that implements categorical exclusion with
-%majority rule.
     معمّا: کدی بنویسید که انحصار دسته‌ای با قانون اکثریت را پیاده‌سازی نماید. 
 
 
 
 \clearemptydoublepage
-%\subsection {Modus Hall problem hint}
 \subsection{راهنمایی مسأله تالار \lr{Modus} }
 
-%Here are the variables I used in my solution.
     متغیرهایی که در راه‌حل بکار برده‌ام در ادامه آمده است. 
 
 \begin{latin}
-%\begin{lstlisting}[title={Modus problem hint}]{}
 \begin{lstlisting}[title=\rl{راهنمایی مسأله تالار \lr{Modus}}]{}
 heathens = 0
 prudes = 0
@@ -4591,39 +4476,27 @@ prudeQueue = Semaphore(0)
 \end{lstlisting}
 \end{latin}
 
-%{\tt heathens} and {\tt prudes} are counters, and {\tt status} records
-%the status of the field, which can be `neutral', `heathens rule',
-%`prudes rule', `transition to heathens' or `transition to prudes'.
-%All three are protected by {\tt mutex} in the usual scoreboard
-%pattern.
     {\tt heathens} و {\tt prudes} 
     شمارنده هستند و  {\tt status} وضعیت میدان را نگاه می‌دارد که می‌تواند 
     \lr{`neutral'}, \lr{`heathens rule'},
-    \lr{`prudes rule'}, \lr{`transition to heathens'} و یا \lr{`transition to prudes'}. 
+    \lr{`prudes rule'}, \lr{`transition to heathens'} و یا \lr{`transition to prudes'} باشد.
     هر سه تای این متغیرها با {\tt mutex} در یک الگوی جدول امتیاز معمولی محافظت می‌شوند. 
     
 
 
-%{\tt heathenTurn} and {\tt prudeTurn} control access to the field
-%so that we can bar one side or the other during a transition.
     {\tt heathenTurn} و {\tt prudeTurn} 
-    دسترسی به میدان را به نحوی کنترل می‌نمایند که می‌توانیم در مدت انتقال مانع یکی از دو طرف شویم. 
+    دسترسی به میدان را به نحوی کنترل می‌نمایند که می‌توانیم در مدت انتقال، مانع یکی از دو طرف شویم. 
 
-%{\tt heathenQueue} and {\tt prudeQueue} are where threads wait after
-%checking in and before taking the field.
     {\tt heathenQueue} و {\tt prudeQueue}
     جایی هستند که نخ‌ها پس از ورود و پیش از گرفتن میدان، منتظر می‌مانند. 
     
 
 \clearemptydoublepage
-%\subsection {Modus Hall problem solution}
 \subsection{راه‌حل مسأله تالار \lr{Modus} }
 
-%Here is the code for heathens:
     کد \lr{heathen}ها در ادامه آمده است:‌ 
 
 \begin{latin}
-%\begin{lstlisting}[title={Modus problem solution}]{}
 \begin{lstlisting}[title=\rl{راه‌حل مسأله  \lr{Modus} }]{}
 heathenTurn.wait()
 heathenTurn.signal()
@@ -4669,65 +4542,48 @@ mutex.signal()
 \end{lstlisting}
 \end{latin}
 
-%As each student checks in, he has to
-%consider the following cases:
     هر دانشجویی که می‌رسد باید حالات زیر را در نظر گیرد: 
 
 \begin{itemize}
 
-\item %If the field is empty, the student lays claim for the heathens.
+\item
     اگر میدان خالی بود، دانشجو مدعی عبور \lr{heathen}ها می‌شود. 
 
-\item %If the heathens currently in charge, but the new arrival
-%has tipped the balance, he locks the prude turnstile and the
-%system switches to transition mode.
+\item
     اگر  الان \lr{heathen}ها مسئول هستند ولی ورودی جدید توازن را بهم زند، او ترن‌استایل \lr{prude} را قفل نموده و سیستم 
     به حالت \lr{transition} می‌رود. 
 
-\item %If the prudes in charge, but the new arrival doesn't
-%tip the balance, he joins the queue.
+\item
     اگر \lr{prude}ها مسئول بودند امّا ورودی جدید توازن به هم نزند، این فرد به صف ملحق می‌گردد. 
 
-\item %If the system is transitioning to heathen control, the new arrival
-%joins the queue.
+\item
     اگر سیستم در حال انتقال کنترل به  \lr{heathen} است، ورودی جدید به صف ملحق می‌شود. 
 
-\item %Otherwise we conclude that either the heathens are in charge, or the
-%system is transitioning to prude control.  In either case, this
-%thread can proceed.
-    در غیر اینصورت،  نتیجه می‌گیرم که یا  \lr{heathen}ها مسئول هستند و یا سیستم در حال انتقال کنترل به  \lr{prude} است. 
-    در هر حالت، این نخ می‌تواند ادامه یابد. 
+\item
+    در غیر اینصورت،  نتیجه می‌گیریم که یا  \lr{heathen}ها مسئول هستند و یا سیستم در حال انتقال کنترل به  \lr{prude} است. 
+    در هر دو حالت، این نخ می‌تواند ادامه یابد. 
 \end{itemize}  
 
-%Similarly, as each student checks out, she has to consider several
-%cases.  
     به طور مشابه، هر دانشجویی که خارج می‌شود باید چندین حالت را در نظر گیرد. 
 
 \begin{itemize}
 
-\item %If she is the last heathen to check out, she has to
-%consider the following:
+\item
     اگر او آخرین فرد \lr{heathen} باشد که می‌رود باید شرایط زیر را در نظر گیرد: 
 
     \begin{itemize}
 
-    \item %If the system is in transition, that means that the prude
-%      turnstile is locked, so she has to open it.
-        اگر سیستم در حالت \lr{transition} است، بدین معنی که ترن‌استایل \lr{prude}  قفل شده است، آن فرد باید آن را باز نماید. 
+    \item
+        اگر سیستم در حالت \lr{transition} است، بدین معنی است که ترن‌استایل \lr{prude}  قفل شده است، و لذا آن فرد باید آن را باز نماید. 
 
-    \item %If there are prudes waiting, she signals them and
-%      updates {\tt status} so the prudes are in charge.  If not, the
-%      new status is 'neutral'. 
-%%typo : 'neutral' -> `neutral'
+    \item 
+%%typo : 'neutral' -> `neutral' <<<<<=====
     اگر \lr{prude}هایی منتظر هستند، او باید به آن‌ها سیگنال داده و {\tt status}  را چنان به‌روزرسانی نماید که \lr{prude}ها 
     مسئول هستند. و اگر چنین نباشد وضعیت جدید،       `\lr{neutral'} است. 
 
     \end{itemize}  
 
-\item %If she is not the last heathen to check out, she still has to
-%check the possibility that her departure will tip the balance.  In
-%that case, she closes the heathen turnstile and starts the
-%transition.
+\item
     اگر آن فرد، آخرین نفر  \lr{heathen} که می‌رود نباشد، هنوز باید این امکان را بررسی نماید که آیا رفتن او، توازن را بر هم می‌زند یا نه؟ 
     در این حالت، او ترن‌استایل \lr{heathen} را می‌بندد و انتقال را آغاز می‌نماید. 
 
@@ -4735,30 +4591,17 @@ mutex.signal()
 
     
 
-%One potential difficulty of this solution is that any number
-%of threads could be interrupted at Line~\ref{silentmajority},
-%where they would have passed the turnstile but not yet checked in.
-%Until they check in, they are not counted, so the balance of
-%power may not reflect the number of threads that have passed the
-%turnstile.  Also, a transition ends when all the threads that have
-%checked in have also checked out.  At that point, there may
-%be threads (of both types) that have passed the turnstile.
-    
     یک مشکل بالقوه این راه‌حل این است که هر تعداد نخ‌ ممکن است در خط~\ref{silentmajority} متوقف شوند، جاییکه آن‌ها 
     باید از ترن‌استایل گذشته باشند ولی هنوز وارد نشده‌اند. تا زمانیکه آن‌ نخ‌ها وارد شوند، شمرده نمی‌شوند، لذا توازن قدرت ممکن است 
     بازگوی تعداد نخ‌هایی که از ترن‌استایل عبور نموده‌اند نباشد. همچنین زمانیکه تمام نخ‌ها که وارد شده‌اند خارج نیز شده باشند یک انتقال 
     پایان می‌پذیرد. در آن نقطه، ممکن است نخ‌هایی (از هر دو نوع) وجود داشته باشند که از ترن‌استایل گذر کرده باشند. 
     
-%These behaviors may affect efficiency---this solution does
-%not guarantee maximum concurrency---but they don't affect
-%correctness, if you accept that ``majority rule'' only applies
-%to threads that have registered to vote.
-    این رفتارها کارایی را تحت تاثیر قرار می‌دهد ---این راه‌حل همروندی حداکثری را تضمین نمی‌کند--- امّا این نکات،
-    اگر بپذیرید که «قانون اکثریت»  تنها به نخ‌هایی که برای رای‌گیری ثبت‌نام نموده‌اند اعمال می‌شود، 
-    درستی راه‌حل را تحت تاثیر خود قرار نمی‌دهد. 
+    این رفتارها ممکن است کارایی را تحت تأثیر قرار دهد ---این راه‌حل، همروندی حداکثری را تضمین نمی‌کند--- امّا این نکات،
+    اگر بپذیرید که «قانون اکثریت»  تنها به نخ‌هایی که برای رأی‌گیری ثبت‌نام نموده‌اند اعمال می‌شود، 
+    درستی راه‌حل را تحت تأثیر خود قرار نمی‌دهد. 
     
 %%%    Sun 07 Jan 2018 06:21:11 PM +0330 
-
+%%%% Sun 11 Dec 2022 07:19:01 PM +0330
 
 \clearemptydoublepage
 %\chapter{Not remotely classical problems}
@@ -5738,7 +5581,7 @@ boarded.signal()
 %This problem was written by Grant Hutchins, who was inspired
 %by a friend who took her
 %Oath of Citizenship at Faneuil Hall in Boston.
-    این مسأله بوسیله \lr{Grant Hutchins} تحت تاثیر یک دوست که  برای سوگند شهروندی به تالار \lr{Faneuil}  بوستون رفته بود نوشته شده است.
+    این مسأله بوسیله \lr{Grant Hutchins} تحت تأثیر یک دوست که  برای سوگند شهروندی به تالار \lr{Faneuil}  بوستون رفته بود نوشته شده است.
 
 %``There are three kinds of threads: immigrants, spectators, and a one
 %judge.  Immigrants must wait in line, check in, and then sit down.  At
