@@ -4604,37 +4604,23 @@ mutex.signal()
 %%%% Sun 11 Dec 2022 07:19:01 PM +0330
 
 \clearemptydoublepage
-%\chapter{Not remotely classical problems}
 \chapter{مسائل تقریباً غیر کلاسیک}
 
 % \clearemptydoublepage
-%\section{The sushi bar problem}
-\section{مسأله بار سوشی}
+\section{مسأله بار سوشی\LTRfootnote{Sushi bar}}
 
-%This problem was inspired by a problem proposed by Kenneth Reek \cite{reek}.
-%Imagine a sushi bar with 5 seats.  If you arrive while there is an
-%empty seat, you can take a seat immediately.  But if you arrive when
-%all 5 seats are full, that means that all of them are dining together,
-%and you will have to wait for the entire party to leave before you
-%sit down.
-    این مسأله از یک مسأله پیشنهاد شده توسط \lr{Kenneth Reek} الهام گرفته شده است.\cite{reek}. که یک بار سوشی با پنج صندلی را  تصور کنید.
+    این مسأله از مسأله‌ای که توسط \lr{Kenneth Reek} پیشنهاد شده الهام گرفته است\cite{reek}. یک بار سوشی با پنج صندلی را  تصور کنید.
     اگر زمانیکه شما می‌رسید یک صندلی خالی وجود داشته باشد، شما می‌توانید بلافاصله بنشینید. امّا اگر زمانیکه می‌رسید تمامی پنج صندلی پر باشد 
     به این معنی است که تمامی آن‌ها با هم مشغول غذا خوردن هستند و شما باید پیش از نشستن منتظر بمانید تا تمام آن‌ها بار را ترک نمایند. 
     
-
-%Puzzle: write code for customers entering and
-%leaving the sushi bar that enforces these requirements.
     معمّا: کدی برای مشتریان در حال ورود/خروج  به/از بار سوشی بنویسید که این نیازها را اعمال نماید. 
 
 \clearemptydoublepage
-%\subsection {Sushi bar hint}
 \subsection{راهنمایی بار سوشی}
 
-%Here are the variables I used:
     متغیرهای بکار رفته در ادامه آمده است:
 
 \begin{latin}
-%\begin{lstlisting}[title={Sushi bar hint}]{}
 \begin{lstlisting}[title=\rl{راهنمایی بار سوشی}]{}
 eating = waiting = 0
 mutex = Semaphore(1)
@@ -4657,15 +4643,11 @@ must_wait = False
     
 
 \clearemptydoublepage
-%\subsection {Sushi bar non-solution}
 \subsection{ناراه‌حل بار سوشی}
 
-%Here is an incorrect solution Reek uses to illustrate one
-%of the difficulties of this problem.
     راه‌حل نادرستی که \lr{Reek} برای نشان‌دادن یکی از مشکلات این مسأله به کار می‌برد در ادامه آمده است: 
 
 \begin{latin}
-%\begin{lstlisting}[title={Sushi bar non-solution}]{}
 \begin{lstlisting}[title=\rl{ناراه‌حل بار سوشی}]{}
 mutex.wait()
 if must_wait:
@@ -4692,59 +4674,35 @@ mutex.signal()
 \end{lstlisting}
 \end{latin}
 
-%Puzzle: what's wrong with this solution?
     معمّا: این راه‌حل چه مشکلی دارد؟
 
 
 \clearemptydoublepage
-%\subsection {Sushi bar non-solution}
 \subsection{ناراه‌حل بار سوشی}
 
-%The problem is at Line~\ref{sushi1}.  If a customer arrives
-%while the bar is full, he has to give up the mutex while he
-%waits so that other customers can leave.  When the last customer
-%leaves, she signals {\tt block}, which wakes up at least some
-%of the waiting customers, and clears {\tt must\_wait}.
     مشکل در خط~\ref{sushi1} است. اگر یک مشتری زمانیکه بار پر است برسد تا زمانیکه منتظر است تا سایر مشتریان بار را ترک کنند باید از میوتکس 
     صرف نظر کند. زمانیکه آخرین مشتری بار را ترک می‌کند، او به {\tt block} سیگنال می‌دهد که منجر به بیدار شدن حداقل تعدادی از مشتریان منتظر 
     می‌شود و {\tt must\_wait} را \texttt{False} می‌کند. 
     
 
-%But when the customers wake up, they have to get the mutex
-%back, and that means they have to compete with incoming new
-%threads.  If new threads arrive and get the mutex first,
-%they could take all the seats before the waiting threads.
-%This is not just a question of injustice; it is possible for more
-%than 5 threads to be in the critical section concurrently, which
-%violates the synchronization constraints.
-    امّا زمانیکه مشتریان بیدار می‌شوند، آن‌ها باید میوتکس را بگیرند و این بدین معنی است که آن‌ها باید با نخ‌های که جدیداً وارد می‌شوند رقابت نمایند. 
-    اگر نخ‌های جدیدی که می‌رسند میوتکس را اول بگیرند، آنگاه آن‌ها می‌توانند پیش از نخ‌های منتظر تمامی صندلی‌ها را بگیرند. این فقط یک مسأله بی‌عدالتی
+    امّا زمانیکه مشتریان بیدار می‌شوند، آن‌ها باید میوتکس را بگیرند و این بدین معنی است که آن‌ها باید با نخ‌هایی که جدیداً وارد می‌شوند رقابت نمایند. 
+    اگر نخ‌های جدیدی که می‌رسند میوتکس را اول بگیرند، آنگاه آن‌ها می‌توانند پیش از نخ‌های منتظر، تمامی صندلی‌ها را بگیرند. این فقط یک مسأله بی‌عدالتی
     نیست؛ زیرا که ممکن است بیش از ۵ نخ به طور همزمان در ناحیه بحرانی قرار گیرند که محدودیت‌های همگام‌سازی مسأله را خدشه‌دار می‌نمایند. 
 
-%Reek provides two solutions to this problem, which appear
-%in the next two sections.
     \lr{Reek}
     دو راه‌حل برای این مشکل ارائه می‌دهد که در دو بخش بعدی آمده است. 
 
-%Puzzle: see if you can come up with two different correct solutions!
-    معمّا: ببینید آیا می‌توانید دو راه‌حل صحیح متفاوت برای این مسأله ارائه دهید. 
+    معمّا: ببینید آیا می‌توانید دو راه‌حل صحیح متفاوت برای این مسأله ارائه دهید!
 
-%Hint: neither solution uses any additional variables.
     راهنمایی: هیچکدام از این راه‌حل‌ها هیچ متغیر اضافی بکار نمی‌برد. 
 
 \clearemptydoublepage
-%\subsection {Sushi bar solution \#1}
 \subsection{راه‌حل بار سوشی  \#1}
 
-%The only reason a waiting customer has to reacquire the mutex
-%is to update the state of {\tt eating} and {\tt waiting}, so
-%one way to solve the problem is to make the departing customer,
-%who already has the mutex, do the updating.
     تنها دلیلی که یک مشتری در حال انتظار باید میوتکس را مجدداً بگیرد، به‌روزرسانی وضعیت  {\tt eating} و {\tt waiting} است لذا 
     یک راه برای حل این مشکل این است که مشتری  در حال خروج ---کسی که در حال حاضر میوتکس را دارد--- این به‌روزرسانی را انجام دهد. 
 
 \begin{latin}
-%\begin{lstlisting}[title={Sushi bar solution \#1}]{}
 \begin{lstlisting}[title=\rl{راه‌حل بار سوشی  \#1}]{}
 mutex.wait()
 if must_wait:
@@ -4770,38 +4728,24 @@ mutex.signal()
 \end{lstlisting}
 \end{latin}
 
-%When the last departing customer releases the mutex, 
-%{\tt eating} has already been updated, so newly arriving customers
-%see the right state and block if necessary.  Reek calls this
-%pattern ``I'll do it for you,'' because the departing thread
-%is doing work that seems, logically, to belong to the waiting
-%threads.
     زمانیکه آخرین مشتری در حال خروج میوتکس را آزاد می‌کند، {\tt eating} نیز به‌روزرسانی شده لذا مشتری‌هایی که جدیداً وارد می‌شوند وضعیت درست 
-    را می‌بینند و در صورت لزوم مسدود می‌شوند. \lr{Reek} این الگو را ‍‍"به خاطر تو این کار را انجام خواهم داد`` نامیده است زیرا که نخ در حال خروج 
-    کار را انجام می‌دهد که منطقاً به نظر می‌رسد که متعلق به نخ‌های در حال انتظار است. 
+    را می‌بینند و در صورت لزوم مسدود می‌شوند. \lr{Reek} این الگو را ‍‍"به خاطر تو این کار را انجام خواهم داد\LTRfootnote{I'll do it for you}`` 
+    نامیده است زیرا که نخ در حال خروج کاری را انجام می‌دهد که منطقاً به نظر می‌رسد که متعلق به نخ‌های در حال انتظار است. 
 
 %A drawback of this approach is that is it a little more difficult
 %to confirm that the state is being updated correctly.
 %typo that is it a -> that it is a 
-    اشکال این راهکار این است که تایید اینکه وضعیت به درستی به روز رسانی می‌شود کمی سخت است. 
+    تأیید اینکه این وضعیت به درستی به روز رسانی می‌شود کمی سخت است و این نقطه ضعف این راهکار است. 
 
 
 \clearemptydoublepage
-%\subsection {Sushi bar solution \#2}
-\subsection{راه‌حل بار سوشی  \#1}
+\subsection{راه‌حل بار سوشی  \#2}
 
-%Reek's alternative solution is based on the counterintuitive
-%notion that we can transfer a mutex from one thread to another!
-%In other words, one thread can acquire a lock and then another
-%thread can release it.  As long as both threads understand
-%that the lock has been transferred, there is nothing wrong with
-%this.
-     راه‌حل دیگر \lr{Reek} بر پایه ایده غیر معمول است که ما می‌توانیم یک میوتکس را از نخی به نخ دیگر منتقل نماییم. 
+     راه‌حل دیگر \lr{Reek} بر پایهٔ این ایدهٔ غیر معمول است که ما می‌توانیم یک میوتکس را از نخی به نخ دیگر منتقل نماییم. 
      به عبارت دیگر، یک نخ می‌تواند یک قفل را بگیرد و سپس نخ دیگری می‌تواند آن را آزاد نماید. تا زمانیکه هر دو نخ می‌دانند که قفل منتقل شده است 
      هیچ مشکلی با این موضوع وجود ندارد. 
 
 \begin{latin}
-%\begin{lstlisting}[title={Sushi bar solution \#2}]{}
 \begin{lstlisting}[title=\rl{راه‌حل بار سوشی  \#2}]{}
 mutex.wait()
 if must_wait:
@@ -4832,102 +4776,61 @@ else:
 
 %%%        Sat 13 Jan 2018 06:19:25 PM +0330
 
-%If there are fewer than 5 customers at the bar and no one waiting, an
-%entering customer just increments {\tt eating} and releases the
-%mutex.  The fifth customer sets {\tt must\_wait}.
     اگر کمتر از ۵ مشتری در بار وجود داشته باشد و هیچ مشتری منتظر نباشد، یک مشتری جدید فقط مقدار {\tt eating} را افزایش داده و میوتکس را رها می‌کند. 
     پنجمین مشتری مقدار {\tt must\_wait} را برابر \texttt{True} می‌نماید. 
 
-%If {\tt must\_wait} is set, entering customers block until the last
-%customer at the bar clears {\tt must\_wait} and signals {\tt block}.
-%It is understood that the signaling thread gives up the mutex and the
-%waiting thread receives it.  Keep in mind, though, that this is an
-%invariant understood by the programmer, and documented in the
-%comments, but not enforced by the semantics of semaphores.  It is up
-%to us to get it right.
-    اگر {\tt must\_wait} مقدار صحیح داشته باشد تا زمانیکه آخرین مشتری در بار مقدار آن را ناصحیح نموده و به  {\tt block} سیگنال دهد مشتری‌های جدید 
-    مسدود می‌شوند. این قابل درک است که نخ سیگنال دهنده از میوتکس صرف نظر نموده و نخ منتظر آن را می‌گیرد. در هر حال  به یاد داشته باشید که 
-    این نکته بوسیله برنامه‌نویس غیر قابل درک است و چیزی است که در توضیحات، مستند شده است 
+    اگر {\tt must\_wait} مقدار صحیح داشته باشد تا زمانیکه آخرین مشتری در بار، مقدار آن را ناصحیح نموده و به  {\tt block} سیگنال دهد مشتری‌های جدید 
+    مسدود می‌شوند. این قابل درک است که نخ سیگنال دهنده از میوتکس صرف نظر نموده و نخ منتظر، آن را می‌گیرد. در هر حال  به یاد داشته باشید که 
+    این نکته بوسیله برنامه‌نویس غیر قابل درک است و چیزی است که در توضیحات، مستند شده است، 
     ولکن به وسیله معانی سمافورها اعمال نشده است. این وظیفه ما است که معنی درست را دریابیم.
 
-%When the waiting thread resumes, we understand that it has
-%the mutex.  If there are other threads waiting,
-%it signals {\tt block} which, again,
-%passes the mutex to a waiting thread.  This process
-%continues, with each thread passing the mutex to the next until
-%there are no more chairs or no more waiting threads.  In either
-%case, the last thread releases the mutex and goes to sit down.
-    زمانیکه نخ منتظر ادامه می‌یابد، در می‌یابیم که آن نخ میوتکس را دارد. اگر نخ‌های منتظر دیگری وجوپد داشته باشد، آن نخ به  {\tt block} سیگنال می‌دهد که 
-    دومرتبه میوتکس را به نخ منتظر می‌دهد. این فرآیند به این صورت ادامه می‌یابد که  اگر هیچ صندلی و یا نخ منتظر وجود نداشته باشد هر نخ میوتکس را
-    به دیگری می‌دهد. در هر حالت، آخرین نخ میوتکس را آزاد نموده و می‌رود که بنشیند. 
+    زمانیکه نخ منتظر ادامه می‌یابد، در می‌یابیم که آن نخ میوتکس را دارد. اگر نخ‌های منتظر دیگری وجود داشته باشد، آن نخ، {\tt block} را سیگنال داده و 
+    دومرتبه میوتکس را به یک نخ منتظر می‌دهد. این فرآیند به این صورت ادامه می‌یابد که  هر نخ میوتکس را
+    به دیگری می‌دهد تا آن زمان که هیچ صندلی و یا نخ منتظر دیگری وجود نداشته باشد. در هر حالت، آخرین نخ میوتکس را آزاد نموده و می‌رود که بنشیند. 
     
 
-%Reek calls this pattern ``Pass the baton,'' since the mutex
-%is being passed from one thread to the next like a baton in a
-%relay race.
-%One nice thing about this solution is that it is easy to confirm
-%that updates to {\tt eating} and {\tt waiting} are consistent.
-%A drawback is that it is harder to confirm that the mutex is
-%being used correctly.
-    از آنجاییکه میوتکس از یک نخ به نخ دیگر منتقل می‌شود مشابه آنچه در مسابقه دو امدادی رخ می‌دهد \lr{Reek}
-    این الگو را "باتوم را منتقل کنید‍‍`` می‌نامد.
-    یک چیز خوب در رابطه با این راه‌حل این است که تایید پایدار بودن به‌روزرسانی  {\tt eating} و {\tt waiting} آسان است. و  یک نقطه ضعف آن 
-    این است که تایید صحیح بکار رفتن میوتکس سخت‌تر است. 
+    از آنجاییکه میوتکس از یک نخ به نخ دیگر منتقل می‌شود مشابه آنچه در مسابقه دو امدادی رخ می‌دهد، \lr{Reek}
+    این الگو را "باتوم را منتقل کنید‍‍\LTRfootnote{Pass the baton}`` می‌نامد.
+    یک چیز خوب در رابطه با این راه‌حل این است که تأیید پایدار بودن به‌روزرسانی  {\tt eating} و {\tt waiting} آسان است. یک نقطه ضعف آن 
+    این است که تأیید بکار رفتن صحیح میوتکس سخت‌تر است. 
 
 %%%    Sun 14 Jan 2018 06:43:22 PM +0330
 % \clearemptydoublepage
-%\section{The child care problem}
 \section{مسأله مراقبت از کودکان}
 
-%Max Hailperin wrote this problem for his textbook {\em Operating
-%Systems and Middleware} \cite{hailperin}.  At a child care center,
-%state regulations require that there is always one adult present for
-%every three children.
     این مسأله را \lr{Max Hailperin} در کتابش، «سیستم‌های عامل و میان‌افزارها»\LTRfootnote{\em Operating
 Systems and Middleware}، نوشته است \cite{hailperin}. 
     در یک مرکز مراقبت از کودکان، قوانین دولتی حضور دائم یک بزرگسال را برای هر سه بچه الزامی می‌نماید. 
 
-%Puzzle: Write code for child threads and adult threads that enforces
-%this constraint in a critical section.
     معمّا: کدی برای سه نخ کودک و یک نخ بزرگسال بنویسید که این محدودیت‌ را در یک ناحیه بحرانی اعمال نماید. 
 
 \clearemptydoublepage
-%\subsection {Child care hint}
 \subsection {راهنمایی مراقبت از کودکان}
 
 %Hailperin suggests that you can {\em almost} solve this problem
 %with one semaphore.
-    پیشنهاد \lr{Hailperin} این است که این مسأله با یک سمافور تقریباً قابل حل است. 
+    پیشنهاد \lr{Hailperin} این است که می‌توانید این مسأله را  با یک سمافور حل کنید. 
 
 \begin{latin}
-%\begin{lstlisting}[title={Child care hint}]{}
 \begin{lstlisting}[title=\rl{راهنمایی مراقبت از کودکان}]{}
 multiplex = Semaphore(0)
 \end{lstlisting}
 \end{latin}
 
-%{\tt multiplex} counts the number of tokens available, where each token
-%allows a child thread to enter.  As adults enter, they signal {\tt
-%multiplex} three times; as they leave, they {\tt wait} three times.
-%But there is a problem with this solution.
     {\tt multiplex} 
     تعداد توکن‌های موجود را می‌شمرد که هر توکن اجازه ورود یک نخ کودک را می‌دهد. 
     با ورود برزگسالان، آن‌ها به {\tt multiplex} سه بار سیگنال می‌دهند؛ و با خروجشان، سه بار {\tt wait} را فرا می‌خوانند. 
     امّا این راه‌حل یک اشکال دارد. 
 
-%Puzzle: what is the problem?
     معمّا: این مشکل چیست؟
 
 
 \clearemptydoublepage
-%\subsection {Child care non-solution}
 \subsection {ناراه‌حل مراقبت از کودکان}
 
-%Here is what the adult code looks like in Hailperin's non-solution:
     آنچه در ادامه آمده مشابه کد بزرگسال در ناراه‌حل \lr{Hailperin} است: 
 
 \begin{latin}
-%\begin{lstlisting}[title={Child care non-solution (adult)}]{}
 \begin{lstlisting}[title=\rl{ناراه‌حل مراقبت از کودکان (بزرگسال)}]{}
 multiplex.signal(3)
 
@@ -4939,29 +4842,19 @@ multiplex.wait()
 \end{lstlisting}
 \end{latin}
 
-%The problem is a potential deadlock.  Imagine that there are
-%three children and two adults in the child care center.  The
-%value of {\tt multiplex} is 3, so either adult should be able
-%to leave.  But if both adults start to leave at the same time,
-%they might divide the available tokens between them, and both
-%block. 
     مشکل احتمال وقوع بن‌بست است. تصور نمایید که سه کودک و دو بزرگسال در مرکز مراقبت از کودکان وجود دارد. 
     مقدار {\tt multiplex} برابر ۳ است، لذا هر کدام از بزرگسالان باید بتوانند که بروند. 
     امّا اگر هر دو بزرگسال در یک لحظه بخواهند بروند، ممکن است توکن‌های موجود را بین خود تقسیم نمایند و هر دو مسدود شوند. 
 
-%Puzzle: solve this problem with a minimal change.
     معمّا: این مشکل را با حداقل تغییرات، رفع نمایید. 
 
 
 \clearemptydoublepage
-%\subsection {Child care solution}
     \subsection{راه‌حل مرکز مراقبت از کودکان}        
 
-%Adding a mutex solves the problem:
     افزودن یک میوتکس مشکل را حل می‌نماید. 
 
 \begin{latin}
-%\begin{lstlisting}[title={Child care solution (adult)}]{}
 \begin{lstlisting}[title=\rl{راه‌حل مرکز مراقبت از کودکان (بزرگسال)}]{}
      
 multiplex.signal(3)
@@ -4976,51 +4869,30 @@ mutex.signal()
 \end{lstlisting}
 \end{latin}
 
-%Now the three {\tt wait} operations are atomic.  If there
-%are three tokens available, the thread that gets the mutex
-%will get all three tokens and exit.  If there are fewer
-%tokens available, the first thread will block in the mutex
-%and subsequent threads will queue on the mutex.
     اکنون سه عمل {\tt wait} اتمی هستند. اگر سه توکن موجود باشد، نخی که میوتکس را می‌گیرد تمامی هر سه توکن را گرفته و خارج می‌شود. 
     اگر  توکن کمتری وجود داشته باشد، اوّلین نخ روی میوتکس مسدود خواهد شد و نخ‌های بعدی روی میوتکس تشکیل صف می‌دهند. 
 
-%\subsection {Extended child care problem}
 \subsection {مسأله توسعه‌یافته مرکز مراقبت}
 
-%One feature of this solution is that an adult thread waiting to leave
-%can prevent child threads from entering.
-    یک ویژگی این راه‌حل این استکه نخ بزرگسال در انتظار خروج می‌تواند جلوی ورود نخ‌های کودک را بگیرد. 
+    یک ویژگی این راه‌حل این است که نخ بزرگسالی که منتظر خروج است می‌تواند جلوی ورود نخ‌های کودک را بگیرد. 
 
-%Imagine that there are 4 children and two adults, so the value of the
-%multiplex is 2.  If one of the adults tries to leave, she will take
-%two tokens and then block waiting for the third.  If a child thread
-%arrives, it will wait even though it would be legal to enter.
-%From the point of view of the adult trying to leave, that might
-%be just fine, but if you are trying to maximize the utilization
-%of the child care center, it's not.
     تصور نمایید که ۴ کودک و ۲ بزرگسال وجود دارد، لذا مقدار \lr{multiplex} برابر ۲ است. اگر یکی از بزرگسالان بخواهد که برود، باید دو توکن 
-    را نگاه دارد و سپس منتظر سومی بماند. اگر یک نخ کودک برسد، گرچه قانوناً می‌تواند وارد شود ولی منتظر خواهند ماند. 
+    را نگاه دارد و سپس منتظر سومی بماند. اگر یک نخ کودک برسد، گرچه قانوناً می‌تواند وارد شود ولی منتظر خواهد ماند. 
     از منظر بزرگسالی که تلاش می‌کند تا خارج شود، این امر خوب است، امّا اگر شما در تلاش برای حداکثر کردن بهره‌وری مرکز مراقبت از کودکان هستید 
     این مسأله خوب نیست. 
 
-%Puzzle: write a solution to this problem that avoids unnecessary
-%waiting.
     معمّا: راه‌حلی برای این مشکل ارائه دهید که از انتظارهای غیرضروری اجتناب نماید. 
 
-%Hint: think about the dancers in Section~\ref{dancers}.
     راهنمایی: به رقصندگان در بخش~\ref{dancers} بیندیشید. 
 
 
 
 \clearemptydoublepage
-%\subsection {Extended child care hint}
 \subsection {راهنمایی مسأله توسعه‌یافته مرکز مراقبت}
 
-%Here are the variables I used in my solution:
     متغیرهای بکار رفته در راه‌حل در اینجا آمده است:
 
 \begin{latin}
-%\begin{lstlisting}[title={Extended child care hint}]{}
 \begin{lstlisting}[title=\rl{راهنمایی مسأله توسعه‌یافته مرکز مراقبت}]{}
 children = adults = waiting = leaving = 0
 mutex = Semaphore(1)
@@ -5029,34 +4901,21 @@ adultQueue = Semaphore(0)
 \end{lstlisting}
 \end{latin}
 
-%{\tt children}, {\tt adults}, {\tt waiting} and {\tt leaving}
-%keep track of the number of children, adults, children waiting
-%to enter, and adults waiting to leave; they are protected by
-%{\tt mutex}.
 {\tt children}, {\tt adults}, {\tt waiting} و {\tt leaving}
     تعداد کودکان، بزرگسالان، کودکان در انتظار ورود و بزرگسالان در انتظار خروج را نگاه می‌دارند؛ این متغیرها بوسیله {\tt mutex} محافظت می‌شوند. 
 
-%Children wait on {\tt childQueue} to enter, if necessary.
-%Adults wait on {\tt adultQueue} to leave.
     در صورت لزوم،  کودکان  برای ورود  روی {\tt childQueue}  منتظر می‌مانند. 
     بزرگسالان به منظور خروج روی  {\tt adultQueue}  منتظر می‌مانند. 
 
 \clearemptydoublepage
-%\subsection {Extended child care solution}
 \subsection {راه‌حل مسأله توسعه‌یافته مرکز مراقبت}
 
-%This solution is more complicated than
-%Hailperin's elegant solution, but it is mostly a combination
-%of patterns we have seen before: a scoreboard, two queues,
-%and ``I'll do it for you''.
     این راه‌حل، از را‌ه‌حل زیبای \lr{Hailperin} کمی پیچیده‌تر است، امّا تقریبا ترکیبی از الگوهایی است که پیش از این  دیده‌ایم: یک تابلوی امتیاز، دو صف و 
     ‍‍‍‍‍``بخاطر تو این کار را انجام خواهم داد".
 
-%Here is the child code:
     کد کودک در ادامه آمده است. 
 
 \begin{latin}
-%\begin{lstlisting}[title={Extended child care solution (child)}]{}
 \begin{lstlisting}[title=\rl{راه‌حل توسعه‌یافته مرکز مراقبت از کودکان (کودک)}]{}
 mutex.wait()
     if children < 3 * adults:
@@ -5079,21 +4938,14 @@ mutex.signal()
 \end{lstlisting}
 \end{latin}
 
-%As children enter, they check whether there are enough adults
-%and either (1) increment {\tt children} and enter or (2) increment
-%{\tt waiting} and block.
-%When they exit, they check for an adult thread waiting to leave and
-%signal it if possible.
-    وقتی کودکان وارد می‌شوند، بررسی می‌نمایند که آیا به اندازه کافی بزرگسال وجود دارد و یا  (1) {\tt children} را یک واحد افزایش داده و وارد می‌شود و 
-    یا (2) {\tt waiting}  را یک واحد افزایش داده و مسدود می‌گردد. زمانیکه کودکان خارج می‌شوند، بررسی می‌نمایند که آیا نخ بزرگسالی در انتظار برای خروج 
+    وقتی کودکان وارد می‌شوند، بررسی می‌نمایند که آیا به اندازه کافی بزرگسال وجود دارد و یا  (1) {\tt children} را یک واحد افزایش داده و وارد می‌شوتد و 
+    یا (2) {\tt waiting}  را یک واحد افزایش داده و مسدود می‌گردند. زمانیکه کودکان خارج می‌شوند، بررسی می‌نمایند که آیا نخ بزرگسالی در انتظار برای خروج 
     وجود دارد و اگر مقدور باشد به آن سیگنال می‌دهند. 
     
 \newpage
-%Here is the code for adults:
     کد بزرگسال در ادامه آمده است:
 
 \begin{latin}
-%\begin{lstlisting}[title={Extended child care solution (adult)}]{}
 \begin{lstlisting}[title=\rl{راه‌حل توسعه‌یافته مرکز مراقبت از کودکان (بزرگسال)}]{}
 mutex.wait()
     adults++
@@ -5117,12 +4969,6 @@ mutex.wait()
 \end{lstlisting}
 \end{latin}
 
-%As adults enter, they signal waiting children, if any.  Before they
-%leave, they check whether there are enough adults left.  If so, they
-%decrement {\tt adults} and exit.  Otherwise they increment {\tt
-%leaving} and block.  While an adult thread is waiting to leave, it
-%counts as one of the adults in the critical section, so additional
-%children can enter.
     بزرگسالان همانطوری که وارد می‌شوند اگر کودکانی در حال انتظار باشند به آن‌ها سیگنال می‌دهند. قبل از خروج، بررسی می‌نمایند که آیا به اندازهٔ کافی بزرگسال 
     باقی می‌ماند یا خیر؟. اگر به تعدادی کافی بودند، {\tt adults} را یک واحد کم کرده و خارج می‌شوند. در غیر اینصورت {\tt leaving} را یک واحد افزایش 
     داده و مسدود می‌گردند. زمانیکه یک نخ بزرگسال در انتظار خروج است، به عنوان یکی از بزرگسالان موجود در ناحیه بحرانی شمرده می‌شود، لذا کودکان 
@@ -5131,65 +4977,41 @@ mutex.wait()
 %%%    Sun 28 Jan 2018 05:57:06 PM +0330
 
 \newpage
-%\section{The room party problem}
 \section{مسأله اتاق پارتی}
 
-%I wrote this problem while I was at Colby College.  One semester
-%there was a controversy over an allegation by a student that someone
-%from the Dean of Students Office had searched his room in his
-%absence.  Although the allegation was public, the Dean of Students
-%wasn't able to comment on the case, so we never found out what
-%really happened.  I wrote this problem to tease a friend of mine,
-%who was the Dean of Student Housing.
-    این مسأله را زمانیکه در کالج کالبی بودم نوشتم. در یک ترم  به سبب اینکه یک دانشجو مدعی شده بود که شخصی از طرف رئیس دفتر دانشجویان 
+    زمانی این مسأله را نوشتم که در کالج کالبی بودم. در یک ترم  به سبب اینکه یک دانشجو مدعی شده بود که شخصی از طرف رئیس دفتر دانشجویان 
     در غیاب او اتاقش را وارسی کرده است منازعه‌ای رخ داد. اگرچه ادعا به صورت عمومی مطرح شد، رئیس دفتر دانشجویان قادر به اظهار نظر در مورد آن نبود، 
-    لذا هرگز نفهمیدیم واقعاً چه اتفاقی افتاده است. این مسأله را برای این نوشتن تا یکی از دوستانم را که معاون مسکن دانشجویی بود دست بیندازم. 
+    لذا هرگز نفهمیدیم واقعاً چه اتفاقی افتاده است. این مسأله را برای این نوشتم تا یکی از دوستانم را که معاون مسکن دانشجویی بود دست بیندازم. 
 
-%The following synchronization constraints apply to students
-%and the Dean of Students:
-    محدودیت‌های همگام‌سازی زیر نسبت دانشجویان و مدیریت دانشجویی اعمال می‌گردد: 
+    محدودیت‌های همگام‌سازی زیر نسبت به دانشجویان و مدیریت دانشجویی اعمال می‌گردد: 
 
 \begin{enumerate}
 
-\item %Any number of students can be in a room at the same time.
+\item
     هر تعداد دانشجو می‌تواند به طور همزمان در یک اتاق باشد.
 
 \item 
-%The Dean of Students can only enter a room if there
-%are no students in the room (to conduct a search) or if
-%there are more than 50 students in the room (to break up
-%the party).
     مدیریت دانشجویی تنها  در صورتی می‌تواند وارد اتاقی شود که یا هیچ دانشجویی در اتاق نباشد (به منظور هدایت یک تفحص) و 
     یا بیش از ۵۰ دانشجو در اتاق باشد  (به منظور بر هم زدن پارتی).
 
 \item 
-%While the Dean of Students is in the room, no additional
-%students may enter, but students may leave.
-    زمانیکه مدیریت دانشجویی در اتاق هست هیچ دانشجویی دیگری ممکن نیست وارد شود ولی دانشجویان ممکن است اتاق را ترک کنند. 
+    زمانیکه مدیریت دانشجویی در اتاق هست هیچ دانشجوی دیگری ممکن نیست وارد شود ولی دانشجویان ممکن است اتاق را ترک کنند. 
 
 \item 
-%The Dean of Students may not leave the room until all
-%students have left.
     مدیریت دانشجویی ممکن نیست اتاق را ترک گوید مگر اینکه تمامی دانشجویان آن را ترک کرده باشند. 
 
 \item 
-%There is only one Dean of Students, so you do not have
-%to enforce exclusion among multiple deans.
     تنها یک مدیریت دانشجویی وجود دارد لذا نباید بین چند مدیر انحصار اعمال کنید. 
 
 \end{enumerate}
 
-%Puzzle: write synchronization code for students and for the
-%Dean of Students that enforces all of these constraints.
     معمّا: برای دانشجویان و مدیریت دانشجویی یک کد همگام‌سازی بنویسید که تمامی این محدودیت‌ها را اعمال نماید. 
 
 
 \clearemptydoublepage
-%\subsection {Room party hint}
 \subsection{راهنمای اتاق پارتی}
 
 \begin{latin}
-%\begin{lstlisting}[title={Room party hint}]{}
 \begin{lstlisting}[title=\rl{راهنمای اتاق پارتی}]{}
 students = 0                
 dean = 'not here'           
@@ -5200,25 +5022,16 @@ lieIn = Semaphore(0)
 \end{lstlisting}
 \end{latin}
 
-%{\tt students} counts the number of students in the room,
-%and {\tt dean} is the state of the Dean, which can also be
-%``waiting'' or ``in the room''.
-%{\tt mutex} protects {\tt students} and {\tt dean}, so this
-%is yet another example of a scoreboard.
     {\tt students}
-    تعداد دانشجویان داخل اتاق را می‌شمرد و {\tt dean}  وضعیت مدیر است که علاوه بر  \lr{'not here'}
-    همچنین می‌تواند \lr{``waiting'' } و یا \lr{ ``in the room''}. 
+    تعداد دانشجویان داخل اتاق را می‌شمرد و {\tt dean}  وضعیت مدیر است که علاوه بر  \lr{``not here''}
+    همچنین می‌تواند \lr{``waiting'' } و یا \lr{ ``in the room''} باشد. 
     {\tt mutex}
-    از  {\tt students} و {\tt dean} محافظت می‌نماید لذا این نیز مثالی دیگر یک جدول امتیاز است. 
+    از  {\tt students} و {\tt dean} محافظت می‌نماید لذا این نیز مثالی دیگر از یک جدول امتیاز است. 
     
 
-%{\tt turn} is a turnstile that keeps students from entering
-%while the Dean is in the room.
     {\tt turn}
-    ترن‌استایلی است که مانع ورود دانشجویان  به اتاق زمانیکه مدیر در اتاق است می‌گردد. 
+    ترن‌استایلی است که هنگام حضور مدیر در اتاق، مانع ورود دانشجویان می‌گردد. 
 
-%{\tt clear} and {\tt lieIn} are used as rendezvouses between
-%a student and the Dean (which is a whole other kind of scandal!).
     {\tt clear} و {\tt lieIn}
     به صورت قرار ملاقات‌هایی بین  یک دانشجو و مدیر (که یک نمونه کامل دیگر از رسوایی است)  بکار می‌رود. 
 
@@ -5227,26 +5040,16 @@ lieIn = Semaphore(0)
 %\subsection {Room party solution}
 \subsection{راه‌حل اتاق پارتی}
 
-%This problem is hard.  I worked through a lot of versions before
-%I got to this one.  The version that appeared in the first edition
-%was mostly correct, but occasionally the Dean would enter the
-%room and then find that he could neither search nor break up the
-%party, so he would have to skulk off in embarrassed silence.
-    این مسأله‌ای  سخت است. من پیش اینکه با این یکی روبرو شوم روی نسخه‌های زیادی کار کردم. این نسخه که در ویرایش اول این کتاب عرضه گردید 
+    این مسأله‌ای  سخت است. من پیش از اینکه با این یکی روبرو شوم روی نسخه‌های زیادی کار کردم. این نسخه که در ویرایش اوّل این کتاب عرضه گردید 
     کاملاً درست بود، امّا گهگاهی مدیر ممکن بود وارد اتاق شود و سپس دریابد که نه می‌تواند به جستجو بپردازد و نه می‌تواند پارتی را متوقف کند، لذا او می‌بایست 
     در سکوتی خجالت‌بار آنجا را ترک کند. 
 
-%Matt Tesch wrote a solution that spared this humiliation, but the
-%result was complicated enough that we had a hard time convincing
-%ourselves that it was correct.  But that solution led me to this one,
-%which is a bit more readable.
     \lr{Matt Tesch}
-    یک راه‌حل نوشت که جلوی این حقارت را می‌گرفت، امّا نتیجه اینقدر پیچیده بود که به سختی توانستیم خود را متقاعد کنیم که راه‌حل درست است. 
+    راه‌حلی نوشت که جلوی این حقارت را می‌گرفت، امّا نتیجه اینقدر پیچیده بود که به سختی توانستیم خود را متقاعد کنیم که راه‌حل درست است. 
     امّا آن راه‌حل مرا به این راه‌حل که کمی خواناتر است رهنمون گردید. 
 
 
 \begin{latin}
-%\begin{lstlisting}[title={Room party solution (dean)}]{}
 \begin{lstlisting}[title=\rl{راه‌حل اتاق پارتی (مدیر)}]{}
 mutex.wait()
     if students > 0 and students < 50:
@@ -5272,27 +5075,17 @@ mutex.signal()
 \end{lstlisting}
 \end{latin}
 
-%When the Dean arrives, there are three cases: if there are students in
-%the room, but not 50 or more, the Dean has to wait.  If there are 50
-%or more, the Dean breaks up the party and waits for the students to
-%leave.  If there are no students, the Dean searches and leaves.
     زمانیکه مدیر می‌رسد، سه حالت وجود دارد: 
-    اگر دانشجویانی داخل اتاق بوده و ۵۰ نفر یا بیشتر  نباشد مدیر باید صبر کند. اگر ۵۰ یا تعدادی بیشتر دانشجو در اتاق باشد مدیر پارتی را متوقف نموده و 
+    اگر دانشجویانی داخل اتاق بوده و ۵۰ نفر یا بیشتر  نباشند مدیر باید صبر کند. اگر ۵۰ یا تعدادی بیشتر دانشجو در اتاق باشند مدیر پارتی را متوقف نموده و 
     منتظر خروج دانشجویان می‌ماند. اگر هیچ دانشجویی وجود نداشته باشد، مدیر به جستجو پرداخته و سپس اتاق را ترک می‌کند. 
     
 
-%In the first two cases, the Dean has to wait for a rendezvous with a
-%student, so he has to give up {\tt mutex} to avoid a deadlock.  When
-%the Dean wakes up, he has to modify the scoreboard, so he needs to get
-%the mutex back.  This is similar to the situation we saw in the Sushi
-%Bar problem.  The solution I chose is the ``Pass the baton'' pattern.
-    در دو حالت اول، مدیر باید برای یک قرار ملاقات با یک دانشجو صبر کند لذا از {\tt mutex} صرف نظر می‌‌کند تا بن‌بستی رخ ندهد. 
-    زمانیکه مدیر بر می‌خیرد، باید جدول امتیاز را تغییر دهد بنابراین نیاز دارد تا میوتکس را دوباره بگیرد. 
+    در دو حالت اوّل، مدیر باید برای یک قرار ملاقات با یک دانشجو صبر کند لذا از {\tt mutex} صرف نظر می‌‌کند تا بن‌بستی رخ ندهد. 
+    زمانیکه مدیر بر می‌خیزد، باید جدول امتیاز را تغییر دهد بنابراین لازم است تا میوتکس را دوباره بگیرد. 
     این، مشابه وضعیتی است که در مسأله بار سوشی دیدیم. راه‌حلی که انتخاب کردم الگوی "باتوم را منتقل کنید`` است. 
 
 \newpage
 \begin{latin}
-%\begin{lstlisting}[title={Room party solution (student)}]{}
 \begin{lstlisting}[title=\rl{راه‌حل اتاق پارتی (دانشجو)}]{}
 mutex.wait()
     if dean == 'in the room':
@@ -5322,32 +5115,19 @@ mutex.wait()
 \end{lstlisting}
 \end{latin}
 
-%There are three cases where a student might have to signal the Dean.
-%If the Dean is waiting, then the 50th student in or the last one out
-%has to signal {\tt lieIn}.  If the Dean is in the room (waiting for
-%all the students to leave), the last student out signals {\tt clear}.
-%In all three cases, it is understood that the mutex passes from the
-%student to the Dean.
     سه حالت وجود دارد که ممکن است یک دانشجو مجبور شود به مدیر سیگنال دهد. 
     اگر مدیر در حال انتظار است،  پنجاهمین دانشجویی که وارد می‌شود یا آخرین دانشجویی که خارج می‌شود باید  به {\tt lieIn} سیگنال دهد.
     اگر مدیر داخل اتاق است (و در حالیکه منتظر است تا تمامی دانشجویان خارج شوند)، آخرین دانشجویی که خارج می‌شود باید به {\tt clear} سیگنال دهد. 
     در تمامی سه حالت، قابل درک است که میوتکس از یک دانشجو به مدیر منتقل می‌گردد. 
 
-%One part of this solution that may not be obvious is how we know at
-%Line~\ref{roomparty1} of the Dean's code that {\tt students} must be 0
-%or not less than 50.  The key is to realize that there are only two
-%ways to get to this point: either the first conditional was false,
-%which means that {\tt students} is either 0 or not less than 50; or
-%the Dean was waiting on {\tt lieIn} when a student signaled, which
-%means, again, that {\tt students} is either 0 or not less than 50.
     بخشی از این راه‌حل که ممکن است واضح نباشد این است چطور در می‌یابیم در خط~\ref{roomparty1} از کد مدیر، مقدار {\tt students}  
-    باید صفر و یا نباید کمتر از ۵۰ باشد. نکته در فهم این است تنها دو راه برای رسیدن به این دونقطه وجود دارد: یا شرط اولی نادرست بود 
+    باید صفر و یا نباید کمتر از ۵۰ باشد. نکته کلیدی این است که درک کنیم تنها دو راه برای رسیدن به این دونقطه وجود دارد: یا شرط اوّلی نادرست بوده 
     که در اینصورت  {\tt students} یا صفر است و یا کمتر پنجاه نیست؛‌ یا مدیر زمانیکه یک دانشجو سیگنال داد روی {\tt lieIn} منتظر بوده است و 
     دوباره به این معنی است که {\tt students}  یا صفر است و یا کمتر از ۵۰ نیست. 
     
     
 %%%        Sat 03 Feb 2018 05:56:47 PM +0330
-
+%%%%    Sun 18 Dec 2022 07:04:09 PM +0330
 \clearemptydoublepage
 %\section{The Senate Bus problem}
 \section{مسأله اتوبوس سنا\footnotemark}
