@@ -5037,7 +5037,6 @@ lieIn = Semaphore(0)
 
 
 \clearemptydoublepage
-%\subsection {Room party solution}
 \subsection{راه‌حل اتاق پارتی}
 
     این مسأله‌ای  سخت است. من پیش از اینکه با این یکی روبرو شوم روی نسخه‌های زیادی کار کردم. این نسخه که در ویرایش اوّل این کتاب عرضه گردید 
@@ -5129,41 +5128,26 @@ mutex.wait()
 %%%        Sat 03 Feb 2018 05:56:47 PM +0330
 %%%%    Sun 18 Dec 2022 07:04:09 PM +0330
 \clearemptydoublepage
-%\section{The Senate Bus problem}
 \section{مسأله اتوبوس سنا\footnotemark}
 \LTRfootnotetext{\url{https://www.wellesley.edu/housingtransp/transportation/shuttlebuses}}
 
-%This problem was originally based on the Senate bus at Wellesley
-%College.  Riders come to a bus stop and wait for a bus.  When the bus
-%arrives, all the waiting riders invoke {\tt boardBus}, but anyone who
-%arrives while the bus is boarding has to wait for the next bus.  The
-%capacity of the bus is 50 people; if there are more than 50 people
-%waiting, some will have to wait for the next bus.
     این مسأله در اصل بر مبنای اتوبوس سنا در کالج \lr{Wellesley} بود.
-    مسافران به ایستگاه اتوبوس آمده و منتظر اتوبوس می‌شوند. زمانیکه اتوبوس می‌رسد، تمامی مسافران منتظر    {\tt boardBus} را فرا می‌خوانند امّا 
+    مسافران به ایستگاه اتوبوس آمده و منتظر اتوبوس می‌شوند. زمانیکه اتوبوس می‌رسد تمامی مسافرانِ منتظر، {\tt boardBus} را فرامی‌خوانند امّا 
     هر کسی که در حین سوارشدن مسافران می‌رسد باید منتظر اتوبوس بعدی بماند. ظرفیت اتوبوس ۵۰ نفر است، اگر بیش از ۵۰ نفر منتظر باشند، 
-    برخی باید منتظر اتوبوس بعدی بنمانند. 
+    بعضی از آن‌ها باید منتظر اتوبوس بعدی بمانند. 
 
-%When all the waiting riders have boarded,
-%the bus can invoke {\tt depart}.  If the bus arrives when there
-%are no riders, it should depart immediately.
-    زمانیکه تمامی مسافران منتظر سوار شدند، اتوبوس می‌تواند  {\tt depart} را فراخواند. 
-    اگر اتوبوس زمانی برسد که هیچ مسافری وجود نداشته باشد می‌تواند بلافاصله  حرکت کند. 
+    زمانیکه تمامی مسافرانِ منتظر سوار شدند، اتوبوس می‌تواند  {\tt depart} را فراخواند. 
+    اگر اتوبوس زمانی برسد که هیچ مسافری وجود نداشته باشد می‌بایست بلافاصله  حرکت کند. 
 
-%Puzzle: Write synchronization code that enforces all of these
-%constraints.
     معمّا: کدی بمنظور همگام‌سازی بنویسید که تمامی این محدودیت‌ها را اعمال کند. 
 
 
 \clearemptydoublepage
-%\subsection {Bus problem hint}
 \subsection {راهنمایی مسأله اتوبوس}
 
-%Here are the variables I used in my solution:
     متغیرهایی که در راه‌حل بکار برده‌ام در ادامه آمده است: 
 
 \begin{latin}
-%\begin{lstlisting}[title={Bus problem hint}]{}
 \begin{lstlisting}[title=\rl{راهنمای مسأله اتوبوس}]{}
 riders = 0
 mutex = Semaphore(1)
@@ -5173,33 +5157,21 @@ allAboard = Semaphore(0)
 \end{lstlisting}
 \end{latin}
 
-%{\tt mutex} protects {\tt riders}, which keeps track of
-%how many riders are waiting;
-%{\tt multiplex} makes sure there are no more than 50 riders
-%in the boarding area.
     {\tt mutex}
-    از  {\tt riders} که تعداد مسافران منتظر را نگه می‌دارد محافظ می‌کند؛ {\tt multiplex} تضمین می‌کند که بیش از ۵۰ مسافر در 
+    از  {\tt riders} که تعداد مسافرانِ منتظر را نگه می‌دارد محافظت می‌کند؛ {\tt multiplex} تضمین می‌کند که بیش از ۵۰ مسافر در 
     سکوی  سوارشدن وجود نداشته باشد. 
     
 
-%Riders wait on
-%{\tt bus}, which gets signaled when the bus arrives.  The
-%bus waits on {\tt allAboard}, which gets signaled by the last
-%student to board.
-    مسافران روی سمافور {\tt bus} منتظر می‌مانند و این سمافور زمانیکه اتوبوس می‌رسد سیگنال دریافت می‌دارد. 
+    مسافران روی سمافور {\tt bus} منتظر می‌مانند و این سمافور زمانیکه اتوبوس می‌رسد سیگنال می‌گیرد. 
     اتوبوس روی سمافور {\tt allAboard} منتظر می‌ماند و این سمافور زمانیکه آخرین دانشجو سوار شد سیگنال دریافت می‌کند. 
 
 
 \clearemptydoublepage
-%\subsection {Bus problem solution \#1}
 \subsection {راه‌حل مسأله اتوبوس \#1}
 
-%Here is the code for the bus.  Again, we are using the
-%``Pass the baton'' pattern.
     کد اتوبوس در ادامه آمده است. دوباره از الگوی ``باتوم را منتقل کنید" استفاده می‌کنیم. 
 
 \begin{latin}
-%\begin{lstlisting}[title={Bus problem solution (bus)}]{}
 \begin{lstlisting}[title=\rl{راه‌حل مسأله اتوبوس (اتوبوس)}]{}
 mutex.wait()
 if riders > 0:
@@ -5211,11 +5183,7 @@ depart()
 \end{lstlisting}
 \end{latin}
 
-%When the bus arrives, it gets {\tt mutex}, which
-%prevents late arrivals from entering the boarding area.  If there
-%are no riders, it departs immediately.  Otherwise, it signals {\tt bus}
-%and waits for the riders to board.
-    زمانیکه اتوبوس می‌رسد، {\tt mutex} را می‌گیرد تا از ورود کسانیکه بعداً می‌رسند به سکوی سوارشدن جلوگیری نماید.
+    زمانیکه اتوبوس می‌رسد، {\tt mutex} را می‌گیرد که  از ورود دیرهنگام مسافران به سکوی سوارشدن جلوگیری ‌می‌نماید.
     اگر هیچ مسافری وجود نداشته اتوبوس بلافاصله محل را ترک می‌نماید. در غیر اینصورت، به {\tt bus} سیگنال داده و 
     منتظر می‌ماند تا مسافران سوار شوند. 
 
@@ -5223,7 +5191,6 @@ depart()
     کد مسافران نیز در اینجا آمده است:
 
 \begin{latin}
-%\begin{lstlisting}[title={Bus problem solution (riders)}]{}
 \begin{lstlisting}[title=\rl{راه‌حل مسأله اتوبوس (مسافران)}]{}
 multiplex.wait()
     mutex.wait()
@@ -5243,43 +5210,26 @@ else:
 \end{lstlisting}
 \end{latin}
 
-%The multiplex controls the number of riders in the waiting area,
-%although strictly speaking, a rider doesn't enter the waiting
-%area until she increments {\tt riders}.
     {\tt multiplex}
     تعداد مسافران موجود در محل انتظار را کنترل می‌کند، گرچه مسافران تا زمانیکه {\tt riders} را یک واحد افزایش ندهند وارد محل انتظار می‌گردند. 
     
 
-%Riders wait on {\tt bus} until the bus arrives.  When a rider
-%wakes up, it is understood that she has the mutex.
-%After boarding, each rider decrements {\tt riders}.  If there
-%are more riders waiting, the boarding rider signals {\tt bus}
-%and pass the mutex to the next rider.  The last rider signals
-%{\tt allAboard} and passes the mutex back to the bus.
-    مسافران تا زمانیکه اتوبوس برسد روی سمافور  {\tt bus} منتظر می‌‌مانند. زمانیکه یک مسافر بیدار می‌شود (سیگنال دریافت می‌کند)، قابل فهم است که 
+    مسافران تا زمانیکه اتوبوس برسد روی سمافور  {\tt bus} منتظر می‌‌مانند. زمانیکه یک مسافر بیدار می‌شود (سیگنال دریافت می‌کند)، قابل درک است که 
     میوتکس را دارد. پس از سوار شدن هر مسافر یک واحد از مقدار  {\tt riders} کم می‌کند. اگر تعداد مسافران بیشتری در حال انتظار باشند، 
     مسافری که در حال سوار شدن است به  {\tt bus} سیگنال داده و میوتکس را به مسافر بعدی منتقل می‌کند. 
     آخرین مسافر به {\tt allAboard} سیگنال داده و میوتکس را به اتوبوس پس می‌دهد. 
-%Finally, the bus releases the mutex and departs.
+
     نهایتاً اتوبوس میوتکس را رها کرده و حرکت می‌کند. 
 
-%Puzzle: can you find a solution to this problem using the
-%``I'll do it for you'' pattern?
-    معمّا: آیا می‌توانید راه‌حلی برای این مسأله با کمک الگوی ``بخاطر تو انجام این کار را خواهم داد'' بیابید؟
+    معمّا: آیا می‌توانید راه‌حلی برای این مسأله با کمک الگوی ``بخاطر تو این کار را انجام خواهم داد'' بیابید؟
 
 
 \clearemptydoublepage
-%\subsection {Bus problem solution \#2}
 \subsection {راه‌حل مسأله اتوبوس \#2}
 
-%Grant Hutchins came up with this solution, which uses fewer
-%variables than the previous one, and doesn't involve passing
-%around any mutexes.  Here are the variables:
-    
-    این راه‌حل را \lr{Grant Hutchins} ارائه داد که متغیرهای کمتری نسبت به راه‌حل قبلی بکار می‌برد و  مستلزم انتقال میوتکس نیست. 
+    این راه‌حل را که متغیرهای کمتری نسبت به راه‌حل قبلی بکار می‌برد و  مستلزم انتقال میوتکس نیست، \lr{Grant Hutchins} ارائه داد. در ادامه متغیرهای بکار رفته آمده است:
 
 \begin{latin}
-%\begin{lstlisting}[title={Bus problem solution \#2 (initialization)}]{}
 \begin{lstlisting}[title=\rl{راه‌حل \#2 مسأله اتوبوس  (مقداردهی اولیه)}]{}
 waiting = 0
 mutex = new Semaphore(1)
@@ -5289,18 +5239,13 @@ boarded = new Semaphore(0)
 \end{latin}
 %%%% typo  new Semaphore -> Semaphore
 
-%{\tt waiting} is the number of riders in the boarding area,
-%which is protected by {\tt mutex}.  {\tt bus} signals when the
-%bus has arrived; {\tt boarded} signals that a rider has boarded.
     {\tt waiting} 
     تعداد مسافران در ناحیه سوارشدن است که بوسیله {\tt mutex} حفاظت می‌شود.  {\tt bus} زمانیکه اتوبوس رسیده است سیگنال می‌دهد؛     {\tt boarded} 
     سیگنال می‌دهد که یک مسافر سوار شده است. 
 
-%Here is the code for the bus.
     کد اتوبوس در ادامه آمده است. 
 
 \begin{latin}
-%\begin{lstlisting}[title={Bus problem solution (bus)}]{}
 \begin{lstlisting}[title=\rl{راه‌حل اتوبوس (اتوبوس)}]{}
 mutex.wait()
 n = min(waiting, 50)
@@ -5315,24 +5260,15 @@ depart()
 \end{lstlisting}
 \end{latin}
 
-%The bus gets the {\tt mutex} and holds it throughout the boarding
-%process.  The loop signals each rider in turn and waits for her to
-%board.  By controlling the number of signals, the bus prevents
-%more than 50 riders from boarding.
-    اتوبوس {\tt mutex}  را می‌گیرد و در طی فرآیند سوارشدن مسافران آن را نگاه می‌دارد. 
+    اتوبوس {\tt mutex}  را می‌گیرد و طیّ فرآیند سوارشدن مسافران آن را نگاه می‌دارد. 
     حلقه به نوبت به هر مسافر  سیگنال داده  و منتظر او می‌ماند تا سوار شود. 
     با کنترل تعداد سیگنال‌ها، اتوبوس از اینکه بیش از ۵۰ مسافر سوار شوند جلوگیری می‌نماید. 
 
-%When all the riders have boarded, the bus updates {\tt
-%waiting}, which is an example of the ``I'll do it for you'' pattern.
     زمانیکه تمامی مسافران سوار شدند، اتوبوس مقدار  {\tt waiting} را به‌روزرسانی می‌نماید که این مثالی از الگوی ``بخاطر تو  این کار را انجام خواهم داد'' است. 
 
-%The code for the riders uses two
-%simple patterns: a mutex and a rendezvous.
     کد مسافران از دو الگوی ساده استفاده می‌نماید: یک میوتکس و یک قرار ملاقات. 
 
 \begin{latin}
-\begin{lstlisting}[title={Bus problem solution (riders)}]{}
 \begin{lstlisting}[title=\rl{راه‌حل اتوبوس (مسافران)}]{}
 mutex.wait()
      waiting += 1
@@ -5344,73 +5280,49 @@ boarded.signal()
 \end{lstlisting}
 \end{latin}
 
-%Challenge: if riders arrive while the bus is boarding, they
-%might be annoyed if you make them wait for the next one.  Can you
-%find a solution that allows late arrivals to board without violating
-%the other constraints?
     چالش: اگر مسافران زمانیکه اتوبوس در حال مسافرگیری است برسند و آن‌ها را مجبور کنید که منتظر اتوبوس بعدی بمانند ممکن است که رنجیده خاطر شوند. 
-    آیا می‌توانید راه‌حلی بیابید که اجازه دهد تا مسافرینی که بعداً می‌رسند بدون نقض دیگر محدودیت‌ها سوار اتوبوس شوند. 
+    آیا می‌توانید راه‌حلی بیابید که اجازه دهد تا مسافرینی که دیر می‌رسند بدون نقض دیگر محدودیت‌ها سوار اتوبوس شوند. 
     
 %%%    Wed 07 Feb 2018 06:03:48 PM +0330
 
 
 \clearemptydoublepage
-%\section{The Faneuil Hall problem}
 \section{مسأله تالار \lr{Faneuil}}
 
-%This problem was written by Grant Hutchins, who was inspired
-%by a friend who took her
-%Oath of Citizenship at Faneuil Hall in Boston.
     این مسأله بوسیله \lr{Grant Hutchins} تحت تأثیر یک دوست که  برای سوگند شهروندی به تالار \lr{Faneuil}  بوستون رفته بود نوشته شده است.
 
-%``There are three kinds of threads: immigrants, spectators, and a one
-%judge.  Immigrants must wait in line, check in, and then sit down.  At
-%some point, the judge enters the building.  When the judge is in the
-%building, no one may enter, and the immigrants may not leave.
-%Spectators may leave.  Once all immigrants check in, the judge can
-%confirm the naturalization.  After the confirmation, the immigrants
-%pick up their certificates of U.S. Citizenship.  The judge leaves at
-%some point after the confirmation.  Spectators may now enter as
-%before.  After immigrants get their certificates, they may leave.''
-    "سه نوع نخ وجود دارد: مهاجران، تماشاگران، و یک قاضی. مهاجران باید در یک صف منتظر مانده، مدارک را به منظور احراز هویت ارائه داده  و سپس بنشینند. 
+    ``سه نوع نخ وجود دارد: مهاجران، تماشاگران، و یک قاضی. مهاجران باید در یک صف منتظر مانده، مدارک را به منظور احراز هویت ارائه داده  و سپس بنشینند. 
     قاضی در یک زمانی وارد ساختمان می‌شود. زمانی که قاضی در ساختمان است، هیچکس نمی‌تواند وارد شود و مهاجران نمی‌توانند محل را ترک کنند ولی 
     تماشاگران می‌توانند سالن را ترک گویند. زمانیکه تمامی مهاجران احراز هویت شدند قاضی می‌تواند تابعیت آن‌ها را تایید کند. پس از تایید، مهاجران 
     گواهی شهروندی خود را دریافت می‌کنند. قاضی در زمانی پس از تایید محل را ترک می‌گوید. تماشاگران اکنون نیز مانند قبل می‌توانند وارد شوند. 
-    پس از اینکه مهاجران گواهی‌ خود را گرفتند ممکن است سالن را ترک کنند. 
+    پس از اینکه مهاجران گواهی‌ خود را گرفتند ممکن است سالن را ترک کنند." 
 
-%To make these requirements more specific, let's give the threads
-%some functions to execute, and put constraints on those functions.
-    برای روشن‌تر نمودن این محدودیت‌ها، بگذارید نخ‌ها را مقید به اجرای    اعمالی کنیم و محدودیت‌ها را روی این اعمال بگذاریم. 
+    برای روشن‌تر نمودن این محدودیت‌ها، بگذارید نخ‌ها را مقیّد به اجرای أعمالی کنیم و محدودیت‌ها را روی این أعمال بگذاریم. 
 
 \begin{itemize}
 
-\item %Immigrants must invoke {\tt enter}, {\tt checkIn}, {\tt sitDown},
-%{\tt swear}, {\tt getCertificate} and {\tt leave}.
+\item
     مهاجران باید {\tt enter}, {\tt checkIn}, {\tt sitDown}, {\tt swear}, {\tt getCertificate} و {\tt leave} 
     فرا خوانند. 
 
-\item %The judge invokes {\tt enter}, {\tt confirm} and {\tt leave}.
+\item
     قاضی {\tt enter}, {\tt confirm} و {\tt leave}  را فرا می‌خواند. 
 
-\item% Spectators invoke {\tt enter}, {\tt spectate} and {\tt leave}.
+\item
     تماشاگران {\tt enter}, {\tt spectate} و {\tt leave} را فرا می‌خوانند. 
 
-\item %While the judge is in the building, no one may {\tt enter}
-%and immigrants may not {\tt leave}.
-    زمانیکه قاضی در ساختمان است، هیچ کس نمی‌تواند {\tt enter} را فراخواند و مهاجران نمی‌توانند  {\tt leave} را فرا خوانند. 
+\item
+    زمانیکه قاضی در ساختمان است، هیچ کس نمی‌تواند {\tt enter} را فراخواند و مهاجران نمی‌توانند  {\tt leave} را فراخوانند. 
 
-\item %The judge can not {\tt confirm} until all immigrants who have
-%invoked {\tt enter} have also invoked {\tt checkIn}.
+\item
     تا زمانیکه تمامی مهاجرانی که {\tt enter} را فراخوانده‌اند  {\tt checkIn} را  اجرا نکرده‌اند  قاضی نمی‌تواند  {\tt confirm} را فراخواند.
 
-\item %Immigrants can not {\tt getCertificate} until the judge
-%has executed {\tt confirm}.
+\item
     تا زمانیکه قاضی {\tt confirm} اجرا نکرده باشد مهاجران نمی‌توانند {\tt getCertificate} را فراخوانند. 
 
 \end{itemize}
 
 \clearemptydoublepage
-%\subsection {Faneuil Hall Problem Hint}
 \subsection{راهنمایی مسأله تالار \lr{Faneuil}}
 
 \begin{latin}
@@ -5426,29 +5338,22 @@ allSignedIn = Semaphore(0)
 \end{lstlisting}
 \end{latin}
 
-%%%typo -> forgotten judge = 0
+%%% typo -> forgotten judge = 0, allSignedIn = Semaphore(0)
+%%% code has been changed, be careful
 
-%{\tt noJudge} acts as a turnstile for incoming immigrants and
-%spectators; it also protects {\tt entered}, which counts the
-%number of immigrants in the room.  {\tt checked} counts the
-%number of immigrants who have checked in; it is protected by
-%{\tt mutex}.
     {\tt noJudge} 
     مانند یک ترن‌استایل برای مهاجران و تماشاگران در حال ورود عمل می نماید؛ همچنین از {\tt entered} که تعداد مهاجران درون اتاق را می‌شمرد 
     محافظت می‌نماید.  {\tt checked} تعداد مهاجرانی که احراز هویت شده‌اند را می‌شمرد و بوسیله {\tt mutex} حفاظت می‌شود. 
-%{\tt confirmed} signals that the judge has executed {\tt confirm}.
+
     {\tt confirmed}
     علامت می‌دهد که قاضی {\tt confirm} را اجرا نموده است. 
 
 \clearemptydoublepage
-%\subsection {Faneuil Hall problem solution}
 \subsection{راه‌حل مسأله تالار \lr{Faneuil}}
 
-%Here is the code for immigrants:
     کد مهاجران در ادامه آمده است:
 
 \begin{latin}
-%\begin{lstlisting}[title={Faneuil Hall problem solution (immigrant)}]{}
 \begin{lstlisting}[title=\rl{راهنمایی مسأله تالار \lr{Faneuil} (مهاجر)}]{}
 noJudge.wait()
 enter()
@@ -5476,23 +5381,15 @@ noJudge.signal()
 \end{lstlisting}
 \end{latin}
 
-%Immigrants pass through a turnstile when they enter; while the
-%judge is in the room, the turnstile is locked.
     مهاجران برای ورود از یک ترن‌استایل گذر کرده و زمانیکه قاضی در اتاق است این ترن‌استایل قفل می‌گردد.
 
-%After entering, immigrants have to get {\tt mutex} to check 
-%in and update {\tt checked}.  If there is a judge waiting, the
-%last immigrant to check in signals {\tt allSignedIn} and passes
-%the mutex to the judge.
     مهاجران پس از ورود به منظور احراز هویت و به‌روزرسانی {\tt checked} باید  {\tt mutex} را بگیرند. اگر یک قاضی در حال انتظار باشد  آخرین مهاجری 
     که احراز هویت می‌شود به  {\tt allSignedIn} سیگنال داده و میوتکس را به قاضی منتقل می‌کند. 
 
-%Here is the code for the judge:
     کد قاضی در ادامه آمده است: 
 
 \begin{latin}
-%\begin{lstlisting}[title={Faneuil Hall problem solution (judge)}]{}
-\begin{lstlisting}[title=\rl{راهنمایی مسأله تالار \lr{Faneuil} (فاضی)}]{}
+\begin{lstlisting}[title=\rl{راهنمایی مسأله تالار \lr{Faneuil} (قاضی)}]{}
 noJudge.wait()
 mutex.wait()
 
@@ -5515,42 +5412,24 @@ noJudge.signal()
 \end{lstlisting}
 \end{latin}
 
-%The judge holds {\tt noJudge} to bar immigrants and spectators
-%from entering, and {\tt mutex} so he can access {\tt entered}
-%and {\tt checked}.
     قاضی {\tt noJudge} را نگه می‌دارد تا مانع ورود مهاجران و تماشاگران گردد و نیز {\tt mutex} را نگه می‌دارد تا به {\tt entered} و  {\tt checked}
     دسترسی داشته باشد. 
 
-%If the judge arrives at an instant when everyone who has
-%entered has also checked in, she can proceed immediately.  Otherwise,
-%she has to give up the mutex and wait.  When the last immigrant
-%checks in and signals {\tt allSignedIn}, it is understood that the
-%judge will get the mutex back.
     اگر قاضی در لحظه‌ای برسد که تمامی مهاجرانی که داخل شده‌اند احراز هویت نیز شده باشند، می‌تواند بلافاصله کار را  خود ادامه دهد. 
-    در غیر اینصورت، باید از میوتکس صرف نموده و منتظر بماند. زمانیکه آخرین مهاجر احراز هویت شد به  {\tt allSignedIn} سیگنال می‌دهد، 
+    در غیر اینصورت، باید از میوتکس صرف نظر نموده و منتظر بماند. زمانیکه آخرین مهاجر احراز هویت شد به  {\tt allSignedIn} سیگنال می‌دهد، 
     و قابل درک است که قاضی دومرتبه میوتکس را خواهد گرفت. 
     
 
-%After invoking {\tt confirm}, the judge signals {\tt confirmed}
-%once for every immigrant who has checked in, and then resets
-%the counters (an example of ``I'll do it for you'').
-%Then the judge leaves and releases {\tt mutex} and {\tt noJudge}.
-    قاضی پس از فراخوانی {\tt confirm}، به  {\tt confirmed} بازای هر مهاجری که احراز هویت شده است  یک مرتبه سیگنال می‌دهد و سپس 
+    قاضی پس از فراخوانی {\tt confirm}، به ازای هر مهاجری که احراز هویت شده است به  {\tt confirmed}   یک مرتبه سیگنال می‌دهد و سپس 
     مقدار شمارنده‌ها را صفر می‌کند (مثالی از "بخاطر تو این کار را انجام خواهم داد``).
     سپس قاضی محل را ترک نموده {\tt mutex} و {\tt noJudge}  را رها می‌نماید. 
 
-%After the judge signals {\tt confirmed}, immigrants invoke
-%{\tt swear} and {\tt getCertificate} concurrently, and then
-%wait for the {\tt noJudge} turnstile to open before leaving.
-    پس از اینکه قاضی به {\tt confirmed} سیگنال داد، مهاجران {\tt swear} و {\tt getCertificate} را به صورت همزمان فرا می‌خوانند و سپس 
+    پس از اینکه قاضی به {\tt confirmed} سیگنال داد، مهاجران {\tt swear} و {\tt getCertificate} را به صورت همزمان فرامی‌خوانند و سپس 
     قبل از خروج، منتظر ترن‌استایل {\tt noJudge} می‌شوند که باز شود. 
 
-%The code for spectators is easy; the only constraint they have
-%to obey is the {\tt noJudge} turnstile.
     کد تماشاگران ساده است؛ تنها محدودیتی که  آن‌ها باید رعایت کنند ترن‌استایل  {\tt noJudge} است.
 
 \begin{latin}
-%\begin{lstlisting}[title={Faneuil Hall problem solution (spectator)}]{}
 \begin{lstlisting}[title=\rl{راهنمایی مسأله تالار \lr{Faneuil} (تماشاگر)}]{}
 noJudge.wait()
 enter()
@@ -5562,20 +5441,14 @@ leave()
 \end{lstlisting}
 \end{latin}
 
-%Note: in this solution it is possible for immigrants to get stuck,
-%after they get their certificate, by another judge coming to swear
-%in the next batch of immigrants.  If that happens, they might have
-%to wait through another swearing in-ceremony.
     توجه: در این راه‌حل ممکن است مهاجران پس از اینکه گواهی خود را گرفتند بوسیله قاضی‌ دیگری که برای سوگند دادن دسته بعدی 
     مهاجران در حال ورود است گیر بیفتند. اگر چنین اتفاقی بیفتد، آن‌ها باید در تمام مدت زمان مراسم سوگند گروه دیگر صبر کنند. 
 
-%Puzzle: modify this solution to handle the additional constraint
-%that after the judge leaves, all immigrants who have been sworn
-%in must leave before the judge can enter again.
-    معمّا: این راه‌حل را چنان دستکاری کنید که محدودیت اضافی زیر را اعمال نماید. پس از اینکه قاضی خارج می‌شود تمامی مهاجرانی سوگند خورده‌اند 
+    معمّا: این راه‌حل را چنان دستکاری کنید که محدودیت اضافی زیر را اعمال نماید. پس از اینکه قاضی خارج می‌شود تمامی مهاجرانی که سوگند خورده‌اند 
     باید قبل از اینکه قاضی بعدی وارد شود خارج شوند. 
 
-
+%%%% Sun 08 Jan 2023 06:32:13 PM +0330
+   
 \clearemptydoublepage
 %\subsection {Extended Faneuil Hall Problem Hint}
 \subsection{راهنمایی مسأله توسعه‌یافته تالار \lr{Faneuil}}
