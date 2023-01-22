@@ -5970,11 +5970,8 @@ def child_code(shared):
 %%%% Sun 15 Jan 2023 07:03:16 PM +0330
 
 \clearemptydoublepage
-%\section {The coke machine problem}
 \section {مسأله دستگاه خودکار کوکاکولا}
 
-%The following program simulates producers and consumers
-%adding and removing cokes from a coke machine:
     برنامه بعدی، عملیات افزودن/برداشتن  کوکاکولا به/از دستگاه خودکار کوکاکولا توسط تولیدکنندگان/مصرف‌کنندگان را شبیه‌سازی می‌نماید. 
 
 \begin{latin}
@@ -6007,22 +6004,12 @@ for thread in threads: thread.join()
 \end{lstlisting}
 \end{latin}
 
-%The capacity is 10 cokes, and that the machine is initially
-%half full.  So the shared variable {\tt cokes} is 5.
     ظرفیت ماشین ۱۰ کوکاکولا است و ماشین در ابتدا نیمه‌پر است. لذا متغیر اشتراکی {\tt cokes} برابر ۵ است. 
 
-%The program creates 4 threads, two producers and two consumers.
-%They both run {\tt loop}, but producers invoke {\tt produce}
-%and consumers invoke {\tt consume}.  These functions make
-%unsynchronized access to a shared variable, which is a no-no.
     برنامه ۴ نخ ایجاد می‌نماید: دو تولیدکننده و دو مصرف‌کننده. 
-    هر دوی آن‌ها تابع {\tt loop} را اجرا می‌نمایند امّا تولیدکننده  {\tt produce}  و مصرف‌کننده {\tt consume} را فرا می‌خواند. 
+    هر دوی آن‌ها تابع {\tt loop} را اجرا می‌نمایند امّا تولیدکنندگان  {\tt produce}  و مصرف‌کنندگان {\tt consume} را فرا می‌خواند. 
     این توابع دسترسی ناهمگامی به یک متغیر اشتراکی دارند که این نوع دسترسی در اینجا پذیرفتنی نیست. 
 
-%Each time through the loop, producers and consumers sleep for a
-%duration chosen from an exponential distribution with mean {\tt mu}.
-%Since there are two producers and two consumers, two cokes get added
-%to the machine per second, on average, and two get removed.
     در هر اجرای حلقه، تولیدکنندگان و مصرف‌کنندگان برای یک مدتی به خواب می‌روند که مقدار آن به صورت تصادفی 
     از یک توزیع نمایی با میانگین  {\tt mu} تعیین می‌شود. از آنجایی که دو تولیدکننده و دو مصرف‌کننده وجود دارد، در هر ثانیه به طور میانگین 
     دو کوکاکولا به ماشین افزوده شده و دو کوکاکولا مصرف می‌گردد. 
@@ -6036,35 +6023,28 @@ for thread in threads: thread.join()
     بنابراین به طور متوسط میزان کوکاکولاها ثابت است، امّا در کوتاه مدت، این مقدار می‌تواند به صورت فزاینده‌ای متفاوت باشد.
     اگر برنامه را برای مدتی اجرا کنید، احتمالا مقدار  {\tt cokes}  را زیر صفر و یا بیشتر از ۱۰ خواهید دید. البته که هیچکدام از این دو نباید اتفاق بیفتند. 
     
-%Puzzle: add code to this program to enforce the following
-%synchronization constraints:   
     معمّا: کدی به این برنامه بیفزایید که محدودیت‌های همگام‌سازی زیر را اعمال نماید:
 
 \begin{itemize}
 
-\item %Access to {\tt cokes} should be mutually exclusive.
+\item
     دسترسی به {\tt cokes} باید به صورت انحصاری باشد. 
 
-\item %If the number of cokes is zero, consumers should block
-%until a coke is added.
+\item
     اگر مقدار کوکاکولا صفر است، مصرف‌کننده باید تا زمانیکه کوکاکولا افزوده شود مسدود گردد. 
 
-\item %If the number of cokes is 10, producers should block
-%until a coke is removed.
+\item
     اگر مقدار کوکاکولا ۱۰ است، تولید‌کننده باید تا زمانیکه کوکاکولایی مصرف شود مسدود گردد. 
 
 \end{itemize}
 
-%You can download the program from
     برنامه را می‌توانید از آدرس زیر دانلود کنید:
 \url{greenteapress.com/semaphores/coke.py}
 
 
 \clearemptydoublepage
-%\subsection {Coke machine hint}
 \subsection {مسأله دستگاه خودکار کوکاکولا}
 
-%Here are the shared variables I used in my solution:
     متغیرهای اشتراکی که در راه‌حل خود بکار برده‌ام به شرح زیر است:
 
 \begin{latin}
@@ -6077,36 +6057,19 @@ class Shared:
 \end{lstlisting}
 \end{latin}
 
-%{\tt cokes} is a Semaphore now (rather than a simple integer), 
-%which makes it tricky to print its value.  Of course, you
-%should never access the value of a Semaphore, and Python in
-%its usual do-gooder way doesn't provide any of the cheater
-%methods you see in some implementations.
-    الان {\tt cokes} یک سمافور است (بجای عدد صحیح ساده)، که سبب می‌شود چاپ مقدار آن مستلزم مقداری زیرکی گردد. 
-    البته که  شما هرگز نباید به مقدار یک سمافور دسترسی داشته باشید و پایتون با روش معمول خود، هیچکدام از شیوه‌های تقلب که در برخی از پیاده‌سازی‌ها را 
-    مشاهده می‌نمایید  فراهم نمی‌کند. 
+    اکنون {\tt cokes} یک سمافور است (بجای عدد صحیح ساده)، که سبب می‌شود چاپ مقدار آن کمی دشوار گردد. 
+    البته که  شما هرگز نباید به مقدار یک سمافور دسترسی داشته باشید و پایتون با روش معمول خود، هیچکدام از شیوه‌های تقلب که در برخی از پیاده‌سازی‌ها  
+    مشاهده می‌نمایید را  فراهم نمی‌کند. 
 
-%But you might find it interesting to know that the value
-%of a Semaphore is stored in a private attribute named
-%{\tt \_Semaphore\_\_value}.  Also, in case you don't know,
-%Python doesn't actually enforce any restriction on access to
-%private attributes.  You should never access it, of course,
-%but I thought you might be interested.
     امّا جالب است بدانید که مقدار یک سمافور در یک ویژگی خصوصی به نام {\tt \_Semaphore\_\_value} ذخیره شده است. 
     همچنین، موردی که نمی‌دانید این است که در واقع پایتون هیچ محدودیتی در دسترسی به ویژگی‌های خصوصی اعمال نمی‌نماید. 
     البته که شما هرگز نباید از این امکان استفاده کنید امّا فکر کردم دانستن این نکته شاید برایتان جالب باشد. 
 
-%Ahem.
-%    اوهوم. 
-
 
 \clearemptydoublepage
-%\subsection {Coke machine solution}
 \subsection {راه‌حل دستگاه خودکار کوکاکولا}
 
-%If you've read the rest of this book, you should have had no
-%trouble coming up with something at least as good as this:
-    اگر شما بقیه کتاب را خوانده باشید، با چیزی که حداقل به خوبی کد زیر است نباید هیچ مشکلی داشته باشید:
+    اگر شما مابقی کتاب را خوانده باشید، با چیزی که حداقل به خوبی کد زیر است نباید هیچ مشکلی داشته باشید:
 
 \begin{latin}
 %\begin{lstlisting}[title={}]{}
@@ -6127,32 +6090,19 @@ def produce(shared):
 \end{lstlisting}
 \end{latin}
 
-%If you run this program for a while, you should be able to confirm
-%that the number of cokes in the machine is never negative or greater
-%than 10.  So this solution seems to be correct.
-
-%So far.
     اگر این برنامه را برای مدتی اجرا کنید، باید بتوانید تایید کنید که تعداد کوکاکولاها در ماشین هرگز منفی و یا بیشتر از ۱۰ نمی‌شود. 
     بنابراین این راه‌حل به نظر درست می‌آید. 
 
     لااقل تا الان. 
 
-%\chapter{Synchronization in C}
 \chapter{همگام‌سازی در \lr{C}}
 \label{csync}
 
-%In this section we will write a multithreaded, synchronized
-%program in C.  Appendix~\ref{ccleanup} provides some of the utility
-%code I use to make the C code a little more palatable.  The
-%examples in this section depend on that code.
-    در این بخش یک برنامه چندنخی و همگام به زبان \lr{C} خواهیم نوشت. پیوست~\ref{ccleanup} کدهای کاربردی فراهم می‌آورد که 
+    در این بخش یک برنامه چندنخی و همگام به زبان \lr{C} می‌نویسیم. پیوست~\ref{ccleanup} کدهایی کاربردی فراهم می‌آورد که 
     من از آن‌ها به منظور دلچسب‌تر نمودن کد  \lr{C} استفاده می‌کنم. مثال‌های این بخش مبتنی بر آن کدهاست. 
     
-%\section{Mutual exclusion}
 \section{انحصار متقابل}
 
-%We'll start by defining a structure that contains shared
-%variables:
     با تعریف ساختاری که حاوی متغیرهای اشتراکی است شروع خواهم کرد:
 
 \begin{latin}
@@ -6181,20 +6131,13 @@ Shared *make_shared (int end)
 \end{lstlisting}
 \end{latin}
 
-%{\tt counter} is a shared variable that will be incremented by
-%concurrent threads until it reaches {\tt end}.  We will use
-%{\tt array} to check for synchronization errors by keeping track
-%of the value of {\tt counter} after each increment.
     {\tt counter} یک متغیر  اشتراکی است که بوسیله نخ‌های همروند مقدارش یک واحد یک واحد  افزایش می‌یابد تا به مقدار   {\tt end} برسد. 
     از {\tt array}  به منظور بررسی خطاهای همگام‌سازی، با ردگیری مقدار {\tt counter} پس از هر افزایش، استفاده خواهیم کرد.
 %%%        Wed 07 Mar 2018 06:05:49 PM +0330
 
 
-%\subsection{Parent code}
 \subsection{کد والد}
 
-%Here is the code the parent thread uses to create threads
-%and wait for them to complete:
     کدی که نخ والد به منظور ایجاد نخ‌ها  و سپس انتظار برای اتمام آن‌ها بکار می‌برد در ادامه آمده‌ است:
 
 \begin{latin}
@@ -6221,19 +6164,12 @@ int main ()
 \end{lstlisting}
 \end{latin}
 
-%The first loop creates the child threads; the second loop waits
-%for them to complete.  When the last child has finished, the parent
-%invokes {\tt check\_array} to check for errors.
-%{\tt make\_thread} and {\tt join\_thread} are defined in
-%Appendix~\ref{ccleanup}.
-    حلقهٔ اول نخ‌های فرزند را ایجاد می‌نماید؛ حلقه دوم منتظر می‌شود تا آن‌ها کارشان را تمام کنند. زمانیکه کار آخرین فرزند پایان یابد،‌
+    حلقهٔ اول نخ‌های فرزند را ایجاد می‌نماید؛ حلقهٔ دوم منتظر می‌شود تا آن‌ها کارشان را تمام کنند. زمانیکه کار آخرین فرزند پایان یابد،‌
     نخ والد {\tt check\_array} را به منظور بررسی خطاها فراخوانی می‌نماید. {\tt make\_thread} و {\tt join\_thread}
     در پیوست~\ref{ccleanup} تعریف شده‌اند. 
 
-%\subsection{Child code}
 \subsection{کد فرزند}
 
-%Here is the code that is executed by each of the children:
     کدی که توسط هر کدام از فرزندان اجرا می‌شود در ادامه آمده است: 
 
 \begin{latin}
@@ -6252,21 +6188,14 @@ void child_code (Shared *shared)
 \end{lstlisting}
 \end{latin}
 
-%Each time through the loop, the child threads use {\tt counter}
-%as an index into {\tt array} and increment the corresponding element.
-%Then they increment {\tt counter} and check to see if they're done.
-    در هر اجرای حلقه، نخ‌های فرزند از {\tt counter} به عنوان اندیس {\tt array} استفاده نموده و عنصر متناطر را یک واحد افزایش می‌دهد. 
-    سپس مقدار  {\tt counter}  را یک واحد افزایش داده و اتمام کار را بررسی می‌کند. 
+    در هر اجرای حلقه، نخ‌های فرزند از {\tt counter} به عنوان اندیس {\tt array} استفاده نموده و عنصر متناظر را یک واحد افزایش می‌دهند. 
+    سپس مقدار  {\tt counter}  را یک واحد افزایش داده و اتمام کار را بررسی می‌کنند. 
     
 
-%\subsection{Synchronization errors}
 \subsection{خطاهای همگام‌سازی}
 
-%If everything works correctly, each element of the array should be
-%incremented once.  So to check for errors, we can just count the
-%number of elements that are not 1:
-    اگر هر چیز به درستی عمل هماید، هر عنصر {\tt array} باید یک واحد افزایش یابد. 
-    لذا به منظور بررسی خطاها، تنها تعداد عناصری را که نیستند {\tt 1} می‌شماریم.
+    اگر هر چیز به درستی عمل نماید، هر عنصر {\tt array} باید یک واحد افزایش یابد. 
+    لذا به منظور بررسی خطاها، تنها تعداد عناصری را می‌شماریم که {\tt 1} نیستند.
 
 \begin{latin}
 %\begin{lstlisting}[title={}]{}
@@ -6283,12 +6212,9 @@ void check_array (Shared *shared)
 \end{lstlisting}
 \end{latin}
 
-%You can download this program (including the cleanup code) from
-%\url{greenteapress.com/semaphores/counter.c}
-    این برنامه را (بهمراه کدهای تمیزکاری)می‌توانید از آدرس زیر دانلود نمایید: \\*    
+    این برنامه را (به همراه کدهای تمیزکاری) می‌توانید از آدرس زیر دانلود نمایید: \\*    
     \leftline{\url{greenteapress.com/semaphores/counter.c}}
 
-%If you compile and run the program, you should see output like this:
     اگر برنامه را کامپایل و اجرا نمایید، خروجی برنامه باید مشابه زیر باشد: 
 
 \begingroup
@@ -6312,29 +6238,17 @@ Checking...
 \end{verbatim}
 \endgroup
 
-%Of course, the interaction of the children depends on details
-%of your operating system and also other programs running on your
-%computer.  In the example shown here, one thread ran all the way
-%from 0 to {\tt end} before the other thread got started, so it is
-%not surprising that there were no synchronization errors.
-    البته که تعامل میان فرزندان بسته به جزئیات سیستم عامل و همچنین دیگر برنامه‌های در حال اجرا روی کامپیوتر دارد. 
-    در مثالی که دیدید، پیش از اینکه نخ‌های دیگری آغاز به کار نمایند یک نخ، از {\tt 0} تا  {\tt end} حلقه را به طور کامل و به تنهایی طی می‌کند
+    البته که تعامل میان فرزندان، به جزئیات سیستم عامل و همچنین دیگر برنامه‌های در حال اجرا روی کامپیوتر بستگی دارد. 
+    در مثالی که دیدید، پیش از اینکه نخ‌های دیگری آغاز به کار نمایند یک نخ، تمام مسیر از {\tt 0} تا  {\tt end} را به طور کامل و به تنهایی طی می‌کند
     لذا تعجبی ندارد که هیچ خطای همگام‌سازی وجود نداشته باشد. 
 
-%But as {\tt end} gets bigger, there are more context switches between
-%the children.  On my system I start to see errors when
-%{\tt end} is 100,000,000.
     امّا همانطور که {\tt end}  بزرگتر می‌شود، تعویض بسترهای بیشتری بین فرزندان وجود دارد. 
-    در سیستم من، خطاها زمانی شروع شد که {\tt end} به  100000000 رسید. 
+    در سیستم من، خطاها زمانی شروع شد که {\tt end} به  $100,000,000$ رسید. 
 
-%Puzzle: use semaphores to enforce exclusive access to the shared
-%variables and run the program again to confirm that there are
-%no errors.
     معمّا:‌ سمافورها را به منظور اعمال دسترسی انحصاری به متغیرهای اشتراکی بکار برید و برنامه را دومرتبه اجرا نمایید تا نشان دهید که خطایی وجود ندارد. 
     
-
+%%%% Sun 22 Jan 2023 07:08:29 PM +0330
 \clearemptydoublepage
-%\subsection{Mutual exclusion hint}
 \subsection{راهنمایی انحصار متقابل}
 
 %Here is the version of {\tt Shared} I used in my solution:
@@ -6342,7 +6256,7 @@ Checking...
 
 \begin{latin}
 %\begin{lstlisting}[title={}]{}
-\begin{lstlisting}[title={}]{}
+\begin{lstlisting}
 typedef struct {
   int counter;
   int end;
