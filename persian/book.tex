@@ -6251,12 +6251,10 @@ Checking...
 \clearemptydoublepage
 \subsection{راهنمایی انحصار متقابل}
 
-%Here is the version of {\tt Shared} I used in my solution:
-    نسخه‌ای از {\tt Shared} که در راه‌حل بکار برده‌ام، در زیر آمده است:
+    نسخه‌ای از {\tt Shared} را که در راه‌حل بکار برده‌ام، در زیر آمده است:
 
 \begin{latin}
-%\begin{lstlisting}[title={}]{}
-\begin{lstlisting}
+\begin{lstlisting}[title={}]{}
 typedef struct {
   int counter;
   int end;
@@ -6282,23 +6280,18 @@ Shared *make_shared (int end)
 \end{lstlisting}
 \end{latin}
 
-%Line~\ref{declaremutex} declares {\tt mutex} as a Semaphore;
-%Line~\ref{initmutex} initializes the mutex with the value 1.   
     خط~\ref{declaremutex} متغیر  {\tt mutex} را به عنوان یک سمافور اعلان می‌نماید و 
     خط~\ref{initmutex} مقدر اولیه  {\tt 1} را به آن اختصاص می‌دهد. 
 
 %%%    Wed 11 Apr 2018 06:07:46 PM +0430
 
 \clearemptydoublepage
-%\subsection{Mutual exclusion solution}
 \subsection{راه‌حل انحصار متقابل}
 
-%Here is the synchronized version of the child code:
-    نسخه همگام‌سازی شده کد فرزند در ادامه آمده است:
+    نسخهٔ همگام‌سازی شدهٔ کد فرزند در ادامه آمده است:
 
 \begin{latin}
-%\begin{lstlisting}[title={}]{}
-\begin{lstlisting}
+\begin{lstlisting}[title={}]{}
 void child_code (Shared *shared)
 {
   while (1) {
@@ -6316,42 +6309,28 @@ void child_code (Shared *shared)
 \end{lstlisting}
 \end{latin}
 
-%There is nothing too surprising here; the only tricky thing    
-%is to remember to release the mutex before the {\tt return}
-%statement.
-    هیچ نکته شگفت‌انگیزی در اینجا وجود ندارد؛ تنها پیچیدگی مسأله این است که به یاد داشته باشید که پیش از دستور {\tt return} میوتکس را آزاد نمایید.
+    هیچ نکتهٔ شگفت‌انگیزی در اینجا وجود ندارد؛ تنها پیچیدگی مسأله این است که به یاد داشته باشید که پیش از دستور {\tt return} میوتکس را آزاد نمایید.
     
 
-%You can download this solution from 
     کد این راه‌حل را می‌توانید از آدرس زیر دانلود نمایید.
 \url{greenteapress.com/semaphores/counter_mutex.c}
 
 
 \clearemptydoublepage
-%\section{Make your own semaphores}
 \section{سمافورهای خودتان را بسازید}
 \label{makeyourown}
 
-%The most commonly used synchronization tools for programs that use
-%Pthreads are mutexes and condition variables, not semaphores.  For an
-%explanation of these tools, I recommend Butenhof's {\em Programming
-%with POSIX Threads} \cite{butenhof}.
-    رایج‌ترین ابزارهای همگام‌سازی برای برنامه‌هایی از \lr{Pthreads} استفاده می‌نمایند میوتکس‌ها و متغیرهای شرطی هستند و نه سمافورها. 
+    برای  برنامه‌هایی که از \lr{Pthreads} استفاده می‌نمایند میوتکس‌ها و متغیرهای شرطی، ابزارهای همگام‌سازی رایج‌تری نسبت به سمافورها هستند. 
     برای شرحی از این ابزارها، کتاب «برنامه‌نویسی با نخ‌های\lr{POSIX}»\LTRfootnote{{\em Programming with POSIX Threads}} 
     اثر \lr{Butenhof} را پیشنهاد می‌کنم. 
 
-%Puzzle: read about mutexes and condition variables, and then
-%use them to write an implementation of semaphores.
     معمّا: میوتکس‌ها و متغیرهای شرطی را مطالعه نموده و سپس با استفاده از آن‌ها یک پیاده‌سازی از سمافورها بنویسید. 
 
-%You might want to use the following utility code in your solutions.
-%Here is my wrapper for Pthreads mutexes:
-    ممکن است بخواهید از کد کاربردی زیر را در راه‌حل خود استفاده کنید. 
+    ممکن است بخواهید از کد کاربردی زیر در راه‌حل خود استفاده کنید. 
     این بسته‌بندی من از میوتکس‌های \lr{Pthreads} است.
 
 \begin{latin}
-%\begin{lstlisting}[title={}]{}
-\begin{lstlisting}
+\begin{lstlisting}[title={}]{}
 typedef pthread_mutex_t Mutex;
 
 Mutex *make_mutex ()
@@ -6377,13 +6356,11 @@ void mutex_unlock (Mutex *mutex)
 \end{latin}
 
 \newpage
-%And my wrapper for Pthread condition variables:
     و بسته‌بندی من از متغیرهای شرطی \lr{Pthreads}:
 
 
 \begin{latin}
-%\begin{lstlisting}[title={}]{}
-\begin{lstlisting}
+\begin{lstlisting}[title={}]{}
 typedef pthread_cond_t Cond;
 
 Cond *make_cond ()
@@ -6411,15 +6388,12 @@ void cond_signal (Cond *cond)
 
 
 \clearemptydoublepage
-%\subsection{Semaphore implementation hint}
 \subsection{راهنمایی پیاده‌سازی سمافور}
 
-%Here is the structure definition I used for my semaphores:
-     تعریف ساختار سمافورهایم در ادامه آمده است:
+     ساختاری را که برای سمافورهایم به کار برده‌ام در ادامه آمده است:
 
 \begin{latin}
-%\begin{lstlisting}[title={}]{}
-\begin{lstlisting}
+\begin{lstlisting}[title={}]{}
 typedef struct {
   int value, wakeups;
   Mutex *mutex;
@@ -6428,29 +6402,19 @@ typedef struct {
 \end{lstlisting}
 \end{latin}
 
-%{\tt value} is the value of the semaphore.  {\tt wakeups} counts
-%the number of pending signals; that is, the number of threads
-%that have been woken but have not yet resumed execution.  The reason
-%for wakeups is to make sure that our semaphores have
-%Property 3, described in Section~\ref{props}.
     مقدار سمافور در {\tt value} قرار می‌گیرد.  {\tt wakeups} تعداد سیگنال‌های در حال انتظار را می‌شمارد که در واقع تعداد نخ‌هایی است که 
     بیدار شده‌اند امّا هنوز اجرایشان ادامه نیافته است. دلیل وجود {\tt wakeups} برای برآورده شدن خصوصیت ۳ سمافورها است که در بخش~\ref{props} 
     شرح داده شد. 
     
 
-%{\tt mutex} provides exclusive access to {\tt value} and
-%{\tt wakeups}; {\tt cond} is the condition variable threads
-%wait on if they wait on the semaphore.
     {\tt mutex} 
     دسترسی انحصاری به  {\tt value} و {\tt wakeups} را فراهم می‌آورد؛ 
      اگر  نخ‌ها روی سمافور منتظر باشند در واقع روی متغیر شرطی   {\tt cond}  منتظر می‌مانند. 
 
-%Here is the initialization code for this structure:
     کد مقداردهی اولیه این ساختار در ادامه آمده است:
 
 \begin{latin}
-%\begin{lstlisting}[title={}]{}
-\begin{lstlisting}
+\begin{lstlisting}[title={}]{}
 Semaphore *make_semaphore (int value)
 {
   Semaphore *semaphore = check_malloc (sizeof(Semaphore));
@@ -6465,16 +6429,12 @@ Semaphore *make_semaphore (int value)
 
 
 \clearemptydoublepage
-%\subsection{Semaphore implementation}
 \subsection{پیاده‌سازی سمافور}
 
-%Here is my implementation of semaphores using Pthread's mutexes
-%and condition variables:
     پیاده‌سازی من از سمافورها با کمک میوتکس‌ها و متغیرهای شرطی \lr{Pthread} در ادامه آمده است:
 
 \begin{latin}
-%\begin{lstlisting}[title={}]{}
-\begin{lstlisting}
+\begin{lstlisting}[title={}]{}
 void sem_wait (Semaphore *semaphore)
 {
   mutex_lock (semaphore->mutex);                 (*\label{sementer}*)
@@ -6503,41 +6463,22 @@ void sem_signal (Semaphore *semaphore)
 \end{lstlisting}
 \end{latin}
 
-%Most of this is straightforward; the only thing that might be 
-%tricky is the {\tt do...while} loop at Line~\ref{dowhile}.
-%This is an unusual way to use a condition variable, but in
-%this case it is necessary.
-    غالب این کد سر راست است؛ تنهای چیزی که ممکن است کمی پیچیدگی داشته باشد حلقه {\tt do...while} در خط~\ref{dowhile} است. 
+    غالب این کد سرراست است؛ تنهای چیزی که ممکن است کمی پیچیدگی داشته باشد حلقه {\tt do...while} در خط~\ref{dowhile} است. 
     این کاربردی غیر معمول از یک متغیر شرطی است، امّا در اینجا ضروری است. 
 
-%Puzzle: why can't we replace this {\tt do...while} loop
-%with a {\tt while} loop?
     معمّا: چرا نمی‌توانیم حلقه {\tt do...while} را با یک حلقه {\tt while}  جایگزین نماییم؟
 
 \clearemptydoublepage
-%\subsection{Semaphore implementation detail}
 \subsection{جزئیات پیاده‌سازی سمافور}
 
-%With a {\tt while} loop, this implementation would not have
-%Property 3.  It would be possible for a thread to signal
-%and then run around and catch its own signal.
-    با یک حلقه {\tt while}، این پیاده‌سازی خصوصیت ۳ را نخواهد داشت. ممکن است یک نخ سیگنال داده و در ادامه اجرا سیگنال خودش 
+    با یک حلقه {\tt while}، این پیاده‌سازی خصوصیت ۳ را نخواهد داشت. ممکن است یک نخ سیگنال داده و در ادامهٔ اجرا سیگنال خودش 
     را بگیرد. 
 
-%With the {\tt do...while} loop, it is guaranteed\footnote{Well,
-%  almost.  It turns out that a well-timed spurious wakeup (see
-%  \url{http://en.wikipedia.org/wiki/Spurious_wakeup}) can violate this
-%  guarantee.} that when a thread signals, one of the waiting threads
-%will get the signal, even if another thread gets the mutex at
-%Line~\ref{sementer} before one of the waiting threads resumes.
-    با حلقه {\tt do...while}، زمانیکه یک نخ سیگنال می‌دهد تضمین می‌شود که یکی از نخ‌های در حال انتظار، سیگنال را دریافت نماید 
+    با استفاده از حلقهٔ {\tt do...while} تضمین می‌شود آن زمانیکه یک نخ سیگنال می‌دهد، یکی از نخ‌های در حال انتظار، سیگنال را دریافت نماید 
     حتی اگر نخ دیگری  پیش از ادامه یافتن یکی از نخ‌های منتظر، میوتکس را در خط~\ref{sementer} بگیرد\footnote{
-<<<<<<< HEAD
     البته این تضمین تقریبی است. چرا که یک بیداری نادرست در زمانی مناسب می‌تواند این تضمین را خدشه‌دار کند. برای توضیحات بیشتر لینک 
     \url{http://en.wikipedia.org/wiki/Spurious_wakeup} را مطالعه نمایید. 
     }.
-    %%%%% ترجمه فوق بازبینی لازم  دارد. 
-
 
 %%%Wed 18 Apr 2018 06:34:17 PM +0430
 
@@ -6547,31 +6488,19 @@ void sem_signal (Semaphore *semaphore)
 
 \appendix
 
-%\chapter{Cleaning up Python threads}
 \chapter{تمیزکاری نخ‌های پایتون}
 \label{cleanup}
 
-%Compared to a lot of other threading environments, Python threads are
-%pretty good, but there are a couple of features that annoy me.
-%Fortunately, you can fix them with a little clean-up code.
-    در مقایسه با  بسیاری از محیط‌های چندنخی، نخ‌های پایتون خیلی خوب هستند، امّا چند تا ویژگی وجود دارد که مرا آزار می‌دهد. 
+    در مقایسه با  بسیاری از محیط‌های چندنخی، نخ‌های پایتون خیلی خوب هستند، امّا چند ویژگی وجود دارد که مرا آزار می‌دهد. 
     خوشبختانه،‌ با یک کد کوچک تمیزکاری می‌توان این مسأله را برطرف نمود. 
 
-%\section{Semaphore methods}
 \section{متدهای سمافور}
 
-%First, the methods for Python semaphores are called {\tt acquire}
-%and {\tt release}, which is a perfectly reasonable choice, but
-%after working on this book for a couple of years, I am used
-%to {\tt signal} and {\tt wait}.  Fortunately, I can have it
-%my way by subclassing the version of Semaphore in the
-%{\tt threading} module:
-    در ابتدا متدهای سمافورهای پایتون {\tt acquire} و {\tt release} نامیده می شد که انتخابی کاملاً معقول است، امّا پس 
-    از چندین سال کار روی این کتاب، به {\tt signal} و {\tt wait} عادت کرده‌ام. خوشبختانه می‌توانم با تعریف زیرکلاس 
-    نسخه سمافور موجود در ماژول {\tt threading} شیوه خودم را  داشته باشم. 
+    در ابتدا متدهای سمافورهای پایتون {\tt acquire} و {\tt release} نامیده می‌شد که انتخابی کاملاً معقول است، امّا پس 
+    از چندین سال کار روی این کتاب، به {\tt signal} و {\tt wait} عادت کرده‌ام. خوشبختانه می‌توانم با تعریف زیرکلاسی 
+    از نسخهٔ سمافور موجود در ماژول {\tt threading}، شیوهٔ خودم را  داشته باشم. 
 
 \begin{latin}
-%\begin{lstlisting}[title={Semaphore name change}]{}
 \begin{lstlisting}[title=\rl{تغییر نام سمافور}]{}
 import threading
  
@@ -6581,12 +6510,9 @@ class Semaphore(threading._Semaphore):
 \end{lstlisting}
 \end{latin}
 
-%Once this class is defined, you can create and manipulate Semaphores
-%using the syntax in this book.
     زمانیکه این کلاس تعریف شده باشد، می‌توانید با استفاده از نحو این کتاب به ایجاد و دستکاری سمافورها بپردازید. 
 
 \begin{latin}
-%\begin{lstlisting}[title={Semaphore example}]{}
 \begin{lstlisting}[title=\rl{مثال سمافور}]{}
 mutex = Semaphore()
 mutex.wait()
@@ -6594,17 +6520,12 @@ mutex.signal()
 \end{lstlisting}
 \end{latin}
 
-%\section{Creating threads}
 \section{ایجاد نخ‌}
 
-%The other feature of the {\tt threading} module that annoys
-%me is the interface for creating and starting threads.  The
-%usual way requires keyword arguments and two steps:
     ویژگی دیگری از  ماژول {\tt threading} که مرا می‌رنجاند، واسط\LTRfootnote{interface} ایجاد و شروع نخ‌ها است. 
-    شیوه معمول، متغیرهای کلمه‌کلیدی و دو گام نیاز دارد. 
+    شیوهٔ معمول، نیاز به دو گام و آرگومان‌های کلمه‌کلیدی دارد. 
 
 \begin{latin}
-%\begin{lstlisting}[title={Thread example (standard way)}]{}
 \begin{lstlisting}[title=\rl{مثال نخ (شیوه معمول)}]{}
 import threading
 
@@ -6616,23 +6537,13 @@ thread.start()
 \end{lstlisting}
 \end{latin}
 
-%In this example, creating the thread has no immediate effect.
-%But when you invoke {\tt start}, the new thread executes
-%the target function with the given arguments.
-%This is great if you need to do something with the thread
-%before it starts, but I almost never do.
-%Also, I think the keyword arguments {\tt target} and {\tt args}
-%are awkward.
     در این مثال، ایجاد نخ هیچ اثر فوری ندارد. امّا زمانیکه  {\tt start} را فراخوانی می‌کنید، نخ جدید، تابع هدف را با آرگومان‌های داده شده اجرا می‌نماید. 
     این شیوه در زمانیکه شما باید کاری را روی نخ پیش از شروع آن انجام دهید عالی است،‌ ولی من تقریباً  هرگز چنین نمی‌کنم. 
-    همچنین گمان می‌کنم که آرگومان‌های {\tt target} و {\tt args} نازیبا است. 
+    همچنین گمان می‌کنم که آرگومان‌های {\tt target} و {\tt args} نازیبا هستند. 
 
-%Fortunately, we can solve both of these problems with four
-%lines of code.
     خوشبختانه هر دوی این مسائل را می‌توانیم با چهار خط کد حل نماییم. 
 
 \begin{latin}
-%\begin{lstlisting}[title={Cleaned-up Thread class}]{}
 \begin{lstlisting}[title=\rl{کلاس  نخ تمیزکاری  شده}]{}
 class Thread(threading.Thread):
     def __init__(self, t, *args):
@@ -6641,48 +6552,34 @@ class Thread(threading.Thread):
 \end{lstlisting}
 \end{latin}
 
-%Now we can create threads with a nicer interface, and they
-%start automatically:
     اکنون می‌توانیم نخ‌ها را با یک واسط زیباتر ایجاد نماییم و  آن‌ها به طور خودکار شروع می‌شوند. 
 
 \begin{latin}
-%\begin{lstlisting}[title={Thread example (my way)}]{}
-\begin{lstlisting}[title=\rl{مثال نخ (به روش من)
-}]{}
+\begin{lstlisting}[title=\rl{مثال نخ (به روش من)}]{}
 thread = Thread(function, 1, 2, 3)
 \end{lstlisting}
 \end{latin}
 
-%This also lends itself to an idiom I like, which is to create
-%multiple Threads with a list comprehension:
-    این روش وامدار شیوه‌ای است که می‌پسندم  و آن ایجاد چندین نخ با یک ادراک لیست است. 
+    این روش وامدار شیوه‌ای است که آن را می‌پسندم  و آن ایجاد چندین نخ با یک ادراک لیست است. 
     
     
 
 \begin{latin}
-%\begin{lstlisting}[title={Multiple thread example}]{}
 \begin{lstlisting}[title=\rl{مثال چند نخی}]{}
 threads = [Thread(function, i, i, i) for i in range(10)]
 \end{lstlisting}
 \end{latin}
 
-%\section{Handling keyboard interrupts}
 \section{کنترل وقفه‌های صفحه کلید}
 
-%One other problem with the {\tt threading} class is that 
-%{\tt Thread.join} can't be interrupted by Ctrl-C, which
-%generates the signal {\tt SIGINT}, which Python translates
-%into a KeyboardInterrupt.
     یکی دیگر از مشکلات کلاس {\tt threading} این است که {\tt Thread.join} با کلیدهای {\tt Ctrl-C} --که سیگنال  {\tt SIGINT} را تولید می‌نماید 
      و  پایتون آن را به یک {\tt KeyboardInterrupt} ترجمه می‌نماید-- دچار وقفه نمی‌شود. 
     
 
 \newpage
-%So, if you write the following program:
     لذا اگر کد زیر را بنویسید: 
 
 \begin{latin}
-%\begin{lstlisting}[title={Unstoppable program}]{}
 \begin{lstlisting}[title=\rl{برنامه توقف‌ناپذیر}]{}
 import threading, time
 
@@ -6704,21 +6601,11 @@ parent_code()
 \end{lstlisting}
 \end{latin}
 
-%You will find that it cannot be interrupted with Ctrl-C or
-%a {\tt SIGINT}\footnote{At the time of this writing, this
-%bug had been reported and assigned number 1167930, but it was
-%open and unassigned (\url{https://sourceforge.net/projects/python/}).}.
-    درخواهید یافت که کد فوق با {\tt Ctrl-C} یا {\tt SIGINT} دچار وقفه نمی‌شود\footnote{
+    درخواهید یافت که کد فوق با {\tt Ctrl-C} یا {\tt SIGINT} دچار وقفه نمی‌شود\footnote{%
     در زمان این نگارش، این باگ به شماره 1167930 گزارش شده است ولی هنوز باز بوده و وضعیت آن نامشخص است.  
     }.
-%My workaround for this problem uses {\tt os.fork} and {\tt os.wait},
-%so it only works on UNIX and Macintosh.  Here's how it works:
-%before creating new threads, the program invokes {\tt watcher},
-%which forks a new process.  The new process returns and executes
-%the rest of the program.  The original process waits for the
-%child process to complete, hence the name {\tt watcher}:
     راه‌حل من برای این مسأله از {\tt os.fork} و {\tt os.wait} استفاده می‌کند لذا این راه‌حل تنها روی سیستم‌های \lr{UNIX} و \lr{Macintosh} 
-    کار می‌کند. شیوه کار بدین صورت است:‌ پیش از ایجاد نخ‌های جدید، برنامه  تابع  {\tt watcher} را که یک فرآیند جدید را ایجاد می‌کند فراخوانی می‌نماید. 
+    کار می‌کند. شیوهٔ کار بدین صورت است:‌ پیش از ایجاد نخ‌های جدید، برنامه  تابع  {\tt watcher} را که یک فرآیند جدید ایجاد می‌کند فراخوانی می‌نماید. 
     فرآیند جدید برمی‌گردد و  مابقی برنامه را اجرا می‌کند. 
     فرآیند اصلی منتظر تکمیل فرآیند فرزند می‌ماند، از این رو نام آن   {\tt watcher} است. 
     
@@ -6758,26 +6645,17 @@ parent_code()
 
 %%%%Sat 28 Apr 2018 06:18:50 PM +0430   
 
-%If you run this version of the program, you should be able
-%to interrupt it with Ctrl-C.  I am not sure, but I think it
-%is guaranteed that the {\tt SIGINT} is delivered to the
-%watcher process, so that's one less thing the
-%parent and child threads have to deal with.
     اگر این نسخه از برنامه را اجرا کنید،‌ باید بتوانید با استفاده از \lr{ Ctrl-C} آن را دچار وقفه نمایید. 
     مطمئن نیستم ولی گمان می‌کنم که  ارسال {\tt SIGINT} به فرآیند {\tt watcher} تضمین شده است لذا 
     این یکی از آن مسائلی است که نخ‌های والد و فرآیند باید با آن برخورد نمایند. 
 
-%I keep all this code in a file named {\tt threading\_cleanup.py},
-%which you can download from
-%\url{greenteapress.com/semaphores/threading\_cleanup.py}
     تمامی این کد را در فایلی تحت نام {\tt threading\_cleanup.py} قرار داده‌ام که شما می‌توانید آن را از 
-    \url{greenteapress.com/semaphores/threading\_cleanup.py} دانلود نمایید. 
+    \url{greenteapress.com/semaphores/threading_cleanup.py} دانلود نمایید.  
+% typo drop \ from url  
+    
+    مثال‌های فصل~\ref{pysync} با در نظر گرفتن این نکته  ارائه شده‌اند که این کد پیش از کد مثال ارائه شده، اجرا می‌گردد.
 
-
-%The examples in Chapter~\ref{pysync} are presented with the understanding
-%that this code executes prior to the example code.
-    مثال‌های فصل~\ref{pysync} با درک این نکته که این کد پیش از کد مثال، اجرا می‌گردد ارائه شده است. 
-
+%%%%    Sun 29 Jan 2023 06:50:43 PM +0330
 
 %\chapter{Cleaning up POSIX threads}
 \chapter{تمیزکاری نخ‌های  \lr{POSIX}}
