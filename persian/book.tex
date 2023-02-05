@@ -31,10 +31,8 @@ left=2cm, right=2cm, bottom=1.7cm, top=2cm,
 \setdigitfont{Yas}
 \setlatintextfont{Linux Libertine}[Scale=0.94]
 
-%\title{The Little Book of Semaphores}
 \title{کتاب کوچک سمافورها}
 
-%\author{Allen B. Downey}
 \author{آلن بی.دونی\\[2cm]
 %\vspace{2cm}
 مترجمین:\\
@@ -6657,50 +6655,37 @@ parent_code()
 
 %%%%    Sun 29 Jan 2023 06:50:43 PM +0330
 
-%\chapter{Cleaning up POSIX threads}
 \chapter{تمیزکاری نخ‌های  \lr{POSIX}}
 \label{ccleanup}
 
-%In this section, I present some utility code I use to make
-%multithreading in C a little more pleasant.  The examples in
-%Section~\ref{csync} are based on this code.
-    در این بخش، چند کد کاربردی که از آن‌ به منظور خوشایندتر نمودن چند نخی در \lr{C} استفاده می‌کنم را ارائه می‌دهم. 
-    مثال‌های بخش~\ref{csync} بر پایه این کد هستند. 
+    در این بخش، چند کد کاربردی را ارائه می‌دهم که از آن‌ برای خوشایندتر نمودن چند نخی در \lr{C} استفاده می‌کنم. 
+    مثال‌های بخش~\ref{csync} بر پایهٔ این کد هستند. 
 
-%Probably the most popular threading standard used with C is
-%POSIX Threads, or Pthreads for short.  The POSIX standard defines
-%a thread model and an interface for creating and controlling
-%threads.  Most versions of UNIX provide an implementation of
-%Pthreads.
     احتمالاً محبوب‌ترین استاندارد چندنخی که در  \lr{C} استفاده می‌شود \lr{POSIX Threads} یا به اختصار \lr{Pthreads} است. 
     استاندارد  \lr{POSIX} یک مدل نخ و یک واسط برای ایجاد و کنترل نخ‌ها تعریف می‌نماید. 
     غالب نسخه‌های  \lr{UNIX} یک پیاده‌سازی از \lr{Pthreads} را فراهم می‌نمایند. 
 
-%\section{Compiling Pthread code}
 \section{کامپایل کد \lr{Pthreads} }
 
-%Using Pthreads is like using most C libraries:
-    استفاده از  \lr{Pthreads}  شبیه استفاده از غالب کتاب‌های \lr{C}  است: 
+    استفاده از  \lr{Pthreads}  شبیه استفاده از غالب کتابخانه‌های \lr{C}  است: 
 
 
 \begin{itemize}
 
-\item %You include headers files at the beginning of your program.
+\item
     در ابتدای برنامه‌تان باید فایل‌های سرآمد\LTRfootnote{headers files} را وارد نمایید. 
 
-\item %You write code that calls functions defined by Pthreads.
+\item
     کدی می‌نویسید که توابع تعریف‌شده توسط \lr{Pthreads} را فراخوانی می‌نماید. 
 
-\item %When you compile the program, you link it with the Pthread library.
+\item
     با کامپایل برنامه، آن را به کتابخانه \lr{Pthreads} متصل می‌نمایید. 
 
 \end{itemize}
 
-%For my examples, I include the following headers:
     من در مثال‌هایم از سرآمدهای زیر استفاده می‌کنم:
 
 \begin{latin}
-%\begin{lstlisting}[title={Headers}]{}
 \begin{lstlisting}[title=\rl{سرآمدها}]{}
 #include <stdio.h>
 #include <stdlib.h>
@@ -6709,43 +6694,25 @@ parent_code()
 \end{lstlisting}
 \end{latin}
 
-%The first two are standard; the third is for Pthreads and
-%the fourth is for semaphores.
-%To compile with the Pthread library in {\tt gcc}, you
-%can use the {\tt -l}
-%option on the command line:
-    دوتای اول سرآمدهای استاندارد هستند؛ سرآمد سوم برای \lr{Pthreads} و چهارمی هم برای سمافورها. 
+    دوتای اول سرآمدهای استاندارد هستند؛ سرآمد سوم برای \lr{Pthreads} است و چهارمی هم برای سمافورها. 
     به منظور کامپایل با کتابخانه \lr{Pthreads} در {\tt gcc}، می‌توانید از گزینه {\tt -l} در خط فرمان استفاده نمایید: 
 
 \begin{latin}
-%\begin{lstlisting}[title={}]{}
-\begin{lstlisting}
+\begin{lstlisting}[title={}]{}
 gcc -g -O2 -o array array.c -lpthread
 \end{lstlisting}
 \end{latin}
 
-%This compiles {\tt array.c} with debugging info and optimization,
-%links with the Pthread library, and generates an executable
-%named {\tt array}.
     دستور فوق  {\tt array.c} را با اطلاعات اشکال‌زدایی و بهینه‌سازی کامپایل نموده، به کتابخانه \lr{Pthreads} متصل کرده و 
     فایل اجرایی با نام {\tt array} ایجاد می‌نماید. 
 
-%If you are used to a language like Python that provides exception
-%handling, you will probably be annoyed with languages like C that
-%require you to check for error conditions explicitly.  I often
-%mitigate this hassle by wrapping library function calls
-%together with their error-checking code inside my own functions.
-%For example, here is a version of {\tt malloc}
-%that checks the return value.
-    اگر شما به زبانی مانند پایتون که مکانیزم مدیریت استثناء را فراهم می‌آورد عادت دارید، احتمالاً زبان‌هایی نظیر \lr{C} که 
-    برای بررسی شرایط خطا نیاز به تصریح دارند برای شما آزار دهنده خواهند بود. 
-%    اغلب با جمع‌کردن فراخوانی توابع کتابخانه‌ای همراه با کد بررسی خطای آن‌ها درون توابع خودم،  این مشکل را کاهش می‌دهم. 
-    اغلب برای کمتر کردن این مشکل، درون توابع خودم، فراخوانی‌ توابع کتابخانه‌ای را همراه با کد بررسی خطای آن‌‌ها، مجمتع می‌نمایم. 
-    برای نمونه، نسخه {\tt malloc} که مقدار خروجی را بررسی می‌نماید در ادامه آمده است. 
+    اگر شما به زبانی مانند پایتون که مکانیزم مدیریت استثناء را فراهم می‌آورد عادت دارید،
+    احتمالاً از زبان‌هایی مانند \lr{C} که از شما می خواهند شرایط خطا را به صراحت بررسی کنید، آزرده خواهید شد.
+    اغلب برای کمتر کردن این دردسر، فراخوانی‌ توابع کتابخانه‌ای را همراه با کد بررسی خطای آن‌‌ها درون توابع خودم قرار می‌دهم. 
+    برای نمونه، نسخهٔ {\tt malloc} که مقدار خروجی را بررسی می‌نماید در ادامه آمده است. 
 
 \begin{latin}
-%\begin{lstlisting}[title={}]{}
-\begin{lstlisting}
+\begin{lstlisting}[title={}]{}
 void *check_malloc(int size)
 {
   void *p = malloc (size);
@@ -6760,19 +6727,15 @@ void *check_malloc(int size)
 
 %%%Wed 09 May 2018 06:07:41 PM +0430
 
-%\section{Creating threads}
-\section{ ایجاد نخ‌ها}
+\section{ایجاد نخ‌ها}
 
-%I've done the same thing with the Pthread functions I'm going to use;
-%here's my wrapper for {\tt pthread\_create}.
-    با آن توابع \lr{Pthread} که می‌خواهم از آن‌ها استفاده کنم کاری مشابه انجام داده‌ام: 
-    در ادامه  بسته‌بندی خود را از {\tt pthread\_create} مشاهده می‌نمایید. 
+    همین کار را با توابع \lr{Pthreظd} که قرار است استفاده کنم انجام داده‌ام؛
+    در ادامه  بسته‌بندی خودم را از {\tt pthread\_create} مشاهده می‌نمایید. 
     
 
-%%%todo -> allen forget to set escapeinside in the following blco
+%%%todo -> allen forget to set escapeinside in the following block
 \begin{latin}
-%\begin{lstlisting}[title={}]{}
-\begin{lstlisting}[escapeinside={}]
+\begin{lstlisting}[title={},escapeinside={}]{}
 pthread_t make_thread(void *(*entry)(void *), Shared *shared)
 {
   int n;
@@ -6787,59 +6750,32 @@ pthread_t make_thread(void *(*entry)(void *), Shared *shared)
 }
 \end{lstlisting}
 \end{latin}
-
-%The return type from {\tt pthread\_create} is {\tt pthread\_t},
-%which you can think of as a handle for the new thread.  You
-%shouldn't have to worry about the implementation of {\tt pthread\_t},
-%but you do have to know that it has the semantics of a primitive
-%type\footnote{Like an integer, for example, which is what a
-%{\tt pthread\_t} is in all the implementations I know.}.  That
-%means that you can think of a thread handle as an immutable
-%value, so you can copy it or pass it by value without causing
-%problems.  I point this out now because it is not true for
-%semaphores, which I will get to in a minute.
     مقدار بازگشتی  {\tt pthread\_create} از نوع  {\tt pthread\_t} است که می‌توانید آن را به صورت دستگیره‌ای\LTRfootnote{handle} 
-    برای نخ جدید در نظر بگیرید. نیازی نیست  نگران پیاده‌سازی {\tt pthread\_t} باشید امّا باید بدانید که از لحاظ معنایی یک نوع ابتدایی است\footnote{
-    مثل یک عدد صحیح، برای نمونه این عدد صحیح همان چیزی است که  {\tt pthread\_t} در تمام پیاده‌سازی‌هایی که از آن می‌دانم است.}. 
-    بدین معنی است که می‌توانید یک دستگیره نخ را به عنوان یک مقدار تغییرناپذیر در نظر بیگرید، لذا می‌توانید بدون مشکلی مقدار آن کپی یا ارسال نمایید.
-    در اینجا بدین سبب به این نکته اشاره نمودم که این مطلب برای سمافورها صحیح نمی‌باشد و تا دقیقه‌ای دیگر به آن می‌پردازم. 
+    برای نخ جدید در نظر بگیرید. نیازی نیست  نگران پیاده‌سازی {\tt pthread\_t} باشید امّا باید بدانید که از لحاظ معنایی یک نوع ابتدایی است\footnote{%
+    برای مثال مانند یک عدد صحیح، که  اتفاقاً در تمام پیاده‌سازی‌هایی که از {\tt pthread\_t} می‌دانم چنین است.}. 
+    بدین معنی است که می‌توانید یک دستگیرهٔ نخ را به عنوان یک مقدار تغییرناپذیر در نظر بگیرید، لذا می‌توانید بدون مشکلی مقدار آن را کپی یا ارسال نمایید.
+    در اینجا بدین سبب به این نکته اشاره نمودم که این مطلب برای سمافورها صحیح نمی‌باشد و تا دقیقه‌ای دیگر به آن می‌پردازم.
 
-%If {\tt pthread\_create} succeeds, it returns 0 and my function
-%returns the handle of the new thread.
-%If an error occurs, {\tt pthread\_create} 
-%returns an error code and my function prints an error message
-%and exits.
-    اگر {\tt pthread\_create}  موفقیت‌آمیز باشد، مقدار {\tt 0}  را بر می‌گرداند و تابع من دستگیره نخ جدید را بر می‌گرداند. 
+    اگر {\tt pthread\_create}  موفقیت‌آمیز باشد، مقدار {\tt 0}  را بر می‌گرداند و تابع من دستگیرهٔ نخ جدید را بر می‌گرداند. 
     اگر خطایی رخ دهد، {\tt pthread\_create}  یک کد خطا بر می‌گرداند و تابع من پیام خطا را چاپ نموده و خارج می‌شود. 
 
 
-%The parameters of {\tt pthread\_create} take some
-%explaining.  Starting with the second,
-%{\tt Shared}
-%is a user-defined structure that contains shared variables.
-%The following {\tt typedef} statement creates the new type:
-    
-    پارامترهای {\tt pthread\_create}  مقداری توضیح می‌طلبد. با پارامتر دوم، {\tt Shared}، شروع می‌کنیم که یک ساختار تعریف شده توسط کاربر است 
-    که محتوی متغیرهای اشتراکی است. دستور {\tt typedef} زیر یک نوع جدید ایجاد می‌نماید. 
+    پارامترهای {\tt pthread\_create}  مقداری توضیح می‌طلبد. با پارامتر دوّم، {\tt Shared}، شروع می‌کنیم که یک ساختار تعریف شده توسط کاربر است 
+    که حاوی متغیرهای اشتراکی است. دستور {\tt typedef} زیر یک نوع جدید ایجاد می‌نماید. 
 
 \begin{latin}
-%\begin{lstlisting}[title={}]{}
-\begin{lstlisting}
+\begin{lstlisting}[title={}]{}
 typedef struct {
   int counter;
 } Shared;
 \end{lstlisting}
 \end{latin}
 
-%In this case, the only shared variable is {\tt counter}.
-%{\tt make\_shared} allocates
-%space for a {\tt Shared} structure and initializes the contents:
-    در این جا، تنها متغیر اشتراکی  {\tt counter}  است. تابع {\tt make\_shared}  فضای لازم برای ساختار  {\tt Shared} را تخصیص داده و 
-    محتوای آن را مقداردهی اولیه می‌نماید. 
+    در این جا تنها متغیر اشتراکی،  {\tt counter}  است. تابع {\tt make\_shared}  فضای لازم برای ساختار  {\tt Shared} را تخصیص داده و 
+    محتوای آن را مقداردهی اوّلیه می‌نماید. 
 
 \begin{latin}
-%\begin{lstlisting}[title={}]{}
-\begin{lstlisting}
+\begin{lstlisting}[title={}]{}
 Shared *make_shared ()
 {
   int i;
@@ -6850,22 +6786,13 @@ Shared *make_shared ()
 \end{lstlisting}
 \end{latin}
 
-%Now that we have a shared data structure, let's get back to
-%{\tt pthread\_create}.
-%The first parameter is a pointer to a function that takes
-%a {\tt void} pointer and returns a {\tt void} pointer.  If the syntax
-%for declaring this type makes your eyes bleed, you are not alone.
-%Anyway, the purpose of this parameter is to specify the function where
-%the execution of the new thread will begin.  By convention, this
-%function is named {\tt entry}:
     اکنون یک داده‌ساختار اشتراکی داریم، اجازه دهید  به {\tt pthread\_create} برگردیم. 
     اوّلین پارامتر اشاره‌گری به یک تابع است که اشاره‌گر {\tt void} را دریافت نموده و یک اشاره‌گر {\tt void} بر می‌گرداند. 
     اگر نحو تعریف این نوع برای دیدگانتان ناآشنا است، بدانید که تنها نیستید. 
     در هر حال، هدف این پارامتر، تعیین تابعی است که با اجرای نخ جدید، شروع خواهد شد. به طور قراردادی این تابع  {\tt entry} نامگذاری می‌شود. 
 
 \begin{latin}
-%\begin{lstlisting}[title={}]{}
-\begin{lstlisting}
+\begin{lstlisting}[title={}]{}
 void *entry (void *arg)
 {
   Shared *shared = (Shared *) arg;
@@ -6875,37 +6802,25 @@ void *entry (void *arg)
 \end{lstlisting}
 \end{latin}
 
-%The parameter of {\tt entry} has to be declared as a {\tt void}
-%pointer, but in this program we know that it is really a pointer to a
-%{\tt Shared} structure, so we can typecast it accordingly and then
-%pass it along to {\tt child\_code}, which does the real work.
     پارامتر {\tt entry}  باید به صورت یک اشاره‌گر  {\tt void} تعریف شود،‌ امّا در این برنامه می‌دانیم که واقعاً اشاره‌گری به یک ساختار {\tt Shared}  است 
-    لذا می‌توانیم مطابق آن تبدیل نوع را انجام داده و سپس آن را به {\tt child\_code} ارسال کنیم و این کد کار اصلی را انجام می‌دهد. 
+    لذا می‌توانیم مطابق آن تبدیل نوع را انجام داده و سپس آن را به {\tt child\_code} ارسال کنیم که این کد کار اصلی را انجام می‌دهد. 
 
-%When {\tt child\_code} returns, we invoke {\tt pthread\_exit}
-%which can be used to pass a value to any thread (usually the
-%parent) that joins with this thread.  In this case, the child
-%has nothing to say, so we pass {\tt NULL}.
     زمانیکه {\tt child\_code} باز می‌گردد، {\tt pthread\_exit} را فراخوانی می‌نماییم 
     و این تابع می‌تواند برای ارسال یک مقدار به هر نخی (معمولاً نخ والد) که به این نخ ملحق می‌شود، بکار رود. 
     در این جا، نخ فرزند کار خاصی انجام نمی‌دهد، لذا مقدار  {\tt NULL} ارسال می‌کنیم. 
 
 
-%\section{Joining threads}
-\section{الحاق نخ‌ها }
+\section{الحاق نخ‌ها}
 
 %%%todo ->> want-> wants
 
 %When one thread want to wait for another thread to complete,
-%it invokes {\tt pthread\_join}.
-%Here is my wrapper for {\tt pthread\_join}:
-    زمانیکه یک نخ بخواهد منتظر اتمام نخ دیگری بشود، تابع s {\tt pthread\_join} را صدا می‌زند. 
-    در ادامه بسته‌بندی  {\tt pthread\_join} آمده است:‌
+    زمانیکه یک نخ بخواهد منتظر اتمام نخ دیگری بشود، تابع  {\tt pthread\_join} را صدا می‌زند. 
+    در ادامه، بسته‌بندی  {\tt pthread\_join} آمده است:‌
     
 
 \begin{latin}
-%\begin{lstlisting}[title={}]{}
-\begin{lstlisting}
+\begin{lstlisting}[title={}]{}
 void join_thread (pthread_t thread)
 {
   int ret = pthread_join (thread, NULL);
@@ -6917,48 +6832,26 @@ void join_thread (pthread_t thread)
 \end{lstlisting}
 \end{latin}
 
-%The parameter is the handle of the thread you want to wait for.
-%All my function does is call {\tt pthread\_join} and check the
-%result.
-    پارامتر، دستگیره نخی است که می‌خواهید منتظر آن بمانید. تمامی کاری این تابع انجام می‌دهد فراخوانی  {\tt pthread\_join} و بررسی نتیجه است. 
+    پارامتر آن، دستگیرهٔ نخی است که می‌خواهید منتظرش بمانید. تمامی کاری این تابع انجام می‌دهد فراخوانی  {\tt pthread\_join} و بررسی نتیجه است. 
 
 
-%\section{Semaphores}
 \section{سمافورها}
 
-%The POSIX standard specifies an interface for semaphores.
-%This interface is not part of Pthreads, but most UNIXes
-%that implement Pthreads also provide semaphores.  If you
-%find yourself with Pthreads and without semaphores, you
-%can make your own; see Section~\ref{makeyourown}.
     استاندارد \lr{POSIX}  یک واسط برای سمافورها تعریف می‌نماید. 
     این واسط بخشی از \lr{Pthreads} نیست، امّا غالب سیستم‌های مبتنی برای یونیکس که \lr{Pthreads} را پیاده‌سازی می‌نمایند سمافورها را نیز فراهم می‌آورند. 
-    اگر با \lr{Pthreads} مواجه شدید که سمافور ندارد خودتان می‌توانید سمافور خودتان را ایجاد نمایید؛ ر.ک. بخش~\ref{makeyourown}.
+    اگر با [یک پیاده‌سازی از] \lr{Pthreads} مواجه شدید که سمافور ندارد می‌توانید سمافور خودتان را ایجاد نمایید؛ ر.ک. بخش~\ref{makeyourown}.
     
-%POSIX semaphores have type {\tt sem\_t}.  You shouldn't have
-%to know about the implementation of this type, but you do
-%have to know that it has structure semantics, which means that
-%if you assign it to a variable you are making a copy of the
-%contents of a structure.  Copying a semaphore is almost certainly
-%a bad idea.  In POSIX, the behavior of the copy is undefined.
     سمافورهای \lr{POSIX}  از نوع {\tt sem\_t} هستند. نیازی به اطلاع از پیاده‌سازی این نوع ندارید، امّا باید بدانید که از لحاظ معنایی 
     تنها یک ساختار است به این معنی که اگر آن را به یک متغیر نسبت دهید یک کپی از محتوای یک ساختار ایجاد نموده‌اید. 
     کپی‌کردن یک سمافور تقریباً ایدهٔ بدی است. در \lr{POSIX}، رفتار کپی تعریف نشده است. 
 
 
-%In my programs, I use capital letters to denote types with
-%structure semantics, and I always manipulate them with pointers.
-%Fortunately, it is easy to put a wrapper around {\tt sem\_t}
-%to make it behave like a proper object.  Here is the 
-%{\tt typedef} and the wrapper that creates and initializes
-%semaphores:
-    در برنامه‌هایم، از حروف بزرگ برای اشاره به انواعی  استفاده می‌کنم که معنای ساختاری دارند و همیشه آن را به اشاره‌گرها دستکاری می‌کنم. 
+    در برنامه‌هایم، برای اشاره به انواعی که معنای ساختاری دارند از حروف بزرگ استفاده می‌کنم و همیشه آن‌ها را از طریق اشاره‌گرها دستکاری می‌کنم. 
     خوشبختانه براحتی می‌توان یک بسته‌بندی برای  {\tt sem\_t} ایجاد نمود که رفتاری مشابه یک شیء‌ محض داشته باشد. 
     در ادامه {\tt typedef}  و بسته‌بندی ایجاد و مقداردهی اولیه سمافورها آمده است: 
 
 \begin{latin}
-%\begin{lstlisting}[title={}]{}
-\begin{lstlisting}
+\begin{lstlisting}[title={}]{}
 typedef sem_t Semaphore;
 
 Semaphore *make_semaphore (int n)
@@ -6980,36 +6873,26 @@ Semaphore *make_semaphore (int n)
 %{\tt make\_semaphore} takes the initial value of the semaphore
 %as a parameter.  It allocates space for a Semaphore, initializes
 %it, and returns a pointer to {\tt Semaphore}.
-    تابع {\tt make\_semaphore} مقدار اولیه سمافور را به عنوان پارامتر می‌گیرد. فضای لازم برای یک \lr{Semaphore} را تخصیص داده و آن را 
-    مقداردهی اولیه می‌نماید و اشاره‌گری به {\tt Semaphore} بر می‌گرداند. 
+    تابع {\tt make\_semaphore} مقدار اوّلیه سمافور را به عنوان پارامتر می‌گیرد. فضای لازم برای یک \lr{Semaphore} را تخصیص داده و آن را 
+    مقداردهی اوّلیه می‌نماید و اشاره‌گری به {\tt Semaphore} بر می‌گرداند. 
 
-%{\tt sem\_init} uses old-style UNIX error reporting, which means
-%that it returns -1 if something went wrong.  Once nice thing
-%about these wrapper functions is that we don't have to remember
-%which functions use which reporting style.
     تابع {\tt sem\_init} فرم قدیمی گزارش خطای یونیکس را استفاده می‌کند که در صورت بروز خطا مقدار {\tt -1} را بر می‌گرداند. یک چیز 
     جالب در رابطه با این توابع بسته‌بندی این است که لازم نیست به خاطر بسپاریم که هر تابع چه سبک گزارش خطا را بکار می‌برد. 
 
-%With these definitions, we can write C code that almost looks
-%like a real programming language:
     با این تعاریف، می‌توانیم کدی به زبان  \lr{C} بنویسیم که تقریباً شبیه یک زبان برنامه‌نویسی  واقعی است:‌
 
 \begin{latin}
-%\begin{lstlisting}[title={}]{}
-\begin{lstlisting}
+\begin{lstlisting}[title={}]{}
 Semaphore *mutex = make_semaphore(1);
 sem_wait(mutex);
 sem_post(mutex);
 \end{lstlisting}
 \end{latin}
 
-%Annoyingly, POSIX semaphores use {\tt post} instead of
-%{\tt signal}, but we can fix that:
     سمافورهای \lr{POSIX} بجای {\tt signal} از  {\tt post} استفاده می‌کنند و این آزاردهنده است امّا می‌توانیم آن را برطرف کنیم:‌
     
 \begin{latin}
-%\begin{lstlisting}[title={}]{}
-\begin{lstlisting}
+\begin{lstlisting}[title={}]{}
 int sem_signal(Semaphore *sem)
 {
   return sem_post(sem);
@@ -7017,8 +6900,8 @@ int sem_signal(Semaphore *sem)
 \end{lstlisting}
 \end{latin}
 
-%That's enough cleanup for now.
-    تمیزکاری تا همین حد کافی است. 
+    فعلاً تمیزکاری تا همین حد کافی است. 
 %%%%%Sat 12 May 2018 07:02:09 PM +0430
+%%%      Sun 05 Feb 2023 06:13:14 PM +0330   
 \end{document}
 
