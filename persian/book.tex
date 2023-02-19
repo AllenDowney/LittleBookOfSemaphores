@@ -6,7 +6,6 @@
 % document under the terms of the Creative Commons
 % Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
 % http://creativecommons.org/licenses/by-nc-sa/4.0/
-
 \documentclass{book}
 \usepackage[paperwidth=16.5cm, paperheight=23.5cm, 
 left=2cm, right=2cm, bottom=1.7cm, top=2cm, 
@@ -22,7 +21,7 @@ left=2cm, right=2cm, bottom=1.7cm, top=2cm,
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue]{hyperref}
 
 
-
+\usepackage{emptypage}
 \usepackage[computeautoilg, extrafootnotefeatures]{xepersian}
 \usepackage{bidiftnxtra}
 \paragraphfootnotes*
@@ -42,7 +41,7 @@ left=2cm, right=2cm, bottom=1.7cm, top=2cm,
 
 \sloppy
 
-\newcommand{\clearemptydoublepage}{\newpage\cleardoublepage}
+\newcommand{\clearemptydoublepage}{}%\newpage\cleardoublepage}
 \newcommand{\blankpage}{\newpage}
 
 \pagestyle{fancyplain}
@@ -664,9 +663,8 @@ for i in range(100):
 
 
 \item 
-%There is no way to know which thread, if either, will continue immediately.
     پس از اینکه نخی یک سمافور را افزایش داد و نخ دیگری بیدار شد، هر دو نخ به صورت همروند اجرای خود را ادامه می‌دهند. 
-    هیچ راهی وجود ندارد که بدانیم کدامیک از این دو نخ، بلافاصله ادامه می‌یابد. 
+    هیچ راهی وجود ندارد که بدانیم کدام نخ، در صورت وجود، بلافاصله ادامه می‌یابد. 
 
 \item 
     زمانیکه به یک سمافور سیگنال می‌دهید ضرورتاً نمی‌دانید که آیا نخی در حالت انتظار هست یا نه؟ لذا تعداد نخ‌های رفع انسداد شده ممکن است 
@@ -689,7 +687,6 @@ for i in range(100):
     نحوِ ایجاد یک سمافور و مقداردهی اولیه آن در ادامه آمده است.
 %
 \begin{latin}
-%\begin{lstlisting}[title={Semaphore initialization syntax}]{}
 \begin{lstlisting}[title=\rl{نحوِ مقداردهی اولیه سمافور}]{}
 fred = Semaphore(1)
 \end{lstlisting}
@@ -701,7 +698,6 @@ fred = Semaphore(1)
     اعمال سمافور در محیط‌های مختلف نام‌های گوناگونی دارند. رایج‌ترین آن‌ها عبارت است از:
 %
 \begin{latin}
-%\begin{lstlisting}[title={Semaphore operations}]{}
 \begin{lstlisting}[title=\rl{اعمال سمافور}]{}
 fred.increment()
 fred.decrement()	
@@ -712,7 +708,6 @@ fred.decrement()
 و
 %
 \begin{latin}
-%\begin{lstlisting}[title={Semaphore operations}]{}
 \begin{lstlisting}[title=\rl{اعمال سمافور}]{}
 fred.signal()
 fred.wait()	
@@ -723,7 +718,6 @@ fred.wait()
 و
 %
 \begin{latin}
-%\begin{lstlisting}[title={Semaphore operations}]{}
 \begin{lstlisting}[title=\rl{اعمال سمافور}]{}
 fred.V()
 fred.P()	
@@ -747,7 +741,6 @@ fred.P()
     
 
 \begin{latin}
-%\begin{lstlisting}[title={Semaphore operations}]{}
 \begin{lstlisting}[title=\rl{اعمال سمافور}]{}
 fred.increment_and_wake_a_waiting_process_if_any()
 fred.decrement_and_block_if_the_result_is_negative()	
@@ -781,11 +774,8 @@ fred.decrement_and_block_if_the_result_is_negative()
 
 \chapter{الگوهای همگام سازی پایه}
 
-%These problems include
-% serialization and mutual exclusion, which we have already seen, along with others.
-در این فصل تعدادی از مسائل همگام سازی پایه ارائه شده و نشان داده می‌شود چگونه با استفاده از سمافورها آن‌ها را حل کنیم. این مسائل شامل موضوعات مختلفی می‌شود از جمله تسلسل و انحصار متقابل --که قبلاً با آن‌ها آشنا شده ایم--.
-%به همراه مسائلی دیگر. 
-%سایر موضوعات می‌شوند.
+در این فصل تعدادی از مسائل همگام سازی پایه ارائه شده و نشان داده می‌شود چگونه با استفاده از سمافورها آن‌ها را حل کنیم. 
+این مسائل شامل موضوعات مختلفی  از جمله تسلسل و انحصار متقابل می‌شود که قبلاً به همراه موارد دیگر دیده‌ایم.
 
 \section{علامت‌دهی}
 
@@ -829,8 +819,7 @@ statement b1
 این شیوهٔ استفاده از سمافورها، پایه و اساس نام‌های \texttt{signal} و \texttt{wait} است، 
 و در این مورد، این اسامی به راحتی به خاطر سپرده می‌شوند. اما متأسفانه، موارد دیگری را خواهیم دید که این اسم‌ها کمتر به ما کمک می‌کنند.
 
-%Speaking of meaningful names, {\tt sem} isn't one.
-حالا که از اسامی بامعنی صحبت به میان آمد، باید بدانیم که \texttt{sem} با مسمّی نیست.
+حالا که از اسامی بامعنی صحبت به میان آمد، باید بدانیم که \texttt{sem} اینگونه نیست.
 اگر امکان داشته باشد، ایدهٔ خوب این است که به یک سمافور نامی دهیم که مشخص کند به چه دلالت دارد. 
 در این مثال نام \texttt{a1done} می تواند خوب باشد، چرا که \texttt{ a1done.signal()} 
 به این معنی است که «علامت بده \texttt{a1} انجام شده است»، و \texttt{a1done.wait()} 
@@ -887,10 +876,7 @@ statement b2
  \clearemptydoublepage
 \subsection{راهنمای قرار ملاقات}
 	
-% The chances are good that you were able to figure out a solution,
-% but if not, here is a hint.  
-
-اگر خوش شانس باشید می‌توانید به یک راه‌حل برسید، ولی اگر هم نرسیدید، در ادامه یک راهنمایی آمده است. 
+ به احتمال زیاد بتوانید راه حلی بیابید، اما اگر هم نرسیدید، در ادامه یک راهنمایی آمده است.
 دو سمافور به نام‌های \texttt{aArrived} و \texttt{bArrived} ایجاد کنید، و به هر دو مقدار اولیه صفر بدهید. 
 
 همان طور که از نام‌ها مشخص است، \texttt{aArrived} نشان می دهد که آیا نخ \lr{A} به محل ملاقات رسیده است، 
@@ -1077,9 +1063,6 @@ mutex.signal()
     نیاز به هیچگونه تغییری مدیریت نماید. تا زمانی که هر نخ پیش از به‌روزرسانی متغیر،  \lr{wait}  و پس از آن نیز  \lr{signal}  
     را فرا می‌خواند هیچ دو نخی به صورت همزمان به متغیر \lr{\texttt{count}} دسترسی نخواهند داشت.
 
-%Often the code that needs to be protected is called the
-%{\bf critical section}, I suppose because it is critically
-%important to prevent concurrent access.
     اغلب کدی که به حفاظت نیاز دارد \textbf{ناحیه بحرانی}\LTRfootnote{critical section} نامیده می‌شود، 
     زیرا که جلوگیری از دسترسی همزمان، اهمیتی حیاتی دارد. 
 
@@ -1091,11 +1074,8 @@ mutex.signal()
     و هنگام خروج آن را باز می‌نماید. گرچه گهگاهی، کاربران تعابیر را خلط نموده و صحبت از  گرفتن\LTRfootnote{getting} 
     و رهانمودن\LTRfootnote{releasing} یک قفل می‌نمایند که این تعبیر، آن قدر هم با معنی نیست. 
 
-%Both metaphors are potentially useful and potentially misleading.
-%As you work on the next problem, try out both ways of thinking
-%and see which one leads you to a solution.
     هر دو تعبیر، بالقوه مفید و بالقوه گمراه کننده هستند. 
-    هنگام کار بر روی مسأله بعدی،‌ هر دو شیوه تفکر را امتحان نموده و ببینید کدام یک شماره به راه‌حل می‌رساند. 
+    هنگام کار بر روی مسأله بعدی،‌ هر دو روش فکری را امتحان نموده و ببینید کدام یک شما را به راه‌حل می‌رساند.
 %%    Tue 12 Sep 2017 05:59:11 PM +0430
 %%%Wed 23 Jan 2019 06:51:03 PM +0330: revision
 
@@ -1106,8 +1086,7 @@ mutex.signal()
     
     این  الگو یک مالتی‌پلکس\LTRfootnote{multiplex} نامیده می‌شود. در دنیای واقعی، مسأله مالتی‌پلکس در یک کلوپ شبانهٔ شلوغ
     رخ می‌دهد زمانی که برای تعداد افرادی که مجاز به حضور در ساختمان در یک زمان هستند یک حداکثر وجود دارد؛ خواه به منظور تامین ایمنی آتش‌سوزی
-    یا به منظور ایجاد یک انحصار. %illusion of exclusivity.
-    
+    یا برای ایجاد توهم انحصاری بودن.
 
     معمولاً در چنین اماکنی یک مأمور،  با نگاه‌داشتن تعداد افرادی که داخل هستند و 
     جلوگیری از ورود افراد جدید زمانی که اتاق به ظرفیت خود برسد محدودیت همزمانی را تضمین می‌کند.
@@ -1191,9 +1170,6 @@ barrier = Semaphore(0)
 \end{lstlisting}
 \end{latin}
 
-%{\tt count} keeps track of how many threads have arrived.
-%{\tt mutex} provides exclusive access to {\tt count} so that
-%threads can increment it safely.
     \texttt{count} تعداد نخ‌های رسیده را نگاه می‌دارد. 
     \texttt{mutex} دسترسی انحصاری به \texttt{count} را 
     به گونه‌ای فراهم می‌آورد که نخ‌ها بتوانند به صورت ایمن آن را افزایش دهند. 
@@ -1231,15 +1207,10 @@ critical point
 %%%    Sun 17 Sep 2017 06:47:32 PM +0430
 %%% Wed 27 Feb 2019 06:33:35 PM +0330%%revision
 \clearemptydoublepage
-%\subsection{Deadlock \#2}
 \subsection{بن‌بست \#2}
 
     مشکل راه‌حل قبلی، بن‌بست است.
-%%%typo     as an example
-%An an example, imagine that $n=5$
-%and that 4 threads are waiting at the barrier.  The value
-%of the semaphore is the number of threads in queue, negated, 
-%which is -4.
+    
     به عنوان مثال، تصور کنید $n=5$ و چهار نخ پشت حصار منتظر هستند. مقدار سمافور، منفیِ تعداد نخ‌های در صف است که در اینجا $-4$ می‌باشد. 
     
     زمانی که پنجمین نخ به حصار پیام می‌دهد، یکی از نخ‌های در حال انتظار اجازه ادامه کار یافته و سمافور به $-3$ افزایش می‌یابد. 
@@ -1413,13 +1384,7 @@ mutex.signal()
 \clearemptydoublepage
 \subsection {راهنمای حصار با قابلیت استفاده مجدد}
 
-%As it is currently written, this code
-%allows a precocious thread to pass through the second mutex,
-%then loop around and pass through the first mutex and the
-%turnstile, effectively getting ahead of the other threads by
-%a lap.
-%    همانطوری که در حال حاضر نوشته شده است، 
-    همانطوری که نوشته شده است،
+    همانطوری که می‌بینید،
     این کد به نخی که زودتر از ناحیه بحرانی خود خارج می‌شود اجازه عبور از میوتکس دوم را داده و سپس در حلقه کد خود از  میوتکس 
     اول و ترن‌استایل عبور می‌نماید، که در عمل همین نکته سبب می‌شود آن نخ، یک دور جلوتر از دیگر نخ‌ها قرار گیرد. 
 
@@ -1476,15 +1441,9 @@ turnstile2.signal()
     گاهی اوقات به این راه‌حل، \textbf{حصار دو-فاز} گفته می‌شود زیرا که تمامی نخ‌ها را دوبار مجبور به انتظار می‌کند: یکبار برای اینکه تمام نخ‌ها برسند و 
     بار دیگر برای آنکه تمامی نخ‌ها ناحیه بحرانی را اجرا نمایند. 
 
-%Unfortunately, this solution is typical of most non-trivial
-%synchronization code: it is difficult to be sure that a solution is
-%correct.  Often there is a subtle way that a particular path through
-%the program can cause an error.
     متاسفانه، این راه‌حل  از نابدیهی‌ترین انواع کدهای همگام‌سازی است؛ زیرا که اطمینان یافتن از صحت این راه‌حل سخت است. 
-%    اغلب یک مسأله ظریف وجود دارد که موجب می‌شود یک مسیر خاص از طریق برنامه سبب خطایی گردد. 
-    اغلب یافتن اینکه یک مسیر خاص از طریق برنامه سبب خطایی گردد، آنچنان واضح نیست.
-    %ترجمه مشکل داریم 
-
+    اینکه یک مسیر مشخص در برنامه منجر به خطا شود اغلب ظرافت‌های خاصی دارد.  
+    
     بدتر اینکه، بررسی پیاده‌سازی یک راه‌حل آنچنان کمکی نمی‌کند. خطا ممکن است خیلی به ندرت اتفاق افتد، 
     زیرا مسیر بخصوصی که سبب خطا می‌گردد ممکن است نیازمند ترکیبی فوق‌العاده بی‌بدیل از شرایط باشد. 
     تولید و اشکال‌زدایی چنین خطاهایی با روش‌های مرسوم تقریبا ناممکن است. 
@@ -1523,7 +1482,6 @@ turnstile2.signal()
     در مسالهٔ حصار با قابلیت استفادهٔ مجدد، اگر نخی که ترن‌استایل را از حالت قفل خارج می‌نماید 
     آن را با تعداد سیگنال کافی به منظور عبور نخ‌های لازم، از پیش بارگذاری نماید، راه‌حل ساده‌تر می‌شود\footnote{با تشکر از \lr{Matt Tesch} بابت این راه‌حل!}. 
 
-%loop.  But in this case that is not a problem.
     نحو مورد استفاده در اینجا فرض می‌کند که \texttt{signal} می‌تواند پارامتری دریافت دارد که تعداد سیگنال‌ها را مشخص می‌نماید. 
     این، یک ویژگی استاندارد نیست، امّا پیاده‌سازی آن با یک حلقه، آسان خواهد بود. تنها چیزی که باید در ذهن داشت این است که سیگنال‌های چندگانه 
     اتمی نیستند؛ بدین معنی که نخ علامت دهنده ممکن است در میانه حلقه با وقفه روبرو شود. لکن در اینجا، این مسأله مشکلی محسوب نمی‌شود.
@@ -1597,14 +1555,9 @@ class Barrier:
 \end{lstlisting}
 \end{latin}
 
-%The {\tt \_\_init\_\_} method runs when we create a new
-%{\tt Barrier} object, and initializes the instance variables.
-%The parameter {\tt n} is the number of threads that have
-%to invoke {\tt wait} before the Barrier opens.
     زمانیکه یک شیء \texttt{Barrier} ایجاد می‌گردد 
     متد \texttt{\_\_init\_\_} اجرا می‌شود و متغیرهای نمونه را مقداردهی اولیه می‌نماید. 
     پارامتر \texttt{n} تعداد نخ‌هایی است که باید پیش از اینکه حصار باز شود \texttt{wait}  را فراخوانند. 
-%    Barrier باید با حرف کوچک باشد.  report (دومی)
     
 
     متغیر \texttt{self} به شیئی اشاره دارد که متدْ روی آن عمل می‌نماید. 
@@ -1728,7 +1681,6 @@ rendezvous = Semaphore(0)
     قطعه کد مربوط به جلو‌دارها:
 
 \begin{latin}
-%\begin{lstlisting}[title={Queue solution (leaders)}]{}
 \begin{lstlisting}[title=\rl{راه‌حل صف (جلودارها)}]{}
 mutex.wait()
 if followers > 0:
@@ -1755,7 +1707,6 @@ mutex.signal()
     کدمربوط به دنباله‌روها نیز مشابه است:
 
 \begin{latin}
-%\begin{lstlisting}[title={Queue solution (followers)}]{}
 \begin{lstlisting}[title=\rl{راه‌حل صف (دنباله‌روها)}]{}
 mutex.wait()
 if leaders > 0:
@@ -2256,7 +2207,6 @@ readLightswitch.unlock(roomEmpty)
 
     کد نویسنده بدون تغییر باقی می‌ماند. 
 
-%% alen downy: unlocks -> unlock
     همچنین این امکان وجود دارد که بجای ارسال {\tt roomEmpty} به عنوان یک پارامتر به {\tt lock}و  {\tt unlock}، 
     ارجاعی  به {\tt roomEmpty} را به عنوان یک خصیصهٔ‌ \lr{Lightswitch} ذخیره نمود. این رهیافت جایگزین، کمتر مستعدّ خطا است،
     امّا تصوّر می‌کنم اگر هر یک از فراخوانی‌های {\tt lock} و  {\tt unlock} سمافوری که روی آن عمل می‌کند را مشخص نماید خوانایی افزایش می‌یابد. 
@@ -2308,7 +2258,7 @@ turnstile = Semaphore(1)
 \clearemptydoublepage
 \subsection{راه‌حل خوانندگان-نویسندگان بدون قحطی}  
 
-%Here is the writer code:
+    در ادامه کد نویسنده آمده است:
 
 \begin{latin}
 \begin{lstlisting}[title=\rl{راه‌حل نویسنده بدون قحطی}]{}
@@ -2373,7 +2323,7 @@ noWriters = Semaphore(1)
 \end{latin}
 
 %%%    Mon 23 Oct 2017 06:38:02 PM +0330
-
+%%%% Sun 19 Feb 2023 07:00:17 PM +0330   
 
 \clearemptydoublepage
 \subsection{راه‌حل نویسندگان-خوانندگان با اولویت نویسنده}
@@ -2416,12 +2366,11 @@ writeSwitch.unlock(noReaders)
     امّا تا زمانیکه نویسندگان حضور دارند،   {\tt noReaders} را قفل نگاه می‌دارد. 
     فقط زمانیکه آخرین نویسنده خارج می‌شود، خوانندگان می‌توانند وارد شوند. 
 
-%Of course, a drawback of this solution is that now it is
-%possible for {\em readers} to starve (or at least face long
 %delays).  For some applications it might be better to get
 %obsolete data with predictable turnaround times.
     البته، یک اشکال این راه‌حل این است که اکنون ممکن است خوانندگان دچار قحطی شوند (یا حداقل با تاخیر طولانی مواجه شوند).  
-%    برای برخی کاربردها شاید بهتر باشد که داده‌های قدیمی با زمان‌های بازگشتِ پیش‌بینی‌ پذیر، اخذ گردد. 
+%    در برخی کاربردها شاید بهتر باشد که داده‌های قدیمی با زمان‌های بازگشتِ پیش‌بینی‌ پذیر، اخذ گردد. 
+برای برخی از برنامه‌ها، بهتر است داده‌های منسوخ را با زمان‌های قابل پیش‌بینی دریافت کنید.
 %%%%    ترجمه باید بررسی گردد و نامفهوم است. 
 
 
