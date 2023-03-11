@@ -2536,13 +2536,10 @@ t2.wait()                  (*\label{wait2}*)
 \end{lstlisting}
 \end{latin}
 
-%Speaking loosely, the counters {\tt room1} and {\tt room2} keep track
-%of the number of threads in each room.
     یک نخ، پیش از ورود به ناحیه بحرانی باید از دو ترن‌استایل بگذرد. 
     این ترن‌استایل‌ها کد را به سه اتاق تقسیم می‌نمایند. اتاق ۱ خطوط~\ref{room1begin}--~\ref{room1end}.
     اتاق ۲ خطوط~\ref{room2begin}--~\ref{room2end}. اتاق ۳ مابقی  کد  است. 
-    شمارنده‌های {\tt room1} و {\tt room2} تعداد نخ‌های هر اتاق را در خود نگه می‌دارند. 
-%    ترجمه speaking loosely
+    به طور کلی، شمارنده‌های {\tt room1} و {\tt room2} تعداد نخ‌های هر اتاق را در خود نگه می‌دارند. 
 
     شمارنده  {\tt room1}  به شیوه معمول با کمک {\tt mutex} محافظت می‌شود امّا امر حفاظت از {\tt room2} 
     بین {\tt t1} و {\tt t2} تقسیم شده است. به طور مشابه، مسئولیت دسترسی انحصاری به ناحیه بحرانی مشمول هر دوی {\tt t1} و {\tt t2} است. 
@@ -2848,8 +2845,7 @@ def test(i):
     هیچ بن‌بستی ممکن نیست، زیرا تنها سمافوری که بیش از یک فیلسوف به آن دسترسی دارد، {\tt mutex} است و هیچ نخی  
     تا زمانی که {\tt mutex} را در اختیار دارد {\tt wait} را اجرا نمی‌نماید. 
 
-%But again, starvation is tricky.
-    امّا دومرتبه، قحطیْ ممکن ولی در اینجا خیلی مستلزم دقّت و مهارت است.
+    امّا دوباره، قحطیْ ممکن ولی کمی پیچیده است. 
 
     معمّا: یا خودتان را متقاعد نمایید راه‌حل تننبام از قحطی جلوگیری می‌نماید و یا یک الگوی تکرارشونده بیابید که در آن، 
     یک نخ دچار قحطی شود در حالیکه مابقی نخ‌ها به کار خود ادامه می‌دهند. 
@@ -2915,13 +2911,11 @@ def test(i):
     [نسخهٔ جذّاب:] این نسخه محدودیت اول (عدم امکان تغییر کد عامل) را دارد ولی مابقی را در نظر نمی‌گیرد.
     
 \item
-%to the ingredients that are available.  This version of the problem
-%is uninteresting because it makes the whole premise, the ingredients
-%and the cigarettes, irrelevant.  Also, as a practical matter, it is
+
     [نسخهٔ بدیهی:] در برخی کتاب‌ها، در خود مسأله آمده است که عامل باید بر مبنای مواد موجود به آن فرد سیگاری که 
     می‌تواند ادامه دهد سیگنال ارسال نماید. 
-    این نسخه از مسأله، جذّابیتی ندارد زیرا که تمام فرض اوّلیه --مواد لازمه و سیگارها-- را بی‌ربط می‌سازد. همچنین در عمل، احتمالاً     
-     اینکه عامل، اطلاعی از سایر نخ‌ها و آنچه که آن‌ها نیاز دارند داشته باشد ایده خوبی نیست. 
+    این نسخه از مسأله، جذّابیتی ندارد زیرا که تمام فرض اوّلیه --مواد لازمه و سیگارها-- را بی‌ربط می‌سازد.
+    همچنین در عمل، احتمالاً اینکه عامل را ملزم کنیم تا اطلاعی از سایر نخ‌ها و آنچه که آن‌ها نیاز دارند داشته باشد ایده خوبی نیست. 
      در نهایت،  این نسخه از مسأله نیز بسیار ساده است.
      
 \end{description}
@@ -2931,7 +2925,6 @@ def test(i):
     طبیعتاً روی نسخه جذّاب تمرکز می‌نمایم. برای تکمیل بیان مسأله، باید کد عامل را مشخص نماییم. عامل، سمافورهای زیر را بکار می‌برد:
 
 \begin{latin}
-%\begin{lstlisting}[title={Agent semaphores}]{}
 \begin{lstlisting}[title=\rl{سمافورهای عامل}]{}
 agentSem = Semaphore(1)
 tobacco = Semaphore(0)
@@ -2969,13 +2962,10 @@ match.signal()
 \end{lstlisting}
 \end{latin}
 
-%work.  It is tempting to write something like:
     این مسأله آنقدرها هم ساده نیست زیرا که راه‌حل طبیعی آن کار نمی‌کند.  ممکن است وسوسه شوید تا کدی مانند زیر بنویسید:
-%    نوشتن کدی مانند زیر، وسوسه انگیز است: 
     
 
 \begin{latin}
-%\begin{lstlisting}[title={Smoker with matches}]{}
 \begin{lstlisting}[title=\rl{‌سیگاری کبریت‌دار}]{}
 tobacco.wait()
 paper.wait()
@@ -2984,7 +2974,6 @@ agentSem.signal()
 \end{latin}
 
 \begin{latin}
-%\begin{lstlisting}[title={Smoker with tobacco}]{}
 \begin{lstlisting}[title=\rl{سیگاری تنباکو‌دار}]{}
 paper.wait()
 match.wait()
@@ -2993,7 +2982,6 @@ agentSem.signal()
 \end{latin}
 
 \begin{latin}
-%\begin{lstlisting}[title={Smoker with paper}]{}
 \begin{lstlisting}[title=\rl{سیگاری کاغذدار}]{}
 tobacco.wait()
 match.wait()
@@ -3038,7 +3026,6 @@ matchSem = Semaphore(0)
     کد یکی از فروشندگان در ادامه آمده است:‌
 
 \begin{latin}
-%\begin{lstlisting}[title={Pusher A}]{}
 \begin{lstlisting}[title=\rl{فروشنده \lr{A}}]{}
 tobacco.wait()
 mutex.wait()
@@ -3064,7 +3051,6 @@ mutex.signal()
     فروشنده‌های دیگر نیز چنین هستند. از آنجایی که  تمام کار اصلی را فروشنده‌ها انجام می‌دهند، کد سیگاری بدیهی می‌شود.
 
 \begin{latin}
-%\begin{lstlisting}[title={Smoker with tobacco}]{}
 \begin{lstlisting}[title=\rl{سیگاری تنباکو‌دار}]{}
 tobaccoSem.wait()
 makeCigarette()
@@ -3209,7 +3195,7 @@ while True:
     متغیرهایی را که به کار برده‌ایم در ادامه مشاهده می‌نمایید:
 
 \begin{latin}
-\begin{lstlisting}[title={Dining Savages hint}]{}
+\begin{lstlisting}[title={\rl{راهنمایی غذاخوردن وحشی‌ها}}]{}
 servings = 0
 mutex = Semaphore(1)
 emptyPot = Semaphore(0)
@@ -3342,8 +3328,6 @@ while True:
     اگر  $n$ مشتری در آرایشگاه وجود داشته باشد، هر مشتری که می‌رسد بلافاصله {\tt balk} را فرا می‌خواند 
     و الّا هر مشتری به {\tt customer} سینگال داده و روی {\tt barber} منتظر می‌ماند. 
 
-    % typo: barbers -> barber
-%Here is the code for barbers:
     کد آرایشگر در ادامه آمده است. 
 
 \begin{latin}
@@ -3386,9 +3370,6 @@ while True:
 \lstinputlisting[title=\rl{راهنمایی آرایشگاه \lr{FIFO}}]{../code/barber2.py.0}
 \end{latin}
 
-%%%%typo: a thread -> a semophore
-%As each thread passes the turnstile, it creates a thread and puts it
-%in the queue.
 	زمانی‌که هر یک از نخ‌ها از ترن‌استایل عبور می‌کند، یک سمافور ساخته و آن را در صف قرار می‌دهد.
 
 	به جای انتظار روی {\tt barber}، هر نخ روی سمافور خودش منتظر می‌ماند. 
@@ -3417,7 +3398,6 @@ while True:
 	این راه‌حل در \verb"sync_code/barber2.py" آمده است (ر.ک.~\ref{sync.py}).
 
 \clearemptydoublepage
-%\section {Hilzer's Barbershop problem}
 \section {مسألهٔ آرایشگاه هیلزر}
 
 	ویلیام استالینگز\LTRfootnote{William Stallings} \cite{stallings}  
@@ -3444,8 +3424,7 @@ while True:
 \item 
     مشتریان توابع زیر را به ترتیب فرا می‌خوانند:
 {\tt enterShop}, {\tt sitOnSofa},
-{\tt getHairCut}, {\tt pay}.   
-%%typo: ,and for the last one. 
+{\tt getHairCut} و {\tt pay}.   
 
 \item 
     آرایشگران  {\tt cutHair} و {\tt acceptPayment} را فرا می‌خوانند. 
@@ -3487,8 +3466,6 @@ while True:
     از {\tt customers} که تعداد مشتری‌های درون آرایشگاه را در خود دارد و  از {\tt queue1} که لیست سمافورهای نخ‌های منتظر برای نشستن 
     روی کاناپه است حفاظت می‌نماید. 	
 
-%{\tt mutex2} protects {\tt queue2}, which is a list
-%of semaphores for threads waiting for a chair.
     {\tt mutex2} 
     از {\tt queue2} (یک لیست از سمافورهای نخ‌های در انتظار صندلی) حفاظت می‌کند. 
 
@@ -3541,21 +3518,14 @@ while True:
 
     این راه‌حل در \verb"sync_code/barber3.py" آمده است (ر.ک.~\ref{sync.py}).
 
-%The only way I can think of to solve this problem is to create a third
-%kind of thread, which I can an usher.  The ushers manage {\tt queue1}
-%and the barbers manage {\tt queue2}.  If there are 4 ushers and 3 barbers,
-%the sofa can be fully utilized.
-
-    %typo: which I can an usher --> which I can name it an usher
-    تنها راهی که برای حل مسأله به ذهنم می‌رسد این است که یک نوع سومی از نخ ایجاد نموده و آن را راهنما می‌نامم. 
+    تنها راهی که برای حل مسأله به ذهنم می‌رسد این است که یک نوع سومی از نخ ایجاد نموده و آن را راهنما بنامم. 
     راهنمایان {\tt queue1} را مدیریت نموده و آرایشگران {\tt queue2} را مدیریت می‌نمایند. اگر چهار راهنما و سه آرایشگر وجود داشته باشد 
     کاناپه می‌تواند به طور کامل مورد استفاده قرار گیرد. 
 
     این راه‌حل در \verb"sync_code/barber4.py" آمده است (ر.ک.~\ref{sync.py}).
 
-
+%%%% Sat 11 Mar 2023 06:32:44 PM +0330   
 \clearemptydoublepage
-%\section{The Santa Claus problem}
 \section{مسأله بابانوئل}
 
     این مسأله از کتاب \emph{سیستم‌های عامل} ویلیام استالینگز گرفته شده است  \cite{stallings}، امّا او خود این مسأله را به \lr{ John Trono}
