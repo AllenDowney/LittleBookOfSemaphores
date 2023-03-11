@@ -3650,7 +3650,7 @@ My solution uses a list of semaphores named {\tt queue}.
 
 \lstinputlisting[title=FIFO barbershop hint]{../code/barber2.py.0}
 
-As each thread passes the turnstile, it creates a thread and puts it
+As each thread passes the turnstile, it creates a semaphore and puts it
 in the queue.
 
 Instead of waiting on {\tt barber}, each thread waits on its own
