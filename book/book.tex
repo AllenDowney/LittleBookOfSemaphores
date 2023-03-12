@@ -3604,7 +3604,7 @@ arrive immediately invoke {\tt balk}.
 Otherwise each customer signals {\tt customer} and waits on
 {\tt barber}.
 
-Here is the code for barbers:
+Here is the code for the barber:
 
 \lstinputlisting[title=Barbershop solution (barber)]{../code/barber.py.2}
 
@@ -3649,7 +3649,7 @@ My solution uses a list of semaphores named {\tt queue}.
 
 \lstinputlisting[title=FIFO barbershop hint]{../code/barber2.py.0}
 
-As each thread passes the turnstile, it creates a thread and puts it
+As each thread passes the turnstile, it creates a semaphore and puts it
 in the queue.
 
 Instead of waiting on {\tt barber}, each thread waits on its own
@@ -3708,7 +3708,7 @@ In other words, the following synchronization constraints apply:
 
 \item Customers invoke the following functions in order:
 {\tt enterShop}, {\tt sitOnSofa},
-{\tt getHairCut}, {\tt pay}.
+{\tt getHairCut}, and {\tt pay}.
 
 \item Barbers invoke {\tt cutHair} and {\tt acceptPayment}.
 
@@ -3806,7 +3806,7 @@ is unnecessary.
 This solution is in \verb"sync_code/barber3.py" (see~\ref{sync.py}).
 
 The only way I can think of to solve this problem is to create a third
-kind of thread, which I can an usher.  The ushers manage {\tt queue1}
+kind of thread, which I'll call an usher.  The ushers manage {\tt queue1}
 and the barbers manage {\tt queue2}.  If there are 4 ushers and 3 barbers,
 the sofa can be fully utilized.
 
