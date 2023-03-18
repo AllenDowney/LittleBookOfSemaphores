@@ -4366,9 +4366,9 @@ signals the next car in line.
 
 \begin{lstlisting}[title={Multi-car Roller Coaster hint}]{}
 loadingArea = [Semaphore(0) for i in range(m)]
-loadingArea[1].signal()
+loadingArea[0].signal()
 unloadingArea = [Semaphore(0) for i in range(m)]
-unloadingArea[1].signal()
+unloadingArea[0].signal()
 \end{lstlisting}
 
 The function {\tt next} computes the identifier of the next
