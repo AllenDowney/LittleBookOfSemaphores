@@ -4166,7 +4166,7 @@ makes sure that all four threads have invoked
 {\tt board} before the captain invokes {\tt rowBoat}.
 
 {\tt isCaptain} is a local variable that
-indicates which thread should invoke {\tt row}.
+indicates which thread should invoke {\tt rowBoat}.
 
 \clearemptydoublepage
 \subsection {River crossing solution}
@@ -4214,7 +4214,7 @@ boat has sailed.
 
 The barrier keeps track of how many threads have boarded.
 When the last thread arrives, all threads proceed.
-The captain invoked {\tt row} and then (finally) releases the mutex.
+The captain invoked {\tt rowBoat} and then (finally) releases the mutex.
 
 
 \clearemptydoublepage
