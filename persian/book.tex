@@ -3614,7 +3614,6 @@ mutex.signal()
     کد گوزن‌ها در ادامه آمده است: 
 
 \begin{latin}
-%\begin{lstlisting}[title={Santa problem solution (reindeer)}]{}
 \begin{lstlisting}[title=\rl{راه‌حل مسأله بابانوئل (گوزن‌ها)}]{}
 mutex.wait()
     reindeer += 1
@@ -3835,9 +3834,6 @@ local isCaptain = False
     به ما اجازه می‌دهند که تعداد هکرها و کارمندانی را که گذر می‌کنند کنترل نماییم. {\tt barrier} تضمین می‌کند که تمامی چهار نخ، پیش از اینکه 
     کاپیتان  {\tt rowBoat} را فراخواند  {\tt board}  را فراخوانند. 
 
-%{\tt isCaptain} is a local variable that
-%indicates which thread should invoke {\tt row}.
-% typo {\tt row} -> {\tt rowBoat}
     {\tt isCaptain} یک متغیر محلی است که نشان می‌دهد کدام نخ باید {\tt rowBoat} را فراخواند. 
 
 \clearemptydoublepage
@@ -3880,8 +3876,6 @@ if isCaptain:
     بررسی می‌نماید که یک خدمهٔ کامل آماده سوار شدن قایق هست یا خیر؟ اگر چنین بود، به نخ‌های متناسب سیگنال داده، خودش را به عنوان کاپیتان 
     معرفی نموده، میوتکس را می‌گیرد و تا آن زمان که قایق رانده شود مانع [ورود] نخ‌های اضافی می‌شود. 
 
-%The captain invoked {\tt row} and then (finally) releases the mutex.
-% typo  {\tt row}  -> {\tt rowBoat} 
     حصار، تعداد نخ‌هایی که سوار شده‌اند را نگاه می‌دارد. زمانیکه آخرین نخ می‌رسد، تمامی نخ‌ها با هم ادامه می‌یابند. 
     کاپیتان  {\tt rowBoat} را فراخوانده و در نهایت میوتکس را آزاد می‌نماید. 
     
@@ -3940,11 +3934,8 @@ allAshore = Semaphore(0)
 \end{lstlisting}
 \end{latin}
 
-%% TODO: there is no boardCar!!
-%{\tt mutex} protects {\tt passengers}, which counts the number of
-%passengers that have invoked {\tt boardCar}.  
     {\tt mutex} از {\tt passengers} که
-    تعداد  مسافرانی را که {\tt boardCar} را فراخوانده‌اند می‌شمارد، محافظت می‌نماید. 
+    تعداد  مسافرانی را که {\tt board} را فراخوانده‌اند می‌شمارد، محافظت می‌نماید. 
     
     مسافران پیش از سوار شدن  روی {\tt boardQueue}   و پیش از پیاده‌شدن روی {\tt unboardQueue} منتظر می‌مانند.   {\tt allAboard}
     نشان می‌دهد که ماشین پر است. {\tt allAshore} نشان می‌دهد که ماشین خالی شده است. 
@@ -4040,7 +4031,6 @@ unloadingArea = [Semaphore(0) for i in range(m)]
 unloadingArea[0].signal()
 \end{lstlisting}
 \end{latin}
-%%%typo: loadingArea[1].signal() -> loadingArea[0].signal(), unloadingArea[1].signal() -> unloadingArea[0].signal()
 
     تابع {\tt next}  شناسه ماشین بعدی در دنباله را محاسبه می‌نماید (بعد از $m-1$ به  $0$  باز می‌گردد):
 
@@ -4465,7 +4455,6 @@ mutex.signal()
         اگر سیستم در حالت \lr{transition} است، بدین معنی است که ترن‌استایل \lr{prude}  قفل شده است، و لذا آن فرد باید آن را باز نماید. 
 
     \item 
-%%typo : 'neutral' -> `neutral' <<<<<=====
     اگر \lr{prude}هایی منتظر هستند، او باید به آن‌ها سیگنال داده و {\tt status}  را چنان به‌روزرسانی نماید که \lr{prude}ها 
     مسئول هستند. و اگر چنین نباشد وضعیت جدید،       `\lr{neutral'} است. 
 
@@ -4517,17 +4506,9 @@ must_wait = False
 \end{lstlisting}
 \end{latin}
 
-%{\tt eating} and {\tt waiting} keep track of the number of
-%threads sitting at the bar and waiting.  {\tt mutex} protects
-%both counters.  {\tt must\_wait} indicates that the bar is (or
-%has been) full, som incoming customers have to block
-%on {\tt block}.
-
-% typo som -> some
-
     {\tt eating} و {\tt waiting}
     تعداد نخ‌های منتظر و نشسته در بار را در خود نگاه می‌دارند. {\tt mutex}  از هر دو شمارنده محافظت می‌نماید.  {\tt must\_wait}
-    نشان می‌دهد که بار پر است و مشتری‌های جدید باید روی  {\tt block} مسدود گردند. 
+    نشان می‌دهد که بار پر است و لذا مشتری‌های جدید باید روی  {\tt block} مسدود گردند. 
     
 
 \clearemptydoublepage
@@ -4620,9 +4601,6 @@ mutex.signal()
     را می‌بینند و در صورت لزوم مسدود می‌شوند. \lr{Reek} این الگو را ‍‍"به خاطر تو این کار را انجام خواهم داد\LTRfootnote{I'll do it for you}`` 
     نامیده است زیرا که نخ در حال خروج کاری را انجام می‌دهد که منطقاً به نظر می‌رسد که متعلق به نخ‌های در حال انتظار است. 
 
-%A drawback of this approach is that is it a little more difficult
-%to confirm that the state is being updated correctly.
-%typo that is it a -> that it is a 
     تأیید اینکه این وضعیت به درستی به روز رسانی می‌شود کمی سخت است و این نقطه ضعف این راهکار است. 
 
 
@@ -5075,7 +5053,6 @@ depart()
     اگر هیچ مسافری وجود نداشته اتوبوس بلافاصله محل را ترک می‌نماید. در غیر اینصورت، به {\tt bus} سیگنال داده و 
     منتظر می‌ماند تا مسافران سوار شوند. 
 
-%Here is the code for the riders:
     کد مسافران نیز در اینجا آمده است:
 
 \begin{latin}
@@ -5120,12 +5097,11 @@ else:
 \begin{latin}
 \begin{lstlisting}[title=\rl{راه‌حل \#2 مسأله اتوبوس  (مقداردهی اولیه)}]{}
 waiting = 0
-mutex = new Semaphore(1)
-bus = new Semaphore(0)
-boarded = new Semaphore(0)
+mutex = Semaphore(1)
+bus = Semaphore(0)
+boarded = Semaphore(0)
 \end{lstlisting}
 \end{latin}
-%%%% typo  new Semaphore -> Semaphore
 
     {\tt waiting} 
     تعداد مسافران در ناحیه سوارشدن است که بوسیله {\tt mutex} حفاظت می‌شود.  {\tt bus} زمانیکه اتوبوس رسیده است سیگنال می‌دهد؛     {\tt boarded} 
@@ -5172,7 +5148,7 @@ boarded.signal()
     آیا می‌توانید راه‌حلی بیابید که اجازه دهد تا مسافرینی که دیر می‌رسند بدون نقض دیگر محدودیت‌ها سوار اتوبوس شوند. 
     
 %%%    Wed 07 Feb 2018 06:03:48 PM +0330
-
+%%%% Sat 18 Mar 2023 06:50:17 PM +0330
 
 \clearemptydoublepage
 \section{مسأله تالار \lr{Faneuil}}
@@ -5214,7 +5190,6 @@ boarded.signal()
 \subsection{راهنمایی مسأله تالار \lr{Faneuil}}
 
 \begin{latin}
-%\begin{lstlisting}[title={Faneuil Hall problem hint}]{}
 \begin{lstlisting}[title=\rl{راهنمایی مسأله تالار \lr{Faneuil}}]{}
 noJudge = Semaphore(1)
 entered = 0
