@@ -4166,7 +4166,7 @@ makes sure that all four threads have invoked
 {\tt board} before the captain invokes {\tt rowBoat}.
 
 {\tt isCaptain} is a local variable that
-indicates which thread should invoke {\tt row}.
+indicates which thread should invoke {\tt rowBoat}.
 
 \clearemptydoublepage
 \subsection {River crossing solution}
@@ -4214,7 +4214,7 @@ boat has sailed.
 
 The barrier keeps track of how many threads have boarded.
 When the last thread arrives, all threads proceed.
-The captain invoked {\tt row} and then (finally) releases the mutex.
+The captain invoked {\tt rowBoat} and then (finally) releases the mutex.
 
 
 \clearemptydoublepage
@@ -4266,7 +4266,7 @@ allAshore = Semaphore(0)
 \end{lstlisting}
 
 {\tt mutex} protects {\tt passengers}, which counts the number of
-passengers that have invoked {\tt boardCar}.  
+passengers that have invoked {\tt board}.  
 
 Passengers wait on {\tt boardQueue} before boarding and
 {\tt unboardQueue} before unboarding.  {\tt allAboard}
@@ -4366,9 +4366,9 @@ signals the next car in line.
 
 \begin{lstlisting}[title={Multi-car Roller Coaster hint}]{}
 loadingArea = [Semaphore(0) for i in range(m)]
-loadingArea[1].signal()
+loadingArea[0].signal()
 unloadingArea = [Semaphore(0) for i in range(m)]
-unloadingArea[1].signal()
+unloadingArea[0].signal()
 \end{lstlisting}
 
 The function {\tt next} computes the identifier of the next
@@ -4820,7 +4820,7 @@ consider the following:
 
     \item If there are prudes waiting, she signals them and
       updates {\tt status} so the prudes are in charge.  If not, the
-      new status is 'neutral'.
+      new status is `neutral'.
 
     \end{itemize}  
 
