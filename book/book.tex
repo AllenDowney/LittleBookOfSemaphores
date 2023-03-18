@@ -5509,9 +5509,9 @@ around any mutexes.  Here are the variables:
 
 \begin{lstlisting}[title={Bus problem solution \#2 (initialization)}]{}
 waiting = 0
-mutex = new Semaphore(1)
-bus = new Semaphore(0)
-boarded = new Semaphore(0)
+mutex = Semaphore(1)
+bus = Semaphore(0)
+boarded = Semaphore(0)
 \end{lstlisting}
 
 {\tt waiting} is the number of riders in the boarding area,
