@@ -5482,10 +5482,6 @@ leave()
 \end{lstlisting}
 \end{latin}
 
-% typo: When is student is checking in, ---> %When a student is checking in,
-%When is student is checking in, if she sees one student
-%eating and one waiting to leave, she lets the waiter off the
-%hook and decrements {\tt readyToLeave} for him.
     زمانیکه دانشجویی وارد می‌شود، اگر ببیند که یک دانشجو در حال غذاخوردن است و یک دانشجو در انتظار ترک کردن است اجازه می‌دهد که  دانشجوی منتظر 
     برود و مقدار  {\tt readyToLeave} را برای او یک واحد کاهش می‌دهد. 
 
@@ -5605,9 +5601,6 @@ leave()
 
     مشابه راه‌حل قبلی، در این راه‌حل نیز الگوی ``بخاطر تو این کار را انجام خواهم داد'' را بکار بردم چنانکه دانشجوی منتظر نباید دومرتبه میوتکس را بگیرد. 
 
-%proceed.  It either case, we don't have to check for students
-%waiting to leave, since no one can leave an empty table!
-%%%%typo it either case -> in either case
     تفاوت اصلی بین این راه‌حل و راه‌حل قبلی در این است که اوّلین دانشجویی که به یک میز خالی می‌رسد باید منتظر بماند و دانشجوی دوّم به هر دو اجازه 
     می‌دهد که ادامه یابند. در هر دو حالت، نمی‌بایست وجود دانشجویان در حال انتظار برای خروج را بررسی کنیم چرا که سر یک میز خالی کسی نیست که بتواند
     آن را ترک نماید!
@@ -5669,15 +5662,9 @@ for child in children: child.join()
 
     خط اول کد تمیزکاری از پیوست~\ref{cleanup} را اجرا می‌نماید؛ این خط را در مثال‌های بعدی نشان نخواهیم داد. 
 
-%use any in these examples.  Threads that are local in the sense
-%that they are declared inside a function are also local in the
-%sense that they are thread-specific.
-%% typo --> Threads -> Variables
     {\tt Shared}  
     یک نوع شیء\LTRfootnote{object type} است که حاوی متغیرهای اشتراکی خواهد بود. متغیرهای عمومی نیز بین نخ‌ها مشترک هستند، 
     امّا ما هیچ متغیر عمومی‌\LTRfootnote{global} را در این مثال‌ها بکار نخواهیم برد. 
-%    متغیرهایی که به واسطه تعریف شدن داخل یک تابع محلی محسوب می‌شوند باز به این معنی که مختص به یک نخ باشند نیز محلی هستند.
-%    متغیرهایی که محلی هستند به این معنی که در داخل یک تابع اعلان می‌شوند، از این نظر محلی هستند که مختص نخ هستند.
     متغیرهایی که به واسطه اعلان‌شدن داخل یک تابع، محلی\LTRfootnote{local} هستند از این نظر که مختص به یک نخ هستند باز محلی محسوب می‌شوند.
 
     کد فرزند یک حلقه بی‌پایان است که مقدار {\tt counter} را یک واحد افزایش داده، مقدار جدید را چاپ کرده و سپس به مدت $0.5$ ثانیه به خواب می‌رود. 
@@ -5877,12 +5864,6 @@ for thread in threads: thread.join()
     از یک توزیع نمایی با میانگین  {\tt mu} تعیین می‌شود. از آنجایی که دو تولیدکننده و دو مصرف‌کننده وجود دارد، در هر ثانیه به طور میانگین 
     دو کوکاکولا به ماشین افزوده شده و دو کوکاکولا مصرف می‌گردد. 
 
-%So on average the number of cokes is constant, but in the short
-%run in can vary quite widely.  If you run the program for a
-%while, you will probably see the value of {\tt cokes} dip
-%below zero, or climb above 10.  Of course, neither of these
-%should happen.
-%%%typo: run in can -> run it can 
     بنابراین به طور متوسط میزان کوکاکولاها ثابت است، امّا در کوتاه مدت، این مقدار می‌تواند به صورت فزاینده‌ای متفاوت باشد.
     اگر برنامه را برای مدتی اجرا کنید، احتمالا مقدار  {\tt cokes}  را زیر صفر و یا بیشتر از ۱۰ خواهید دید. البته که هیچکدام از این دو نباید اتفاق بیفتند. 
     
@@ -6513,8 +6494,7 @@ parent_code()
     این یکی از آن مسائلی است که نخ‌های والد و فرآیند باید با آن برخورد نمایند. 
 
     تمامی این کد را در فایلی تحت نام {\tt threading\_cleanup.py} قرار داده‌ام که شما می‌توانید آن را از 
-    \url{greenteapress.com/semaphores/threading_cleanup.py} دانلود نمایید.  
-% typo drop \ from url  
+    \url{greenteapress.com/semaphores/threading\_cleanup.py} دانلود نمایید.  
     
     مثال‌های فصل~\ref{pysync} با در نظر گرفتن این نکته  ارائه شده‌اند که این کد پیش از کد مثال ارائه شده، اجرا می‌گردد.
 
@@ -6591,7 +6571,7 @@ void *check_malloc(int size)
 \end{latin}
 
 %%%Wed 09 May 2018 06:07:41 PM +0430
-
+%%% Sun Apr 30 07:18:53 PM +0330 2023
 \section{ایجاد نخ‌ها}
 
     همین کار را با توابع \lr{Pthread} که قرار است استفاده کنم انجام داده‌ام؛
