@@ -6578,7 +6578,6 @@ void *check_malloc(int size)
     در ادامه  بسته‌بندی خودم را از {\tt pthread\_create} مشاهده می‌نمایید. 
     
 
-%%%todo -> allen forget to set escapeinside in the following block
 \begin{latin}
 \begin{lstlisting}[title={},escapeinside={}]{}
 pthread_t make_thread(void *(*entry)(void *), Shared *shared)
@@ -6657,9 +6656,6 @@ void *entry (void *arg)
 
 \section{الحاق نخ‌ها}
 
-%%%todo ->> want-> wants
-
-%When one thread want to wait for another thread to complete,
     زمانیکه یک نخ بخواهد منتظر اتمام نخ دیگری بشود، تابع  {\tt pthread\_join} را صدا می‌زند. 
     در ادامه، بسته‌بندی  {\tt pthread\_join} آمده است:‌
     
@@ -6712,12 +6708,6 @@ Semaphore *make_semaphore (int n)
 \end{lstlisting}
 \end{latin}
 
-%%todo  Semaphore -> {\tt Semaphore}
-%%%Semaphore -> semaphore
-%%% شاید هم هیچکدام. 
-%{\tt make\_semaphore} takes the initial value of the semaphore
-%as a parameter.  It allocates space for a Semaphore, initializes
-%it, and returns a pointer to {\tt Semaphore}.
     تابع {\tt make\_semaphore} مقدار اوّلیه سمافور را به عنوان پارامتر می‌گیرد. فضای لازم برای یک \lr{Semaphore} را تخصیص داده و آن را 
     مقداردهی اوّلیه می‌نماید و اشاره‌گری به {\tt Semaphore} بر می‌گرداند. 
 
