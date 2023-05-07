@@ -5635,7 +5635,7 @@ mutex.wait()
 checkIn()
 checked++
 
-if judge = 1 and entered == checked:
+if judge == 1 and entered == checked:
     allSignedIn.signal()              # and pass the mutex
 else:
     mutex.signal()
