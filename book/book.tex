@@ -7012,7 +7012,7 @@ void *check_malloc(int size)
 I've done the same thing with the Pthread functions I'm going to use;
 here's my wrapper for {\tt pthread\_create}.
 
-\begin{lstlisting}[title={}]{}
+\begin{lstlisting}[title={},escapeinside={}]{}
 pthread_t make_thread(void *(*entry)(void *), Shared *shared)
 {
   int n;
