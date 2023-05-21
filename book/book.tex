@@ -1285,7 +1285,7 @@ Puzzle:  What is wrong with this solution?
 
 The problem is a deadlock.
 
-An an example, imagine that $n=5$
+As an example, imagine that $n=5$
 and that 4 threads are waiting at the barrier.  The value
 of the semaphore is the number of threads in queue, negated, 
 which is -4.
@@ -2361,7 +2361,7 @@ It would also be possible to store a reference to {\tt roomEmpty}
 as an attribute of the Lightswitch, rather than pass it as a parameter
 to {\tt lock} and {\tt unlock}.  This alternative would be less
 error-prone, but I think it improves readability if each invocation
-of {\tt lock} and {\tt unlocks} specifies the semaphore it operates on.
+of {\tt lock} and {\tt unlock} specifies the semaphore it operates on.
 
 \subsection{Starvation}
 
@@ -3604,7 +3604,7 @@ arrive immediately invoke {\tt balk}.
 Otherwise each customer signals {\tt customer} and waits on
 {\tt barber}.
 
-Here is the code for barbers:
+Here is the code for the barber:
 
 \lstinputlisting[title=Barbershop solution (barber)]{../code/barber.py.2}
 
@@ -3649,7 +3649,7 @@ My solution uses a list of semaphores named {\tt queue}.
 
 \lstinputlisting[title=FIFO barbershop hint]{../code/barber2.py.0}
 
-As each thread passes the turnstile, it creates a thread and puts it
+As each thread passes the turnstile, it creates a semaphore and puts it
 in the queue.
 
 Instead of waiting on {\tt barber}, each thread waits on its own
@@ -3708,7 +3708,7 @@ In other words, the following synchronization constraints apply:
 
 \item Customers invoke the following functions in order:
 {\tt enterShop}, {\tt sitOnSofa},
-{\tt getHairCut}, {\tt pay}.
+{\tt getHairCut}, and {\tt pay}.
 
 \item Barbers invoke {\tt cutHair} and {\tt acceptPayment}.
 
@@ -3806,7 +3806,7 @@ is unnecessary.
 This solution is in \verb"sync_code/barber3.py" (see~\ref{sync.py}).
 
 The only way I can think of to solve this problem is to create a third
-kind of thread, which I can an usher.  The ushers manage {\tt queue1}
+kind of thread, which I'll call an usher.  The ushers manage {\tt queue1}
 and the barbers manage {\tt queue2}.  If there are 4 ushers and 3 barbers,
 the sofa can be fully utilized.
 
@@ -4166,7 +4166,7 @@ makes sure that all four threads have invoked
 {\tt board} before the captain invokes {\tt rowBoat}.
 
 {\tt isCaptain} is a local variable that
-indicates which thread should invoke {\tt row}.
+indicates which thread should invoke {\tt rowBoat}.
 
 \clearemptydoublepage
 \subsection {River crossing solution}
@@ -4214,7 +4214,7 @@ boat has sailed.
 
 The barrier keeps track of how many threads have boarded.
 When the last thread arrives, all threads proceed.
-The captain invoked {\tt row} and then (finally) releases the mutex.
+The captain invoked {\tt rowBoat} and then (finally) releases the mutex.
 
 
 \clearemptydoublepage
@@ -4266,7 +4266,7 @@ allAshore = Semaphore(0)
 \end{lstlisting}
 
 {\tt mutex} protects {\tt passengers}, which counts the number of
-passengers that have invoked {\tt boardCar}.  
+passengers that have invoked {\tt board}.  
 
 Passengers wait on {\tt boardQueue} before boarding and
 {\tt unboardQueue} before unboarding.  {\tt allAboard}
@@ -4366,9 +4366,9 @@ signals the next car in line.
 
 \begin{lstlisting}[title={Multi-car Roller Coaster hint}]{}
 loadingArea = [Semaphore(0) for i in range(m)]
-loadingArea[1].signal()
+loadingArea[0].signal()
 unloadingArea = [Semaphore(0) for i in range(m)]
-unloadingArea[1].signal()
+unloadingArea[0].signal()
 \end{lstlisting}
 
 The function {\tt next} computes the identifier of the next
@@ -4820,7 +4820,7 @@ consider the following:
 
     \item If there are prudes waiting, she signals them and
       updates {\tt status} so the prudes are in charge.  If not, the
-      new status is 'neutral'.
+      new status is `neutral'.
 
     \end{itemize}  
 
@@ -4979,7 +4979,7 @@ pattern ``I'll do it for you,'' because the departing thread
 is doing work that seems, logically, to belong to the waiting
 threads.
 
-A drawback of this approach is that is it a little more difficult
+A drawback of this approach is that it is a little more difficult
 to confirm that the state is being updated correctly.
 
 
@@ -5509,9 +5509,9 @@ around any mutexes.  Here are the variables:
 
 \begin{lstlisting}[title={Bus problem solution \#2 (initialization)}]{}
 waiting = 0
-mutex = new Semaphore(1)
-bus = new Semaphore(0)
-boarded = new Semaphore(0)
+mutex = Semaphore(1)
+bus = Semaphore(0)
+boarded = Semaphore(0)
 \end{lstlisting}
 
 {\tt waiting} is the number of riders in the boarding area,
@@ -5904,7 +5904,7 @@ else:
 leave()
 \end{lstlisting}
 
-When is student is checking in, if she sees one student
+When a student is checking in, if she sees one student
 eating and one waiting to leave, she lets the waiter off the
 hook and decrements {\tt readyToLeave} for him.
 
@@ -6032,7 +6032,7 @@ back.
 The primary difference between this solution and the previous
 one is that the first student who arrives at an empty table
 has to wait, and the second student allows both students to
-proceed.  It either case, we don't have to check for students
+proceed.  In either case, we don't have to check for students
 waiting to leave, since no one can leave an empty table!
 
 
@@ -6095,7 +6095,7 @@ I will leave this line out of the other examples.
 
 {\tt Shared} defines an object type that will contain shared variables.
 Global variables are also shared between threads, but we won't
-use any in these examples.  Threads that are local in the sense
+use any in these examples.  Variables that are local in the sense
 that they are declared inside a function are also local in the
 sense that they are thread-specific.
 
