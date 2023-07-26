@@ -1,6 +1,4 @@
-LATEX = latex
-
-DVIPS = dvips
+LATEX = xelatex
 
 PDFFLAGS = -dCompatibilityLevel=1.4 \
            -dCompressPages=true -dUseFlateCompression=true  \
@@ -8,18 +6,31 @@ PDFFLAGS = -dCompatibilityLevel=1.4 \
 
 NAME = LittleBookOfSemaphores
 
-all:	book.tex
-	xelatex book
-	bibtex book
-	makeindex book
-	#dvips -Ppdf -o $(NAME).ps book
-	evince book.pdf &> /dev/null & #$(NAME).ps 
+OS:=$(shell uname || echo unknown)
+ifeq ($(OS), Linux)
+    OPEN:=xdg-open
+endif
+ifeq ($(OS), Darwin)
+    OPEN:=open
+endif
+ifeq ($(OS), unknown)
+    OPEN:=echo
+endif
+
+
+all: book.tex
+	${LATEX} $<
+	bibtex $(basename $<)
+	makeindex $(basename $<)
+	${LATEX} $<
+	${LATEX} $<
+	$(OPEN) $(basename $<).pdf &> /dev/null &
 
 FILES = book.tex book.bib table.eps
 
-distrib: 
+distrib:
 	ps2pdf $(PDFFLAGS) $(NAME).ps $(NAME).pdf
 	cp $(NAME).* /home/downey/public_html/greent/semaphores
 
 clean:
-	rm -fv *.aux *.log *.dvi *.idx *.ilg *.ind *.toc *.out *.pyg *.bbl *.blg
+	rm -fv *.{aux,log,dvi,idx,ilg,ind,toc,out,pyg,bbl,blg}
