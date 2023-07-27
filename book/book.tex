@@ -5635,7 +5635,7 @@ mutex.wait()
 checkIn()
 checked++
 
-if judge = 1 and entered == checked:
+if judge == 1 and entered == checked:
     allSignedIn.signal()              # and pass the mutex
 else:
     mutex.signal()
@@ -7012,7 +7012,7 @@ void *check_malloc(int size)
 I've done the same thing with the Pthread functions I'm going to use;
 here's my wrapper for {\tt pthread\_create}.
 
-\begin{lstlisting}[title={}]{}
+\begin{lstlisting}[title={},escapeinside={}]{}
 pthread_t make_thread(void *(*entry)(void *), Shared *shared)
 {
   int n;
@@ -7101,7 +7101,7 @@ has nothing to say, so we pass {\tt NULL}.
 
 \section{Joining threads}
 
-When one thread want to wait for another thread to complete,
+When one thread wants to wait for another thread to complete,
 it invokes {\tt pthread\_join}.
 Here is my wrapper for {\tt pthread\_join}:
 
@@ -7159,7 +7159,7 @@ Semaphore *make_semaphore (int n)
 \end{lstlisting}
 
 {\tt make\_semaphore} takes the initial value of the semaphore
-as a parameter.  It allocates space for a Semaphore, initializes
+as a parameter.  It allocates space for a {\tt Semaphore}, initializes
 it, and returns a pointer to {\tt Semaphore}.
 
 {\tt sem\_init} uses old-style UNIX error reporting, which means
