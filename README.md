@@ -33,3 +33,12 @@ python Sync.py sync_code/barrier.py
 ```
 
 If you are using Anaconda, you might find that the fonts don't look good. This is a well-known problem with no easy solution.
+
+## Translations
+
+The following list of translations is sorted alphabetically.
+
+- [Hugarian](https://github.com/bodri5/LittleBookOfSemaphoresHungarian)
+- [Persian](https://github.com/ircsbook/LittleBookOfSemaphores)
+
+If you have created a translation of this book and would like to add it to this list, feel free to submit a pull request or contact me to include it here.
