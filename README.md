@@ -41,4 +41,9 @@ The following list of translations is sorted alphabetically.
 - [Hungarian](https://github.com/bodri5/LittleBookOfSemaphoresHungarian)
 - [Persian](https://github.com/ircsbook/LittleBookOfSemaphores)
 
+### EPUB Versions
+
+- [English](epub/TheLittleBookOfSemaphores.epub)
+- [Portuguese (Brazil)](epub/TheLittleBookOfSemaphores-PTBR.epub)
+
 If you have created a translation of this book and would like to add it to this list, feel free to submit a pull request or contact me to include it here.
