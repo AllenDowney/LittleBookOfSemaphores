@@ -577,20 +577,20 @@ yield the same result.
 The problem is that these operations are translated into
 machine language before execution, and in machine language
 the update takes two steps, a read and a write.
-The problem is more obvious if we rewrite the code with a temporary
-variable, {\tt temp}.
+The problem is more obvious if we rewrite the code with temporary
+variables {\tt tempA} and {\tt tempB}.
 
 \begin{minipage}[t]{2in}
 \begin{lstlisting}[title={Thread A}]{}
-temp = count
-count = temp + 1
+tempA = count
+count = tempA + 1
 \end{lstlisting}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{2in}
 \begin{lstlisting}[title={Thread B}]{}
-temp = count
-count = temp + 1
+tempB = count
+count = tempB + 1
 \end{lstlisting}
 \end{minipage}
 
