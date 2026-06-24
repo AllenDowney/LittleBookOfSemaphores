@@ -1606,6 +1606,7 @@ loop.  But in this case that is not a problem.
 mutex.wait()
     count += 1
     if count == n:
+    	turnstile2.wait()	 # lock the second
         turnstile.signal(n)      # unlock the first
 mutex.signal()
 
@@ -1616,6 +1617,7 @@ turnstile.wait()                 # first turnstile
 mutex.wait()
     count -= 1
     if count == 0:
+    	turnstile.wait()	 # lock the first
         turnstile2.signal(n)     # unlock the second
 mutex.signal()
 
