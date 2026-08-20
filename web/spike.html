@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sync + Pyodide spike</title>
+  <style>
+    :root {
+      --bg: #f7f5f0;
+      --ink: #1a1a1a;
+      --muted: #555;
+      --ok: #1b6b3a;
+      --err: #9b1c1c;
+      --panel: #fff;
+      --border: #d4cfc4;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.45;
+    }
+    main {
+      max-width: 52rem;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 3rem;
+    }
+    h1 { font-size: 1.4rem; margin: 0 0 0.35rem; }
+    .lede { color: var(--muted); margin: 0 0 1.25rem; }
+    section {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 1rem;
+    }
+    h2 { font-size: 1.05rem; margin: 0 0 0.6rem; }
+    #status { font-weight: 600; }
+    #status.ok { color: var(--ok); }
+    #status.err { color: var(--err); }
+    pre {
+      margin: 0.5rem 0 0;
+      padding: 0.75rem;
+      background: #1e1e1e;
+      color: #e8e6e3;
+      border-radius: 4px;
+      overflow: auto;
+      font-size: 0.85rem;
+      white-space: pre-wrap;
+    }
+    button {
+      font: inherit;
+      padding: 0.4rem 0.85rem;
+      cursor: pointer;
+    }
+    button:disabled { opacity: 0.5; cursor: wait; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Sync Pyodide spike</h1>
+    <p class="lede">
+      Task 4 checkpoint: load Pyodide, prove <code>compile</code>/<code>exec</code>/<code>eval</code>,
+      then run one headless <code>sync_core</code> step (no full UI).
+    </p>
+
+    <section>
+      <h2>Status</h2>
+      <p id="status">Starting…</p>
+      <button id="rerun" type="button" disabled>Run again</button>
+    </section>
+
+    <section>
+      <h2>1. Bare compile / exec / eval</h2>
+      <pre id="bare-out">(pending)</pre>
+    </section>
+
+    <section>
+      <h2>2. sync_core mutex — one thread step</h2>
+      <pre id="sync-out">(pending)</pre>
+    </section>
+  </main>
+
+  <script type="module" src="spike.js"></script>
+</body>
+</html>

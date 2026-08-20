@@ -1,7 +1,7 @@
 PROJECT_NAME = LittleBookOfSemaphores
 
 .PHONY: help create_environment create_environment_dev delete_environment \
-	update_environment update_environment_dev clean lint format tests
+	update_environment update_environment_dev clean lint format tests serve
 
 help:
 	@echo "Available targets:"
@@ -14,6 +14,7 @@ help:
 	@echo "  lint                    - Run linters (flake8, black --check)"
 	@echo "  format                  - Format code with black"
 	@echo "  tests                   - Run Sync tests"
+	@echo "  serve                   - Static server for web/ Pyodide spike (port 8000)"
 
 ## Set up Python environment
 create_environment:
@@ -77,3 +78,9 @@ clean:
 	-rm -rf dist/
 	-rm -rf *.egg-info
 	@echo ">>> Cleanup complete!"
+
+## Local static server for the Pyodide spike (Task 4)
+## Open http://localhost:8000/web/spike.html (must serve repo root for ../code/)
+serve:
+	@echo "Open http://localhost:8000/web/spike.html"
+	python -m http.server 8000
