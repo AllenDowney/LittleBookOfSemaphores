@@ -656,3 +656,130 @@ class Simulator:
         """Loops through the views and clears them."""
         for view in self.views.values():
             view.clear()
+
+    def get_state(self):
+        """Return a JSON-friendly snapshot of the simulator for UIs/tests."""
+        return snapshot_state(self)
+
+
+def _is_json_primitive(value):
+    return value is None or isinstance(value, (bool, int, float, str))
+
+
+def _jsonable_value(value):
+    """Convert a shared/local value to something JSON can represent."""
+    if _is_json_primitive(value):
+        return value
+    if isinstance(value, (list, tuple)):
+        return [_jsonable_value(v) for v in value]
+    if isinstance(value, dict):
+        return {str(k): _jsonable_value(v) for k, v in value.items()}
+    # Semaphores and other engine objects are handled elsewhere or stringified.
+    return str(value)
+
+
+def _namespace_locals(namespace):
+    data = {}
+    for key, value in vars(namespace).items():
+        if key.startswith("_"):
+            continue
+        if isinstance(value, (Semaphore, Lightswitch, Namespace)):
+            continue
+        if callable(value):
+            continue
+        data[key] = _jsonable_value(value)
+    return data
+
+
+def snapshot_state(sim):
+    """Build a serializable state dict from a Simulator (or Sync-like object).
+
+    Schema (Task 2):
+      init: list[str]
+      columns: list[list[str]]
+      threads: list[{name, column, row, row_text, blocked, waiting_on, color, locals}]
+      semaphores: {name: {value, queue, fifo}}
+      variables: {name: jsonable}  # non-semaphore shared locals
+      views: {name: init_row_index|null}
+      filename: str|null
+    """
+    waiting_on = {}
+    semaphores = {}
+    variables = {}
+
+    for key, value in sim.locals.items():
+        if isinstance(value, Semaphore):
+            semaphores[key] = {
+                "value": value.n,
+                "queue": [thread.name for thread in value.queue],
+                "fifo": isinstance(value, FifoSemaphore),
+            }
+            for thread in value.queue:
+                waiting_on[thread.name] = key
+        elif isinstance(value, Lightswitch):
+            variables[key] = {
+                "type": "Lightswitch",
+                "counter": value.counter,
+            }
+        elif callable(value):
+            continue
+        elif isinstance(value, type):
+            continue
+        else:
+            variables[key] = _jsonable_value(value)
+
+    col_index = {id(col): i for i, col in enumerate(sim.cols)}
+
+    threads = []
+    for thread in sim.threads:
+        column = thread.column
+        if column is getattr(sim, "topcol", None):
+            column_index = None
+        else:
+            column_index = col_index.get(id(column))
+
+        row_index = None
+        row_text = None
+        if thread.row is not None and column is not None:
+            try:
+                row_index = column.rows.index(thread.row)
+            except ValueError:
+                row_index = None
+            row_text = thread.row.get()
+
+        threads.append(
+            {
+                "name": thread.name,
+                "column": column_index,
+                "row": row_index,
+                "row_text": row_text,
+                "blocked": bool(thread.queued),
+                "waiting_on": waiting_on.get(thread.name),
+                "color": thread.color,
+                "locals": _namespace_locals(thread.namespace),
+            }
+        )
+
+    init = []
+    if getattr(sim, "topcol", None) is not None:
+        init = [row.get() for row in sim.topcol.rows]
+
+    columns = [[row.get() for row in col.rows] for col in sim.cols]
+
+    views = {}
+    top_rows = getattr(getattr(sim, "topcol", None), "rows", [])
+    for key, row in getattr(sim, "views", {}).items():
+        try:
+            views[key] = top_rows.index(row)
+        except ValueError:
+            views[key] = None
+
+    return {
+        "filename": getattr(sim, "filename", None) or None,
+        "init": init,
+        "columns": columns,
+        "threads": threads,
+        "semaphores": semaphores,
+        "variables": variables,
+        "views": views,
+    }
