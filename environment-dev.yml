@@ -1,0 +1,7 @@
+name: LittleBookOfSemaphores
+channels:
+  - conda-forge
+dependencies:
+  - pytest
+  - black
+  - flake8

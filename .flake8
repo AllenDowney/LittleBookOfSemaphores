@@ -1,0 +1,11 @@
+[flake8]
+max-line-length = 88
+extend-ignore = E203, W503
+exclude =
+    .git,
+    __pycache__,
+    code/sync_code,
+    code/Gui.py,
+    code/Gui_test.py
+per-file-ignores =
+    code/Sync.py:F401

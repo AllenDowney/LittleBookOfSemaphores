@@ -1,0 +1,2 @@
+# No pip runtime dependencies.
+# Desktop Sync needs Python 3.12+ with tkinter (conda: see environment.yml).

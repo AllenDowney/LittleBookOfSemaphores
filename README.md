@@ -2,9 +2,24 @@
 
 LaTeX source and supporting code for The Little Book of Semaphores, by Allen Downey.
 
-To run the Sync thread simulator, make sure you have Python installed with tkinter.
+## Development environment (conda / mamba)
 
-Then
+For a reproducible setup (recommended for Sync development and tests):
+
+```bash
+make create_environment_dev
+conda activate LittleBookOfSemaphores
+```
+
+Useful targets: `make help`, `make tests`, `make update_environment_dev`, `make delete_environment`.
+
+Pip-only equivalent for CI: `pip install -r requirements-dev.txt` (still needs system tkinter to run the desktop GUI).
+
+## Running Sync
+
+Desktop Sync needs Python with tkinter (`tk` is included in the conda environment above).
+
+From a zip download:
 
 1. [Download this repository in a Zip file](https://github.com/AllenDowney/LittleBookOfSemaphores/archive/refs/heads/master.zip)
 
@@ -29,10 +44,12 @@ python Sync.py
 5. Run Sync with example code:
 
 ```
-python Sync.py sync_code/barrier.py 
+python Sync.py sync_code/barrier.py
 ```
 
 If you are using Anaconda, you might find that the fonts don't look good. This is a well-known problem with no easy solution.
+
+See [`PROJECT_BOARD.md`](PROJECT_BOARD.md) for the Sync web-app roadmap.
 
 ## Translations
 
