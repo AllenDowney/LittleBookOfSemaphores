@@ -371,5 +371,66 @@ class LoopTests(HeadlessTestCase):
         self.assertEqual(thread.row.get(), "n += 1")
 
 
+class ExampleLoaderTests(HeadlessTestCase):
+    """Task 11: Sync source parser + representative sync_code loads."""
+
+    # Curated set from web/examples.json (must load under headless Sync).
+    MANIFEST_FILES = [
+        "mutex.py",
+        "signal.py",
+        "rendez.py",
+        "multiplex.py",
+        "barrier.py",
+        "barrier3.py",
+        "conditional.py",
+        "while.py",
+        "deadlock.py",
+        "barber.py",
+        "barber4.py",
+        "readwrite.py",
+        "coke.py",
+    ]
+
+    def test_parse_sync_source_thread_delimiter(self):
+        text = "a = 1\n## thread\nx = 2\n## Thread B\ny = 3\n"
+        blocks = sync_core.parse_sync_source(text)
+        self.assertEqual(len(blocks), 3)
+        self.assertEqual(blocks[0], ["a = 1"])
+        self.assertEqual(blocks[1], ["x = 2"])
+        self.assertEqual(blocks[2], ["y = 3"])
+
+    def test_from_source_matches_from_file(self):
+        path = _path("sync_code", "mutex.py")
+        with open(path) as fp:
+            text = fp.read()
+        sync_core.SIM_LOCALS.clear()
+        from_text = Simulator.from_source(text, filename=path)
+        state_a = from_text.get_state()
+        sync_core.SIM_LOCALS.clear()
+        from_file = Simulator.from_file(path)
+        state_b = from_file.get_state()
+        self.assertEqual(state_a["init"], state_b["init"])
+        self.assertEqual(state_a["columns"], state_b["columns"])
+        self.assertEqual(len(state_a["threads"]), len(state_b["threads"]))
+
+    def test_manifest_examples_load(self):
+        for name in self.MANIFEST_FILES:
+            sync_core.SIM_LOCALS.clear()
+            with self.subTest(example=name):
+                sim = Simulator.from_file(_path("sync_code", name))
+                state = sim.get_state()
+                self.assertGreaterEqual(len(state["columns"]), 1, name)
+                self.assertGreaterEqual(len(state["threads"]), 1, name)
+
+    def test_examples_json_matches_manifest_files(self):
+        manifest_path = os.path.join(
+            os.path.dirname(_code_dir()), "web", "examples.json"
+        )
+        with open(manifest_path) as fp:
+            data = json.load(fp)
+        files = [item["file"] for item in data["examples"]]
+        self.assertEqual(files, self.MANIFEST_FILES)
+
+
 if __name__ == "__main__":
     unittest.main()

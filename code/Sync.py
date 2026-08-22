@@ -41,6 +41,7 @@ from sync_core import (
     noop,
     num_threads,
     parse_sync_file,
+    parse_sync_source,
     pid,
     snapshot_state,
     trim_block,
@@ -66,6 +67,7 @@ __all__ = [
     "pid",
     "num_threads",
     "snapshot_state",
+    "parse_sync_source",
 ]
 
 

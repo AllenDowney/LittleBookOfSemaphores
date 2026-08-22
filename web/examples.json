@@ -1,0 +1,86 @@
+{
+  "examples": [
+    {
+      "id": "mutex",
+      "file": "mutex.py",
+      "title": "Mutex",
+      "group": "Basics"
+    },
+    {
+      "id": "signal",
+      "file": "signal.py",
+      "title": "Signal",
+      "group": "Basics"
+    },
+    {
+      "id": "rendez",
+      "file": "rendez.py",
+      "title": "Rendezvous",
+      "group": "Basics"
+    },
+    {
+      "id": "multiplex",
+      "file": "multiplex.py",
+      "title": "Multiplex",
+      "group": "Basics"
+    },
+    {
+      "id": "barrier",
+      "file": "barrier.py",
+      "title": "Barrier",
+      "group": "Barriers"
+    },
+    {
+      "id": "barrier3",
+      "file": "barrier3.py",
+      "title": "Barrier (variant 3)",
+      "group": "Barriers"
+    },
+    {
+      "id": "conditional",
+      "file": "conditional.py",
+      "title": "Conditional",
+      "group": "Control flow"
+    },
+    {
+      "id": "while",
+      "file": "while.py",
+      "title": "While",
+      "group": "Control flow"
+    },
+    {
+      "id": "deadlock",
+      "file": "deadlock.py",
+      "title": "Deadlock",
+      "group": "Pitfalls"
+    },
+    {
+      "id": "barber",
+      "file": "barber.py",
+      "title": "Barbershop",
+      "group": "Classic problems"
+    },
+    {
+      "id": "barber4",
+      "file": "barber4.py",
+      "title": "Barbershop (variant 4)",
+      "group": "Classic problems"
+    },
+    {
+      "id": "readwrite",
+      "file": "readwrite.py",
+      "title": "Readers–writers",
+      "group": "Classic problems"
+    },
+    {
+      "id": "coke",
+      "file": "coke.py",
+      "title": "Coke machine",
+      "group": "Classic problems"
+    }
+  ],
+  "notes": {
+    "pair.py": "Skipped: init uses a multi-line class/def that Sync cannot run row-by-row.",
+    "test.py": "Skipped: init-only scratch file (no thread columns)."
+  }
+}

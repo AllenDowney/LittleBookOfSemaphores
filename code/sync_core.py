@@ -155,11 +155,10 @@ def trim_block(block):
         block.pop(-1)
 
 
-def parse_sync_file(filename):
-    """Parse a Sync source file into blocks of lines.
+def parse_sync_source(text):
+    """Parse Sync source text into blocks of lines.
 
-    Lines that start with ## do not get special treatment except:
-    a line that starts with "## thread" begins a new column of code.
+    A line that starts with "## thread" begins a new column of code.
 
     Returns a list of blocks where each block is a list of lines.
     """
@@ -178,17 +177,24 @@ def parse_sync_file(filename):
     block = []
     blocks.append(block)
 
-    with open(filename) as fp:
-        for line in fp:
-            line = line.rstrip()
+    for line in text.splitlines():
+        line = line.rstrip("\n").rstrip("\r")
+        # Keep interior whitespace; only strip newline (already split).
+        line = line.rstrip()
 
-            if is_new_thread(line):
-                block = []
-                blocks.append(block)
-            else:
-                block.append(line)
+        if is_new_thread(line):
+            block = []
+            blocks.append(block)
+        else:
+            block.append(line)
 
     return blocks
+
+
+def parse_sync_file(filename):
+    """Parse a Sync source file into blocks of lines."""
+    with open(filename) as fp:
+        return parse_sync_source(fp.read())
 
 
 class Namer(object):
@@ -575,7 +581,20 @@ class Simulator:
     @classmethod
     def from_file(cls, filename):
         """Load a Sync source file and create one thread per column."""
-        return cls(filename)
+        with open(filename) as fp:
+            return cls.from_source(fp.read(), filename=filename)
+
+    @classmethod
+    def from_source(cls, text, filename=""):
+        """Load Sync source text and create one thread per column."""
+        sim = cls()
+        sim.filename = filename
+        sim.blocks = parse_sync_source(text)
+        sim.make_columns()
+        sim.run_init()
+        for col in sim.cols:
+            col.create_thread()
+        return sim
 
     def get_name(self, name=None):
         return self.namer.next(name)
