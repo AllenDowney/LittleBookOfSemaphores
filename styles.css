@@ -1,0 +1,9 @@
+/* Minimal book styling for the Quarto HTML scaffold (Task 22). */
+
+.navbar {
+  border-bottom: 1px solid #d6d3d1;
+}
+
+main.content {
+  max-width: 48rem;
+}

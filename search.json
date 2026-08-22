@@ -1,0 +1,176 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "The Little Book of Semaphores (dev)",
+    "section": "",
+    "text": "Most undergraduate Operating Systems textbooks have a module on Synchronization, which usually presents a set of primitives (mutexes, semaphores, monitors, and sometimes condition variables), and classical problems like readers-writers and producers-consumers.\nWhen I took the Operating Systems class at Berkeley, and taught it at Colby College, I got the impression that most students were able to understand the solutions to these problems, but few would have been able to produce them, or solve similar problems.\nOne reason students don’t understand this material deeply is that it takes more time, and more practice, than most classes can spare. Synchronization is just one of the modules competing for space in an Operating Systems class, and I’m not sure I can argue that it is the most important. But I do think it is one of the most challenging, interesting, and (done right) fun.\nI wrote the first edition this book with the goal of identifying synchronization idioms and patterns that could be understood in isolation and then assembled to solve complex problems. This was a challenge, because synchronization code doesn’t compose well; as the number of components increases, the number of interactions grows unmanageably.\nNevertheless, I found patterns in the solutions I saw, and discovered at least some systematic approaches to assembling solutions that are demonstrably correct.\nI had a chance to test this approach when I taught Operating Systems at Wellesley College. I used the first edition of The Little Book of Semaphores along with one of the standard textbooks, and I taught Synchronization as a concurrent thread for the duration of the course. Each week I gave the students a few pages from the book, ending with a puzzle, and sometimes a hint. I told them not to look at the hint unless they were stumped.\nI also gave them some tools for testing their solutions: a small magnetic whiteboard where they could write code, and a stack of magnets to represent the threads executing the code.\nThe results were dramatic. Given more time to absorb the material, students demonstrated a depth of understanding I had not seen before. More importantly, most of them were able to solve most of the puzzles. In some cases they reinvented classical solutions; in other cases they found creative new approaches.\nWhen I moved to Olin College, I took the next step and created a half-class, called Synchronization, which covered The Little Book of Semaphores and also the implementation of synchronization primitives in x86 Assembly Language, POSIX, and Python.\nThe students who took the class helped me find errors in the first edition and several of them contributed solutions that were better than mine. At the end of the semester, I asked each of them to write a new, original problem (preferably with a solution). I have added their contributions to the second edition.\nAlso since the first edition appeared, Kenneth Reek presented the article “Design Patterns for Semaphores” at the ACM Special Interest Group for Computer Science Education. He presents a problem, which I have cast as the Sushi Bar Problem, and two solutions that demonstrate patterns he calls “Pass the baton” and “I’ll do it for you.” Once I came to appreciate these patterns, I was able to apply them to some of the problems from the first edition and produce solutions that I think are better.\nOne other change in the second edition is the syntax. After I wrote the first edition, I learned Python, which is not only a great programming language; it also makes a great pseudocode language. So I switched from the C-like syntax in the first edition to syntax that is pretty close to executable Python1. In fact, I have written a simulator that can execute many of the solutions in this book.\nReaders who are not familiar with Python will (I hope) find it mostly obvious. In cases where I use a Python-specific feature, I explain the syntax and what it means. I hope that these changes make the book more readable.\nThe pagination of this book might seem peculiar, but there is a method to my whitespace. After each puzzle, I leave enough space that the hint appears on the next sheet of paper and the solution on the next sheet after that. When I use this book in my class, I hand it out a few pages at a time, and students collect them in a binder. My pagination system makes it possible to hand out a problem without giving away the hint or the solution. Sometimes I fold and staple the hint and hand it out along with the problem so that students can decide whether and when to look at the hint. If you print the book single-sided, you can discard the blank pages and the system still works.\nThis is a Free Book, which means that anyone is welcome to read, copy, modify and redistribute it, subject to the restrictions of the license. I hope that people will find this book useful, but I also hope they will help continue to develop it by sending in corrections, suggestions, and additional material. Thanks!\nAllen B. Downey\nNeedham, MA\nJune 1, 2005",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Preface</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#footnotes",
+    "href": "index.html#footnotes",
+    "title": "The Little Book of Semaphores (dev)",
+    "section": "",
+    "text": "The primary difference is that I sometimes use indentation to indicate code that is protected by a mutex, which would cause syntax errors in Python.↩︎",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Preface</span>"
+    ]
+  },
+  {
+    "objectID": "sections/serialization-with-messages.html",
+    "href": "sections/serialization-with-messages.html",
+    "title": "2  Serialization with messages",
+    "section": "",
+    "text": "One solution is to instruct Bob not to eat lunch until you call. Then, make sure you don’t call until after lunch. This approach may seem trivial, but the underlying idea, message passing, is a real solution for many synchronization problems. At the risk of belaboring the obvious, consider this timeline.\nEat breakfast \nWork          \nEat lunch     \nCall Bob\nEat breakfast\nWait for a call\nEat lunch\nThe first column is a list of actions you perform; in other words, your thread of execution. The second column is Bob’s thread of execution. Within a thread, we can always tell what order things happen. We can denote the order of events \\[\\begin{aligned}\na1 &lt; a2 &lt; a3 &lt; a4  \\\\\nb1 &lt; b2 &lt; b3\n\\end{aligned}\\] where the relation \\(a1 &lt; a2\\) means that a1 happened before a2.\nIn general, though, there is no way to compare events from different threads; for example, we have no idea who ate breakfast first (is \\(a1\n&lt; b1\\)?).\nBut with message passing (the phone call) we can tell who ate lunch first (\\(a3 &lt; b3\\)). Assuming that Bob has no other friends, he won’t get a call until you call, so \\(b2 &gt; a4\\) . Combining all the relations, we get \\[\\begin{aligned}\nb3 &gt; b2 &gt; a4 &gt; a3\n\\end{aligned}\\] which proves that you had lunch before Bob.\nIn this case, we would say that you and Bob ate lunch sequentially, because we know the order of events, and you ate breakfast concurrently, because we don’t.\nWhen we talk about concurrent events, it is tempting to say that they happen at the same time, or simultaneously. As a shorthand, that’s fine, as long as you remember the strict definition:\n\nTwo events are concurrent if we cannot tell by looking at the program which will happen first.\n\nSometimes we can tell, after the program runs, which happened first, but often not, and even if we can, there is no guarantee that we will get the same result the next time.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Serialization with messages</span>"
+    ]
+  },
+  {
+    "objectID": "sections/non-determinism.html",
+    "href": "sections/non-determinism.html",
+    "title": "3  Non-determinism",
+    "section": "",
+    "text": "Concurrent programs are often non-deterministic, which means it is not possible to tell, by looking at the program, what will happen when it executes. Here is a simple example of a non-deterministic program:\nprint \"yes\"\nprint \"no\"\nBecause the two threads run concurrently, the order of execution depends on the scheduler. During any given run of this program, the output might be “yes no” or “no yes”.\nNon-determinism is one of the things that makes concurrent programs hard to debug. A program might work correctly 1000 times in a row, and then crash on the 1001st run, depending on the particular decisions of the scheduler.\nThese kinds of bugs are almost impossible to find by testing; they can only be avoided by careful programming.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Non-determinism</span>"
+    ]
+  },
+  {
+    "objectID": "sections/shared-variables.html",
+    "href": "sections/shared-variables.html",
+    "title": "4  Shared variables",
+    "section": "",
+    "text": "4.1 Concurrent writes\nMost of the time, most variables in most threads are local, meaning that they belong to a single thread and no other threads can access them. As long as that’s true, there tend to be few synchronization problems, because threads just don’t interact.\nBut usually some variables are shared among two or more threads; this is one of the ways threads interact with each other. For example, one way to communicate information between threads is for one thread to read a value written by another thread.\nIf the threads are unsynchronized, then we cannot tell by looking at the program whether the reader will see the value the writer writes or an old value that was already there. Thus many applications enforce the constraint that the reader should not read until after the writer writes. This is exactly the serialization problem in Section [serialization].\nOther ways that threads interact are concurrent writes (two or more writers) and concurrent updates (two or more threads performing a read followed by a write). The next two sections deal with these interactions. The other possible use of a shared variable, concurrent reads, does not generally create a synchronization problem.\nIn the following example, x is a shared variable accessed by two writers.\nWhat value of x gets printed? What is the final value of x when all these statements have executed? It depends on the order in which the statements are executed, called the execution path. One possible path is \\(a1 &lt; a2 &lt; b1\\), in which case the output of the program is 5, but the final value is 7.\nPuzzle: What path yields output 5 and final value 5?\nPuzzle: What path yields output 7 and final value 7?\nPuzzle: Is there a path that yields output 7 and final value 5? Can you prove it?\nAnswering questions like these is an important part of concurrent programming: What paths are possible and what are the possible effects? Can we prove that a given (desirable) effect is necessary or that an (undesirable) effect is impossible?",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Shared variables</span>"
+    ]
+  },
+  {
+    "objectID": "sections/shared-variables.html#concurrent-writes",
+    "href": "sections/shared-variables.html#concurrent-writes",
+    "title": "4  Shared variables",
+    "section": "",
+    "text": "x = 5\nprint x\nx = 7",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Shared variables</span>"
+    ]
+  },
+  {
+    "objectID": "sections/shared-variables.html#concurrent-updates",
+    "href": "sections/shared-variables.html#concurrent-updates",
+    "title": "4  Shared variables",
+    "section": "4.2 Concurrent updates",
+    "text": "4.2 Concurrent updates\nAn update is an operation that reads the value of a variable, computes a new value based on the old value, and writes the new value. The most common kind of update is an increment, in which the new value is the old value plus one. The following example shows a shared variable, count, being updated concurrently by two threads.\ncount = count + 1\ncount = count + 1\nAt first glance, it is not obvious that there is a synchronization problem here. There are only two execution paths, and they yield the same result.\nThe problem is that these operations are translated into machine language before execution, and in machine language the update takes two steps, a read and a write. The problem is more obvious if we rewrite the code with a temporary variable, temp.\ntemp = count\ncount = temp + 1\ntemp = count\ncount = temp + 1\nNow consider the following execution path\n\\[a1 &lt; b1 &lt; b2 &lt; a2\\]\nAssuming that the initial value of count is 0, what is its final value? Because both threads read the same initial value, they write the same value. The variable is only incremented once, which is probably not what the programmer had in mind.\nThis kind of problem is subtle because it is not always possible to tell, looking at a high-level program, which operations are performed in a single step and which can be interrupted. In fact, some computers provide an increment instruction that is implemented in hardware and cannot be interrupted. An operation that cannot be interrupted is said to be atomic.\nSo how can we write concurrent programs if we don’t know which operations are atomic? One possibility is to collect specific information about each operation on each hardware platform. The drawbacks of this approach are obvious.\nThe most common alternative is to make the conservative assumption that all updates and all writes are not atomic, and to use synchronization constraints to control concurrent access to shared variables.\nThe most common constraint is mutual exclusion, or mutex, which I mentioned in Section [synch]. Mutual exclusion guarantees that only one thread accesses a shared variable at a time, eliminating the kinds of synchronization errors in this section.\nPuzzle: Suppose that 100 threads run the following program concurrently (if you are not familiar with Python, the for loop runs the update 100 times.):\nfor i in range(100):\n    temp = count\n    count = temp + 1\nWhat is the largest possible value of count after all threads have completed? What is the smallest possible value?\nHint: the first question is easy; the second is not.",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Shared variables</span>"
+    ]
+  },
+  {
+    "objectID": "sections/shared-variables.html#mutual-exclusion-with-messages",
+    "href": "sections/shared-variables.html#mutual-exclusion-with-messages",
+    "title": "4  Shared variables",
+    "section": "4.3 Mutual exclusion with messages",
+    "text": "4.3 Mutual exclusion with messages\nLike serialization, mutual exclusion can be implemented using message passing. For example, imagine that you and Bob operate a nuclear reactor that you monitor from remote stations. Most of the time, both of you are watching for warning lights, but you are both allowed to take a break for lunch. It doesn’t matter who eats lunch first, but it is very important that you don’t eat lunch at the same time, leaving the reactor unwatched!\nPuzzle: Figure out a system of message passing (phone calls) that enforces these restraints. Assume there are no clocks, and you cannot predict when lunch will start or how long it will last. What is the minimum number of messages that is required?",
+    "crumbs": [
+      "Introduction",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Shared variables</span>"
+    ]
+  },
+  {
+    "objectID": "sections/signaling.html",
+    "href": "sections/signaling.html",
+    "title": "5  Signaling",
+    "section": "",
+    "text": "Possibly the simplest use for a semaphore is signaling, which means that one thread sends a signal to another thread to indicate that something has happened.\nSignaling makes it possible to guarantee that a section of code in one thread will run before a section of code in another thread; in other words, it solves the serialization problem.\nAssume that we have a semaphore named sem with initial value 0, and that Threads A and B have shared access to it.\nstatement a1\nsem.signal()\nsem.wait()\nstatement b1\nThe word statement represents an arbitrary program statement. To make the example concrete, imagine that a1 reads a line from a file, and b1 displays the line on the screen. The semaphore in this program guarantees that Thread A has completed a1 before Thread B begins b1.\nHere’s how it works: if thread B gets to the wait statement first, it will find the initial value, zero, and it will block. Then when Thread A signals, Thread B proceeds.\nSimilarly, if Thread A gets to the signal first then the value of the semaphore will be incremented, and when Thread B gets to the wait, it will proceed immediately. Either way, the order of a1 and b1 is guaranteed.\nThis use of semaphores is the basis of the names signal and wait, and in this case the names are conveniently mnemonic. Unfortunately, we will see other cases where the names are less helpful.\nSpeaking of meaningful names, sem isn’t one. When possible, it is a good idea to give a semaphore a name that indicates what it represents. In this case a name like a1Done might be good, so that a1done.signal() means “signal that a1 is done,” and a1done.wait() means “wait until a1 is done.”",
+    "crumbs": [
+      "Basic synchronization patterns",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Signaling</span>"
+    ]
+  },
+  {
+    "objectID": "sections/sync-py.html",
+    "href": "sections/sync-py.html",
+    "title": "6  Sync.py",
+    "section": "",
+    "text": "TODO: write about using sync, starting with signal.py\nWhy does Thread B signal initComplete?",
+    "crumbs": [
+      "Basic synchronization patterns",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Sync.py</span>"
+    ]
+  },
+  {
+    "objectID": "sections/rendezvous.html",
+    "href": "sections/rendezvous.html",
+    "title": "7  Rendezvous",
+    "section": "",
+    "text": "7.1 Rendezvous hint\nPuzzle: Generalize the signal pattern so that it works both ways. Thread A has to wait for Thread B and vice versa. In other words, given this code\nwe want to guarantee that a1 happens before b2 and b1 happens before a2. In writing your solution, be sure to specify the names and initial values of your semaphores (little hint there).\nYour solution should not enforce too many constraints. For example, we don’t care about the order of a1 and b1. In your solution, either order should be possible.\nThis synchronization problem has a name; it’s a rendezvous. The idea is that two threads rendezvous at a point of execution, and neither is allowed to proceed until both have arrived.\nThe chances are good that you were able to figure out a solution, but if not, here is a hint. Create two semaphores, named aArrived and bArrived, and initialize them both to zero.\nAs the names suggest, aArrived indicates whether Thread A has arrived at the rendezvous, and bArrived likewise.",
+    "crumbs": [
+      "Basic synchronization patterns",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Rendezvous</span>"
+    ]
+  },
+  {
+    "objectID": "sections/rendezvous.html#rendezvous-solution",
+    "href": "sections/rendezvous.html#rendezvous-solution",
+    "title": "7  Rendezvous",
+    "section": "7.2 Rendezvous solution",
+    "text": "7.2 Rendezvous solution\nHere is my solution, based on the previous hint:\nstatement a1\naArrived.signal()\nbArrived.wait()\nstatement a2\nstatement b1\nbArrived.signal()\naArrived.wait()\nstatement b2\nWhile working on the previous problem, you might have tried something like this:\nstatement a1\nbArrived.wait()\naArrived.signal()\nstatement a2\nstatement b1\nbArrived.signal()\naArrived.wait()\nstatement b2\nThis solution also works, although it is probably less efficient, since it might have to switch between A and B one time more than necessary.\nIf A arrives first, it waits for B. When B arrives, it wakes A and might proceed immediately to its wait in which case it blocks, allowing A to reach its signal, after which both threads can proceed.\nThink about the other possible paths through this code and convince yourself that in all cases neither thread can proceed until both have arrived.",
+    "crumbs": [
+      "Basic synchronization patterns",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Rendezvous</span>"
+    ]
+  },
+  {
+    "objectID": "sections/rendezvous.html#deadlock-1",
+    "href": "sections/rendezvous.html#deadlock-1",
+    "title": "7  Rendezvous",
+    "section": "7.3 Deadlock #1",
+    "text": "7.3 Deadlock #1\nAgain, while working on the previous problem, you might have tried something like this:\nstatement a1\nbArrived.wait()\naArrived.signal()\nstatement a2\nstatement b1\naArrived.wait()\nbArrived.signal()\nstatement b2\nIf so, I hope you rejected it quickly, because it has a serious problem. Assuming that A arrives first, it will block at its wait. When B arrives, it will also block, since A wasn’t able to signal aArrived. At this point, neither thread can proceed, and never will.\nThis situation is called a deadlock and, obviously, it is not a successful solution of the synchronization problem. In this case, the error is obvious, but often the possibility of deadlock is more subtle. We will see more examples later.",
+    "crumbs": [
+      "Basic synchronization patterns",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Rendezvous</span>"
+    ]
+  },
+  {
+    "objectID": "sections/mutex.html",
+    "href": "sections/mutex.html",
+    "title": "8  Mutex",
+    "section": "",
+    "text": "8.1 Mutual exclusion hint\nA second common use for semaphores is to enforce mutual exclusion. We have already seen one use for mutual exclusion, controlling concurrent access to shared variables. The mutex guarantees that only one thread accesses the shared variable at a time.\nA mutex is like a token that passes from one thread to another, allowing one thread at a time to proceed. For example, in The Lord of the Flies a group of children use a conch as a mutex. In order to speak, you have to hold the conch. As long as only one child holds the conch, only one can speak1.\nSimilarly, in order for a thread to access a shared variable, it has to “get” the mutex; when it is done, it “releases” the mutex. Only one thread can hold the mutex at a time.\nPuzzle: Add semaphores to the following example to enforce mutual exclusion to the shared variable count.\nCreate a semaphore named mutex that is initialized to 1. A value of one means that a thread may proceed and access the shared variable; a value of zero means that it has to wait for another thread to release the mutex.",
+    "crumbs": [
+      "Basic synchronization patterns",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Mutex</span>"
+    ]
+  },
+  {
+    "objectID": "sections/mutex.html#mutual-exclusion-solution",
+    "href": "sections/mutex.html#mutual-exclusion-solution",
+    "title": "8  Mutex",
+    "section": "8.2 Mutual exclusion solution",
+    "text": "8.2 Mutual exclusion solution\nHere is a solution:\nmutex.wait()\n    # critical section\n    count = count + 1\nmutex.signal()\nmutex.wait()\n    # critical section\n    count = count + 1\nmutex.signal()\nSince mutex is initially 1, whichever thread gets to the wait first will be able to proceed immediately. Of course, the act of waiting on the semaphore has the effect of decrementing it, so the second thread to arrive will have to wait until the first signals.\nI have indented the update operation to show that it is contained within the mutex.\nIn this example, both threads are running the same code. This is sometimes called a symmetric solution. If the threads have to run different code, the solution is asymmetric. Symmetric solutions are often easier to generalize. In this case, the mutex solution can handle any number of concurrent threads without modification. As long as every thread waits before performing an update and signals after, then no two threads will access count concurrently.\nOften the code that needs to be protected is called the critical section, I suppose because it is critically important to prevent concurrent access.\nIn the tradition of computer science and mixed metaphors, there are several other ways people sometimes talk about mutexes. In the metaphor we have been using so far, the mutex is a token that is passed from one thread to another.\nIn an alternative metaphor, we think of the critical section as a room, and only one thread is allowed to be in the room at a time. In this metaphor, mutexes are called locks, and a thread is said to lock the mutex before entering and unlock it while exiting. Occasionally, though, people mix the metaphors and talk about “getting” or “releasing” a lock, which doesn’t make much sense.\nBoth metaphors are potentially useful and potentially misleading. As you work on the next problem, try out both ways of thinking and see which one leads you to a solution.",
+    "crumbs": [
+      "Basic synchronization patterns",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Mutex</span>"
+    ]
+  },
+  {
+    "objectID": "sections/mutex.html#footnotes",
+    "href": "sections/mutex.html#footnotes",
+    "title": "8  Mutex",
+    "section": "",
+    "text": "Although this metaphor is helpful for now, it can also be misleading, as you will see in Section [water]↩︎",
+    "crumbs": [
+      "Basic synchronization patterns",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Mutex</span>"
+    ]
+  }
+]

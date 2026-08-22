@@ -1,0 +1,206 @@
+/* Compact Sync widget for Quarto embeds (Task 23). */
+
+.sync-embed,
+.sync-widget {
+  margin: 1rem 0 1.5rem;
+  border: 1px solid #d6d3d1;
+  border-radius: 8px;
+  background: #fffcf7;
+  overflow: hidden;
+  font-family: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+}
+
+.sync-pending-code {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  background: #1c1917;
+  color: #e7e5e4;
+  font-size: 0.85rem;
+}
+
+.sync-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid #e7e5e4;
+  background: #f5f5f4;
+}
+
+.sync-toolbar button {
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.3rem 0.55rem;
+  border: 1px solid #d6d3d1;
+  border-radius: 5px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.sync-toolbar button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.sync-example-label {
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-right: 0.35rem;
+}
+
+.sync-status {
+  margin-left: auto;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #57534e;
+}
+
+.sync-status.ok {
+  color: #15803d;
+}
+
+.sync-status.err {
+  color: #b91c1c;
+}
+
+.sync-panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid #e7e5e4;
+  font-size: 0.85rem;
+}
+
+.sync-panels h4 {
+  margin: 0 0 0.3rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #78716c;
+}
+
+.sync-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.sync-chip {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  background: #e7e5e4;
+  font-family: ui-monospace, monospace;
+  font-size: 0.78rem;
+}
+
+.sync-queue {
+  color: #b45309;
+}
+
+.sync-muted {
+  color: #a8a29e;
+}
+
+.sync-workspace {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  padding: 0.75rem;
+}
+
+.sync-column {
+  flex: 1 1 14rem;
+  min-width: min(100%, 14rem);
+  border: 1px solid #e7e5e4;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.sync-column-title {
+  margin: 0;
+  padding: 0.4rem 0.55rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #78716c;
+  background: #f5f5f4;
+  border-bottom: 1px solid #e7e5e4;
+}
+
+.sync-row {
+  display: grid;
+  grid-template-columns: 3.5rem 1fr;
+  gap: 0.25rem;
+  padding: 0.28rem 0.45rem;
+  border-bottom: 1px solid #f5f5f4;
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem;
+}
+
+.sync-row:last-child {
+  border-bottom: none;
+}
+
+.sync-markers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem;
+  min-height: 1.25rem;
+}
+
+.sync-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  box-sizing: border-box;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #fff;
+  background: #0f766e;
+}
+
+.sync-badge.blocked {
+  border-color: #b45309;
+}
+
+.sync-code {
+  white-space: pre-wrap;
+  word-break: break-word;
+  padding-top: 0.1rem;
+}
+
+.sync-view {
+  margin-left: 0.4rem;
+  color: #0f766e;
+  font-weight: 600;
+}
+
+.sync-empty {
+  padding: 0.5rem;
+  color: #a8a29e;
+  font-size: 0.85rem;
+}
+
+.sync-error,
+.sync-error-detail {
+  color: #b91c1c;
+  padding: 0.75rem;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+@media (max-width: 700px) {
+  .sync-panels {
+    grid-template-columns: 1fr;
+  }
+}
