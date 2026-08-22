@@ -1,0 +1,4 @@
+---
+title: Basic synchronization patterns
+---
+This chapter presents a series of basic synchronization problems and shows ways of using semaphores to solve them. These problems include serialization and mutual exclusion, which we have already seen, along with others.

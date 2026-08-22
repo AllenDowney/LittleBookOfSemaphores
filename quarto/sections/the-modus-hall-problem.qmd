@@ -1,0 +1,111 @@
+---
+title: The Modus Hall Problem
+---
+This problem was written by Nathan Karst, one of the Olin students living in Modus Hall[^1] during the winter of 2005.
+
+> After a particularly heavy snowfall this winter, the denizens of Modus Hall created a trench-like path between their cardboard shantytown and the rest of campus. Every day some of the residents walk to and from class, food and civilization via the path; we will ignore the indolent students who chose daily to drive to Tier 3. We will also ignore the direction in which pedestrians are traveling. For some unknown reason, students living in West Hall would occasionally find it necessary to venture to the Mods.
+>
+> Unfortunately, the path is not wide enough to allow two people to walk side-by-side. If two Mods persons meet at some point on the path, one will gladly step aside into the neck high drift to accommodate the other. A similar situation will occur if two ResHall inhabitants cross paths. If a Mods heathen and a ResHall prude meet, however, a violent skirmish will ensue with the victors determined solely by strength of numbers; that is, the faction with the larger population will force the other to wait.
+
+This is similar to the Baboon Crossing problem (in more ways than one), with the added twist that control of the critical section is determined by majority rule. This has the potential to be an efficient and starvation-free solution to the categorical exclusion problem.
+
+Starvation is avoided because while one faction controls the critical section, members of the other faction accumulate in queue until they achieve a majority. Then they can bar new opponents from entering while they wait for the critical section to clear. I expect this solution to be efficient because it will tend to move threads through in batches, allowing maximum concurrency in the critical section.
+
+Puzzle: write code that implements categorical exclusion with majority rule.
+
+## Modus Hall problem hint
+
+Here are the variables I used in my solution.
+
+``` {title="Modus problem hint"}
+heathens = 0
+prudes = 0
+status = 'neutral'
+mutex = Semaphore(1)
+heathenTurn = Semaphore(1)
+prudeTurn = Semaphore(1)
+heathenQueue = Semaphore(0)
+prudeQueue = Semaphore(0)
+```
+
+`heathens` and `prudes` are counters, and `status` records the status of the field, which can be 'neutral', 'heathens rule', 'prudes rule', 'transition to heathens' or 'transition to prudes'. All three are protected by `mutex` in the usual scoreboard pattern.
+
+`heathenTurn` and `prudeTurn` control access to the field so that we can bar one side or the other during a transition.
+
+`heathenQueue` and `prudeQueue` are where threads wait after checking in and before taking the field.
+
+## Modus Hall problem solution
+
+Here is the code for heathens:
+
+``` {title="Modus problem solution"}
+heathenTurn.wait()
+heathenTurn.signal()
+(*\label{silentmajority}*)
+mutex.wait()
+heathens++
+
+if status == 'neutral':
+    status = 'heathens rule'
+    mutex.signal()
+elif status == 'prudes rule':
+    if heathens > prudes:
+        status = 'transition to heathens'
+        prudeTurn.wait()
+    mutex.signal()
+    heathenQueue.wait()
+elif status == 'transition to heathens':
+    mutex.signal()
+    heathenQueue.wait()
+else
+    mutex.signal()
+
+# cross the field
+
+mutex.wait()
+heathens--
+
+if heathens == 0:
+    if status == 'transition to prudes':
+        prudeTurn.signal()
+    if prudes:
+        prudeQueue.signal(prudes)
+        status = 'prudes rule'
+    else:
+        status = 'neutral'
+        
+if status == 'heathens rule':
+    if prudes > heathens:
+        status = 'transition to prudes'
+        heathenTurn.wait()
+
+mutex.signal()
+```
+
+As each student checks in, he has to consider the following cases:
+
+-   If the field is empty, the student lays claim for the heathens.
+
+-   If the heathens currently in charge, but the new arrival has tipped the balance, he locks the prude turnstile and the system switches to transition mode.
+
+-   If the prudes in charge, but the new arrival doesn't tip the balance, he joins the queue.
+
+-   If the system is transitioning to heathen control, the new arrival joins the queue.
+
+-   Otherwise we conclude that either the heathens are in charge, or the system is transitioning to prude control. In either case, this thread can proceed.
+
+Similarly, as each student checks out, she has to consider several cases.
+
+-   If she is the last heathen to check out, she has to consider the following:
+
+    -   If the system is in transition, that means that the prude turnstile is locked, so she has to open it.
+
+    -   If there are prudes waiting, she signals them and updates `status` so the prudes are in charge. If not, the new status is 'neutral'.
+
+-   If she is not the last heathen to check out, she still has to check the possibility that her departure will tip the balance. In that case, she closes the heathen turnstile and starts the transition.
+
+One potential difficulty of this solution is that any number of threads could be interrupted at Line [\[silentmajority\]](#silentmajority){reference-type="ref" reference="silentmajority"}, where they would have passed the turnstile but not yet checked in. Until they check in, they are not counted, so the balance of power may not reflect the number of threads that have passed the turnstile. Also, a transition ends when all the threads that have checked in have also checked out. At that point, there may be threads (of both types) that have passed the turnstile.
+
+These behaviors may affect efficiency---this solution does not guarantee maximum concurrency---but they don't affect correctness, if you accept that "majority rule" only applies to threads that have registered to vote.
+
+[^1]: Modus Hall is one of several nicknames for the modular buildings, aka Mods, that some students lived in while the second residence hall was being built.

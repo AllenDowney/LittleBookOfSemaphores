@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="quarto-1.5.56" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+
+
+<title>38  The search-insert-delete problem – The Little Book of Semaphores</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+<!-- htmldependencies:E3FAD763 -->
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script type="module" src="assets/sync/sync_embed.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css" />
+<link rel="stylesheet" href="../assets/sync/sync_embed.css" />
+</head>
+
+<body>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn"
+      data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" 
+      aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation"
+      onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <h1 class="quarto-secondary-nav-title no-breadcrumbs"></h1>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" role="link"
+        aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation"
+        onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="/">
+      The Little Book of Semaphores
+      </a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/AllenDowney/LittleBookOfSemaphores"  title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>1</span>  <span class='chapter-title'>Preface</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1"  role="navigation" aria-expanded="true">
+ <span class="menu-text">Preface</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/contributors-list.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>2</span>  <span class='chapter-title'>Contributor's list</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2"  role="navigation" aria-expanded="true">
+ <span class="menu-text">Introduction</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/synchronization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>3</span>  <span class='chapter-title'>Synchronization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/execution-model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>4</span>  <span class='chapter-title'>Execution model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/serialization-with-messages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>5</span>  <span class='chapter-title'>Serialization with messages</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/non-determinism.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>6</span>  <span class='chapter-title'>Non-determinism</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/shared-variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>7</span>  <span class='chapter-title'>Shared variables</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3"  role="navigation" aria-expanded="true">
+ <span class="menu-text">Semaphores</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/semaphores.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>8</span>  <span class='chapter-title'>Semaphores</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/definition.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>9</span>  <span class='chapter-title'>Definition</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/syntax.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>10</span>  <span class='chapter-title'>Syntax</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/why-semaphores.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>11</span>  <span class='chapter-title'>Why semaphores?</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4"  role="navigation" aria-expanded="true">
+ <span class="menu-text">Basic synchronization patterns</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/basic-synchronization-patterns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>12</span>  <span class='chapter-title'>Basic synchronization patterns</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/signaling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>13</span>  <span class='chapter-title'>Signaling</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/sync-py.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>14</span>  <span class='chapter-title'>Sync.py</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/rendezvous.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>15</span>  <span class='chapter-title'>Rendezvous</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/mutex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>16</span>  <span class='chapter-title'>Mutex</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/multiplex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>17</span>  <span class='chapter-title'>Multiplex</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/barrier.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>18</span>  <span class='chapter-title'>Barrier</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/reusable-barrier.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>19</span>  <span class='chapter-title'>Reusable barrier</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/queue.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>20</span>  <span class='chapter-title'>Queue</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5"  role="navigation" aria-expanded="true">
+ <span class="menu-text">Classical synchronization problems</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/classical-synchronization-problems.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>21</span>  <span class='chapter-title'>Classical synchronization problems</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/producer-consumer-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>22</span>  <span class='chapter-title'>Producer-consumer problem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/producer-consumer-with-a-finite-buffer.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>23</span>  <span class='chapter-title'>Producer-consumer with a finite buffer</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/readers-writers-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>24</span>  <span class='chapter-title'>Readers-writers problem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/no-starve-mutex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>25</span>  <span class='chapter-title'>No-starve mutex</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/dining-philosophers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>26</span>  <span class='chapter-title'>Dining philosophers</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/cigarette-smokers-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>27</span>  <span class='chapter-title'>Cigarette smokers problem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/generalized-smokers-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>28</span>  <span class='chapter-title'>Generalized Smokers Problem</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6"  role="navigation" aria-expanded="true">
+ <span class="menu-text">Less classical synchronization problems</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/the-dining-savages-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>29</span>  <span class='chapter-title'>The dining savages problem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/the-barbershop-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>30</span>  <span class='chapter-title'>The barbershop problem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/the-fifo-barbershop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>31</span>  <span class='chapter-title'>The FIFO barbershop</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/hilzers-barbershop-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>32</span>  <span class='chapter-title'>Hilzer's Barbershop problem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/the-santa-claus-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>33</span>  <span class='chapter-title'>The Santa Claus problem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/building-ho.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>34</span>  <span class='chapter-title'>Building H$_2$O</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/river-crossing-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>35</span>  <span class='chapter-title'>River crossing problem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/the-roller-coaster-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>36</span>  <span class='chapter-title'>The roller coaster problem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/multi-car-roller-coaster-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>37</span>  <span class='chapter-title'>Multi-car Roller Coaster problem</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7"  role="navigation" aria-expanded="true">
+ <span class="menu-text">Not-so-classical problems</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/the-search-insert-delete-problem.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class='chapter-number'>38</span>  <span class='chapter-title'>The search-insert-delete problem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/the-unisex-bathroom-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>39</span>  <span class='chapter-title'>The unisex bathroom problem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/no-starve-unisex-bathroom-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>40</span>  <span class='chapter-title'>No-starve unisex bathroom problem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/baboon-crossing-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>41</span>  <span class='chapter-title'>Baboon crossing problem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/the-modus-hall-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>42</span>  <span class='chapter-title'>The Modus Hall Problem</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8"  role="navigation" aria-expanded="true">
+ <span class="menu-text">Not remotely classical problems</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/the-sushi-bar-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>43</span>  <span class='chapter-title'>The sushi bar problem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/the-child-care-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>44</span>  <span class='chapter-title'>The child care problem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/the-room-party-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>45</span>  <span class='chapter-title'>The room party problem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/the-senate-bus-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>46</span>  <span class='chapter-title'>The Senate Bus problem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/the-faneuil-hall-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>47</span>  <span class='chapter-title'>The Faneuil Hall problem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/dining-hall-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>48</span>  <span class='chapter-title'>Dining Hall problem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/extended-dining-hall-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>49</span>  <span class='chapter-title'>Extended Dining Hall problem</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9"  role="navigation" aria-expanded="true">
+ <span class="menu-text">Synchronization in Python</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/synchronization-in-python.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>50</span>  <span class='chapter-title'>Synchronization in Python</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/mutex-checker-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>51</span>  <span class='chapter-title'>Mutex checker problem</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/the-coke-machine-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>52</span>  <span class='chapter-title'>The coke machine problem</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10"  role="navigation" aria-expanded="true">
+ <span class="menu-text">Synchronization in C</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/synchronization-in-c.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>53</span>  <span class='chapter-title'>Synchronization in C</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/mutual-exclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>54</span>  <span class='chapter-title'>Mutual exclusion</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/make-your-own-semaphores.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>55</span>  <span class='chapter-title'>Make your own semaphores</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11"  role="navigation" aria-expanded="true">
+ <span class="menu-text">Cleaning up Python threads</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/cleaning-up-python-threads.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>56</span>  <span class='chapter-title'>Cleaning up Python threads</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/semaphore-methods.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>57</span>  <span class='chapter-title'>Semaphore methods</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/creating-threads.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>58</span>  <span class='chapter-title'>Creating threads</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/handling-keyboard-interrupts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>59</span>  <span class='chapter-title'>Handling keyboard interrupts</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12"  role="navigation" aria-expanded="true">
+ <span class="menu-text">Cleaning up POSIX threads</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/cleaning-up-posix-threads.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>60</span>  <span class='chapter-title'>Cleaning up POSIX threads</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/compiling-pthread-code.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>61</span>  <span class='chapter-title'>Compiling Pthread code</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/creating-threads-2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>62</span>  <span class='chapter-title'>Creating threads</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/joining-threads.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>63</span>  <span class='chapter-title'>Joining threads</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/sections/semaphores-2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class='chapter-number'>64</span>  <span class='chapter-title'>Semaphores</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" ></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <div id="quarto-toc-target"></div>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">38</span>  <span class="chapter-title">The search-insert-delete problem</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+<nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#search-insert-delete-hint" id="toc-search-insert-delete-hint"><span class="header-section-number">38.1</span> Search-Insert-Delete hint</a></li>
+  <li><a href="#search-insert-delete-solution" id="toc-search-insert-delete-solution"><span class="header-section-number">38.2</span> Search-Insert-Delete solution</a></li>
+  </ul>
+</nav>
+<p>This one is from Andrews’s <em>Concurrent Programming</em> <span class="citation" data-cites="andrews">[@andrews]</span>.</p>
+<blockquote>
+<p>Three kinds of threads share access to a singly-linked list: searchers, inserters and deleters. Searchers merely examine the list; hence they can execute concurrently with each other. Inserters add new items to the end of the list; insertions must be mutually exclusive to preclude two inserters from inserting new items at about the same time. However, one insert can proceed in parallel with any number of searches. Finally, deleters remove items from anywhere in the list. At most one deleter process can access the list at a time, and deletion must also be mutually exclusive with searches and insertions.</p>
+</blockquote>
+<p>Puzzle: write code for searchers, inserters and deleters that enforces this kind of three-way categorical mutual exclusion.</p>
+<section id="search-insert-delete-hint" class="level2" data-number="38.1">
+<h2 data-number="38.1"><span class="header-section-number">38.1</span> Search-Insert-Delete hint</h2>
+<pre title="Search-Insert-Delete hint"><code>insertMutex = Semaphore(1)
+noSearcher = Semaphore(1)
+noInserter = Semaphore(1)
+searchSwitch = Lightswitch()
+insertSwitch = Lightswitch()</code></pre>
+<p><code>insertMutex</code> ensures that only one inserter is in its critical section at a time. <code>noSearcher</code> and <code>noInserter</code> indicate (surprise) that there are no searchers and no inserters in their critical sections; a deleter needs to hold both of these to enter.</p>
+<p><code>searchSwitch</code> and <code>insertSwitch</code> are used by searchers and inserters to exclude deleters.</p>
+</section>
+<section id="search-insert-delete-solution" class="level2" data-number="38.2">
+<h2 data-number="38.2"><span class="header-section-number">38.2</span> Search-Insert-Delete solution</h2>
+<p>Here is my solution:</p>
+<pre title="Search-Insert-Delete solution (searcher)"><code>searchSwitch.wait(noSearcher)
+# critical section
+searchSwitch.signal(noSearcher)</code></pre>
+<p>The only thing a searcher needs to worry about is a deleter. The first searcher in takes <code>noSearcher</code>; the last one out releases it.</p>
+<pre title="Search-Insert-Delete solution (inserter)"><code>insertSwitch.wait(noInserter)
+insertMutex.wait()
+# critical section
+insertMutex.signal()
+insertSwitch.signal(noInserter)</code></pre>
+<p>Similarly, the first inserter takes <code>noInserter</code> and the last one out releases it. Since searchers and inserters compete for different semaphores, they can be in their critical section concurrently. But <code>insertMutex</code> ensures that only one inserter is in the room at a time.</p>
+<pre title="Search-Insert-Delete solution (deleter)"><code>noSearcher.wait()
+noInserter.wait()
+# critical section
+noInserter.signal()
+noSearcher.signal()</code></pre>
+<p>Since the deleter holds both <code>noSearcher</code> and <code>noInserter</code>, it is guaranteed exclusive access. Of course, any time we see a thread holding more than one semaphore, we need to check for deadlocks. By trying out a few scenarios, you should be able to convince yourself that this solution is deadlock free.</p>
+<p>On the other hand, like many categorical exclusion problems, this one is prone to starvation. As we saw in the Readers-Writers problem, we can sometimes mitigate this problem by giving priority to one category of threads according to application-specific criteria. But in general it is difficult to write an efficient solution (one that allows the maximum degree of concurrency) that avoids starvation.</p>
+<div id="quarto-navigation-envelope" class="hidden">
+<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar-title">The Little Book of Semaphores</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-navbar-title">The Little Book of Semaphores</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-next"><span class="chapter-number">39</span>  <span class="chapter-title">The unisex bathroom problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-prev"><span class="chapter-number">37</span>  <span class="chapter-title">Multi-car Roller Coaster problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/index.html&lt;span-class=&#39;chapter-number&#39;&gt;1&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Preface&lt;/span&gt;"><span class="chapter-number">1</span>  <span class="chapter-title">Preface</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:quarto-sidebar-section-1">Preface</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/contributors-list.html&lt;span-class=&#39;chapter-number&#39;&gt;2&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Contributor&#39;s-list&lt;/span&gt;"><span class="chapter-number">2</span>  <span class="chapter-title">Contributor’s list</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:quarto-sidebar-section-2">Introduction</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/synchronization.html&lt;span-class=&#39;chapter-number&#39;&gt;3&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Synchronization&lt;/span&gt;"><span class="chapter-number">3</span>  <span class="chapter-title">Synchronization</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/execution-model.html&lt;span-class=&#39;chapter-number&#39;&gt;4&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Execution-model&lt;/span&gt;"><span class="chapter-number">4</span>  <span class="chapter-title">Execution model</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/serialization-with-messages.html&lt;span-class=&#39;chapter-number&#39;&gt;5&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Serialization-with-messages&lt;/span&gt;"><span class="chapter-number">5</span>  <span class="chapter-title">Serialization with messages</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/non-determinism.html&lt;span-class=&#39;chapter-number&#39;&gt;6&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Non-determinism&lt;/span&gt;"><span class="chapter-number">6</span>  <span class="chapter-title">Non-determinism</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/shared-variables.html&lt;span-class=&#39;chapter-number&#39;&gt;7&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Shared-variables&lt;/span&gt;"><span class="chapter-number">7</span>  <span class="chapter-title">Shared variables</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:quarto-sidebar-section-3">Semaphores</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/semaphores.html&lt;span-class=&#39;chapter-number&#39;&gt;8&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Semaphores&lt;/span&gt;"><span class="chapter-number">8</span>  <span class="chapter-title">Semaphores</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/definition.html&lt;span-class=&#39;chapter-number&#39;&gt;9&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Definition&lt;/span&gt;"><span class="chapter-number">9</span>  <span class="chapter-title">Definition</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/syntax.html&lt;span-class=&#39;chapter-number&#39;&gt;10&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Syntax&lt;/span&gt;"><span class="chapter-number">10</span>  <span class="chapter-title">Syntax</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/why-semaphores.html&lt;span-class=&#39;chapter-number&#39;&gt;11&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Why-semaphores?&lt;/span&gt;"><span class="chapter-number">11</span>  <span class="chapter-title">Why semaphores?</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:quarto-sidebar-section-4">Basic synchronization patterns</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/basic-synchronization-patterns.html&lt;span-class=&#39;chapter-number&#39;&gt;12&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Basic-synchronization-patterns&lt;/span&gt;"><span class="chapter-number">12</span>  <span class="chapter-title">Basic synchronization patterns</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/signaling.html&lt;span-class=&#39;chapter-number&#39;&gt;13&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Signaling&lt;/span&gt;"><span class="chapter-number">13</span>  <span class="chapter-title">Signaling</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/sync-py.html&lt;span-class=&#39;chapter-number&#39;&gt;14&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Sync.py&lt;/span&gt;"><span class="chapter-number">14</span>  <span class="chapter-title">Sync.py</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/rendezvous.html&lt;span-class=&#39;chapter-number&#39;&gt;15&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Rendezvous&lt;/span&gt;"><span class="chapter-number">15</span>  <span class="chapter-title">Rendezvous</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/mutex.html&lt;span-class=&#39;chapter-number&#39;&gt;16&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Mutex&lt;/span&gt;"><span class="chapter-number">16</span>  <span class="chapter-title">Mutex</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/multiplex.html&lt;span-class=&#39;chapter-number&#39;&gt;17&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Multiplex&lt;/span&gt;"><span class="chapter-number">17</span>  <span class="chapter-title">Multiplex</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/barrier.html&lt;span-class=&#39;chapter-number&#39;&gt;18&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Barrier&lt;/span&gt;"><span class="chapter-number">18</span>  <span class="chapter-title">Barrier</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/reusable-barrier.html&lt;span-class=&#39;chapter-number&#39;&gt;19&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Reusable-barrier&lt;/span&gt;"><span class="chapter-number">19</span>  <span class="chapter-title">Reusable barrier</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/queue.html&lt;span-class=&#39;chapter-number&#39;&gt;20&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Queue&lt;/span&gt;"><span class="chapter-number">20</span>  <span class="chapter-title">Queue</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:quarto-sidebar-section-5">Classical synchronization problems</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/classical-synchronization-problems.html&lt;span-class=&#39;chapter-number&#39;&gt;21&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Classical-synchronization-problems&lt;/span&gt;"><span class="chapter-number">21</span>  <span class="chapter-title">Classical synchronization problems</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/producer-consumer-problem.html&lt;span-class=&#39;chapter-number&#39;&gt;22&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Producer-consumer-problem&lt;/span&gt;"><span class="chapter-number">22</span>  <span class="chapter-title">Producer-consumer problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/producer-consumer-with-a-finite-buffer.html&lt;span-class=&#39;chapter-number&#39;&gt;23&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Producer-consumer-with-a-finite-buffer&lt;/span&gt;"><span class="chapter-number">23</span>  <span class="chapter-title">Producer-consumer with a finite buffer</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/readers-writers-problem.html&lt;span-class=&#39;chapter-number&#39;&gt;24&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Readers-writers-problem&lt;/span&gt;"><span class="chapter-number">24</span>  <span class="chapter-title">Readers-writers problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/no-starve-mutex.html&lt;span-class=&#39;chapter-number&#39;&gt;25&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;No-starve-mutex&lt;/span&gt;"><span class="chapter-number">25</span>  <span class="chapter-title">No-starve mutex</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/dining-philosophers.html&lt;span-class=&#39;chapter-number&#39;&gt;26&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Dining-philosophers&lt;/span&gt;"><span class="chapter-number">26</span>  <span class="chapter-title">Dining philosophers</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/cigarette-smokers-problem.html&lt;span-class=&#39;chapter-number&#39;&gt;27&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Cigarette-smokers-problem&lt;/span&gt;"><span class="chapter-number">27</span>  <span class="chapter-title">Cigarette smokers problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/generalized-smokers-problem.html&lt;span-class=&#39;chapter-number&#39;&gt;28&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Generalized-Smokers-Problem&lt;/span&gt;"><span class="chapter-number">28</span>  <span class="chapter-title">Generalized Smokers Problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:quarto-sidebar-section-6">Less classical synchronization problems</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/the-dining-savages-problem.html&lt;span-class=&#39;chapter-number&#39;&gt;29&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;The-dining-savages-problem&lt;/span&gt;"><span class="chapter-number">29</span>  <span class="chapter-title">The dining savages problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/the-barbershop-problem.html&lt;span-class=&#39;chapter-number&#39;&gt;30&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;The-barbershop-problem&lt;/span&gt;"><span class="chapter-number">30</span>  <span class="chapter-title">The barbershop problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/the-fifo-barbershop.html&lt;span-class=&#39;chapter-number&#39;&gt;31&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;The-FIFO-barbershop&lt;/span&gt;"><span class="chapter-number">31</span>  <span class="chapter-title">The FIFO barbershop</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/hilzers-barbershop-problem.html&lt;span-class=&#39;chapter-number&#39;&gt;32&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Hilzer&#39;s-Barbershop-problem&lt;/span&gt;"><span class="chapter-number">32</span>  <span class="chapter-title">Hilzer’s Barbershop problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/the-santa-claus-problem.html&lt;span-class=&#39;chapter-number&#39;&gt;33&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;The-Santa-Claus-problem&lt;/span&gt;"><span class="chapter-number">33</span>  <span class="chapter-title">The Santa Claus problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/building-ho.html&lt;span-class=&#39;chapter-number&#39;&gt;34&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Building-H$_2$O&lt;/span&gt;"><span class="chapter-number">34</span>  <span class="chapter-title">Building H<span class="math inline">\(_2\)</span>O</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/river-crossing-problem.html&lt;span-class=&#39;chapter-number&#39;&gt;35&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;River-crossing-problem&lt;/span&gt;"><span class="chapter-number">35</span>  <span class="chapter-title">River crossing problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/the-roller-coaster-problem.html&lt;span-class=&#39;chapter-number&#39;&gt;36&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;The-roller-coaster-problem&lt;/span&gt;"><span class="chapter-number">36</span>  <span class="chapter-title">The roller coaster problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/multi-car-roller-coaster-problem.html&lt;span-class=&#39;chapter-number&#39;&gt;37&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Multi-car-Roller-Coaster-problem&lt;/span&gt;"><span class="chapter-number">37</span>  <span class="chapter-title">Multi-car Roller Coaster problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:quarto-sidebar-section-7">Not-so-classical problems</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/the-search-insert-delete-problem.html&lt;span-class=&#39;chapter-number&#39;&gt;38&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;The-search-insert-delete-problem&lt;/span&gt;"><span class="chapter-number">38</span>  <span class="chapter-title">The search-insert-delete problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/the-unisex-bathroom-problem.html&lt;span-class=&#39;chapter-number&#39;&gt;39&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;The-unisex-bathroom-problem&lt;/span&gt;"><span class="chapter-number">39</span>  <span class="chapter-title">The unisex bathroom problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/no-starve-unisex-bathroom-problem.html&lt;span-class=&#39;chapter-number&#39;&gt;40&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;No-starve-unisex-bathroom-problem&lt;/span&gt;"><span class="chapter-number">40</span>  <span class="chapter-title">No-starve unisex bathroom problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/baboon-crossing-problem.html&lt;span-class=&#39;chapter-number&#39;&gt;41&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Baboon-crossing-problem&lt;/span&gt;"><span class="chapter-number">41</span>  <span class="chapter-title">Baboon crossing problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/the-modus-hall-problem.html&lt;span-class=&#39;chapter-number&#39;&gt;42&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;The-Modus-Hall-Problem&lt;/span&gt;"><span class="chapter-number">42</span>  <span class="chapter-title">The Modus Hall Problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:quarto-sidebar-section-8">Not remotely classical problems</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/the-sushi-bar-problem.html&lt;span-class=&#39;chapter-number&#39;&gt;43&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;The-sushi-bar-problem&lt;/span&gt;"><span class="chapter-number">43</span>  <span class="chapter-title">The sushi bar problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/the-child-care-problem.html&lt;span-class=&#39;chapter-number&#39;&gt;44&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;The-child-care-problem&lt;/span&gt;"><span class="chapter-number">44</span>  <span class="chapter-title">The child care problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/the-room-party-problem.html&lt;span-class=&#39;chapter-number&#39;&gt;45&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;The-room-party-problem&lt;/span&gt;"><span class="chapter-number">45</span>  <span class="chapter-title">The room party problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/the-senate-bus-problem.html&lt;span-class=&#39;chapter-number&#39;&gt;46&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;The-Senate-Bus-problem&lt;/span&gt;"><span class="chapter-number">46</span>  <span class="chapter-title">The Senate Bus problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/the-faneuil-hall-problem.html&lt;span-class=&#39;chapter-number&#39;&gt;47&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;The-Faneuil-Hall-problem&lt;/span&gt;"><span class="chapter-number">47</span>  <span class="chapter-title">The Faneuil Hall problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/dining-hall-problem.html&lt;span-class=&#39;chapter-number&#39;&gt;48&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Dining-Hall-problem&lt;/span&gt;"><span class="chapter-number">48</span>  <span class="chapter-title">Dining Hall problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/extended-dining-hall-problem.html&lt;span-class=&#39;chapter-number&#39;&gt;49&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Extended-Dining-Hall-problem&lt;/span&gt;"><span class="chapter-number">49</span>  <span class="chapter-title">Extended Dining Hall problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:quarto-sidebar-section-9">Synchronization in Python</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/synchronization-in-python.html&lt;span-class=&#39;chapter-number&#39;&gt;50&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Synchronization-in-Python&lt;/span&gt;"><span class="chapter-number">50</span>  <span class="chapter-title">Synchronization in Python</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/mutex-checker-problem.html&lt;span-class=&#39;chapter-number&#39;&gt;51&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Mutex-checker-problem&lt;/span&gt;"><span class="chapter-number">51</span>  <span class="chapter-title">Mutex checker problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/the-coke-machine-problem.html&lt;span-class=&#39;chapter-number&#39;&gt;52&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;The-coke-machine-problem&lt;/span&gt;"><span class="chapter-number">52</span>  <span class="chapter-title">The coke machine problem</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:quarto-sidebar-section-10">Synchronization in C</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/synchronization-in-c.html&lt;span-class=&#39;chapter-number&#39;&gt;53&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Synchronization-in-C&lt;/span&gt;"><span class="chapter-number">53</span>  <span class="chapter-title">Synchronization in C</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/mutual-exclusion.html&lt;span-class=&#39;chapter-number&#39;&gt;54&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Mutual-exclusion&lt;/span&gt;"><span class="chapter-number">54</span>  <span class="chapter-title">Mutual exclusion</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/make-your-own-semaphores.html&lt;span-class=&#39;chapter-number&#39;&gt;55&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Make-your-own-semaphores&lt;/span&gt;"><span class="chapter-number">55</span>  <span class="chapter-title">Make your own semaphores</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:quarto-sidebar-section-11">Cleaning up Python threads</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/cleaning-up-python-threads.html&lt;span-class=&#39;chapter-number&#39;&gt;56&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Cleaning-up-Python-threads&lt;/span&gt;"><span class="chapter-number">56</span>  <span class="chapter-title">Cleaning up Python threads</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/semaphore-methods.html&lt;span-class=&#39;chapter-number&#39;&gt;57&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Semaphore-methods&lt;/span&gt;"><span class="chapter-number">57</span>  <span class="chapter-title">Semaphore methods</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/creating-threads.html&lt;span-class=&#39;chapter-number&#39;&gt;58&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Creating-threads&lt;/span&gt;"><span class="chapter-number">58</span>  <span class="chapter-title">Creating threads</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/handling-keyboard-interrupts.html&lt;span-class=&#39;chapter-number&#39;&gt;59&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Handling-keyboard-interrupts&lt;/span&gt;"><span class="chapter-number">59</span>  <span class="chapter-title">Handling keyboard interrupts</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:quarto-sidebar-section-12">Cleaning up POSIX threads</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/cleaning-up-posix-threads.html&lt;span-class=&#39;chapter-number&#39;&gt;60&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Cleaning-up-POSIX-threads&lt;/span&gt;"><span class="chapter-number">60</span>  <span class="chapter-title">Cleaning up POSIX threads</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/compiling-pthread-code.html&lt;span-class=&#39;chapter-number&#39;&gt;61&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Compiling-Pthread-code&lt;/span&gt;"><span class="chapter-number">61</span>  <span class="chapter-title">Compiling Pthread code</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/creating-threads-2.html&lt;span-class=&#39;chapter-number&#39;&gt;62&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Creating-threads&lt;/span&gt;"><span class="chapter-number">62</span>  <span class="chapter-title">Creating threads</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/joining-threads.html&lt;span-class=&#39;chapter-number&#39;&gt;63&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Joining-threads&lt;/span&gt;"><span class="chapter-number">63</span>  <span class="chapter-title">Joining threads</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-int-sidebar:/sections/semaphores-2.html&lt;span-class=&#39;chapter-number&#39;&gt;64&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;Semaphores&lt;/span&gt;"><span class="chapter-number">64</span>  <span class="chapter-title">Semaphores</span></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-breadcrumbs-Not-so-classical-problems">Not-so-classical problems</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-breadcrumbs-&lt;span-class=&#39;chapter-number&#39;&gt;38&lt;/span&gt;--&lt;span-class=&#39;chapter-title&#39;&gt;The-search-insert-delete-problem&lt;/span&gt;"><span class="chapter-number">38</span>  <span class="chapter-title">The search-insert-delete problem</span></span></p>
+</div>
+<div id="quarto-meta-markdown" class="hidden">
+<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-metatitle"><span class="chapter-number">38</span>  <span class="chapter-title">The search-insert-delete problem</span> – The Little Book of Semaphores</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-twittercardtitle"><span class="chapter-number">38</span>  <span class="chapter-title">The search-insert-delete problem</span> – The Little Book of Semaphores</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-ogcardtitle"><span class="chapter-number">38</span>  <span class="chapter-title">The search-insert-delete problem</span> – The Little Book of Semaphores</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-metasitename">The Little Book of Semaphores</span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-twittercarddesc"></span> <span class="hidden quarto-markdown-envelope-contents" data-render-id="quarto-ogcardddesc"></span></p>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id = "quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a  href="/sections/multi-car-roller-coaster-problem.html" class="pagination-link" aria-label="Multi-car Roller Coaster problem">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class='chapter-number'>37</span>  <span class='chapter-title'>Multi-car Roller Coaster problem</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a  href="/sections/the-unisex-bathroom-problem.html" class="pagination-link" aria-label="The unisex bathroom problem">
+        <span class="nav-page-text"><span class='chapter-number'>39</span>  <span class='chapter-title'>The unisex bathroom problem</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+</body>
+
+</html>

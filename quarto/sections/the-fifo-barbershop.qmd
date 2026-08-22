@@ -1,0 +1,42 @@
+---
+title: The FIFO barbershop
+---
+In the previous solution there is no guarantee that customers are served in the order they arrive. Up to `n` customers can pass the turnstile, signal `customer` and wait on `barber`. When the barber signal `barber`, any of the customers might proceed.
+
+Modify this solution so that customers are served in the order they pass the turnstile.
+
+Hint: you can refer to the current thread as `self`, so if you write `self.sem = Semaphore(0)`, each thread gets its own semaphore.
+
+## FIFO barbershop hint
+
+My solution uses a list of semaphores named `queue`.
+
+``` {title="FIFO barbershop hint"}
+n = 4
+customers = 0
+mutex = Semaphore(1)
+customer = Semaphore(0)
+customerDone = Semaphore(0)
+barberDone = Semaphore(0)
+queue = []
+```
+
+As each thread passes the turnstile, it creates a semaphore and puts it in the queue.
+
+Instead of waiting on `barber`, each thread waits on its own semaphore. When the barber wakes up, he removes a thread from the queue and signals it.
+
+## FIFO barbershop solution
+
+Here is the modified code for customers:
+
+``` {.troff mandoc title="FIFO barbershop solution (customer)"}
+```
+
+And the code for barbers:
+
+``` {.troff mandoc title="FIFO barbershop solution (barber)"}
+```
+
+Notice that the barber has to get `mutex` to access the queue.
+
+This solution is in `sync_code/barber2.py` (see [\[sync.py\]](#sync.py){reference-type="ref" reference="sync.py"}).

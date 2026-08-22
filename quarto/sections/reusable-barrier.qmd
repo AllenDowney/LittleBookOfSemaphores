@@ -1,0 +1,217 @@
+---
+title: Reusable barrier
+---
+[]{#rebar label="rebar"}
+
+Often a set of cooperating threads will perform a series of steps in a loop and synchronize at a barrier after each step. For this application we need a reusable barrier that locks itself after all the threads have passed through.
+
+Puzzle: Rewrite the barrier solution so that after all the threads have passed through, the turnstile is locked again.
+
+## Reusable barrier non-solution #1
+
+Once again, we will start with a simple attempt at a solution and gradually improve it:
+
+``` {title="Reusable barrier non-solution"}
+rendezvous
+
+mutex.wait()
+    count += 1
+mutex.signal()
+
+if count == n: turnstile.signal()       (*\label{problem}*)
+
+turnstile.wait()
+turnstile.signal()
+
+critical point
+
+mutex.wait()
+    count -= 1
+mutex.signal()
+
+if count == 0: turnstile.wait()         (*\label{problem2}*)
+```
+
+Notice that the code after the turnstile is pretty much the same as the code before it. Again, we have to use the mutex to protect access to the shared variable `count`. Tragically, though, this code is not quite correct.
+
+Puzzle: What is the problem?
+
+## Reusable barrier problem #1
+
+There is a problem spot at Line [\[problem\]](#problem){reference-type="ref" reference="problem"} of the previous code.
+
+If the $n-1$th thread is interrupted at this point, and then the $n$th thread comes through the mutex, both threads will find that `count==n` and both threads will signal the turnstile. In fact, it is even possible that *all* the threads will signal the turnstile.
+
+Similarly, at Line [\[problem2\]](#problem2){reference-type="ref" reference="problem2"} it is possible for multiple threads to `wait`, which will cause a deadlock.
+
+Puzzle: Fix the problem.
+
+## Reusable barrier non-solution #2
+
+This attempt fixes the previous error, but a subtle problem remains.
+
+``` {title="Reusable barrier non-solution"}
+rendezvous
+
+mutex.wait()
+    count += 1
+    if count == n: turnstile.signal()
+mutex.signal()
+
+turnstile.wait()
+turnstile.signal()
+
+critical point
+
+mutex.wait()
+    count -= 1
+    if count == 0: turnstile.wait()
+mutex.signal()
+```
+
+In both cases the check is inside the mutex so that a thread cannot be interrupted after changing the counter and before checking it.
+
+Tragically, this code is *still* not correct. Remember that this barrier will be inside a loop. So, after executing the last line, each thread will go back to the rendezvous.
+
+Puzzle: Identify and fix the problem.
+
+## Reusable barrier hint
+
+As it is currently written, this code allows a precocious thread to pass through the second mutex, then loop around and pass through the first mutex and the turnstile, effectively getting ahead of the other threads by a lap.
+
+To solve this problem we can use two turnstiles.
+
+``` {title="Reusable barrier hint"}
+turnstile = Semaphore(0)
+turnstile2 = Semaphore(1)
+mutex = Semaphore(1)
+```
+
+Initially the first is locked and the second is open. When all the threads arrive at the first, we lock the second and unlock the first. When all the threads arrive at the second we relock the first, which makes it safe for the threads to loop around to the beginning, and then open the second.
+
+## Reusable barrier solution
+
+``` {title="Reusable barrier solution"}
+# rendezvous
+
+mutex.wait()
+    count += 1
+    if count == n:
+        turnstile2.wait()       # lock the second
+        turnstile.signal()      # unlock the first
+mutex.signal()
+
+turnstile.wait()                # first turnstile
+turnstile.signal()
+
+# critical point
+
+mutex.wait()
+    count -= 1
+    if count == 0: 
+        turnstile.wait()         # lock the first
+        turnstile2.signal()      # unlock the second
+mutex.signal()
+
+turnstile2.wait()                # second turnstile
+turnstile2.signal()
+```
+
+This solution is sometimes called a **two-phase barrier** because it forces all the threads to wait twice: once for all the threads to arrive and again for all the threads to execute the critical section.
+
+Unfortunately, this solution is typical of most non-trivial synchronization code: it is difficult to be sure that a solution is correct. Often there is a subtle way that a particular path through the program can cause an error.
+
+To make matters worse, testing an implementation of a solution is not much help. The error might occur very rarely because the particular path that causes it might require a spectacularly unlucky combination of circumstances. Such errors are almost impossible to reproduce and debug by conventional means.
+
+The only alternative is to examine the code carefully and "prove" that it is correct. I put "prove" in quotation marks because I don't mean, necessarily, that you have to write a formal proof (although there are zealots who encourage such lunacy).
+
+The kind of proof I have in mind is more informal. We can take advantage of the structure of the code, and the idioms we have developed, to assert, and then demonstrate, a number of intermediate-level claims about the program. For example:
+
+1.  Only the $n$th thread can lock or unlock the turnstiles.
+
+2.  Before a thread can unlock the first turnstile, it has to close the second, and vice versa; therefore it is impossible for one thread to get ahead of the others by more than one turnstile.
+
+By finding the right kinds of statements to assert and prove, you can sometimes find a concise way to convince yourself (or a skeptical colleague) that your code is bulletproof.
+
+## Preloaded turnstile
+
+One nice thing about a turnstile is that it is a versatile component you can use in a variety of solutions. But one drawback is that it forces threads to go through sequentially, which may cause more context switching than necessary.
+
+In the reusable barrier solution, we can simplify the solution if the thread that unlocks the turnstile preloads the turnstile with enough signals to let the right number of threads through[^1].
+
+The syntax I am using here assumes that `signal` can take a parameter that specifies the number of signals. This is a non-standard feature, but it would be easy to implement with a loop. The only thing to keep in mind is that the multiple signals are not atomic; that is, the signaling thread might be interrupted in the loop. But in this case that is not a problem.
+
+``` {title="Reusable barrier solution"}
+# rendezvous
+
+mutex.wait()
+    count += 1
+    if count == n:
+        turnstile.signal(n)      # unlock the first
+mutex.signal()
+
+turnstile.wait()                 # first turnstile
+
+# critical point
+
+mutex.wait()
+    count -= 1
+    if count == 0:
+        turnstile2.signal(n)     # unlock the second
+mutex.signal()
+
+turnstile2.wait()                # second turnstile
+```
+
+When the $n$th thread arrives, it preloads the first turnstile with one signal for each thread. When the $n$th thread passes the turnstile, it "takes the last token" and leaves the turnstile locked again.
+
+The same thing happens at the second turnstile, which is unlocked when the last thread goes through the mutex.
+
+## Barrier objects
+
+It is natural to encapsulate a barrier in an object. I will borrow the Python syntax for defining a class:
+
+``` {title="Barrier class"}
+class Barrier:
+    def __init__(self, n):
+        self.n = n
+        self.count = 0
+        self.mutex = Semaphore(1)
+        self.turnstile = Semaphore(0)
+        self.turnstile2 = Semaphore(0)
+
+    def phase1(self):
+        self.mutex.wait()
+            self.count += 1
+            if self.count == self.n:
+                self.turnstile.signal(self.n) 
+        self.mutex.signal()
+        self.turnstile.wait()            
+
+    def phase2(self):
+        self.mutex.wait()
+            self.count -= 1
+            if self.count == 0:
+                self.turnstile2.signal(self.n)
+        self.mutex.signal()
+        self.turnstile2.wait()
+
+    def wait(self):
+        self.phase1()
+        self.phase2()
+```
+
+The `__init__` method runs when we create a new `Barrier` object, and initializes the instance variables. The parameter `n` is the number of threads that have to invoke `wait` before the Barrier opens.
+
+The variable `self` refers to the object the method is operating on. Since each barrier object has its own mutex and turnstiles, `self.mutex` refers to the specific mutex of the current object.
+
+Here is an example that creates a `Barrier` object and waits on it:
+
+``` {title="Barrier interface"}
+barrier = Barrier(n)        # initialize a new barrier
+barrier.wait()              # wait at a barrier
+```
+
+Optionally, code that uses a barrier can call `phase1` and `phase2` separately, if there is something else that should be done in between.
+
+[^1]: Thanks to Matt Tesch for this solution!

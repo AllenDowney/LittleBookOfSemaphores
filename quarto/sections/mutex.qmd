@@ -1,0 +1,56 @@
+---
+title: Mutex
+---
+A second common use for semaphores is to enforce mutual exclusion. We have already seen one use for mutual exclusion, controlling concurrent access to shared variables. The mutex guarantees that only one thread accesses the shared variable at a time.
+
+A mutex is like a token that passes from one thread to another, allowing one thread at a time to proceed. For example, in *The Lord of the Flies* a group of children use a conch as a mutex. In order to speak, you have to hold the conch. As long as only one child holds the conch, only one can speak[^1].
+
+Similarly, in order for a thread to access a shared variable, it has to "get" the mutex; when it is done, it "releases" the mutex. Only one thread can hold the mutex at a time.
+
+Puzzle: Add semaphores to the following example to enforce mutual exclusion to the shared variable `count`.
+
+``` {title="Thread A"}
+count = count + 1
+```
+
+``` {title="Thread B"}
+count = count + 1
+```
+
+## Mutual exclusion hint
+
+Create a semaphore named `mutex` that is initialized to 1. A value of one means that a thread may proceed and access the shared variable; a value of zero means that it has to wait for another thread to release the mutex.
+
+## Mutual exclusion solution
+
+Here is a solution:
+
+``` {title="Thread A"}
+mutex.wait()
+    # critical section
+    count = count + 1
+mutex.signal()
+```
+
+``` {title="Thread B"}
+mutex.wait()
+    # critical section
+    count = count + 1
+mutex.signal()
+```
+
+Since `mutex` is initially 1, whichever thread gets to the `wait` first will be able to proceed immediately. Of course, the act of waiting on the semaphore has the effect of decrementing it, so the second thread to arrive will have to wait until the first signals.
+
+I have indented the update operation to show that it is contained within the mutex.
+
+In this example, both threads are running the same code. This is sometimes called a **symmetric** solution. If the threads have to run different code, the solution is **asymmetric**. Symmetric solutions are often easier to generalize. In this case, the mutex solution can handle any number of concurrent threads without modification. As long as every thread waits before performing an update and signals after, then no two threads will access `count` concurrently.
+
+Often the code that needs to be protected is called the **critical section**, I suppose because it is critically important to prevent concurrent access.
+
+In the tradition of computer science and mixed metaphors, there are several other ways people sometimes talk about mutexes. In the metaphor we have been using so far, the mutex is a token that is passed from one thread to another.
+
+In an alternative metaphor, we think of the critical section as a room, and only one thread is allowed to be in the room at a time. In this metaphor, mutexes are called locks, and a thread is said to lock the mutex before entering and unlock it while exiting. Occasionally, though, people mix the metaphors and talk about "getting" or "releasing" a lock, which doesn't make much sense.
+
+Both metaphors are potentially useful and potentially misleading. As you work on the next problem, try out both ways of thinking and see which one leads you to a solution.
+
+[^1]: Although this metaphor is helpful for now, it can also be misleading, as you will see in Section [\[water\]](#water){reference-type="ref" reference="water"}

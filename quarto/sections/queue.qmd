@@ -1,0 +1,112 @@
+---
+title: Queue
+---
+[]{#dancers label="dancers"}
+
+Semaphores can also be used to represent a queue. In this case, the initial value is 0, and usually the code is written so that it is not possible to signal unless there is a thread waiting, so the value of the semaphore is never positive.
+
+For example, imagine that threads represent ballroom dancers and that two kinds of dancers, leaders and followers, wait in two queues before entering the dance floor. When a leader arrives, it checks to see if there is a follower waiting. If so, they can both proceed. Otherwise it waits.
+
+Similarly, when a follower arrives, it checks for a leader and either proceeds or waits, accordingly.
+
+Puzzle: write code for leaders and followers that enforces these constraints.
+
+## Queue hint
+
+Here are the variables I used in my solution:
+
+``` {title="Queue hint"}
+leaderQueue = Semaphore(0)
+followerQueue = Semaphore(0)
+```
+
+`leaderQueue` is the queue where leaders wait and `followerQueue` is the queue where followers wait.
+
+## Queue solution
+
+Here is the code for leaders:
+
+``` {title="Queue solution (leaders)"}
+followerQueue.signal()
+leaderQueue.wait()
+dance()
+```
+
+And here is the code for followers:
+
+``` {title="Queue solution (followers)"}
+leaderQueue.signal()
+followerQueue.wait()
+dance()
+```
+
+This solution is about as simple as it gets; it is just a Rendezvous. Each leader signals exactly one follower, and each follower signals one leader, so it is guaranteed that leaders and followers are allowed to proceed in pairs. But whether they actually proceed in pairs is not clear. It is possible for any number of threads to accumulate before executing `dance`, and so it is possible for any number of leaders to `dance` before any followers do. Depending on the semantics of `dance`, that behavior may or may not be problematic.
+
+To make things more interesting, let's add the additional constraint that each leader can invoke `dance` concurrently with only one follower, and vice versa. In other words, you got to dance with the one that brought you[^1].
+
+Puzzle: write a solution to this "exclusive queue" problem.
+
+## Exclusive queue hint
+
+Here are the variables I used in my solution:
+
+``` {title="Queue hint"}
+leaders = followers = 0
+mutex = Semaphore(1)
+leaderQueue = Semaphore(0)
+followerQueue = Semaphore(0)
+rendezvous = Semaphore(0)
+```
+
+`leaders` and `followers` are counters that keep track of the number of dancers of each kinds that are waiting. The mutex guarantees exclusive access to the counters.
+
+`leaderQueue` and `followerQueue` are the queues where dancers wait. `rendezvous` is used to check that both threads are done dancing.
+
+## Exclusive queue solution
+
+Here is the code for leaders:
+
+``` {title="Queue solution (leaders)"}
+mutex.wait()
+if followers > 0:
+    followers--
+    followerQueue.signal()
+else:
+    leaders++
+    mutex.signal()
+    leaderQueue.wait()    
+
+dance()
+rendezvous.wait()
+mutex.signal()
+```
+
+When a leader arrives, it gets the mutex that protects `leaders` and `followers`. If there is a follower waiting, the leader decrements `followers`, signals a follower, and then invokes `dance`, all before releasing `mutex`. That guarantees that there can be only one follower thread running `dance` concurrently.
+
+If there are no followers waiting, the leader has to give up the mutex before waiting on `leaderQueue`.
+
+The code for followers is similar:
+
+``` {title="Queue solution (followers)"}
+mutex.wait()
+if leaders > 0:
+    leaders--
+    leaderQueue.signal()
+else:
+    followers++
+    mutex.signal()
+    followerQueue.wait()    
+
+dance()
+rendezvous.signal()
+```
+
+When a follower arrives, it checks for a waiting leader. If there is one, the follower decrements `leaders`, signals a leader, and executes `dance`, all without releasing `mutex`. Actually, in this case the follower *never* releases `mutex`; the leader does. We don't have to keep track of which thread has the mutex because we know that one of them does, and either one of them can release it. In my solution it's always the leader.
+
+When a semaphore is used as a queue[^2], I find it useful to read "wait" as "wait for this queue" and signal as "let someone from this queue go."
+
+In this code we never signal a queue unless someone is waiting, so the values of the queue semaphores are seldom positive. It is possible, though. See if you can figure out how.
+
+[^1]: Song lyric performed by Shania Twain
+
+[^2]: A semaphore used as a queue is very similar to a condition variable. The primary difference is that threads have to release the mutex explicitly before waiting, and reacquire it explicitly afterwards (but only if they need it).

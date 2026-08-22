@@ -1,0 +1,114 @@
+---
+title: The Senate Bus problem
+---
+This problem was originally based on the Senate bus at Wellesley College. Riders come to a bus stop and wait for a bus. When the bus arrives, all the waiting riders invoke `boardBus`, but anyone who arrives while the bus is boarding has to wait for the next bus. The capacity of the bus is 50 people; if there are more than 50 people waiting, some will have to wait for the next bus.
+
+When all the waiting riders have boarded, the bus can invoke `depart`. If the bus arrives when there are no riders, it should depart immediately.
+
+Puzzle: Write synchronization code that enforces all of these constraints.
+
+## Bus problem hint
+
+Here are the variables I used in my solution:
+
+``` {title="Bus problem hint"}
+riders = 0
+mutex = Semaphore(1)
+multiplex = Semaphore(50)
+bus = Semaphore(0)
+allAboard = Semaphore(0)
+```
+
+`mutex` protects `riders`, which keeps track of how many riders are waiting; `multiplex` makes sure there are no more than 50 riders in the boarding area.
+
+Riders wait on `bus`, which gets signaled when the bus arrives. The bus waits on `allAboard`, which gets signaled by the last student to board.
+
+## Bus problem solution #1
+
+Here is the code for the bus. Again, we are using the "Pass the baton" pattern.
+
+``` {title="Bus problem solution (bus)"}
+mutex.wait()
+if riders > 0:
+    bus.signal()        # and pass the mutex
+    allAboard.wait()    # and get the mutex back
+mutex.signal()
+
+depart()
+```
+
+When the bus arrives, it gets `mutex`, which prevents late arrivals from entering the boarding area. If there are no riders, it departs immediately. Otherwise, it signals `bus` and waits for the riders to board.
+
+Here is the code for the riders:
+
+``` {title="Bus problem solution (riders)"}
+multiplex.wait()
+    mutex.wait()
+        riders += 1
+    mutex.signal()
+
+    bus.wait()              # and get the mutex
+multiplex.signal()
+
+boardBus()
+
+riders -= 1
+if riders == 0:
+    allAboard.signal() 
+else:
+    bus.signal()            # and pass the mutex
+```
+
+The multiplex controls the number of riders in the waiting area, although strictly speaking, a rider doesn't enter the waiting area until she increments `riders`.
+
+Riders wait on `bus` until the bus arrives. When a rider wakes up, it is understood that she has the mutex. After boarding, each rider decrements `riders`. If there are more riders waiting, the boarding rider signals `bus` and pass the mutex to the next rider. The last rider signals `allAboard` and passes the mutex back to the bus.
+
+Finally, the bus releases the mutex and departs.
+
+Puzzle: can you find a solution to this problem using the "I'll do it for you" pattern?
+
+## Bus problem solution #2
+
+Grant Hutchins came up with this solution, which uses fewer variables than the previous one, and doesn't involve passing around any mutexes. Here are the variables:
+
+``` {title="Bus problem solution \\#2 (initialization)"}
+waiting = 0
+mutex = Semaphore(1)
+bus = Semaphore(0)
+boarded = Semaphore(0)
+```
+
+`waiting` is the number of riders in the boarding area, which is protected by `mutex`. `bus` signals when the bus has arrived; `boarded` signals that a rider has boarded.
+
+Here is the code for the bus.
+
+``` {title="Bus problem solution (bus)"}
+mutex.wait()
+n = min(waiting, 50)
+for i in range(n):
+    bus.signal()
+    boarded.wait()
+
+waiting = max(waiting-50, 0)
+mutex.signal()
+
+depart()
+```
+
+The bus gets the `mutex` and holds it throughout the boarding process. The loop signals each rider in turn and waits for her to board. By controlling the number of signals, the bus prevents more than 50 riders from boarding.
+
+When all the riders have boarded, the bus updates ` waiting`, which is an example of the "I'll do it for you" pattern.
+
+The code for the riders uses two simple patterns: a mutex and a rendezvous.
+
+``` {title="Bus problem solution (riders)"}
+mutex.wait()
+     waiting += 1
+mutex.signal()
+
+bus.wait()
+board()
+boarded.signal()
+```
+
+Challenge: if riders arrive while the bus is boarding, they might be annoyed if you make them wait for the next one. Can you find a solution that allows late arrivals to board without violating the other constraints?

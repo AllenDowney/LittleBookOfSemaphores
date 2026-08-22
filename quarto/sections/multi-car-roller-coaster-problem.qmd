@@ -1,0 +1,54 @@
+---
+title: Multi-car Roller Coaster problem
+---
+This solution does not generalize to the case where there is more than one car. In order to do that, we have to satisfy some additional constraints:
+
+-   Only one car can be boarding at a time.
+
+-   Multiple cars can be on the track concurrently.
+
+-   Since cars can't pass each other, they have to unload in the same order they boarded.
+
+-   All the threads from one carload must disembark before any of the threads from subsequent carloads.
+
+Puzzle: modify the previous solution to handle the additional constraints. You can assume that there are $m$ cars, and that each car has a local variable named `i` that contains an identifier between 0 and $m-1$.
+
+## Multi-car Roller Coaster hint
+
+I used two lists of semaphores to keep the cars in order. One represents the loading area and one represents the unloading area. Each list contains one semaphore for each car. At any time, only one semaphore in each list is unlocked, so that enforces the order threads can load and unload. Initially, only the semaphores for Car 0 are unlocked. As each car enters the loading (or unloading) it waits on its own semaphore; as it leaves it signals the next car in line.
+
+``` {title="Multi-car Roller Coaster hint"}
+loadingArea = [Semaphore(0) for i in range(m)]
+loadingArea[0].signal()
+unloadingArea = [Semaphore(0) for i in range(m)]
+unloadingArea[0].signal()
+```
+
+The function `next` computes the identifier of the next car in the sequence (wrapping around from $m-1$ to 0):
+
+``` {title="Implementation of {\\tt next}"}
+def next(i):
+    return (i + 1) % m
+```
+
+## Multi-car Roller Coaster solution
+
+Here is the modified code for the cars:
+
+``` {title="Multi-car Roller Coaster solution (car)"}
+loadingArea[i].wait()
+load()
+boardQueue.signal(C)
+allAboard.wait()
+loadingArea[next(i)].signal()
+
+run()
+
+unloadingArea[i].wait()
+unload()
+unboardQueue.signal(C)
+allAshore.wait()
+unloadingArea[next(i)].signal()
+```
+
+The code for the passengers is unchanged.

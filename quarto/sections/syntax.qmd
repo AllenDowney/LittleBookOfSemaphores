@@ -1,0 +1,48 @@
+---
+title: Syntax
+---
+In most programming environments, an implementation of semaphores is available as part of the programming language or the operating system. Different implementations sometimes offer slightly different capabilities, and usually require different syntax.
+
+In this book I will use a simple pseudo-language to demonstrate how semaphores work. The syntax for creating a new semaphore and initializing it is
+
+``` {title="Semaphore initialization syntax"}
+fred = Semaphore(1)
+```
+
+The function `Semaphore` is a constructor; it creates and returns a new Semaphore. The initial value of the semaphore is passed as a parameter to the constructor.
+
+The semaphore operations go by different names in different environments. The most common alternatives are
+
+``` {title="Semaphore operations"}
+fred.increment()
+fred.decrement()    
+```
+
+and
+
+``` {title="Semaphore operations"}
+fred.signal()
+fred.wait() 
+```
+
+and
+
+``` {title="Semaphore operations"}
+fred.V()
+fred.P()    
+```
+
+It may be surprising that there are so many names, but there is a reason. `increment` and `decrement` describe what the operations *do*. `signal` and `wait` describe what they are often *used for*. And `V` and `P` were the original names proposed by Dijkstra, who wisely realized that a meaningless name is better than a misleading name[^1].
+
+I consider the other pairs misleading because `increment` and ` decrement` neglect to mention the possibility of blocking and waking, and semaphores are often used in ways that have nothing to do with `signal` and `wait`.
+
+If you insist on meaningful names, then I would suggest these:
+
+``` {title="Semaphore operations"}
+fred.increment_and_wake_a_waiting_process_if_any()
+fred.decrement_and_block_if_the_result_is_negative()    
+```
+
+I don't think the world is likely to embrace either of these names soon. In the meantime, I choose (more or less arbitrarily) to use `signal` and `wait`.
+
+[^1]: If you speak Dutch, `V` and `P` aren't completely meaningless.

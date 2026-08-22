@@ -1,0 +1,60 @@
+---
+title: Creating threads
+---
+I've done the same thing with the Pthread functions I'm going to use; here's my wrapper for `pthread_create`.
+
+``` {title="" escapeinside=""}
+pthread_t make_thread(void *(*entry)(void *), Shared *shared)
+{
+  int n;
+  pthread_t thread;
+
+  n = pthread_create (&thread, NULL, entry, (void *)shared);
+  if (n != 0) {
+    perror ("pthread_create failed");
+    exit (-1);
+  }
+  return thread;
+}
+```
+
+The return type from `pthread_create` is `pthread_t`, which you can think of as a handle for the new thread. You shouldn't have to worry about the implementation of `pthread_t`, but you do have to know that it has the semantics of a primitive type[^1]. That means that you can think of a thread handle as an immutable value, so you can copy it or pass it by value without causing problems. I point this out now because it is not true for semaphores, which I will get to in a minute.
+
+If `pthread_create` succeeds, it returns 0 and my function returns the handle of the new thread. If an error occurs, `pthread_create` returns an error code and my function prints an error message and exits.
+
+The parameters of `pthread_create` take some explaining. Starting with the second, `Shared` is a user-defined structure that contains shared variables. The following `typedef` statement creates the new type:
+
+``` {title=""}
+typedef struct {
+  int counter;
+} Shared;
+```
+
+In this case, the only shared variable is `counter`. `make_shared` allocates space for a `Shared` structure and initializes the contents:
+
+``` {title=""}
+Shared *make_shared ()
+{
+  int i;
+  Shared *shared = check_malloc (sizeof (Shared));
+  shared->counter = 0;
+  return shared;
+}
+```
+
+Now that we have a shared data structure, let's get back to `pthread_create`. The first parameter is a pointer to a function that takes a `void` pointer and returns a `void` pointer. If the syntax for declaring this type makes your eyes bleed, you are not alone. Anyway, the purpose of this parameter is to specify the function where the execution of the new thread will begin. By convention, this function is named `entry`:
+
+``` {title=""}
+void *entry (void *arg)
+{
+  Shared *shared = (Shared *) arg;
+  child_code (shared);
+  pthread_exit (NULL);
+}
+```
+
+The parameter of `entry` has to be declared as a `void` pointer, but in this program we know that it is really a pointer to a `Shared` structure, so we can typecast it accordingly and then pass it along to `child_code`, which does the real work.
+
+When `child_code` returns, we invoke `pthread_exit` which can be used to pass a value to any thread (usually the parent) that joins with this thread. In this case, the child has nothing to say, so we pass `NULL`.
+
+[^1]: Like an integer, for example, which is what a `pthread_t` is in all the implementations I know.

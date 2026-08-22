@@ -1,0 +1,46 @@
+---
+title: Semaphores
+---
+The POSIX standard specifies an interface for semaphores. This interface is not part of Pthreads, but most UNIXes that implement Pthreads also provide semaphores. If you find yourself with Pthreads and without semaphores, you can make your own; see Section [\[makeyourown\]](#makeyourown){reference-type="ref" reference="makeyourown"}.
+
+POSIX semaphores have type `sem_t`. You shouldn't have to know about the implementation of this type, but you do have to know that it has structure semantics, which means that if you assign it to a variable you are making a copy of the contents of a structure. Copying a semaphore is almost certainly a bad idea. In POSIX, the behavior of the copy is undefined.
+
+In my programs, I use capital letters to denote types with structure semantics, and I always manipulate them with pointers. Fortunately, it is easy to put a wrapper around `sem_t` to make it behave like a proper object. Here is the `typedef` and the wrapper that creates and initializes semaphores:
+
+``` {title=""}
+typedef sem_t Semaphore;
+
+Semaphore *make_semaphore (int n)
+{
+  Semaphore *sem = check_malloc (sizeof(Semaphore));
+  int ret = sem_init(sem, 0, n);
+  if (ret == -1) {
+    perror ("sem_init failed");
+    exit (-1);    
+  }
+  return sem;
+}
+```
+
+`make_semaphore` takes the initial value of the semaphore as a parameter. It allocates space for a `Semaphore`, initializes it, and returns a pointer to `Semaphore`.
+
+`sem_init` uses old-style UNIX error reporting, which means that it returns -1 if something went wrong. Once nice thing about these wrapper functions is that we don't have to remember which functions use which reporting style.
+
+With these definitions, we can write C code that almost looks like a real programming language:
+
+``` {title=""}
+Semaphore *mutex = make_semaphore(1);
+sem_wait(mutex);
+sem_post(mutex);
+```
+
+Annoyingly, POSIX semaphores use `post` instead of `signal`, but we can fix that:
+
+``` {title=""}
+int sem_signal(Semaphore *sem)
+{
+  return sem_post(sem);
+}
+```
+
+That's enough cleanup for now.

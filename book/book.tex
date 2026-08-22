@@ -2082,7 +2082,7 @@ a synchronization problem, you should check for this kind
 of deadlock.
 
 
-\subsection{Producer-consumer with a finite buffer}
+\section{Producer-consumer with a finite buffer}
 
 In the example I described above, event-handling threads,
 the shared buffer is usually infinite (more accurately, it is
@@ -3336,7 +3336,7 @@ artificial constraints).  The resulting code is a bit
 more concise, but its function is not as obvious.
 
 
-\subsection{Generalized Smokers Problem}
+\section{Generalized Smokers Problem}
 
 Parnas suggested that the smokers problem becomes more
 difficult if we modify the agent, eliminating the requirement
@@ -3398,10 +3398,10 @@ at the scoreboard, and reacts accordingly.
 
 \clearemptydoublepage
 \chapter{Less classical synchronization problems}
-\label{next}
 
 
 \section{The dining savages problem}
+\label{next}
 
 This problem is from Andrews's 
 {\em Concurrent Programming} \cite{andrews}.
@@ -4323,7 +4323,7 @@ the car and resets the passenger counter.
 
 
 \clearemptydoublepage
-\subsection{Multi-car Roller Coaster problem}
+\section{Multi-car Roller Coaster problem}
 
 This solution does not generalize to the case where there is more
 than one car.  In order to do that, we have to satisfy some additional
@@ -4576,7 +4576,7 @@ The male code is similar.
 Are there any problems with this solution?
 
 \clearemptydoublepage
-\subsection {No-starve unisex bathroom problem}
+\section {No-starve unisex bathroom problem}
 
 The problem with the previous solution is that it allows starvation.
 A long line of women can arrive and enter while there is a man
@@ -5924,7 +5924,7 @@ her, she signals him and updates the counter for both of them.
 \end{itemize}
 
 
-\subsection{Extended Dining Hall problem}
+\section{Extended Dining Hall problem}
 
 The Dining Hall problem gets a little more challenging if we
 add another step.  As students come to lunch they

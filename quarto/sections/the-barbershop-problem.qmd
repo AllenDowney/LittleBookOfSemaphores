@@ -1,0 +1,87 @@
+---
+title: The barbershop problem
+---
+The original barbershop problem was proposed by Dijkstra. A variation of it appears in Silberschatz and Galvin's *Operating Systems Concepts* [@silberschatz].
+
+> A barbershop consists of a waiting room with $n$ chairs, and the barber room containing the barber chair. If there are no customers to be served, the barber goes to sleep. If a customer enters the barbershop and all chairs are occupied, then the customer leaves the shop. If the barber is busy, but chairs are available, then the customer sits in one of the free chairs. If the barber is asleep, the customer wakes up the barber. Write a program to coordinate the barber and the customers.
+
+To make the problem a little more concrete, I added the following information:
+
+-   Customer threads should invoke a function named `getHairCut`.
+
+-   If a customer thread arrives when the shop is full, it can invoke `balk`, which does not return.
+
+-   The barber thread should invoke `cutHair`.
+
+-   When the barber invokes `cutHair` there should be exactly one thread invoking `getHairCut` concurrently.
+
+Write a solution that guarantees these constraints.
+
+## Barbershop hint
+
+``` {title="Barbershop hint"}
+n = 4
+customers = 0
+mutex = Semaphore(1)
+customer = Semaphore(0)
+barber = Semaphore(0)
+customerDone = Semaphore(0)
+barberDone = Semaphore(0)
+```
+
+`n` is the total number of customers that can be in the shop: three in the waiting room and one in the chair.
+
+`customers` counts the number of customers in the shop; it is protected by `mutex`.
+
+The barber waits on `customer` until a customer enters the shop, then the customer waits on `barber` until the barber signals him to take a seat.
+
+After the haircut, the customer signals `customerDone` and waits on `barberDone`.
+
+## Barbershop solution
+
+This solution combines a scoreboard and two rendezvouses[^1]. Here is the code for customers:
+
+``` {title="Barbershop solution (customer)"}
+mutex.wait()
+    if customers == n:
+        mutex.signal()
+        balk()
+    customers += 1
+mutex.signal()
+
+customer.signal()
+barber.wait()
+
+# getHairCut()
+
+customerDone.signal()
+barberDone.wait()
+
+mutex.wait()
+    customers -= 1
+mutex.signal()
+```
+
+If there are $n$ customers in the shop any customers that arrive immediately invoke `balk`. Otherwise each customer signals `customer` and waits on `barber`.
+
+Here is the code for the barber:
+
+``` {title="Barbershop solution (barber)"}
+customer.wait()
+barber.signal()
+
+# cutHair()
+
+customerDone.wait()
+barberDone.signal()
+```
+
+Each time a customer signals, the barber wakes, signals `barber`, and gives one hair cut. If another customer arrives while the barber is busy, then on the next iteration the barber will pass the `customer` semaphore without sleeping.
+
+The names for `customer` and `barber` are based on the naming convention for a rendezvous, so `customer.wait()` means "wait for a customer," not "customers wait here."
+
+The second rendezvous, using `customerDone` and `barberDone`, ensures that the hair cut is done before the barber loops around to let the next customer into the critical section.
+
+This solution is in `sync_code/barber.py` (see [\[sync.py\]](#sync.py){reference-type="ref" reference="sync.py"}).
+
+[^1]: The plural of rendezvous is rare, and not all dictionaries agree about what it is. Another possibility is that the plural is also spelled "rendezvous," but the final "s" is pronounced.

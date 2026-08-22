@@ -1,0 +1,6 @@
+---
+title: Synchronization in C
+---
+[]{#csync label="csync"}
+
+In this section we will write a multithreaded, synchronized program in C. Appendix [\[ccleanup\]](#ccleanup){reference-type="ref" reference="ccleanup"} provides some of the utility code I use to make the C code a little more palatable. The examples in this section depend on that code.

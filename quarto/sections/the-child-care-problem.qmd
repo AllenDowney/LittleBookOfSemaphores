@@ -1,0 +1,134 @@
+---
+title: The child care problem
+---
+Max Hailperin wrote this problem for his textbook *Operating Systems and Middleware* [@hailperin]. At a child care center, state regulations require that there is always one adult present for every three children.
+
+Puzzle: Write code for child threads and adult threads that enforces this constraint in a critical section.
+
+## Child care hint
+
+Hailperin suggests that you can *almost* solve this problem with one semaphore.
+
+``` {title="Child care hint"}
+multiplex = Semaphore(0)
+```
+
+`multiplex` counts the number of tokens available, where each token allows a child thread to enter. As adults enter, they signal ` multiplex` three times; as they leave, they `wait` three times. But there is a problem with this solution.
+
+Puzzle: what is the problem?
+
+## Child care non-solution
+
+Here is what the adult code looks like in Hailperin's non-solution:
+
+``` {title="Child care non-solution (adult)"}
+multiplex.signal(3)
+
+# critical section
+
+multiplex.wait()
+multiplex.wait()
+multiplex.wait()
+```
+
+The problem is a potential deadlock. Imagine that there are three children and two adults in the child care center. The value of `multiplex` is 3, so either adult should be able to leave. But if both adults start to leave at the same time, they might divide the available tokens between them, and both block.
+
+Puzzle: solve this problem with a minimal change.
+
+## Child care solution
+
+Adding a mutex solves the problem:
+
+``` {title="Child care solution (adult)"}
+multiplex.signal(3)
+
+# critical section
+
+mutex.wait()
+    multiplex.wait()
+    multiplex.wait()
+    multiplex.wait()
+mutex.signal()
+```
+
+Now the three `wait` operations are atomic. If there are three tokens available, the thread that gets the mutex will get all three tokens and exit. If there are fewer tokens available, the first thread will block in the mutex and subsequent threads will queue on the mutex.
+
+## Extended child care problem
+
+One feature of this solution is that an adult thread waiting to leave can prevent child threads from entering.
+
+Imagine that there are 4 children and two adults, so the value of the multiplex is 2. If one of the adults tries to leave, she will take two tokens and then block waiting for the third. If a child thread arrives, it will wait even though it would be legal to enter. From the point of view of the adult trying to leave, that might be just fine, but if you are trying to maximize the utilization of the child care center, it's not.
+
+Puzzle: write a solution to this problem that avoids unnecessary waiting.
+
+Hint: think about the dancers in Section [\[dancers\]](#dancers){reference-type="ref" reference="dancers"}.
+
+## Extended child care hint
+
+Here are the variables I used in my solution:
+
+``` {title="Extended child care hint"}
+children = adults = waiting = leaving = 0
+mutex = Semaphore(1)
+childQueue = Semaphore(0)
+adultQueue = Semaphore(0)
+```
+
+`children`, `adults`, `waiting` and `leaving` keep track of the number of children, adults, children waiting to enter, and adults waiting to leave; they are protected by `mutex`.
+
+Children wait on `childQueue` to enter, if necessary. Adults wait on `adultQueue` to leave.
+
+## Extended child care solution
+
+This solution is more complicated than Hailperin's elegant solution, but it is mostly a combination of patterns we have seen before: a scoreboard, two queues, and "I'll do it for you".
+
+Here is the child code:
+
+``` {title="Extended child care solution (child)"}
+mutex.wait()
+    if children < 3 * adults:
+        children++
+        mutex.signal()
+    else:
+        waiting++
+        mutex.signal()
+        childQueue.wait()
+
+# critical section
+
+mutex.wait()
+    children--
+    if leaving and children <= 3 * (adults-1):
+        leaving--
+        adults--
+        adultQueue.signal() 
+mutex.signal()
+```
+
+As children enter, they check whether there are enough adults and either (1) increment `children` and enter or (2) increment `waiting` and block. When they exit, they check for an adult thread waiting to leave and signal it if possible.
+
+Here is the code for adults:
+
+``` {title="Extended child care solution (adult)"}
+mutex.wait()
+    adults++
+    if waiting:
+        n = min(3, waiting)
+        childQueue.signal(n)
+        waiting -= n
+        children += n
+mutex.signal()
+
+# critical section
+
+mutex.wait()
+    if children <= 3 * (adults-1):
+        adults--
+        mutex.signal()
+    else:
+        leaving++
+        mutex.signal()
+        adultQueue.wait() 
+```
+
+As adults enter, they signal waiting children, if any. Before they leave, they check whether there are enough adults left. If so, they decrement `adults` and exit. Otherwise they increment ` leaving` and block. While an adult thread is waiting to leave, it counts as one of the adults in the critical section, so additional children can enter.

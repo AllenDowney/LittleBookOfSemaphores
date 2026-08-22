@@ -1,0 +1,79 @@
+---
+title: The roller coaster problem
+---
+This problem is from Andrews's *Concurrent Programming* [@andrews], but he attributes it to J. S. Herman's Master's thesis.
+
+> Suppose there are $n$ passenger threads and a car thread. The passengers repeatedly wait to take rides in the car, which can hold $C$ passengers, where $C<n$. The car can go around the tracks only when it is full.
+
+Here are some additional details:
+
+-   Passengers should invoke `board` and `unboard`.
+
+-   The car should invoke `load`, `run` and `unload`.
+
+-   Passengers cannot board until the car has invoked `load`
+
+-   The car cannot depart until $C$ passengers have boarded.
+
+-   Passengers cannot unboard until the car has invoked `unload`.
+
+Puzzle: Write code for the passengers and car that enforces these constraints.
+
+## Roller Coaster hint
+
+``` {title="Roller Coaster hint"}
+mutex = Semaphore(1)
+mutex2 = Semaphore(1)
+boarders = 0
+unboarders = 0
+boardQueue = Semaphore(0)
+unboardQueue = Semaphore(0)
+allAboard = Semaphore(0)
+allAshore = Semaphore(0)
+```
+
+`mutex` protects `passengers`, which counts the number of passengers that have invoked `board`.
+
+Passengers wait on `boardQueue` before boarding and `unboardQueue` before unboarding. `allAboard` indicates that the car is full.
+
+## Roller Coaster solution
+
+Here is my code for the car thread:
+
+``` {title="Roller Coaster solution (car)"}
+load()
+boardQueue.signal(C)
+allAboard.wait()
+
+run()
+
+unload()
+unboardQueue.signal(C)
+allAshore.wait()
+```
+
+When the car arrives, it signals $C$ passengers, then waits for the last one to signal `allAboard`. After it departs, it allows $C$ passengers to disembark, then waits for `allAshore`.
+
+``` {title="Roller Coaster solution (passenger)"}
+boardQueue.wait()
+board()
+
+mutex.wait()
+   boarders += 1
+   if boarders == C:
+       allAboard.signal()
+       boarders = 0
+mutex.signal()
+
+unboardQueue.wait()
+unboard()
+
+mutex2.wait()
+   unboarders += 1
+   if unboarders == C:
+       allAshore.signal()
+       unboarders = 0
+mutex2.signal()
+```
+
+Passengers wait for the car before boarding, naturally, and wait for the car to stop before leaving. The last passenger to board signals the car and resets the passenger counter.

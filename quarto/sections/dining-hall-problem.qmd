@@ -1,0 +1,69 @@
+---
+title: Dining Hall problem
+---
+This problem was written by Jon Pollack during my Synchronization class at Olin College.
+
+Students in the dining hall invoke `dine` and then `leave`. After invoking `dine` and before invoking `leave` a student is considered "ready to leave".
+
+The synchronization constraint that applies to students is that, in order to maintain the illusion of social suave, a student may never sit at a table alone. A student is considered to be sitting alone if everyone else who has invoked `dine` invokes `leave` before she has finished `dine`.
+
+Puzzle: write code that enforces this constraint.
+
+## Dining Hall problem hint
+
+``` {title="Dining Hall problem hint"}
+eating = 0
+readyToLeave = 0
+mutex = Semaphore(1)
+okToLeave = Semaphore(0)
+```
+
+`eating` and `readyToLeave` are counters protected by `mutex`, so this is the usual scoreboard pattern.
+
+If a student is ready to leave, but another student would be left alone at the table, she waits on `okToLeave` until another student changes the situation and signals.
+
+## Dining Hall problem solution
+
+If you analyze the constraints, you will realize that there is only one situation where a student has to wait, if there is one student eating and one student who wants to leave. But there are two ways to get out of this situation: another student might arrive to eat, or the dining student might finish.
+
+In either case, the student who signals the waiting student updates the counters, so the waiting student doesn't have to get the mutex back. This is another example of the the "I'll do it for you" pattern.
+
+``` {title="Dining Hall problem solution"}
+getFood()
+
+mutex.wait()
+eating++
+if eating == 2 and readyToLeave == 1:
+    okToLeave.signal()
+    readyToLeave--
+mutex.signal()
+
+dine()
+
+mutex.wait()
+eating--
+readyToLeave++
+
+if eating == 1 and readyToLeave == 1:
+    mutex.signal()
+    okToLeave.wait()
+elif eating == 0 and readyToLeave == 2:
+    okToLeave.signal()
+    readyToLeave -= 2
+    mutex.signal()
+else:
+    readyToLeave--
+    mutex.signal()
+
+leave()
+```
+
+When a student is checking in, if she sees one student eating and one waiting to leave, she lets the waiter off the hook and decrements `readyToLeave` for him.
+
+After dining, the student checks three cases:
+
+-   If there is only one student left eating, the departing student has to give up the mutex and wait.
+
+-   If the departing student finds that someone is waiting for her, she signals him and updates the counter for both of them.
+
+-   Otherwise, she just decrements `readyToLeave` and leaves.

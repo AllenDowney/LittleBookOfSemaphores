@@ -1,0 +1,119 @@
+---
+title: Barrier
+---
+Consider again the Rendezvous problem from Section [\[rendezvous\]](#rendezvous){reference-type="ref" reference="rendezvous"}. A limitation of the solution we presented is that it does not work with more than two threads.
+
+Puzzle: Generalize the rendezvous solution. Every thread should run the following code:
+
+``` {title="Barrier code"}
+rendezvous
+critical point
+```
+
+The synchronization requirement is that no thread executes `critical point` until after all threads have executed `rendezvous`.
+
+You can assume that there are $n$ threads and that this value is stored in a variable, `n`, that is accessible from all threads.
+
+When the first $n-1$ threads arrive they should block until the $n$th thread arrives, at which point all the threads may proceed.
+
+## Barrier hint
+
+For many of the problems in this book I will provide hints by presenting the variables I used in my solution and explaining their roles.
+
+``` {title="Barrier hint"}
+n = the number of threads
+count = 0
+mutex = Semaphore(1)
+barrier = Semaphore(0)
+```
+
+`count` keeps track of how many threads have arrived. `mutex` provides exclusive access to `count` so that threads can increment it safely.
+
+`barrier` is locked (zero or negative) until all threads arrive; then it should be unlocked (1 or more).
+
+## Barrier non-solution
+
+First I will present a solution that is not quite right, because it is useful to examine incorrect solutions and figure out what is wrong.
+
+``` {title="Barrier non-solution"}
+rendezvous
+
+mutex.wait()
+    count = count + 1
+mutex.signal()
+
+if count == n: barrier.signal()
+
+barrier.wait()
+
+critical point
+```
+
+Since `count` is protected by a mutex, it counts the number of threads that pass. The first $n-1$ threads wait when they get to the barrier, which is initially locked. When the $n$th thread arrives, it unlocks the barrier.
+
+Puzzle: What is wrong with this solution?
+
+## Deadlock #2
+
+The problem is a deadlock.
+
+As an example, imagine that $n=5$ and that 4 threads are waiting at the barrier. The value of the semaphore is the number of threads in queue, negated, which is -4.
+
+When the 5th thread signals the barrier, one of the waiting threads is allowed to proceed, and the semaphore is incremented to -3.
+
+But then no one signals the semaphore again and none of the other threads can pass the barrier. This is a second example of a deadlock.
+
+Puzzle: Does this code always create a deadlock? Can you find an execution path through this code that does *not* cause a deadlock?
+
+Puzzle: Fix the problem.
+
+## Barrier solution {#barrier}
+
+Finally, here is a working barrier:
+
+``` {title="Barrier solution"}
+rendezvous
+
+mutex.wait()
+    count = count + 1
+mutex.signal()
+
+if count == n: barrier.signal()
+
+barrier.wait()
+barrier.signal()
+
+critical point
+```
+
+The only change is another `signal` after waiting at the barrier. Now as each thread passes, it signals the semaphore so that the next thread can pass.
+
+This pattern, a `wait` and a `signal` in rapid succession, occurs often enough that it has a name; it's called a **turnstile**, because it allows one thread to pass at a time, and it can be locked to bar all threads.
+
+In its initial state (zero), the turnstile is locked. The $n$th thread unlocks it and then all $n$ threads go through.
+
+It might seem dangerous to read the value of `count` outside the mutex. In this case it is not a problem, but in general it is probably not a good idea. We will clean this up in a few pages, but in the meantime, you might want to consider these questions: After the $n$th thread, what state is the turnstile in? Is there any way the barrier might be signaled more than once?
+
+## Deadlock #3
+
+Since only one thread at a time can pass through the mutex, and only one thread at a time can pass through the turnstile, it might seem reasonable to put the turnstile inside the mutex, like this:
+
+``` {title="Bad barrier solution"}
+rendezvous
+
+mutex.wait()
+    count = count + 1
+    if count == n: barrier.signal()
+
+    barrier.wait()
+    barrier.signal()
+mutex.signal()
+
+critical point
+```
+
+This turns out to be a bad idea because it can cause a deadlock.
+
+Imagine that the first thread enters the mutex and then blocks when it reaches the turnstile. Since the mutex is locked, no other threads can enter, so the condition, `count==n`, will never be true and no one will ever unlock the turnstile.
+
+In this case the deadlock is fairly obvious, but it demonstrates a common source of deadlocks: blocking on a semaphore while holding a mutex.

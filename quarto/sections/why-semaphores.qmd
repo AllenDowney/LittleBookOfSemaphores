@@ -1,0 +1,10 @@
+---
+title: Why semaphores?
+---
+Looking at the definition of semaphores, it is not at all obvious why they are useful. It's true that we don't *need* semaphores to solve synchronization problems, but there are some advantages to using them:
+
+-   Semaphores impose deliberate constraints that help programmers avoid errors.
+
+-   Solutions using semaphores are often clean and organized, making it easy to demonstrate their correctness.
+
+-   Semaphores can be implemented efficiently on many systems, so solutions that use semaphores are portable and usually efficient.

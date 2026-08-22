@@ -1,0 +1,79 @@
+---
+title: Extended Dining Hall problem
+---
+The Dining Hall problem gets a little more challenging if we add another step. As students come to lunch they invoke `getFood`, `dine` and then `leave`. After invoking `getFood` and before invoking `dine`, a student is considered "ready to eat". Similarly, after invoking `dine` a student is considered "ready to leave".
+
+The same synchronization constraint applies: a student may never sit at a table alone. A student is considered to be sitting alone if either
+
+-   She invokes `dine` while there is no one else at the table and no one ready to eat, or
+
+-   everyone else who has invoked `dine` invokes `leave` before she has finished `dine`.
+
+Puzzle: write code that enforces these constraints.
+
+## Extended Dining Hall problem hint
+
+Here are the variables I used in my solution:
+
+``` {title="Extended Dining Hall problem hint"}
+readyToEat = 0
+eating = 0
+readyToLeave = 0
+mutex = Semaphore(1)
+okToSit = Semaphore(0)
+okToLeave = Semaphore(0)
+```
+
+`readyToEat`, `eating` and `readyToLeave` are counters, all protected by `mutex`.
+
+If a student is in a situation where she cannot proceed, she waits on `okToSit` or `okToLeave` until another student changes the situation and signals.
+
+I also used a per-thread variable named `hasMutex` to help keep track of whether or not a thread holds the mutex.
+
+## Extended Dining Hall problem solution
+
+Again, if we analyze the constraints, we realize that there is only one situation where a student who is ready to eat has to wait, if there is no one eating and no one else ready to eat. And the only way out is if someone else arrives who is ready to eat.
+
+``` {title="Extended Dining Hall problem solution"}
+getFood()
+
+mutex.wait()
+readyToEat++
+if eating == 0 and readyToEat == 1:
+    mutex.signal()
+    okToSit.wait()
+elif eating == 0 and readyToEat == 2:
+    okToSit.signal()
+    readyToEat -= 2
+    eating += 2
+    mutex.signal()
+else:
+    readyToEat--
+    eating++
+    if eating == 2 and readyToLeave == 1:
+        okToLeave.signal()
+        readyToLeave--
+    mutex.signal()
+
+dine()
+
+mutex.wait()
+eating--
+readyToLeave++
+if eating == 1 and readyToLeave == 1:
+    mutex.signal()
+    okToLeave.wait()
+elif eating == 0 and readyToLeave == 2:
+    okToLeave.signal()
+    readyToLeave -= 2
+    mutex.signal()
+else:
+    readyToLeave--
+    mutex.signal()
+
+leave()
+```
+
+As in the previous solution, I used the "I'll do it for you" pattern so that a waiting student doesn't have to get the mutex back.
+
+The primary difference between this solution and the previous one is that the first student who arrives at an empty table has to wait, and the second student allows both students to proceed. In either case, we don't have to check for students waiting to leave, since no one can leave an empty table!

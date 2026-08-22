@@ -1,0 +1,22 @@
+---
+title: Synchronization
+---
+[]{#synch label="synch"}
+
+In common use, "synchronization" means making two things happen at the same time. In computer systems, synchronization is a little more general; it refers to relationships among events---any number of events, and any kind of relationship (before, during, after).
+
+Computer programmers are often concerned with **synchronization constraints**, which are requirements pertaining to the order of events. Examples include:
+
+Serialization:
+
+:   Event A must happen before Event B.
+
+Mutual exclusion:
+
+:   Events A and B must not happen at the same time.
+
+In real life we often check and enforce synchronization constraints using a clock. How do we know if A happened before B? If we know what time both events occurred, we can just compare the times.
+
+In computer systems, we often need to satisfy synchronization constraints without the benefit of a clock, either because there is no universal clock, or because we don't know with fine enough resolution when events occur.
+
+That's what this book is about: software techniques for enforcing synchronization constraints.

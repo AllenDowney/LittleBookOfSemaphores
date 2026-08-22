@@ -1,0 +1,81 @@
+---
+title: The dining savages problem
+---
+[]{#next label="next"}
+
+This problem is from Andrews's *Concurrent Programming* [@andrews].
+
+> A tribe of savages eats communal dinners from a large pot that can hold M servings of stewed missionary[^1]. When a savage wants to eat, he helps himself from the pot, unless it is empty. If the pot is empty, the savage wakes up the cook and then waits until the cook has refilled the pot.
+
+Any number of savage threads run the following code:
+
+``` {title="Unsynchronized savage code"}
+while True:
+    getServingFromPot()
+    eat()
+```
+
+And one cook thread runs this code:
+
+``` {title="Unsynchronized cook code"}
+while True:
+    putServingsInPot(M)
+```
+
+The synchronization constraints are:
+
+-   Savages cannot invoke `getServingFromPot` if the pot is empty.
+
+-   The cook can invoke `putServingsInPot` only if the pot is empty.
+
+Puzzle: Add code for the savages and the cook that satisfies the synchronization constraints.
+
+## Dining Savages hint
+
+It is tempting to use a semaphore to keep track of the number of servings, as in the producer-consumer problem. But in order to signal the cook when the pot is empty, a thread would have to know before decrementing the semaphore whether it would have to wait, and we just can't do that.
+
+An alternative is to use a scoreboard to keep track of the number of servings. If a savage finds the counter at zero, he wakes the cook and waits for a signal that the pot is full. Here are the variables I used:
+
+``` {title="Dining Savages hint"}
+servings = 0
+mutex = Semaphore(1)
+emptyPot = Semaphore(0)
+fullPot = Semaphore(0)
+```
+
+Not surprisingly, `emptyPot` indicates that the pot is empty and `fullPot` indicates that the pot is full.
+
+## Dining Savages solution
+
+My solution is a combination of the scoreboard pattern with a rendezvous. Here is the code for the cook:
+
+``` {title="Dining Savages solution (cook)"}
+while True:
+    emptyPot.wait()
+    putServingsInPot(M)
+    fullPot.signal()
+```
+
+The code for the savages is only a little more complicated. As each savage passes through the mutex, he checks the pot. If it is empty, he signals the cook and waits. Otherwise, he decrements `servings` and gets a serving from the pot.
+
+``` {title="Dining Savages solution (savage)"}
+while True:
+    mutex.wait()
+        if servings == 0:
+            emptyPot.signal()
+            fullPot.wait()
+            servings = M
+        servings -= 1
+    getServingFromPot()
+    mutex.signal()
+
+    eat()
+```
+
+It might seem odd that the savage, rather than the cook, sets `servings = M`. That's not really necessary; when the cook runs `putServingsInPot`, we know that the savage that holds the mutex is waiting on `fullPot`. So the cook could access `servings` safely. But in this case, I decided to let the savage do it so that it is clear from looking at the code that all accesses to `servings` are inside the mutex.
+
+This solution is deadlock-free. The only opportunity for deadlock comes when the savage that holds `mutex` waits for `fullPot`. While he is waiting, other savages are queued on `mutex`. But eventually the cook will run and signal `fullPot`, which allows the waiting savage to resume and release the mutex.
+
+Does this solution assume that the pot is thread-safe, or does it guarantee that `putServingsInPot` and `getServingFromPot` are executed exclusively?
+
+[^1]: This problem is based on a cartoonish representation of the history of Western missionaries among hunter-gatherer societies. Some humor is intended by the allusion to the Dining Philosophers problem, but the representation of "savages" here isn't intended to be any more realistic than the previous representation of philosophers. If you are interested in hunter-gatherer societies, I recommend Jared Diamond's *Guns, Germs and Steel*, Napoleon Chagnon's *The Yanomamo*, and Redmond O'Hanlon's *In Trouble Again*, but not Tierney's *Darkness in El Dorado*, which I believe is unreliable.

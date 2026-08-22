@@ -1,0 +1,75 @@
+---
+title: "Hilzer's Barbershop problem"
+---
+William Stallings [@stallings] presents a more complicated version of the barbershop problem, which he attributes to Ralph Hilzer at the California State University at Chico.
+
+> Our barbershop has three chairs, three barbers, and a waiting area that can accommodate four customers on a sofa and that has standing room for additional customers. Fire codes limit the total number of customers in the shop to 20.
+>
+> A customer will not enter the shop if it is filled to capacity with other customers. Once inside, the customer takes a seat on the sofa or stands if the sofa is filled. When a barber is free, the customer that has been on the sofa the longest is served and, if there are any standing customers, the one that has been in the shop the longest takes a seat on the sofa. When a customer's haircut is finished, any barber can accept payment, but because there is only one cash register, payment is accepted for one customer at a time. The barbers divide their time among cutting hair, accepting payment, and sleeping in their chair waiting for a customer.
+
+In other words, the following synchronization constraints apply:
+
+-   Customers invoke the following functions in order: `enterShop`, `sitOnSofa`, `getHairCut`, and `pay`.
+
+-   Barbers invoke `cutHair` and `acceptPayment`.
+
+-   Customers cannot invoke `enterShop` if the shop is at capacity.
+
+-   If the sofa is full, an arriving customer cannot invoke `sitOnSofa`.
+
+-   When a customer invokes `getHairCut` there should be a corresponding barber executing `cutHair` concurrently, and vice versa.
+
+-   It should be possible for up to three customers to execute `getHairCut` concurrently, and up to three barbers to execute `cutHair` concurrently.
+
+-   The customer has to `pay` before the barber can `acceptPayment`.
+
+-   The barber must `acceptPayment` before the customer can exit.
+
+Puzzle: Write code that enforces the synchronization constraints for Hilzer's barbershop.
+
+## Hilzer's barbershop hint
+
+Here are the variables I used in my solution:
+
+``` {title="Hilzer's barbershop hint"}
+```
+
+`mutex` protects `customers`, which keeps track of the number of customers in the shop, and `queue1` which is a list of semaphores for threads waiting for a seat on the sofa.
+
+`mutex2` protects `queue2`, which is a list of semaphores for threads waiting for a chair.
+
+`sofa` is a multiplex that enforces the maximum number of customers on the sofa.
+
+`customer1` signals that there is a customer in `queue1`, and `customer2` signals that there is a customer in `queue2`.
+
+`payment` signals that a customer has paid, and `receipt` sigmals that a barber has accepted payment.
+
+## Hilzer's barbershop solution
+
+This solution is considerably more complex than I expected. I am not sure if Hilzer had something simpler in mind, but here is the best I could do.
+
+``` {.troff mandoc title="Hilzer's barbershop solution (customer)"}
+```
+
+The first paragraph is the same as in the previous solution. When a customer arrives, it checks the counter and either balks or adds itself to the queue. Then it signals a barber.
+
+When the customer gets out of queue, it enters the multiplex, sits on the couch and adds itself to the second queue.
+
+When it gets out of *that* queue, it gets a haircut, pays, and then exits.
+
+``` {.troff mandoc title="Hilzer's barbershop solution (barber)"}
+```
+
+Each barber waits for a customer to enter, signals the customer's semaphore to get it out of queue, then waits for it to claim a seat on the sofa. This enforces the FIFO requirement.
+
+The barber waits for the customer to join the second queue and then signals it, allowing the customer to claim a chair.
+
+Each barber admits one customer to the chair, so there can by up to three concurrent haircuts. Because there is only one cash register, the customer has to get `mutex`. The customer and barber rendezvous at the cash register, then both exit.
+
+This solution satisfies the synchonization constraints, but it leaves the sofa underutilized. Because there are only three barbers, there can never be more than three customers on the sofa, so the multiplex is unnecessary.
+
+This solution is in `sync_code/barber3.py` (see [\[sync.py\]](#sync.py){reference-type="ref" reference="sync.py"}).
+
+The only way I can think of to solve this problem is to create a third kind of thread, which I'll call an usher. The ushers manage `queue1` and the barbers manage `queue2`. If there are 4 ushers and 3 barbers, the sofa can be fully utilized.
+
+This solution is in `sync_code/barber4.py` (see [\[sync.py\]](#sync.py){reference-type="ref" reference="sync.py"}).

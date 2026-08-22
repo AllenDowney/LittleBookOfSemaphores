@@ -1,0 +1,90 @@
+---
+title: Rendezvous
+---
+[]{#rendezvous label="rendezvous"}
+
+Puzzle: Generalize the signal pattern so that it works both ways. Thread A has to wait for Thread B and vice versa. In other words, given this code
+
+``` {title="Thread A"}
+statement a1
+statement a2
+```
+
+``` {title="Thread B"}
+statement b1
+statement b2
+```
+
+we want to guarantee that `a1` happens before `b2` and `b1` happens before `a2`. In writing your solution, be sure to specify the names and initial values of your semaphores (little hint there).
+
+Your solution should not enforce too many constraints. For example, we don't care about the order of `a1` and `b1`. In your solution, either order should be possible.
+
+This synchronization problem has a name; it's a rendezvous. The idea is that two threads rendezvous at a point of execution, and neither is allowed to proceed until both have arrived.
+
+## Rendezvous hint
+
+The chances are good that you were able to figure out a solution, but if not, here is a hint. Create two semaphores, named `aArrived` and `bArrived`, and initialize them both to zero.
+
+As the names suggest, `aArrived` indicates whether Thread A has arrived at the rendezvous, and `bArrived` likewise.
+
+## Rendezvous solution
+
+Here is my solution, based on the previous hint:
+
+``` {title="Thread A"}
+statement a1
+aArrived.signal()
+bArrived.wait()
+statement a2
+```
+
+``` {title="Thread B"}
+statement b1
+bArrived.signal()
+aArrived.wait()
+statement b2
+```
+
+While working on the previous problem, you might have tried something like this:
+
+``` {title="Thread A"}
+statement a1
+bArrived.wait()
+aArrived.signal()
+statement a2
+```
+
+``` {title="Thread B"}
+statement b1
+bArrived.signal()
+aArrived.wait()
+statement b2
+```
+
+This solution also works, although it is probably less efficient, since it might have to switch between A and B one time more than necessary.
+
+If A arrives first, it waits for B. When B arrives, it wakes A and might proceed immediately to its `wait` in which case it blocks, allowing A to reach its `signal`, after which both threads can proceed.
+
+Think about the other possible paths through this code and convince yourself that in all cases neither thread can proceed until both have arrived.
+
+## Deadlock #1
+
+Again, while working on the previous problem, you might have tried something like this:
+
+``` {title="Thread A"}
+statement a1
+bArrived.wait()
+aArrived.signal()
+statement a2
+```
+
+``` {title="Thread B"}
+statement b1
+aArrived.wait()
+bArrived.signal()
+statement b2
+```
+
+If so, I hope you rejected it quickly, because it has a serious problem. Assuming that A arrives first, it will block at its `wait`. When B arrives, it will also block, since A wasn't able to signal `aArrived`. At this point, neither thread can proceed, and never will.
+
+This situation is called a **deadlock** and, obviously, it is not a successful solution of the synchronization problem. In this case, the error is obvious, but often the possibility of deadlock is more subtle. We will see more examples later.

@@ -1,0 +1,133 @@
+---
+title: The sushi bar problem
+---
+This problem was inspired by a problem proposed by Kenneth Reek [@reek]. Imagine a sushi bar with 5 seats. If you arrive while there is an empty seat, you can take a seat immediately. But if you arrive when all 5 seats are full, that means that all of them are dining together, and you will have to wait for the entire party to leave before you sit down.
+
+Puzzle: write code for customers entering and leaving the sushi bar that enforces these requirements.
+
+## Sushi bar hint
+
+Here are the variables I used:
+
+``` {title="Sushi bar hint"}
+eating = waiting = 0
+mutex = Semaphore(1)
+block = Semaphore(0)
+must_wait = False
+```
+
+`eating` and `waiting` keep track of the number of threads sitting at the bar and waiting. `mutex` protects both counters. `must_wait` indicates that the bar is (or has been) full, so incoming customers have to block on `block`.
+
+## Sushi bar non-solution
+
+Here is an incorrect solution Reek uses to illustrate one of the difficulties of this problem.
+
+``` {title="Sushi bar non-solution"}
+mutex.wait()
+if must_wait:
+    waiting += 1
+    mutex.signal()
+    block.wait()
+
+    mutex.wait()      # reacquire mutex (*\label{sushi1}*)
+    waiting -= 1
+
+eating += 1
+must_wait = (eating == 5)
+mutex.signal()
+
+# eat sushi
+
+mutex.wait()
+eating -= 1
+if eating == 0:
+    n = min(5, waiting)
+    block.signal(n)
+    must_wait = False
+mutex.signal()
+```
+
+Puzzle: what's wrong with this solution?
+
+## Sushi bar non-solution
+
+The problem is at Line [\[sushi1\]](#sushi1){reference-type="ref" reference="sushi1"}. If a customer arrives while the bar is full, he has to give up the mutex while he waits so that other customers can leave. When the last customer leaves, she signals `block`, which wakes up at least some of the waiting customers, and clears `must_wait`.
+
+But when the customers wake up, they have to get the mutex back, and that means they have to compete with incoming new threads. If new threads arrive and get the mutex first, they could take all the seats before the waiting threads. This is not just a question of injustice; it is possible for more than 5 threads to be in the critical section concurrently, which violates the synchronization constraints.
+
+Reek provides two solutions to this problem, which appear in the next two sections.
+
+Puzzle: see if you can come up with two different correct solutions!
+
+Hint: neither solution uses any additional variables.
+
+## Sushi bar solution #1
+
+The only reason a waiting customer has to reacquire the mutex is to update the state of `eating` and `waiting`, so one way to solve the problem is to make the departing customer, who already has the mutex, do the updating.
+
+``` {title="Sushi bar solution \\#1"}
+mutex.wait()
+if must_wait:
+    waiting += 1
+    mutex.signal()
+    block.wait()
+else:
+    eating += 1
+    must_wait = (eating == 5)
+    mutex.signal()
+
+# eat sushi
+
+mutex.wait()
+eating -= 1
+if eating == 0:
+    n = min(5, waiting)
+    waiting -= n
+    eating += n
+    must_wait = (eating == 5)
+    block.signal(n)
+mutex.signal()
+```
+
+When the last departing customer releases the mutex, `eating` has already been updated, so newly arriving customers see the right state and block if necessary. Reek calls this pattern "I'll do it for you," because the departing thread is doing work that seems, logically, to belong to the waiting threads.
+
+A drawback of this approach is that it is a little more difficult to confirm that the state is being updated correctly.
+
+## Sushi bar solution #2
+
+Reek's alternative solution is based on the counterintuitive notion that we can transfer a mutex from one thread to another! In other words, one thread can acquire a lock and then another thread can release it. As long as both threads understand that the lock has been transferred, there is nothing wrong with this.
+
+``` {title="Sushi bar solution \\#2"}
+mutex.wait()
+if must_wait:
+    waiting += 1
+    mutex.signal()
+    block.wait()     # when we resume, we have the mutex
+    waiting -= 1
+
+eating += 1
+must_wait = (eating == 5)
+if waiting and not must_wait:
+    block.signal()            # and pass the mutex
+else:
+    mutex.signal()
+
+# eat sushi
+
+mutex.wait()
+eating -= 1
+if eating == 0: must_wait = False
+
+if waiting and not must_wait:
+    block.signal()            # and pass the mutex
+else:
+    mutex.signal()
+```
+
+If there are fewer than 5 customers at the bar and no one waiting, an entering customer just increments `eating` and releases the mutex. The fifth customer sets `must_wait`.
+
+If `must_wait` is set, entering customers block until the last customer at the bar clears `must_wait` and signals `block`. It is understood that the signaling thread gives up the mutex and the waiting thread receives it. Keep in mind, though, that this is an invariant understood by the programmer, and documented in the comments, but not enforced by the semantics of semaphores. It is up to us to get it right.
+
+When the waiting thread resumes, we understand that it has the mutex. If there are other threads waiting, it signals `block` which, again, passes the mutex to a waiting thread. This process continues, with each thread passing the mutex to the next until there are no more chairs or no more waiting threads. In either case, the last thread releases the mutex and goes to sit down.
+
+Reek calls this pattern "Pass the baton," since the mutex is being passed from one thread to the next like a baton in a relay race. One nice thing about this solution is that it is easy to confirm that updates to `eating` and `waiting` are consistent. A drawback is that it is harder to confirm that the mutex is being used correctly.

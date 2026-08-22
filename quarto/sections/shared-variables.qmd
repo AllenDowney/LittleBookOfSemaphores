@@ -1,0 +1,91 @@
+---
+title: Shared variables
+---
+[]{#shared label="shared"}
+
+Most of the time, most variables in most threads are **local**, meaning that they belong to a single thread and no other threads can access them. As long as that's true, there tend to be few synchronization problems, because threads just don't interact.
+
+But usually some variables are **shared** among two or more threads; this is one of the ways threads interact with each other. For example, one way to communicate information between threads is for one thread to read a value written by another thread.
+
+If the threads are unsynchronized, then we cannot tell by looking at the program whether the reader will see the value the writer writes or an old value that was already there. Thus many applications enforce the constraint that the reader should not read until after the writer writes. This is exactly the serialization problem in Section [\[serialization\]](#serialization){reference-type="ref" reference="serialization"}.
+
+Other ways that threads interact are concurrent writes (two or more writers) and concurrent updates (two or more threads performing a read followed by a write). The next two sections deal with these interactions. The other possible use of a shared variable, concurrent reads, does not generally create a synchronization problem.
+
+## Concurrent writes
+
+In the following example, `x` is a shared variable accessed by two writers.
+
+``` {title="Thread A"}
+x = 5
+print x
+```
+
+``` {title="Thread B"}
+x = 7
+```
+
+What value of `x` gets printed? What is the final value of ` x` when all these statements have executed? It depends on the order in which the statements are executed, called the **execution path**. One possible path is $a1 < a2 < b1$, in which case the output of the program is `5`, but the final value is `7`.
+
+Puzzle: What path yields output `5` and final value `5`?
+
+Puzzle: What path yields output `7` and final value `7`?
+
+Puzzle: Is there a path that yields output `7` and final value `5`? Can you prove it?
+
+Answering questions like these is an important part of concurrent programming: What paths are possible and what are the possible effects? Can we prove that a given (desirable) effect is necessary or that an (undesirable) effect is impossible?
+
+## Concurrent updates
+
+An update is an operation that reads the value of a variable, computes a new value based on the old value, and writes the new value. The most common kind of update is an increment, in which the new value is the old value plus one. The following example shows a shared variable, `count`, being updated concurrently by two threads.
+
+``` {title="Thread A"}
+count = count + 1
+```
+
+``` {title="Thread B"}
+count = count + 1
+```
+
+At first glance, it is not obvious that there is a synchronization problem here. There are only two execution paths, and they yield the same result.
+
+The problem is that these operations are translated into machine language before execution, and in machine language the update takes two steps, a read and a write. The problem is more obvious if we rewrite the code with a temporary variable, `temp`.
+
+``` {title="Thread A"}
+temp = count
+count = temp + 1
+```
+
+``` {title="Thread B"}
+temp = count
+count = temp + 1
+```
+
+Now consider the following execution path
+
+$$a1 < b1 < b2 < a2$$
+
+Assuming that the initial value of `count` is `0`, what is its final value? Because both threads read the same initial value, they write the same value. The variable is only incremented once, which is probably not what the programmer had in mind.
+
+This kind of problem is subtle because it is not always possible to tell, looking at a high-level program, which operations are performed in a single step and which can be interrupted. In fact, some computers provide an increment instruction that is implemented in hardware and cannot be interrupted. An operation that cannot be interrupted is said to be **atomic**.
+
+So how can we write concurrent programs if we don't know which operations are atomic? One possibility is to collect specific information about each operation on each hardware platform. The drawbacks of this approach are obvious.
+
+The most common alternative is to make the conservative assumption that all updates and all writes are not atomic, and to use synchronization constraints to control concurrent access to shared variables.
+
+The most common constraint is mutual exclusion, or mutex, which I mentioned in Section [\[synch\]](#synch){reference-type="ref" reference="synch"}. Mutual exclusion guarantees that only one thread accesses a shared variable at a time, eliminating the kinds of synchronization errors in this section.
+
+Puzzle: Suppose that 100 threads run the following program concurrently (if you are not familiar with Python, the `for` loop runs the update 100 times.):
+
+    for i in range(100):
+        temp = count
+        count = temp + 1
+
+What is the largest possible value of `count` after all threads have completed? What is the smallest possible value?
+
+Hint: the first question is easy; the second is not.
+
+## Mutual exclusion with messages
+
+Like serialization, mutual exclusion can be implemented using message passing. For example, imagine that you and Bob operate a nuclear reactor that you monitor from remote stations. Most of the time, both of you are watching for warning lights, but you are both allowed to take a break for lunch. It doesn't matter who eats lunch first, but it is very important that you don't eat lunch at the same time, leaving the reactor unwatched!
+
+Puzzle: Figure out a system of message passing (phone calls) that enforces these restraints. Assume there are no clocks, and you cannot predict when lunch will start or how long it will last. What is the minimum number of messages that is required?

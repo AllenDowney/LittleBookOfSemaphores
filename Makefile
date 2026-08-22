@@ -2,7 +2,8 @@ PROJECT_NAME = LittleBookOfSemaphores
 
 .PHONY: help create_environment create_environment_dev delete_environment \
 	update_environment update_environment_dev clean lint format tests serve \
-	quarto-sync-assets html html-preview
+	quarto-sync-assets quarto-convert html html-dev html-preview html-preview-dev \
+	html-publish publish
 
 help:
 	@echo "Available targets:"
@@ -16,9 +17,14 @@ help:
 	@echo "  format                  - Format code with black"
 	@echo "  tests                   - Run Sync tests"
 	@echo "  serve                   - Static server (open /web/index.html or /web/spike.html)"
+	@echo "  quarto-convert          - Regenerate section .qmd files from book/book.tex"
 	@echo "  quarto-sync-assets      - Copy Sync embed assets into quarto/assets/sync/"
-	@echo "  html                    - Sync assets + render Quarto HTML book → quarto/_book/"
-	@echo "  html-preview            - Sync assets + Quarto live preview"
+	@echo "  html                    - Sync assets + render full Quarto book → quarto/_book/"
+	@echo "  html-dev                - Sync assets + render short TOC (_quarto-dev.yml swap)"
+	@echo "  html-preview            - Sync assets + Quarto live preview (full book)"
+	@echo "  html-preview-dev        - Sync assets + live preview (short TOC)"
+	@echo "  publish                 - Push quarto/_book to gh-pages (run html first)"
+	@echo "  html-publish            - make html && make publish"
 
 ## Set up Python environment
 create_environment:
@@ -83,6 +89,7 @@ clean:
 	-rm -rf *.egg-info
 	-rm -rf quarto/_book/
 	-rm -rf quarto/.quarto/
+	-rm -rf quarto/build/
 	@echo ">>> Cleanup complete!"
 
 ## Local static server for the web app / Pyodide spike
@@ -90,6 +97,10 @@ clean:
 serve:
 	@echo "Open http://localhost:8000/web/index.html"
 	python -m http.server 8000
+
+## Regenerate Quarto section pages from LaTeX (Task 27)
+quarto-convert:
+	python3 quarto/scripts/convert_lbs.py
 
 ## Copy Sync embed + engine + curated examples into the Quarto tree (Task 23)
 quarto-sync-assets:
@@ -104,5 +115,22 @@ html: quarto-sync-assets
 	cd quarto && quarto render
 	@echo ">>> HTML book: quarto/_book/index.html"
 
+## Short TOC for Sync embed work (Task 32) — edit quarto/_quarto-dev.yml
+html-dev: quarto-sync-assets
+	cd quarto && cp _quarto.yml _quarto.yml.full && cp _quarto-dev.yml _quarto.yml && \
+	  quarto render; status=$$?; mv _quarto.yml.full _quarto.yml; exit $$status
+	@echo ">>> Dev HTML book: quarto/_book/index.html"
+
 html-preview: quarto-sync-assets
 	cd quarto && quarto preview
+
+html-preview-dev: quarto-sync-assets
+	cd quarto && cp _quarto.yml _quarto.yml.full && cp _quarto-dev.yml _quarto.yml && \
+	  quarto preview; status=$$?; mv _quarto.yml.full _quarto.yml; exit $$status
+
+## Publish to GitHub Pages (ThinkJava2 pattern: build locally, push gh-pages)
+publish:
+	cd quarto && quarto publish gh-pages --no-render
+	@echo ">>> Published to gh-pages branch (enable Pages on the repo if needed)"
+
+html-publish: html publish

@@ -1,0 +1,18 @@
+---
+title: Non-determinism
+---
+Concurrent programs are often **non-deterministic**, which means it is not possible to tell, by looking at the program, what will happen when it executes. Here is a simple example of a non-deterministic program:
+
+``` {title="Thread A"}
+print "yes"
+```
+
+``` {title="Thread B"}
+print "no"
+```
+
+Because the two threads run concurrently, the order of execution depends on the scheduler. During any given run of this program, the output might be "yes no" or "no yes".
+
+Non-determinism is one of the things that makes concurrent programs hard to debug. A program might work correctly 1000 times in a row, and then crash on the 1001st run, depending on the particular decisions of the scheduler.
+
+These kinds of bugs are almost impossible to find by testing; they can only be avoided by careful programming.

@@ -1,0 +1,131 @@
+---
+title: Producer-consumer problem
+---
+In multithreaded programs there is often a division of labor between threads. In one common pattern, some threads are producers and some are consumers. Producers create items of some kind and add them to a data structure; consumers remove the items and process them.
+
+Event-driven programs are a good example. An "event" is something that happens that requires the program to respond: the user presses a key or moves the mouse, a block of data arrives from the disk, a packet arrives from the network, a pending operation completes.
+
+Whenever an event occurs, a producer thread creates an event object and adds it to the event buffer. Concurrently, consumer threads take events out of the buffer and process them. In this case, the consumers are called "event handlers."
+
+There are several synchronization constraints that we need to enforce to make this system work correctly:
+
+-   While an item is being added to or removed from the buffer, the buffer is in an inconsistent state. Therefore, threads must have exclusive access to the buffer.
+
+-   If a consumer thread arrives while the buffer is empty, it blocks until a producer adds a new item.
+
+Assume that producers perform the following operations over and over:
+
+``` {title="Basic producer code"}
+event = waitForEvent()
+buffer.add(event)
+```
+
+Also, assume that consumers perform the following operations:
+
+``` {title="Basic consumer code"}
+event = buffer.get()
+event.process()
+```
+
+As specified above, access to the buffer has to be exclusive, but `waitForEvent` and `event.process` can run concurrently.
+
+Puzzle: Add synchronization statements to the producer and consumer code to enforce the synchronization constraints.
+
+## Producer-consumer hint
+
+Here are the variables you might want to use:
+
+``` {title="Producer-consumer initialization"}
+mutex = Semaphore(1)
+items = Semaphore(0)
+local event
+```
+
+Not surprisingly, `mutex` provides exclusive access to the buffer. When `items` is positive, it indicates the number of items in the buffer. When it is negative, it indicates the number of consumer threads in queue.
+
+`event` is a **local variable**, which in this context means that each thread has its own version. So far we have been assuming that all threads have access to all variables, but we will sometimes find it useful to attach a variable to each thread.
+
+There are a number of ways this can be implemented in different environments:
+
+-   If each thread has its own run-time stack, then any variables allocated on the stack are thread-specific.
+
+-   If threads are represented as objects, we can add an attribute to each thread object.
+
+-   If threads have unique IDs, we can use the IDs as an index into an array or hash table, and store per-thread data there.
+
+In most programs, most variables are local unless declared otherwise, but in this book most variables are shared, so we will assume that that variables are shared unless they are explicitly declared ` local`.
+
+## Producer-consumer solution
+
+Here is the producer code from my solution.
+
+``` {title="Producer solution"}
+event = waitForEvent()
+mutex.wait()
+    buffer.add(event)
+    items.signal()
+mutex.signal()
+```
+
+The producer doesn't have to get exclusive access to the buffer until it gets an event. Several threads can run `waitForEvent` concurrently.
+
+The `items` semaphore keeps track of the number of items in the buffer. Each time the producer adds an item, it signals `items`, incrementing it by one.
+
+The consumer code is similar.
+
+``` {title="Consumer solution"}
+items.wait()
+mutex.wait()
+    event = buffer.get()
+mutex.signal()
+event.process()
+```
+
+Again, the buffer operation is protected by a mutex, but before the consumer gets to it, it has to decrement `items`. If `items` is zero or negative, the consumer blocks until a producer signals.
+
+Although this solution is correct, there is an opportunity to make one small improvement to its performance. Imagine that there is at least one consumer in queue when a producer signals `items`. If the scheduler allows the consumer to run, what happens next? It immediately blocks on the mutex that is (still) held by the producer.
+
+Blocking and waking up are moderately expensive operations; performing them unnecessarily can impair the performance of a program. So it would probably be better to rearrange the producer like this:
+
+``` {title="Improved producer solution"}
+event = waitForEvent()
+mutex.wait()
+    buffer.add(event)
+mutex.signal()
+items.signal()
+```
+
+Now we don't bother unblocking a consumer until we know it can proceed (except in the rare case that another producer beats it to the mutex).
+
+There's one other thing about this solution that might bother a stickler. In the hint section I claimed that the `items` semaphore keeps track of the number of items in queue. But looking at the consumer code, we see the possibility that several consumers could decrement `items` before any of them gets the mutex and removes an item from the buffer. At least for a little while, `items` would be inaccurate.
+
+We might try to address that by checking the buffer inside the mutex:
+
+``` {title="Broken consumer solution"}
+mutex.wait()
+    items.wait()
+    event = buffer.get()
+mutex.signal()
+event.process()
+```
+
+This is a bad idea.
+
+Puzzle: why?
+
+## Deadlock #4
+
+If the consumer is running this code
+
+``` {title="Broken consumer solution"}
+mutex.wait()
+    items.wait()
+    event = buffer.get()
+mutex.signal()
+
+event.process()
+```
+
+it can cause a deadlock. Imagine that the buffer is empty. A consumer arrives, gets the mutex, and then blocks on `items`. When the producer arrives, it blocks on `mutex` and the system comes to a grinding halt.
+
+This is a common error in synchronization code: any time you wait for a semaphore while holding a mutex, there is a danger of deadlock. When you are checking a solution to a synchronization problem, you should check for this kind of deadlock.

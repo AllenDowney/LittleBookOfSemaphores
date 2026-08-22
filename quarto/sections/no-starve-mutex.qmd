@@ -1,0 +1,126 @@
+---
+title: No-starve mutex
+---
+[]{#props label="props"}
+
+In the previous section, we addressed what I'll call **categorical starvation**, in which one category of threads (readers) allows another category (writers) to starve. At a more basic level, we have to address the issue of **thread starvation**, which is the possibility that one thread might wait indefinitely while others proceed.
+
+For most concurrent applications, starvation is unacceptable, so we enforce the requirement of **bounded waiting**, which means that the time a thread waits on a semaphore (or anywhere else, for that matter) has to be provably finite.
+
+In part, starvation is the responsibility of the scheduler. Whenever multiple threads are ready to run, the scheduler decides which one or, on a parallel processor, which set of threads gets to run. If a thread is never scheduled, then it will starve, no matter what we do with semaphores.
+
+So in order to say anything about starvation, we have to start with some assumptions about the scheduler. If we are willing to make a strong assumption, we can assume that the scheduler uses one of the many algorithms that can be proven to enforce bounded waiting. If we don't know what algorithm the scheduler uses, then we can get by with a weaker assumption:
+
+> Property 1: if there is only one thread that is ready to run, the scheduler has to let it run.
+
+If we can assume Property 1, then we can build a system that is provably free of starvation. For example, if there are a finite number of threads, then any program that contains a barrier cannot starve, since eventually all threads but one will be waiting at the barrier, at which point the last thread has to run.
+
+In general, though, it is non-trivial to write programs that are free from starvation unless we make the stronger assumption:
+
+> Property 2: if a thread is ready to run, then the time it waits until it runs is bounded.
+
+In our discussion so far, we have been assuming Property 2 implicitly, and we will continue to. On the other hand, you should know that many existing systems use schedulers that do not guarantee this property strictly.
+
+Even with Property 2, starvation rears its ugly head again when we introduce semaphores. In the definition of a semaphore, we said that when one thread executes `signal`, one of the waiting threads gets woken up. But we never said which one. In order to say anything about starvation, we have to make assumptions about the behavior of semaphores.
+
+The weakest assumption that makes it possible to avoid starvation is:
+
+> Property 3: if there are threads waiting on a semaphore when a thread executes `signal`, then one of the waiting threads has to be woken.
+
+This requirement may seem obvious, but it is not trivial. It has the effect of barring one form of problematic behavior, which is a thread that signals a semaphore while other threads are waiting, and then keeps running, waits on the same semaphore, and gets its own signal! If that were possible, there would be nothing we could do to prevent starvation.
+
+With Property 3, it becomes possible to avoid starvation, but even for something as simple as a mutex, it is not easy. For example, imagine three threads running the following code:
+
+``` {title="Mutex loop"}
+while True:
+    mutex.wait()
+    # critical section 
+    mutex.signal()
+```
+
+The `while` statement is an infinite loop; in other words, as soon as a thread leaves the critical section, it loops to the top and tries to get the mutex again.
+
+Imagine that Thread A gets the mutex and Thread B and C wait. When A leaves, B enters, but before B leaves, A loops around and joins C in the queue. When B leaves, there is no guarantee that C goes next. In fact, if A goes next, and B joins the queue, then we are back to the starting position, and we can repeat the cycle forever. C starves.
+
+The existence of this pattern proves that the mutex is vulnerable to starvation. One solution to this problem is to change the implementation of the semaphore so that it guarantees a stronger property:
+
+> Property 4: if a thread is waiting at a semaphore, then the number of threads that will be woken before it is bounded.
+
+For example, if the semaphore maintains a first-in-first-out queue, then Property 4 holds because when a thread joins the queue, the number of threads ahead of it is finite, and no threads that arrive later can go ahead of it.
+
+A semaphore that has Property 4 is sometimes called a **strong semaphore**; one that has only Property 3 is called a **weak semaphore**. We have shown that with weak semaphores, the simple mutex solution is vulnerable to starvation. In fact, Dijkstra conjectured that it is not possible to solve the mutex problem without starvation using only weak semaphores.
+
+In 1979, J.M. Morris refuted the conjecture by solving the problem, assuming that the number of threads is finite [@morris]. If you are interested in this problem, the next section presents his solution. If this is not your idea of fun, you can just assume that semaphores have Property 4 and go on to Section [\[dining\]](#dining){reference-type="ref" reference="dining"}.
+
+Puzzle: write a solution to the mutual exclusion problem using weak semaphores. Your solution should provide the following guarantee: once a thread arrives and attempts to enter the mutex, there is a bound on the number of threads that can proceed ahead of it. You can assume that the total number of threads is finite.
+
+## No-starve mutex hint {#morris}
+
+Morris's solution is similar to the reusable barrier in Section [\[rebar\]](#rebar){reference-type="ref" reference="rebar"}. It uses two turnstiles to create two waiting rooms before the critical section. The mechanism works in two phases. During the first phase, the first turnstile is open and the second is closed, so threads accumulate in the second room. During the second phase, the first turnstile is closed, so no new threads can enter, and the second is open, so the existing threads can get to the critical section.
+
+Although there may be an arbitrary number of threads in the waiting room, each one is guaranteed to enter the critical section before any future arrivals.
+
+Here are the variables I used in the solution (I changed the names Morris used, trying to make the structure clearer).
+
+``` {title="No-starve mutex hint"}
+room1 = room2 = 0
+mutex = Semaphore(1)
+t1 = Semaphore(1)
+t2 = Semaphore(0)
+```
+
+`room1` and `room2` keep track of how many threads are in the waiting rooms. `mutex` helps protect the counters. `t1` and `t2` are the turnstiles.
+
+## No-starve mutex solution
+
+Here is Morris's solution.
+
+``` {title="Morris's algorithm"}
+mutex.wait()
+    room1 += 1            (*\label{room1begin}*)
+mutex.signal()
+                           
+t1.wait()                 (*\label{wait1}*)
+    room2 += 1            (*\label{room2begin}*)
+    mutex.wait()
+    room1 -= 1            (*\label{room1end}*)
+
+    if room1 == 0: 
+        mutex.signal()
+    t2.signal()
+    else: 
+        mutex.signal()
+    t1.signal()
+
+t2.wait()                  (*\label{wait2}*)
+    room2 -= 1             (*\label{room2end}*)
+
+    # critical section
+
+    if room2 == 0:
+        t1.signal()
+    else:
+        t2.signal()
+```
+
+Before entering the critical section, a thread has to pass two turnstiles. These turnstiles divide the code into three "rooms". Room 1 is Lines [\[room1begin\]](#room1begin){reference-type="ref" reference="room1begin"}-- [\[room1end\]](#room1end){reference-type="ref" reference="room1end"}. Room 2 is Lines [\[room2begin\]](#room2begin){reference-type="ref" reference="room2begin"}-- [\[room2end\]](#room2end){reference-type="ref" reference="room2end"}. Room 3 is the rest. Speaking loosely, the counters `room1` and `room2` keep track of the number of threads in each room.
+
+The counter `room1` is protected by `mutex` in the usual way, but guard duty for `room2` is split between `t1` and `t2`. Similarly, responsibility for exclusive access to the critical section involves both `t1` and `t2`. In order to enter the critical section, a thread has to hold one or the other, but not both. Then, before exiting, it gives up whichever one it has.
+
+To understand how this solution works, start by following a single thread all the way through. When it gets to Line [\[room1end\]](#room1end){reference-type="ref" reference="room1end"}, it holds `mutex` and `t1`. Once it checks `room1`, which is 0, it can release `mutex` and then open the second turnstile, ` t2`. As a result, it doesn't wait at Line [\[wait2\]](#wait2){reference-type="ref" reference="wait2"} and it can safely decrement `room2` and enter the critical section, because any following threads have to be queued on `t1`. Leaving the critical section, it finds `room2 = 0` and releases `t1`, which brings us back to the starting state.
+
+Of course, the situation is more interesting if there is more than one thread. In that case, it is possible that when the lead thread gets to Line [\[room1end\]](#room1end){reference-type="ref" reference="room1end"}, other threads have entered the waiting room and queued on `t1`. Since `room1 > 0`, the lead thread leaves `t2` locked and instead signals `t1` to allow a following thread to enter Room 2. Since `t2` is still locked, neither thread can enter Room 3.
+
+Eventually (because there are a finite number of threads), a thread will get to Line [\[room1end\]](#room1end){reference-type="ref" reference="room1end"} before another thread enters Room 1, in which case it will open `t2`, allowing any threads there to move into Room 3. The thread that opens `t2` continues to hold `t1`, so if any of the lead threads loop around, they will block at Line [\[wait1\]](#wait1){reference-type="ref" reference="wait1"}.
+
+As each thread leaves Room 3, it signals `t2`, allowing another thread to leave Room 2. When the last thread leaves Room 2, it leaves `t2` locked and opens `t1`, which brings us back to the starting state.
+
+To see how this solution avoids starvation, it helps to think of its operation in two phases. In the first phase, threads check into Room 1, increment `room1`, and then cascade into Room 2 one at a time. The only way to keep a `t2` locked is to maintain a procession of threads through Room 1. Because there are a finite number of threads, the procession has to end eventually, at which point `t1` stays locked and `t2` opens.
+
+In the second phase, threads cascade into Room 3. Because there are a finite number of threads in Room 2, and no new threads can enter, eventually the last thread leaves, at which point `t2` locks and `t1` opens.
+
+At the end of the first phase, we know that there are no threads waiting at `t1`, because `room1 = 0`. And at the end of the second phase, we know that there are no threads waiting at `t2` because `room2 = 0`.
+
+With a finite number of threads, starvation is only possible if one thread can loop around and overtake another. But the two-turnstile mechanism makes that impossible, so starvation is impossible.
+
+The moral of this story is that with weak semaphores, it is very difficult to prevent starvation, even for the simplest synchronization problems. In the rest of this book, when we discuss starvation, we will assume strong semaphores.

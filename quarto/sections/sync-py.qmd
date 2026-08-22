@@ -1,0 +1,8 @@
+---
+title: Sync.py
+---
+[]{#sync.py label="sync.py"}
+
+TODO: write about using sync, starting with signal.py
+
+Why does Thread B signal `initComplete`?

@@ -1,0 +1,69 @@
+---
+title: Handling keyboard interrupts
+---
+One other problem with the `threading` class is that `Thread.join` can't be interrupted by Ctrl-C, which generates the signal `SIGINT`, which Python translates into a KeyboardInterrupt.
+
+So, if you write the following program:
+
+``` {title="Unstoppable program"}
+import threading, time
+
+class Thread(threading.Thread):
+    def __init__(self, t, *args):
+        threading.Thread.__init__(self, target=t, args=args)
+        self.start()
+
+def parent_code():
+    child = Thread(child_code, 10)
+    child.join()
+
+def child_code(n=10):
+    for i in range(n):
+        print i
+        time.sleep(1)
+    
+parent_code()
+```
+
+You will find that it cannot be interrupted with Ctrl-C or a `SIGINT`[^1].
+
+My workaround for this problem uses `os.fork` and `os.wait`, so it only works on UNIX and Macintosh. Here's how it works: before creating new threads, the program invokes `watcher`, which forks a new process. The new process returns and executes the rest of the program. The original process waits for the child process to complete, hence the name `watcher`:
+
+``` {title="The watcher"}
+import threading, time, os, signal, sys
+
+class Thread(threading.Thread):
+    def __init__(self, t, *args):
+        threading.Thread.__init__(self, target=t, args=args)
+        self.start()
+
+def parent_code():
+    child = Thread(child_code, 10)
+    child.join()
+
+def child_code(n=10):
+    for i in range(n):
+        print i
+        time.sleep(1)
+
+def watcher():
+    child = os.fork()
+    if child == 0: return
+    try:
+        os.wait()
+    except KeyboardInterrupt:
+        print 'KeyboardInterrupt'
+        os.kill(child, signal.SIGKILL)
+    sys.exit()
+
+watcher()
+parent_code()
+```
+
+If you run this version of the program, you should be able to interrupt it with Ctrl-C. I am not sure, but I think it is guaranteed that the `SIGINT` is delivered to the watcher process, so that's one less thing the parent and child threads have to deal with.
+
+I keep all this code in a file named `threading_cleanup.py`, which you can download from [greenteapress.com/semaphores/threading_cleanup.py](http://greenteapress.com/semaphores/threading_cleanup.py){.uri}
+
+The examples in Chapter [\[pysync\]](#pysync){reference-type="ref" reference="pysync"} are presented with the understanding that this code executes prior to the example code.
+
+[^1]: At the time of this writing, this bug had been reported and assigned number 1167930, but it was open and unassigned (<https://sourceforge.net/projects/python/>).

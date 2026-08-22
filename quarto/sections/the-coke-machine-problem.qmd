@@ -1,0 +1,91 @@
+---
+title: The coke machine problem
+---
+The following program simulates producers and consumers adding and removing cokes from a coke machine:
+
+``` {title=""}
+import random
+
+class Shared:
+    def __init__(self, start=5):
+        self.cokes = start
+
+def consume(shared):
+    shared.cokes -= 1
+    print shared.cokes
+
+def produce(shared):
+    shared.cokes += 1
+    print shared.cokes
+
+def loop(shared, f, mu=1):
+    while True:
+        t = random.expovariate(1.0/mu)
+        time.sleep(t)
+        f(shared)
+
+shared = Shared()
+fs = [consume]*2 + [produce]*2 
+threads = [Thread(loop, shared, f) for f in fs]
+for thread in threads: thread.join()
+```
+
+The capacity is 10 cokes, and that the machine is initially half full. So the shared variable `cokes` is 5.
+
+The program creates 4 threads, two producers and two consumers. They both run `loop`, but producers invoke `produce` and consumers invoke `consume`. These functions make unsynchronized access to a shared variable, which is a no-no.
+
+Each time through the loop, producers and consumers sleep for a duration chosen from an exponential distribution with mean `mu`. Since there are two producers and two consumers, two cokes get added to the machine per second, on average, and two get removed.
+
+So on average the number of cokes is constant, but in the short run in can vary quite widely. If you run the program for a while, you will probably see the value of `cokes` dip below zero, or climb above 10. Of course, neither of these should happen.
+
+Puzzle: add code to this program to enforce the following synchronization constraints:
+
+-   Access to `cokes` should be mutually exclusive.
+
+-   If the number of cokes is zero, consumers should block until a coke is added.
+
+-   If the number of cokes is 10, producers should block until a coke is removed.
+
+You can download the program from [greenteapress.com/semaphores/coke.py](http://greenteapress.com/semaphores/coke.py){.uri}
+
+## Coke machine hint
+
+Here are the shared variables I used in my solution:
+
+``` {title=""}
+class Shared:
+    def __init__(self, start=5, capacity=10):
+        self.cokes = Semaphore(start)
+        self.slots = Semaphore(capacity-start)
+        self.mutex = Semaphore(1)
+```
+
+`cokes` is a Semaphore now (rather than a simple integer), which makes it tricky to print its value. Of course, you should never access the value of a Semaphore, and Python in its usual do-gooder way doesn't provide any of the cheater methods you see in some implementations.
+
+But you might find it interesting to know that the value of a Semaphore is stored in a private attribute named `_Semaphore__value`. Also, in case you don't know, Python doesn't actually enforce any restriction on access to private attributes. You should never access it, of course, but I thought you might be interested.
+
+Ahem.
+
+## Coke machine solution
+
+If you've read the rest of this book, you should have had no trouble coming up with something at least as good as this:
+
+``` {title=""}
+def consume(shared):
+    shared.cokes.wait()
+    shared.mutex.wait()
+    print shared.cokes.value()
+    shared.mutex.signal()
+    shared.slots.signal()
+
+def produce(shared):
+    shared.slots.wait()
+    shared.mutex.wait()
+    print shared.cokes._Semaphore__value
+    shared.mutex.signal()
+    shared.cokes.signal()
+```
+
+If you run this program for a while, you should be able to confirm that the number of cokes in the machine is never negative or greater than 10. So this solution seems to be correct.
+
+So far.

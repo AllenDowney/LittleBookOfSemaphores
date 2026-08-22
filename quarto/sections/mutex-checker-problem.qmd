@@ -1,0 +1,101 @@
+---
+title: Mutex checker problem
+---
+Diligent students of synchronization will notice that the children make unsynchronized updates to `counter`, which is not safe! If you run this program, you might see some errors, but you probably won't. The nasty thing about synchronization errors is that they are unpredictable, which means that even extensive testing may not reveal them.
+
+To detect errors, it is often necessary to automate the search. In this case, we can detect errors by keeping track of the values of `counter`.
+
+``` {title=""}
+class Shared:
+    def __init__(self, end=10):
+        self.counter = 0
+        self.end = end
+        self.array = [0]* self.end
+
+def child_code(shared):
+    while True:
+        if shared.counter >= shared.end: break
+        shared.array[shared.counter] += 1
+        shared.counter += 1
+
+shared = Shared(10)
+children = [Thread(child_code, shared) for i in range(2)]
+for child in children: child.join()
+print shared.array
+```
+
+In this example, `shared` contains a list (misleadingly named `array`) that keeps track of the number of times each value of counter is used. Each time through the loop, the children check `counter` and quit if it exceeds `end`. If not, they use `counter` as an index into `array` and increment the corresponding entry. Then they increment `counter`.
+
+If everything works correctly, each entry in the array should be incremented exactly once. When the children exit, the parent returns from `join` and prints the value of `array`. When I ran the program, I got
+
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+
+which is disappointingly correct. If we increase the size of the array, we might expect more errors, but it also gets harder to check the result.
+
+We can automate the checker by making a histogram of the results in the array:
+
+``` {title=""}
+class Histogram(dict):
+    def __init__(self, seq=[]):
+        for item in seq:
+            self[item] = self.get(item, 0) + 1
+
+print Histogram(shared.array)
+```
+
+Now when I run the program, I get
+
+    {1: 10}
+
+which means that the value 1 appeared 10 times, as expected. No errors so far, but if we make `end` bigger, things get more interesting:
+
+    end = 100, {1: 100}
+    end = 1000, {1: 1000}
+    end = 10000, {1: 10000}
+    end = 100000, {1: 27561, 2: 72439}
+
+Oops! When `end` is big enough that there are a lot of context switches between the children, we start to get synchronization errors. In this case, we get a *lot* of errors, which suggests that the program falls into a recurring pattern where threads are consistently interrupted in the critical section.
+
+This example demonstrates one of the dangers of synchronization errors, which is that they may be rare, but they are not random. If an error occurs one time in a million, that doesn't mean it won't happen a million times in a row.
+
+Puzzle: add synchronization code to this program to enforce exclusive access to the shared variables. You can download the code in this section from [greenteapress.com/semaphores/counter.py](http://greenteapress.com/semaphores/counter.py){.uri}
+
+## Mutex checker hint
+
+Here is the version of `Shared` I used:
+
+``` {title=""}
+class Shared:
+    def __init__(self, end=10):
+        self.counter = 0
+        self.end = end
+        self.array = [0]* self.end
+        self.mutex = Semaphore(1)
+```
+
+The only change is the Semaphore named `mutex`, which should come as no surprise.
+
+## Mutex checker solution
+
+Here is my solution:
+
+``` {title=""}
+def child_code(shared):
+    while True:
+        shared.mutex.wait()
+        if shared.counter < shared.end:
+            shared.array[shared.counter] += 1
+            shared.counter += 1
+            shared.mutex.signal()
+        else:
+            shared.mutex.signal()
+            break
+```
+
+Although this is not the most difficult synchronization problem in this book, you might have found it tricky to get the details right. In particular, it is easy to forget to signal the mutex before breaking out of the loop, which would cause a deadlock.
+
+I ran this solution with `end = 1000000`, and got the following result:
+
+    {1: 1000000}
+
+Of course, that doesn't mean my solution is correct, but it is off to a good start.

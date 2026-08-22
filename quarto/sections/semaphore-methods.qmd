@@ -1,0 +1,20 @@
+---
+title: Semaphore methods
+---
+First, the methods for Python semaphores are called `acquire` and `release`, which is a perfectly reasonable choice, but after working on this book for a couple of years, I am used to `signal` and `wait`. Fortunately, I can have it my way by subclassing the version of Semaphore in the `threading` module:
+
+``` {title="Semaphore name change"}
+import threading
+ 
+class Semaphore(threading._Semaphore):
+    wait = threading._Semaphore.acquire
+    signal = threading._Semaphore.release
+```
+
+Once this class is defined, you can create and manipulate Semaphores using the syntax in this book.
+
+``` {title="Semaphore example"}
+mutex = Semaphore()
+mutex.wait()
+mutex.signal()
+```

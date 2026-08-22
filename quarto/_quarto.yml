@@ -6,17 +6,105 @@ book:
   title: "The Little Book of Semaphores"
   author: "Allen B. Downey"
   date: today
-  chapters:
-    - index.qmd
-    - sample.qmd
+  page-navigation: true
   repo-url: https://github.com/AllenDowney/LittleBookOfSemaphores
   repo-actions: [source]
+  chapters:
+    - index.qmd
+    - part: Preface
+      chapters:
+        - sections/contributors-list.qmd
+    - part: Introduction
+      chapters:
+        - sections/synchronization.qmd
+        - sections/execution-model.qmd
+        - sections/serialization-with-messages.qmd
+        - sections/non-determinism.qmd
+        - sections/shared-variables.qmd
+    - part: Semaphores
+      chapters:
+        - sections/semaphores.qmd
+        - sections/definition.qmd
+        - sections/syntax.qmd
+        - sections/why-semaphores.qmd
+    - part: Basic synchronization patterns
+      chapters:
+        - sections/basic-synchronization-patterns.qmd
+        - sections/signaling.qmd
+        - sections/sync-py.qmd
+        - sections/rendezvous.qmd
+        - sections/mutex.qmd
+        - sections/multiplex.qmd
+        - sections/barrier.qmd
+        - sections/reusable-barrier.qmd
+        - sections/queue.qmd
+    - part: Classical synchronization problems
+      chapters:
+        - sections/classical-synchronization-problems.qmd
+        - sections/producer-consumer-problem.qmd
+        - sections/producer-consumer-with-a-finite-buffer.qmd
+        - sections/readers-writers-problem.qmd
+        - sections/no-starve-mutex.qmd
+        - sections/dining-philosophers.qmd
+        - sections/cigarette-smokers-problem.qmd
+        - sections/generalized-smokers-problem.qmd
+    - part: Less classical synchronization problems
+      chapters:
+        - sections/the-dining-savages-problem.qmd
+        - sections/the-barbershop-problem.qmd
+        - sections/the-fifo-barbershop.qmd
+        - sections/hilzers-barbershop-problem.qmd
+        - sections/the-santa-claus-problem.qmd
+        - sections/building-ho.qmd
+        - sections/river-crossing-problem.qmd
+        - sections/the-roller-coaster-problem.qmd
+        - sections/multi-car-roller-coaster-problem.qmd
+    - part: Not-so-classical problems
+      chapters:
+        - sections/the-search-insert-delete-problem.qmd
+        - sections/the-unisex-bathroom-problem.qmd
+        - sections/no-starve-unisex-bathroom-problem.qmd
+        - sections/baboon-crossing-problem.qmd
+        - sections/the-modus-hall-problem.qmd
+    - part: Not remotely classical problems
+      chapters:
+        - sections/the-sushi-bar-problem.qmd
+        - sections/the-child-care-problem.qmd
+        - sections/the-room-party-problem.qmd
+        - sections/the-senate-bus-problem.qmd
+        - sections/the-faneuil-hall-problem.qmd
+        - sections/dining-hall-problem.qmd
+        - sections/extended-dining-hall-problem.qmd
+    - part: Synchronization in Python
+      chapters:
+        - sections/synchronization-in-python.qmd
+        - sections/mutex-checker-problem.qmd
+        - sections/the-coke-machine-problem.qmd
+    - part: Synchronization in C
+      chapters:
+        - sections/synchronization-in-c.qmd
+        - sections/mutual-exclusion.qmd
+        - sections/make-your-own-semaphores.qmd
+    - part: Cleaning up Python threads
+      chapters:
+        - sections/cleaning-up-python-threads.qmd
+        - sections/semaphore-methods.qmd
+        - sections/creating-threads.qmd
+        - sections/handling-keyboard-interrupts.qmd
+    - part: Cleaning up POSIX threads
+      chapters:
+        - sections/cleaning-up-posix-threads.qmd
+        - sections/compiling-pthread-code.qmd
+        - sections/creating-threads-2.qmd
+        - sections/joining-threads.qmd
+        - sections/semaphores-2.qmd
 
 filters:
   - filters/sync.lua
 
 resources:
   - assets/sync/**
+  - assets/book/**
 
 format:
   html:
@@ -29,8 +117,8 @@ format:
     include-in-header:
       - text: |
           <script type="module" src="assets/sync/sync_embed.js"></script>
+    site-url: https://allendowney.github.io/LittleBookOfSemaphores/
 
-# PDF not required for Task 22 smoke; LaTeX PDF remains the book/ pipeline.
-# format:
-#   pdf:
-#     documentclass: book
+execute:
+  freeze: auto
+  enabled: false

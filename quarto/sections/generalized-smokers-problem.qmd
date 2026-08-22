@@ -1,0 +1,36 @@
+---
+title: Generalized Smokers Problem
+---
+Parnas suggested that the smokers problem becomes more difficult if we modify the agent, eliminating the requirement that the agent wait after putting out ingredients. In this case, there might be multiple instances of an ingredient on the table.
+
+Puzzle: modify the previous solution to deal with this variation.
+
+## Generalized Smokers Problem Hint
+
+If the agents don't wait for the smokers, ingredients might accumulate on the table. Instead of using boolean values to keep track of ingredients, we need integers to count them.
+
+``` {title="Generalized Smokers problem hint"}
+numTobacco = numPaper = numMatch = 0
+```
+
+## Generalized Smokers Problem Solution {#smoker}
+
+Here is the modified code for Pusher A:
+
+``` {title="Pusher A"}
+tobacco.wait()
+mutex.wait()
+    if numPaper:
+        numPaper -= 1
+        matchSem.signal()
+    elif numMatch:
+        numMatch -= 1
+        paperSem.signal()
+    else: 
+        numTobacco += 1
+mutex.signal()
+```
+
+One way to visualize this problem is to imagine that when an Agent runs, it creates two pushers, gives each of them one ingredient, and puts them in a room with all the other pushers. Because of the mutex, the pushers file into a room where there are three sleeping smokers and a table. One at a time, each pusher enters the room and checks the ingredients on the table. If he can assemble a complete set of ingredients, he takes them off the table and wakes the corresponding smoker. If not, he leaves his ingredient on the table and leaves without waking anyone.
+
+This is an example of a pattern we will see several times, which I call a **scoreboard**. The variables `numPaper`, `numTobacco` and `numMatch` keep track of the state of the system. As each thread files through the mutex, it checks the state as if looking at the scoreboard, and reacts accordingly.

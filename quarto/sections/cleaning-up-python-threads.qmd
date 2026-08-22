@@ -1,0 +1,6 @@
+---
+title: Cleaning up Python threads
+---
+[]{#cleanup label="cleanup"}
+
+Compared to a lot of other threading environments, Python threads are pretty good, but there are a couple of features that annoy me. Fortunately, you can fix them with a little clean-up code.

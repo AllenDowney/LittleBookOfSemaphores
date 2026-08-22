@@ -1,0 +1,36 @@
+---
+title: Synchronization in Python
+---
+[]{#pysync label="pysync"}
+
+By using pseudocode, we have avoided some of the ugly details of synchronization in the real world. In this chapter we'll look at real synchronization code in Python; in the next chapter we'll look at C.
+
+Python provides a reasonably pleasant multithreading environment, complete with Semaphore objects. It has a few foibles, but there is some cleanup code in Appendix [\[cleanup\]](#cleanup){reference-type="ref" reference="cleanup"} that makes things a little better.
+
+Here is a simple example:
+
+``` {title=""}
+from threading_cleanup import *
+
+class Shared:
+    def __init__(self):
+        self.counter = 0
+
+def child_code(shared):
+    while True:
+        shared.counter += 1
+        print shared.counter
+        time.sleep(0.5)
+
+shared = Shared()
+children = [Thread(child_code, shared) for i in range(2)]
+for child in children: child.join()
+```
+
+The first line runs the cleanup code from Appendix [\[cleanup\]](#cleanup){reference-type="ref" reference="cleanup"}; I will leave this line out of the other examples.
+
+`Shared` defines an object type that will contain shared variables. Global variables are also shared between threads, but we won't use any in these examples. Variables that are local in the sense that they are declared inside a function are also local in the sense that they are thread-specific.
+
+The child code is an infinite loop that increments `counter`, prints the new value, and then sleeps for 0.5 seconds.
+
+The parent thread creates `shared` and two children, then waits for the children to exit (which in this case, they won't).

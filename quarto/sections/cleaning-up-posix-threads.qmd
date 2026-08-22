@@ -1,0 +1,8 @@
+---
+title: Cleaning up POSIX threads
+---
+[]{#ccleanup label="ccleanup"}
+
+In this section, I present some utility code I use to make multithreading in C a little more pleasant. The examples in Section [\[csync\]](#csync){reference-type="ref" reference="csync"} are based on this code.
+
+Probably the most popular threading standard used with C is POSIX Threads, or Pthreads for short. The POSIX standard defines a thread model and an interface for creating and controlling threads. Most versions of UNIX provide an implementation of Pthreads.

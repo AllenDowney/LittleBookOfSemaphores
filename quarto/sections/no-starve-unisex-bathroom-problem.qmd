@@ -1,0 +1,28 @@
+---
+title: No-starve unisex bathroom problem
+---
+The problem with the previous solution is that it allows starvation. A long line of women can arrive and enter while there is a man waiting, and vice versa.
+
+Puzzle: fix the problem.
+
+## No-starve unisex bathroom solution
+
+As we have seen before, we can use a turnstile to allow one kind of thread to stop the flow of the other kind of thread. This time we'll look at the male code:
+
+``` {title="No-starve unisex bathroom solution (male)"}
+turnstile.wait()
+    maleSwitch.lock(empty)
+turnstile.signal()
+
+    maleMultiplex.wait()
+        # bathroom code here
+    maleMultiplex.signal()
+
+maleSwitch.unlock (empty)
+```
+
+As long as there are men in the room, new arrivals will pass through the turnstile and enter. If there are women in the room when a male arrives, the male will block inside the turnstile, which will bar all later arrivals (male and female) from entering until the current occupants leave. At that point the male in the turnstile enters, possibly allowing additional males to enter.
+
+The female code is similar, so if there are men in the room an arriving female will get stuck in the turnstile, barring additional men.
+
+This solution may not be efficient. If the system is busy, then there will often be several threads, male and female, queued on the turnstile. Each time `empty` is signaled, one thread will leave the turnstile and another will enter. If the new thread is the opposite gender, it will promptly block, barring additional threads. Thus, there will usually be only 1-2 threads in the bathroom at a time, and the system will not take full advantage of the available concurrency.

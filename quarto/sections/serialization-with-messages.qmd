@@ -1,0 +1,39 @@
+---
+title: Serialization with messages
+---
+[]{#serialization label="serialization"}
+
+One solution is to instruct Bob not to eat lunch until you call. Then, make sure you don't call until after lunch. This approach may seem trivial, but the underlying idea, message passing, is a real solution for many synchronization problems. At the risk of belaboring the obvious, consider this timeline.
+
+``` {title="Thread A (You)"}
+Eat breakfast 
+Work          
+Eat lunch     
+Call Bob
+```
+
+``` {title="Thread B (Bob)"}
+Eat breakfast
+Wait for a call
+Eat lunch
+```
+
+The first column is a list of actions you perform; in other words, your thread of execution. The second column is Bob's thread of execution. Within a thread, we can always tell what order things happen. We can denote the order of events $$\begin{aligned}
+a1 < a2 < a3 < a4  \\
+b1 < b2 < b3
+\end{aligned}$$ where the relation $a1 < a2$ means that a1 happened before a2.
+
+In general, though, there is no way to compare events from different threads; for example, we have no idea who ate breakfast first (is $a1
+< b1$?).
+
+But with message passing (the phone call) we *can* tell who ate lunch first ($a3 < b3$). Assuming that Bob has no other friends, he won't get a call until you call, so $b2 > a4$ . Combining all the relations, we get $$\begin{aligned}
+b3 > b2 > a4 > a3
+\end{aligned}$$ which proves that you had lunch before Bob.
+
+In this case, we would say that you and Bob ate lunch **sequentially**, because we know the order of events, and you ate breakfast **concurrently**, because we don't.
+
+When we talk about concurrent events, it is tempting to say that they happen at the same time, or simultaneously. As a shorthand, that's fine, as long as you remember the strict definition:
+
+> Two events are concurrent if we cannot tell by looking at the program which will happen first.
+
+Sometimes we can tell, after the program runs, which happened first, but often not, and even if we can, there is no guarantee that we will get the same result the next time.

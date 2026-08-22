@@ -1,0 +1,59 @@
+---
+title: Producer-consumer with a finite buffer
+---
+In the example I described above, event-handling threads, the shared buffer is usually infinite (more accurately, it is bounded by system resources like physical memory and swap space).
+
+In the kernel of the operating system, though, there are limits on available space. Buffers for things like disk requests and network packets are usually fixed size. In situations like these, we have an additional synchronization constraint:
+
+-   If a producer arrives when the buffer is full, it blocks until a consumer removes an item.
+
+Assume that we know the size of the buffer. Call it `bufferSize`. Since we have a semaphore that is keeping track of the number of items, it is tempting to write something like
+
+``` {title="Broken finite buffer solution"}
+if items >= bufferSize:
+    block()
+```
+
+But we can't. Remember that we can't check the current value of a semaphore; the only operations are `wait` and `signal`.
+
+Puzzle: write producer-consumer code that handles the finite-buffer constraint.
+
+## Finite buffer producer-consumer hint
+
+Add a second semaphore to keep track of the number of available spaces in the buffer.
+
+``` {title="Finite-buffer producer-consumer initialization"}
+mutex = Semaphore(1)
+items = Semaphore(0)
+spaces = Semaphore(buffer.size())
+```
+
+When a consumer removes an item it should signal `spaces`. When a producer arrives it should decrement `spaces`, at which point it might block until the next consumer signals.
+
+## Finite buffer producer-consumer solution
+
+Here is a solution.
+
+``` {title="Finite buffer consumer solution"}
+items.wait()
+mutex.wait()
+    event = buffer.get()
+mutex.signal()
+spaces.signal()
+
+event.process()
+```
+
+The producer code is symmetric, in a way:
+
+``` {title="Finite buffer producer solution"}
+event = waitForEvent()
+
+spaces.wait()
+mutex.wait()
+    buffer.add(event)
+mutex.signal()
+items.signal()
+```
+
+In order to avoid deadlock, producers and consumers check availability before getting the mutex. For best performance, they release the mutex before signaling.

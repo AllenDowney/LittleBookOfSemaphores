@@ -1,0 +1,56 @@
+---
+title: The search-insert-delete problem
+---
+This one is from Andrews's *Concurrent Programming* [@andrews].
+
+> Three kinds of threads share access to a singly-linked list: searchers, inserters and deleters. Searchers merely examine the list; hence they can execute concurrently with each other. Inserters add new items to the end of the list; insertions must be mutually exclusive to preclude two inserters from inserting new items at about the same time. However, one insert can proceed in parallel with any number of searches. Finally, deleters remove items from anywhere in the list. At most one deleter process can access the list at a time, and deletion must also be mutually exclusive with searches and insertions.
+
+Puzzle: write code for searchers, inserters and deleters that enforces this kind of three-way categorical mutual exclusion.
+
+## Search-Insert-Delete hint
+
+``` {title="Search-Insert-Delete hint"}
+insertMutex = Semaphore(1)
+noSearcher = Semaphore(1)
+noInserter = Semaphore(1)
+searchSwitch = Lightswitch()
+insertSwitch = Lightswitch()
+```
+
+`insertMutex` ensures that only one inserter is in its critical section at a time. `noSearcher` and `noInserter` indicate (surprise) that there are no searchers and no inserters in their critical sections; a deleter needs to hold both of these to enter.
+
+`searchSwitch` and `insertSwitch` are used by searchers and inserters to exclude deleters.
+
+## Search-Insert-Delete solution
+
+Here is my solution:
+
+``` {title="Search-Insert-Delete solution (searcher)"}
+searchSwitch.wait(noSearcher)
+# critical section
+searchSwitch.signal(noSearcher)
+```
+
+The only thing a searcher needs to worry about is a deleter. The first searcher in takes `noSearcher`; the last one out releases it.
+
+``` {title="Search-Insert-Delete solution (inserter)"}
+insertSwitch.wait(noInserter)
+insertMutex.wait()
+# critical section
+insertMutex.signal()
+insertSwitch.signal(noInserter)
+```
+
+Similarly, the first inserter takes `noInserter` and the last one out releases it. Since searchers and inserters compete for different semaphores, they can be in their critical section concurrently. But `insertMutex` ensures that only one inserter is in the room at a time.
+
+``` {title="Search-Insert-Delete solution (deleter)"}
+noSearcher.wait()
+noInserter.wait()
+# critical section
+noInserter.signal()
+noSearcher.signal()
+```
+
+Since the deleter holds both `noSearcher` and `noInserter`, it is guaranteed exclusive access. Of course, any time we see a thread holding more than one semaphore, we need to check for deadlocks. By trying out a few scenarios, you should be able to convince yourself that this solution is deadlock free.
+
+On the other hand, like many categorical exclusion problems, this one is prone to starvation. As we saw in the Readers-Writers problem, we can sometimes mitigate this problem by giving priority to one category of threads according to application-specific criteria. But in general it is difficult to write an efficient solution (one that allows the maximum degree of concurrency) that avoids starvation.

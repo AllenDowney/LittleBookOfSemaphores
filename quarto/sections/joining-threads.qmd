@@ -1,0 +1,17 @@
+---
+title: Joining threads
+---
+When one thread wants to wait for another thread to complete, it invokes `pthread_join`. Here is my wrapper for `pthread_join`:
+
+``` {title=""}
+void join_thread (pthread_t thread)
+{
+  int ret = pthread_join (thread, NULL);
+  if (ret == -1) {
+    perror ("pthread_join failed");
+    exit (-1);
+  }
+}
+```
+
+The parameter is the handle of the thread you want to wait for. All my function does is call `pthread_join` and check the result.

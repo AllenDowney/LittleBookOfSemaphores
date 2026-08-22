@@ -1,0 +1,134 @@
+---
+title: Make your own semaphores
+---
+[]{#makeyourown label="makeyourown"}
+
+The most commonly used synchronization tools for programs that use Pthreads are mutexes and condition variables, not semaphores. For an explanation of these tools, I recommend Butenhof's *Programming with POSIX Threads* [@butenhof].
+
+Puzzle: read about mutexes and condition variables, and then use them to write an implementation of semaphores.
+
+You might want to use the following utility code in your solutions. Here is my wrapper for Pthreads mutexes:
+
+``` {title=""}
+typedef pthread_mutex_t Mutex;
+
+Mutex *make_mutex ()
+{
+  Mutex *mutex = check_malloc (sizeof(Mutex));
+  int n = pthread_mutex_init (mutex, NULL);
+  if (n != 0) perror_exit ("make_lock failed"); 
+  return mutex;
+}
+
+void mutex_lock (Mutex *mutex)
+{
+  int n = pthread_mutex_lock (mutex);
+  if (n != 0) perror_exit ("lock failed");
+}
+
+void mutex_unlock (Mutex *mutex)
+{
+  int n = pthread_mutex_unlock (mutex);
+  if (n != 0) perror_exit ("unlock failed");
+}
+```
+
+And my wrapper for Pthread condition variables:
+
+``` {title=""}
+typedef pthread_cond_t Cond;
+
+Cond *make_cond ()
+{
+  Cond *cond = check_malloc (sizeof(Cond)); 
+  int n = pthread_cond_init (cond, NULL);
+  if (n != 0) perror_exit ("make_cond failed");
+  return cond;
+}
+
+void cond_wait (Cond *cond, Mutex *mutex)
+{
+  int n = pthread_cond_wait (cond, mutex);
+  if (n != 0) perror_exit ("cond_wait failed");
+}
+
+void cond_signal (Cond *cond)
+{
+  int n = pthread_cond_signal (cond);
+  if (n != 0) perror_exit ("cond_signal failed");
+}
+```
+
+## Semaphore implementation hint
+
+Here is the structure definition I used for my semaphores:
+
+``` {title=""}
+typedef struct {
+  int value, wakeups;
+  Mutex *mutex;
+  Cond *cond;
+} Semaphore;
+```
+
+`value` is the value of the semaphore. `wakeups` counts the number of pending signals; that is, the number of threads that have been woken but have not yet resumed execution. The reason for wakeups is to make sure that our semaphores have Property 3, described in Section [\[props\]](#props){reference-type="ref" reference="props"}.
+
+`mutex` provides exclusive access to `value` and `wakeups`; `cond` is the condition variable threads wait on if they wait on the semaphore.
+
+Here is the initialization code for this structure:
+
+``` {title=""}
+Semaphore *make_semaphore (int value)
+{
+  Semaphore *semaphore = check_malloc (sizeof(Semaphore));
+  semaphore->value = value;
+  semaphore->wakeups = 0;
+  semaphore->mutex = make_mutex ();
+  semaphore->cond = make_cond ();
+  return semaphore;
+}
+```
+
+## Semaphore implementation
+
+Here is my implementation of semaphores using Pthread's mutexes and condition variables:
+
+``` {title=""}
+void sem_wait (Semaphore *semaphore)
+{
+  mutex_lock (semaphore->mutex);                 (*\label{sementer}*)
+  semaphore->value--;
+
+  if (semaphore->value < 0) {
+    do {                                                (*\label{dowhile}*)
+      cond_wait (semaphore->cond, semaphore->mutex);
+    } while (semaphore->wakeups < 1);
+    semaphore->wakeups--;
+  }
+  mutex_unlock (semaphore->mutex);
+}
+
+void sem_signal (Semaphore *semaphore)
+{
+  mutex_lock (semaphore->mutex);
+  semaphore->value++;
+
+  if (semaphore->value <= 0) {
+    semaphore->wakeups++;
+    cond_signal (semaphore->cond);
+  }
+  mutex_unlock (semaphore->mutex);
+}
+```
+
+Most of this is straightforward; the only thing that might be tricky is the `do...while` loop at Line [\[dowhile\]](#dowhile){reference-type="ref" reference="dowhile"}. This is an unusual way to use a condition variable, but in this case it is necessary.
+
+Puzzle: why can't we replace this `do...while` loop with a `while` loop?
+
+## Semaphore implementation detail
+
+With a `while` loop, this implementation would not have Property 3. It would be possible for a thread to signal and then run around and catch its own signal.
+
+With the `do...while` loop, it is guaranteed[^1] that when a thread signals, one of the waiting threads will get the signal, even if another thread gets the mutex at Line [\[sementer\]](#sementer){reference-type="ref" reference="sementer"} before one of the waiting threads resumes.
+
+[^1]: Well, almost. It turns out that a well-timed spurious wakeup (see <http://en.wikipedia.org/wiki/Spurious_wakeup>) can violate this guarantee.

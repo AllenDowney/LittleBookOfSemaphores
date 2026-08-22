@@ -1,0 +1,173 @@
+---
+title: Mutual exclusion
+---
+We'll start by defining a structure that contains shared variables:
+
+``` {title=""}
+typedef struct {
+  int counter;
+  int end;
+  int *array;
+} Shared;
+
+Shared *make_shared (int end)
+{
+  int i;
+  Shared *shared = check_malloc (sizeof (Shared));
+
+  shared->counter = 0;
+  shared->end = end;
+
+  shared->array = check_malloc (shared->end * sizeof(int));
+  for (i=0; i<shared->end; i++) {
+    shared->array[i] = 0;
+  }
+  return shared;
+}
+```
+
+`counter` is a shared variable that will be incremented by concurrent threads until it reaches `end`. We will use `array` to check for synchronization errors by keeping track of the value of `counter` after each increment.
+
+## Parent code
+
+Here is the code the parent thread uses to create threads and wait for them to complete:
+
+``` {title=""}
+int main ()
+{
+  int i;
+  pthread_t child[NUM_CHILDREN];
+
+  Shared *shared = make_shared (100000);
+
+  for (i=0; i<NUM_CHILDREN; i++) {
+    child[i] = make_thread (entry, shared);
+  }
+
+  for (i=0; i<NUM_CHILDREN; i++) {
+    join_thread (child[i]);
+  }
+
+  check_array (shared);
+  return 0;
+}
+```
+
+The first loop creates the child threads; the second loop waits for them to complete. When the last child has finished, the parent invokes `check_array` to check for errors. `make_thread` and `join_thread` are defined in Appendix [\[ccleanup\]](#ccleanup){reference-type="ref" reference="ccleanup"}.
+
+## Child code
+
+Here is the code that is executed by each of the children:
+
+``` {title=""}
+void child_code (Shared *shared)
+{
+  while (1) {
+    if (shared->counter >= shared->end) {
+      return;
+    }
+    shared->array[shared->counter]++;
+    shared->counter++;
+  }
+}
+```
+
+Each time through the loop, the child threads use `counter` as an index into `array` and increment the corresponding element. Then they increment `counter` and check to see if they're done.
+
+## Synchronization errors
+
+If everything works correctly, each element of the array should be incremented once. So to check for errors, we can just count the number of elements that are not 1:
+
+``` {title=""}
+void check_array (Shared *shared)
+{
+  int i, errors=0;
+
+  for (i=0; i<shared->end; i++) {
+    if (shared->array[i] != 1) errors++;
+  }
+  printf ("%d errors.\n", errors);
+}
+```
+
+You can download this program (including the cleanup code) from [greenteapress.com/semaphores/counter.c](http://greenteapress.com/semaphores/counter.c){.uri}
+
+If you compile and run the program, you should see output like this:
+
+    Starting child at counter 0
+    10000
+    20000
+    30000
+    40000
+    50000
+    60000
+    70000
+    80000
+    90000
+    Child done.
+    Starting child at counter 100000
+    Child done.
+    Checking...
+    0 errors.
+
+Of course, the interaction of the children depends on details of your operating system and also other programs running on your computer. In the example shown here, one thread ran all the way from 0 to `end` before the other thread got started, so it is not surprising that there were no synchronization errors.
+
+But as `end` gets bigger, there are more context switches between the children. On my system I start to see errors when `end` is 100,000,000.
+
+Puzzle: use semaphores to enforce exclusive access to the shared variables and run the program again to confirm that there are no errors.
+
+## Mutual exclusion hint
+
+Here is the version of `Shared` I used in my solution:
+
+``` {title=""}
+typedef struct {
+  int counter;
+  int end;
+  int *array;
+  Semaphore *mutex;  (*\label{declaremutex}*)
+} Shared;
+
+Shared *make_shared (int end)
+{
+  int i;
+  Shared *shared = check_malloc (sizeof (Shared));
+
+  shared->counter = 0;
+  shared->end = end;
+
+  shared->array = check_malloc (shared->end * sizeof(int));
+  for (i=0; i<shared->end; i++) {
+    shared->array[i] = 0;
+  }
+  shared->mutex = make_semaphore(1);  (*\label{initmutex}*)
+  return shared;
+}
+```
+
+Line [\[declaremutex\]](#declaremutex){reference-type="ref" reference="declaremutex"} declares `mutex` as a Semaphore; Line [\[initmutex\]](#initmutex){reference-type="ref" reference="initmutex"} initializes the mutex with the value 1.
+
+## Mutual exclusion solution
+
+Here is the synchronized version of the child code:
+
+``` {title=""}
+void child_code (Shared *shared)
+{
+  while (1) {
+    sem_wait(shared->mutex);
+    if (shared->counter >= shared->end) {
+      sem_signal(shared->mutex);
+      return;
+    }
+
+    shared->array[shared->counter]++;
+    shared->counter++;
+    sem_signal(shared->mutex);
+  }
+}
+```
+
+There is nothing too surprising here; the only tricky thing is to remember to release the mutex before the `return` statement.
+
+You can download this solution from [greenteapress.com/semaphores/counter_mutex.c](http://greenteapress.com/semaphores/counter_mutex.c){.uri}

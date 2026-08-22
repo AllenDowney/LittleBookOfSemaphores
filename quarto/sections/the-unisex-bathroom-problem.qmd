@@ -1,0 +1,50 @@
+---
+title: The unisex bathroom problem
+---
+I wrote this problem[^1] when a friend of mine left her position teaching physics at Colby College and took a job at Xerox.
+
+She was working in a cubicle in the basement of a concrete monolith, and the nearest women's bathroom was two floors up. She proposed to the Uberboss that they convert the men's bathroom on her floor to a unisex bathroom, sort of like on Ally McBeal.
+
+The Uberboss agreed, provided that the following synchronization constraints can be maintained:
+
+-   There cannot be men and women in the bathroom at the same time.
+
+-   There should never be more than three employees squandering company time in the bathroom.
+
+Of course the solution should avoid deadlock. For now, though, don't worry about starvation. You may assume that the bathroom is equipped with all the semaphores you need.
+
+## Unisex bathroom hint
+
+Here are the variables I used in my solution:
+
+``` {title="Unisex bathroom hint"}
+empty = Semaphore(1)
+maleSwitch = Lightswitch()
+femaleSwitch = Lightswitch()
+maleMultiplex = Semaphore(3)
+femaleMultiplex = Semaphore(3)
+```
+
+`empty` is 1 if the room is empty and 0 otherwise.
+
+`maleSwitch` allows men to bar women from the room. When the first male enters, the lightswitch locks `empty`, barring women; When the last male exits, it unlocks `empty`, allowing women to enter. Women do likewise using `femaleSwitch`.
+
+`maleMultiplex` and `femaleMultiplex` ensure that there are no more than three men and three women in the system at a time.
+
+## Unisex bathroom solution
+
+Here is the female code:
+
+``` {title="Unisex bathroom solution (female)"}
+femaleSwitch.lock(empty)
+    femaleMultiplex.wait()
+        # bathroom code here
+    femaleMultiplex.signal()
+female Switch.unlock(empty)
+```
+
+The male code is similar.
+
+Are there any problems with this solution?
+
+[^1]: Later I learned that a nearly identical problem appears in Andrews's *Concurrent Programming*[@andrews]
