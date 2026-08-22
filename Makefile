@@ -1,7 +1,8 @@
 PROJECT_NAME = LittleBookOfSemaphores
 
 .PHONY: help create_environment create_environment_dev delete_environment \
-	update_environment update_environment_dev clean lint format tests serve
+	update_environment update_environment_dev clean lint format tests serve \
+	quarto-sync-assets html html-preview
 
 help:
 	@echo "Available targets:"
@@ -14,7 +15,10 @@ help:
 	@echo "  lint                    - Run linters (flake8, black --check)"
 	@echo "  format                  - Format code with black"
 	@echo "  tests                   - Run Sync tests"
-	@echo "  serve                   - Static server for web/ Pyodide spike (port 8000)"
+	@echo "  serve                   - Static server (open /web/index.html or /web/spike.html)"
+	@echo "  quarto-sync-assets      - Copy Sync embed assets into quarto/assets/sync/"
+	@echo "  html                    - Sync assets + render Quarto HTML book → quarto/_book/"
+	@echo "  html-preview            - Sync assets + Quarto live preview"
 
 ## Set up Python environment
 create_environment:
@@ -77,10 +81,28 @@ clean:
 	-rm -rf build/
 	-rm -rf dist/
 	-rm -rf *.egg-info
+	-rm -rf quarto/_book/
+	-rm -rf quarto/.quarto/
 	@echo ">>> Cleanup complete!"
 
-## Local static server for the Pyodide spike (Task 4)
-## Open http://localhost:8000/web/spike.html (must serve repo root for ../code/)
+## Local static server for the web app / Pyodide spike
+## Open http://localhost:8000/web/index.html (serve repo root for ../code/)
 serve:
-	@echo "Open http://localhost:8000/web/spike.html"
+	@echo "Open http://localhost:8000/web/index.html"
 	python -m http.server 8000
+
+## Copy Sync embed + engine + curated examples into the Quarto tree (Task 23)
+quarto-sync-assets:
+	mkdir -p quarto/assets/sync/examples
+	cp web/sync_embed.js web/sync_embed.css code/sync_core.py quarto/assets/sync/
+	cp code/sync_code/mutex.py quarto/assets/sync/examples/
+	@echo ">>> Quarto Sync assets updated under quarto/assets/sync/"
+
+## Quarto HTML book. Requires Quarto CLI:
+##   https://quarto.org/docs/get-started/
+html: quarto-sync-assets
+	cd quarto && quarto render
+	@echo ">>> HTML book: quarto/_book/index.html"
+
+html-preview: quarto-sync-assets
+	cd quarto && quarto preview

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sync — thread simulator</title>
+  <link rel="stylesheet" href="sync.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="top">
+      <div>
+        <h1>Sync</h1>
+        <p class="lede">Browser thread / semaphore simulator (Pyodide + <code>sync_core</code>)</p>
+      </div>
+      <p id="status" class="status">Loading…</p>
+    </header>
+
+    <section class="toolbar" aria-label="Simulation controls">
+      <label class="example-picker">
+        Example
+        <select id="example-select" disabled></select>
+      </label>
+      <button type="button" id="btn-init" disabled>Run initialization</button>
+      <button type="button" id="btn-step" disabled>Step</button>
+      <button type="button" id="btn-random-step" disabled>Random Step</button>
+      <button type="button" id="btn-run" disabled>Run</button>
+      <button type="button" id="btn-random-run" disabled>Random Run</button>
+      <button type="button" id="btn-stop" disabled>Stop</button>
+      <button type="button" id="btn-add-thread" disabled>Add thread</button>
+      <label class="speed">
+        Delay
+        <input id="delay-ms" type="range" min="50" max="1000" step="50" value="200" disabled />
+        <span id="delay-label">200 ms</span>
+      </label>
+    </section>
+
+    <div class="panels">
+      <section class="panel" aria-label="Shared variables">
+        <h2>Variables</h2>
+        <div id="variables" class="kv-list"><span class="muted">—</span></div>
+      </section>
+      <section class="panel" aria-label="Semaphores">
+        <h2>Semaphores</h2>
+        <div id="semaphores" class="kv-list"><span class="muted">—</span></div>
+      </section>
+    </div>
+
+    <div id="workspace" class="workspace" aria-live="polite">
+      <!-- filled by sync.js from get_state() -->
+    </div>
+  </div>
+
+  <script type="module" src="sync.js"></script>
+</body>
+</html>
