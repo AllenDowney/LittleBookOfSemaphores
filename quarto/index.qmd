@@ -1,0 +1,40 @@
+---
+title: "Preface"
+---
+
+# The Little Book of Semaphores {#preface .unnumbered}
+
+This is a **Quarto HTML scaffold** for *The Little Book of Semaphores*
+(Task 22). It is not yet a full port of the LaTeX book under
+[`book/`](../book/).
+
+## What this project is for
+
+- Produce a navigable HTML book that can later host **embedded Sync**
+  examples (Tasks 23–26).
+- Mirror the Think Java 2 pattern: Quarto book under `quarto/`, Sync web
+  assets under `web/`, engine under `code/`.
+
+## Build
+
+Quarto is installed separately ([get started](https://quarto.org/docs/get-started/)).
+From the repository root:
+
+```bash
+make html          # quarto render → quarto/_book/
+make html-preview  # quarto preview
+```
+
+Or from this directory:
+
+```bash
+quarto render
+quarto preview
+```
+
+## LaTeX → Quarto (later)
+
+The published PDF still builds from [`book/book.tex`](../book/book.tex).
+When we convert chapters, we expect to adapt scripts from Think Java 2
+(`ThinkJava2/quarto/convert.py`, `split_book.py`, and related Makefile
+targets)—not invent a new pipeline from scratch.

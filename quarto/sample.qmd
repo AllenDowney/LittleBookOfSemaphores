@@ -1,0 +1,25 @@
+---
+title: "Sample chapter"
+---
+
+# Introduction (sample)
+
+This placeholder chapter proves the Quarto book build works. Real chapters
+will arrive after a LaTeX→Quarto conversion pass (see the preface).
+
+## Semaphores in one sentence
+
+A **semaphore** is a synchronization variable that supports `wait` and
+`signal` (or `P`/`V`), used to coordinate threads without busy-waiting.
+
+## Interactive Sync (mutex)
+
+The div below is authoring syntax for Task 23. Quarto’s Lua filter turns it
+into a Sync mount point; `sync_embed.js` loads Pyodide and runs
+`mutex.py` from the book assets.
+
+::: {.sync example="mutex.py"}
+:::
+
+Authoring rule: one `example="…"` (a file under `assets/sync/examples/`)
+per embed. Use `file=` as an alias for `example=`.

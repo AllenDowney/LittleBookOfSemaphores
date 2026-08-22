@@ -12,6 +12,10 @@ __pycache__/
 dist/
 build/
 
+# Quarto
+quarto/_book/
+quarto/.quarto/
+
 # Editor
 .idea/
 .vscode/

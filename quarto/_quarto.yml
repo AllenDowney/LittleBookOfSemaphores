@@ -1,0 +1,36 @@
+project:
+  type: book
+  output-dir: _book
+
+book:
+  title: "The Little Book of Semaphores"
+  author: "Allen B. Downey"
+  date: today
+  chapters:
+    - index.qmd
+    - sample.qmd
+  repo-url: https://github.com/AllenDowney/LittleBookOfSemaphores
+  repo-actions: [source]
+
+filters:
+  - filters/sync.lua
+
+resources:
+  - assets/sync/**
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    number-sections: true
+    css:
+      - styles.css
+      - assets/sync/sync_embed.css
+    include-in-header:
+      - text: |
+          <script type="module" src="assets/sync/sync_embed.js"></script>
+
+# PDF not required for Task 22 smoke; LaTeX PDF remains the book/ pipeline.
+# format:
+#   pdf:
+#     documentclass: book
