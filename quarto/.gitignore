@@ -3,3 +3,4 @@
 /build/
 
 **/*.quarto_ipynb
+sections/*.html
