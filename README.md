@@ -11,11 +11,11 @@ make create_environment_dev
 conda activate LittleBookOfSemaphores
 ```
 
-Useful targets: `make help`, `make tests`, `make html` (Quarto book), `make serve` (Sync web UI), `make update_environment_dev`, `make delete_environment`.
+Useful targets: `make help`, `make tests`, `make html` (Quarto book), `make html-dev` (short TOC), `make serve` (Sync web UI), `make update_environment_dev`, `make delete_environment`.
 
 Pip-only equivalent for CI: `pip install -r requirements-dev.txt` (still needs system tkinter to run the desktop GUI).
 
-Quarto is installed separately ([get started](https://quarto.org/docs/get-started/)). HTML book scaffold: [`quarto/`](quarto/) → `make html` → `quarto/_book/index.html`.
+Quarto is installed separately ([get started](https://quarto.org/docs/get-started/)). HTML book: [`quarto/`](quarto/) → `make html` → `quarto/_book/index.html`. Published at https://AllenDowney.github.io/LittleBookOfSemaphores/ (`make html-publish`).
 
 ## Running Sync
 

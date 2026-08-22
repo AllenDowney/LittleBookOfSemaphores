@@ -1,0 +1,55 @@
+# Short TOC for fast edit → render → check while wiring Sync embeds (Task 32).
+# make html-dev swaps this file in place of _quarto.yml, renders, then restores.
+# Edit book.chapters below to match the sections you are working on.
+#
+#   make html-dev
+#   make html-preview-dev
+
+project:
+  type: book
+  output-dir: _book
+
+execute:
+  freeze: auto
+  enabled: false
+
+book:
+  title: "The Little Book of Semaphores (dev)"
+  author: "Allen B. Downey"
+  date: today
+  page-navigation: true
+  repo-url: https://github.com/AllenDowney/LittleBookOfSemaphores
+  repo-actions: [source]
+  chapters:
+    - index.qmd
+    - part: Introduction
+      chapters:
+        - sections/serialization-with-messages.qmd
+        - sections/non-determinism.qmd
+        - sections/shared-variables.qmd
+    - part: Basic synchronization patterns
+      chapters:
+        - sections/signaling.qmd
+        - sections/sync-py.qmd
+        - sections/rendezvous.qmd
+        - sections/mutex.qmd
+
+filters:
+  - filters/sync.lua
+
+resources:
+  - assets/sync/**
+  - assets/book/**
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    number-sections: true
+    css:
+      - styles.css
+      - assets/sync/sync_embed.css
+    include-in-header:
+      - text: |
+          <script type="module" src="assets/sync/sync_embed.js"></script>
+    site-url: https://allendowney.github.io/LittleBookOfSemaphores/
