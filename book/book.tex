@@ -3389,6 +3389,21 @@ assemble a complete set of ingredients, he takes them off the table
 and wakes the corresponding smoker.  If not, he leaves his ingredient
 on the table and leaves without waking anyone.
 
+Although this solution is not totally correct. Consider following events, 
+Agent first provides tobacco and match, now let's say Pusher A get 
+hold of the mutex first and simply increases {\tt numTobacco}, And 
+meanwhile as agent is running concurrently, let's say it now provides
+paper and match, and PusherB got hold of semaphore paper and now 
+waiting on mutex, remember Pusher C is already waiting as Agent sent
+tobacco and match first. Now as the Pusher A signals mutex, let's say 
+scheduler schedules Pusher B and now it gets hold of mutex and sees
+{\tt numTobacco} as 1 and decrements it and signals {\tt matchSem}.
+Now Pusher C will run twice and we are left with value of {\tt numMatch}
+as 2, which was not expected. Algorithm to solve it is, everytime you're
+holding mutex, sort values of {\tt numPaper}, {\tt numTobacco} and 
+{\tt numMatch} and take top 2 ingredients and send the signal and
+change the values accordingly.
+
 This is an example of a pattern we will see several times, which
 I call a {\bf scoreboard}.  The variables {\tt numPaper}, {\tt numTobacco}
 and {\tt numMatch} keep track of the state of the system.  As each
