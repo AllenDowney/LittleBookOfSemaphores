@@ -2885,8 +2885,8 @@ To make it easy for philosophers to refer to their forks,
 we can use the functions {\tt left} and {\tt right}:
 
 \begin{lstlisting}[title={Which fork?}]{}
-def left(i): return i
-def right(i): return (i + 1) % 5
+def left(i): return (i + 1) % 5
+def right(i): return i
 \end{lstlisting}
 
 The {\tt \%} operator wraps around when it gets to 5, so
