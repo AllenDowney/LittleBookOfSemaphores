@@ -62,7 +62,7 @@ def put_forks(i):
     fork[left(i)].signal()
 ```
 
-It's clear that this solution satisfies the first constraint, but we can be pretty sure it doesn't satisfy the other two, because if it did, this wouldn't be an interesting problem and you would be reading Chapter [\[next\]](#next){reference-type="ref" reference="next"}.
+It's clear that this solution satisfies the first constraint, but we can be pretty sure it doesn't satisfy the other two, because if it did, this wouldn't be an interesting problem and you would be reading Section [\[next\]](#next){reference-type="ref" reference="next"}.
 
 Puzzle: what's wrong?
 
