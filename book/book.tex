@@ -16,6 +16,9 @@
 
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue]{hyperref}
 
+% Short links: greenteapress.com/sem2/N (catalog in links.csv; see shortlinks.py)
+\newcommand{\shortlink}[1]{\href{https://greenteapress.com/sem2/#1}{\nolinkurl{greenteapress.com/sem2/#1}}}
+
 \title{The Little Book of Semaphores}
 
 \author{Allen B. Downey}
@@ -81,7 +84,7 @@ can be converted to other formats and printed.
 This book was typeset by the author using latex, dvips and ps2pdf,
 among other free, open-source programs.
 The LaTeX source for this book is available from
-\url{http://greenteapress.com/semaphores}.
+\shortlink{1}.
 
 \frontmatter
 
@@ -6201,7 +6204,7 @@ won't happen a million times in a row.
 
 Puzzle: add synchronization code to this program to enforce
 exclusive access to the shared variables.  You can download the
-code in this section from \url{greenteapress.com/semaphores/counter.py}
+code in this section from \shortlink{2}
 
 
 \clearemptydoublepage
@@ -6323,7 +6326,7 @@ until a coke is removed.
 \end{itemize}
 
 You can download the program from
-\url{greenteapress.com/semaphores/coke.py}
+\shortlink{3}
 
 
 \clearemptydoublepage
@@ -6497,7 +6500,7 @@ void check_array (Shared *shared)
 \end{lstlisting}
 
 You can download this program (including the cleanup code) from
-\url{greenteapress.com/semaphores/counter.c}
+\shortlink{4}
 
 If you compile and run the program, you should see output like this:
 
@@ -6594,7 +6597,7 @@ is to remember to release the mutex before the {\tt return}
 statement.
 
 You can download this solution from 
-\url{greenteapress.com/semaphores/counter_mutex.c}
+\shortlink{5}
 
 
 \clearemptydoublepage
@@ -6754,7 +6757,7 @@ and then run around and catch its own signal.
 
 With the {\tt do...while} loop, it is guaranteed\footnote{Well,
   almost.  It turns out that a well-timed spurious wakeup (see
-  \url{http://en.wikipedia.org/wiki/Spurious_wakeup}) can violate this
+  \shortlink{6}) can violate this
   guarantee.} that when a thread signals, one of the waiting threads
 will get the signal, even if another thread gets the mutex at
 Line~\ref{sementer} before one of the waiting threads resumes.
@@ -6879,7 +6882,7 @@ parent_code()
 You will find that it cannot be interrupted with Ctrl-C or
 a {\tt SIGINT}\footnote{At the time of this writing, this
 bug had been reported and assigned number 1167930, but it was
-open and unassigned (\url{https://sourceforge.net/projects/python/}).}.
+open and unassigned (\shortlink{7}).}.
 
 My workaround for this problem uses {\tt os.fork} and {\tt os.wait},
 so it only works on UNIX and Macintosh.  Here's how it works:
@@ -6927,7 +6930,7 @@ parent and child threads have to deal with.
 
 I keep all this code in a file named {\tt threading\_cleanup.py},
 which you can download from
-\url{greenteapress.com/semaphores/threading\_cleanup.py}
+\shortlink{8}
 
 
 The examples in Chapter~\ref{pysync} are presented with the understanding

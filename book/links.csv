@@ -1,0 +1,9 @@
+n,target,note
+1,https://github.com/AllenDowney/LittleBookOfSemaphores,LaTeX source (front matter; was greenteapress.com/semaphores)
+2,https://greenteapress.com/semaphores/counter.py,Python threads: counter example
+3,https://greenteapress.com/semaphores/coke.py,Python threads: Coke machine
+4,https://greenteapress.com/semaphores/counter.c,C threads: counter with cleanup code
+5,https://greenteapress.com/semaphores/counter_mutex.c,C threads: counter solution with mutex
+6,https://en.wikipedia.org/wiki/Spurious_wakeup,footnote: spurious wakeup
+7,https://github.com/python/cpython/issues/41740,footnote: Python bug 1167930 (Thread.join and Ctrl-C); was sourceforge.net/projects/python
+8,https://greenteapress.com/semaphores/threading_cleanup.py,Python threads: threading_cleanup.py
