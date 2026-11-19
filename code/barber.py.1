@@ -8,11 +8,11 @@ mutex.signal()
 customer.signal()
 barber.wait()
 
+mutex.wait()
+    customers -= 1
+mutex.signal()
+
 # getHairCut()
 
 customerDone.signal()
 barberDone.wait()
-
-mutex.wait()
-    customers -= 1
-mutex.signal()
