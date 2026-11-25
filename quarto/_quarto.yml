@@ -1,9 +1,11 @@
 project:
   type: book
   output-dir: _book
+  post-render: scripts/seo_postrender.py
 
 book:
   title: "The Little Book of Semaphores"
+  site-url: https://allendowney.github.io/LittleBookOfSemaphores/
   author: "Allen B. Downey"
   date: today
   page-navigation: true
@@ -117,7 +119,7 @@ format:
     include-in-header:
       - text: |
           <script type="module" src="assets/sync/sync_embed.js"></script>
-    site-url: https://allendowney.github.io/LittleBookOfSemaphores/
+    canonical-url: true
 
 execute:
   freeze: auto
