@@ -31,7 +31,7 @@ Puzzle: Write code that enforces the synchronization constraints for Hilzer's ba
 
 Here are the variables I used in my solution:
 
-``` {title="Hilzer's barbershop hint"}
+``` {.numberLines title="Hilzer's barbershop hint"}
 ```
 
 `mutex` protects `customers`, which keeps track of the number of customers in the shop, and `queue1` which is a list of semaphores for threads waiting for a seat on the sofa.
@@ -48,7 +48,7 @@ Here are the variables I used in my solution:
 
 This solution is considerably more complex than I expected. I am not sure if Hilzer had something simpler in mind, but here is the best I could do.
 
-``` {.troff mandoc title="Hilzer's barbershop solution (customer)"}
+``` {.numberLines .troff mandoc title="Hilzer's barbershop solution (customer)"}
 ```
 
 The first paragraph is the same as in the previous solution. When a customer arrives, it checks the counter and either balks or adds itself to the queue. Then it signals a barber.
@@ -57,7 +57,7 @@ When the customer gets out of queue, it enters the multiplex, sits on the couch 
 
 When it gets out of *that* queue, it gets a haircut, pays, and then exits.
 
-``` {.troff mandoc title="Hilzer's barbershop solution (barber)"}
+``` {.numberLines .troff mandoc title="Hilzer's barbershop solution (barber)"}
 ```
 
 Each barber waits for a customer to enter, signals the customer's semaphore to get it out of queue, then waits for it to claim a seat on the sofa. This enforces the FIFO requirement.
@@ -68,8 +68,8 @@ Each barber admits one customer to the chair, so there can by up to three concur
 
 This solution satisfies the synchonization constraints, but it leaves the sofa underutilized. Because there are only three barbers, there can never be more than three customers on the sofa, so the multiplex is unnecessary.
 
-This solution is in `sync_code/barber3.py` (see [\[sync.py\]](#sync.py){reference-type="ref" reference="sync.py"}).
+This solution is in [`sync_code/barber3.py`](https://github.com/AllenDowney/LittleBookOfSemaphores/blob/master/code/sync_code/barber3.py).
 
 The only way I can think of to solve this problem is to create a third kind of thread, which I'll call an usher. The ushers manage `queue1` and the barbers manage `queue2`. If there are 4 ushers and 3 barbers, the sofa can be fully utilized.
 
-This solution is in `sync_code/barber4.py` (see [\[sync.py\]](#sync.py){reference-type="ref" reference="sync.py"}).
+This solution is in [`sync_code/barber4.py`](https://github.com/AllenDowney/LittleBookOfSemaphores/blob/master/code/sync_code/barber4.py).

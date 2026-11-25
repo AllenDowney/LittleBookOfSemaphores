@@ -30,6 +30,20 @@ ASSETS_DIR = QUARTO_DIR / "assets" / "book"
 BUILD_DIR = QUARTO_DIR / "build"
 QUARTO_YML = QUARTO_DIR / "_quarto.yml"
 EXTRACT_LABELS = REPO_ROOT.parent / "ThinkJava2" / "quarto" / "extract-labels.lua"
+BOOK_BIB = REPO_ROOT / "book" / "book.bib"
+SITE_URL = "https://allendowney.github.io/LittleBookOfSemaphores/"
+SYNC_CODE_URL = "https://github.com/AllenDowney/LittleBookOfSemaphores/tree/master/code/sync_code"
+
+# Sections left out of the HTML book (stubs in book.tex)
+SKIP_SLUGS = {"sync-py"}
+
+# Pandoc's rendering of \ref{label}, with the word before it if any
+REF_RE = re.compile(
+    r"(?:\b(Section|section|Chapter|chapter|Appendix|appendix|Lines|Line|lines|line)\s+)?"
+    r"\[\\\[([^\]\\]+)\\\]\]\(#[^)]*\)\{reference-type=\"ref\" reference=\"[^\"]*\"\}"
+)
+# A label inside a listing, via escapeinside: (*\label{x}*) or (* \label{x} *)
+CODE_LABEL_RE = re.compile(r"\s*\(\*\s*\\label\{([^}]*)\}\s*\*\)")
 
 PANDOC_PREAMBLE = r"""
 \documentclass{article}
@@ -275,6 +289,131 @@ def pandoc_chunk(body_tex: str, resource_paths: list[Path]) -> str:
     return result.stdout
 
 
+def chapter_labels(tex: str) -> dict[str, str]:
+    """Labels that belong to a \\chapter (between it and the next marker): label -> title."""
+    markers = find_markers(tex)
+    out: dict[str, str] = {}
+    for idx, (pos, kind, title, _) in enumerate(markers):
+        if kind != "chapter":
+            continue
+        end = markers[idx + 1][0] if idx + 1 < len(markers) else len(tex)
+        for label in re.findall(r"\\label\{([^}]*)\}", tex[pos:end]):
+            out[label] = title
+    return out
+
+
+def strip_code_labels(md: str) -> tuple[str, dict[str, int]]:
+    """Remove (*\\label{x}*) from code blocks; return the text and label -> line number."""
+    lines = md.split("\n")
+    found: dict[str, int] = {}
+    in_code = False
+    line_no = 0
+    for i, line in enumerate(lines):
+        if line.lstrip().startswith("```"):
+            in_code = not in_code
+            line_no = 0
+            continue
+        if in_code:
+            line_no += 1
+            m = CODE_LABEL_RE.search(line)
+            if m:
+                found[m.group(1)] = line_no
+                lines[i] = CODE_LABEL_RE.sub("", line).rstrip()
+    return "\n".join(lines), found
+
+
+def resolve_refs(
+    chunks: list[SectionChunk], markdowns: list[str], tex: str, numbers: dict[str, int]
+) -> list[str]:
+    """Turn Pandoc's same-page \\ref links into links between the section pages.
+
+    Section labels become "Section N" (N as the HTML numbers its pages), chapter labels
+    the chapter's title, labels in listings "Line N" (code-line-numbers is on, as in the
+    PDF). References to skipped sections (SKIP_SLUGS) are rewritten by hand below.
+    """
+    # label -> (slug, anchor or None); line labels -> line number
+    where: dict[str, tuple[str, str | None]] = {}
+    lines: dict[str, int] = {}
+    for i, (chunk, md) in enumerate(zip(chunks, markdowns)):
+        md, found = strip_code_labels(md)
+        markdowns[i] = md
+        lines.update(found)
+        for label in re.findall(r"^#+ .*\{#([^}\s]+)", md, re.M):
+            where[label] = (chunk.slug, label)
+        for label in re.findall(r"\\label\{([^}]*)\}", chunk.body_tex):
+            if label not in where and label not in found:
+                where[label] = (chunk.slug, None)
+    chapters = chapter_labels(tex)
+    first_page = {}
+    for chunk in chunks:
+        first_page.setdefault(chunk.chapter_title, chunk.slug)
+
+    def replace(m: re.Match[str], slug_here: str) -> str:
+        word, label = m.group(1), m.group(2)
+        if label in lines:
+            in_range = m.string[: m.start()].rstrip(" \xa0").endswith(("--", "–"))
+            if in_range and not word:
+                return str(lines[label])  # second half of "Lines a--b"
+            return f"{word or 'Line'} {lines[label]}"
+        if label in chapters and chapters[label] in first_page:
+            title = chapters[label]
+            target = f"{first_page[title]}.qmd"
+            return f"{word or 'Chapter'} [{title}]({target})"
+        if label in where:
+            slug, anchor = where[label]
+            target = f"{slug}.qmd" + (f"#{anchor}" if anchor else "")
+            if slug == slug_here and anchor:
+                target = f"#{anchor}"
+            if slug in numbers:
+                prefix = f"{word} " if word else "Section "
+                if prefix.strip().lower() in ("chapter", "appendix"):
+                    prefix = "Section "
+                return f"{prefix}[{numbers[slug]}]({target})"
+        print(f"  unresolved reference: {label}", file=sys.stderr)
+        return m.group(0)
+
+    out = []
+    for chunk, md in zip(chunks, markdowns):
+        # "`sync_code/x.py` (see Sync.py)": that section is a stub, so link the file instead
+        md = re.sub(
+            r"`sync_code/([\w.]+)` \(see\s\[\\\[sync\.py\\\]\]\(#sync\.py\)"
+            r"\{reference-type=\"ref\" reference=\"sync\.py\"\}\)",
+            lambda m: f"[`sync_code/{m.group(1)}`]({SYNC_CODE_URL.replace('/tree/', '/blob/')}/{m.group(1)})",
+            md,
+        )
+        md = REF_RE.sub(lambda m: replace(m, chunk.slug), md)
+        out.append(re.sub(r"(Lines \d+)(--|–)[ \xa0]+(\d)", r"\1\2\3", md))
+    return out
+
+
+def number_code_blocks(md: str) -> str:
+    """Number the lines of every listing, as the PDF does (lstset numbers=left), so
+    "Line N" references can be followed. The listings have no language class, so
+    Quarto's code-line-numbers doesn't apply; Pandoc's .numberLines does."""
+    lines = md.split("\n")
+    in_code = False
+    for i, line in enumerate(lines):
+        stripped = line.lstrip()
+        if not stripped.startswith("```"):
+            continue
+        if not in_code:
+            indent = line[: len(line) - len(stripped)]
+            attrs = stripped[3:].strip()
+            if attrs.startswith("{") and ".numberLines" not in attrs:
+                lines[i] = f"{indent}``` {{.numberLines {attrs[1:].lstrip()}"
+            elif not attrs:
+                lines[i] = f"{indent}``` {{.numberLines}}"
+            elif not attrs.startswith("{"):
+                lines[i] = f"{indent}``` {{.{attrs} .numberLines}}"
+        in_code = not in_code
+    return "\n".join(lines)
+
+
+def fix_citation_keys(md: str, keys: dict[str, str]) -> str:
+    """Citation keys are case-sensitive in Pandoc but not in BibTeX ([@Parnas] -> parnas)."""
+    return re.sub(r"\[@([^\]\s;]+)\]", lambda m: f"[@{keys.get(m.group(1).lower(), m.group(1))}]", md)
+
+
 def yaml_quote(value: str) -> str:
     if re.search(r'[:#"\'\n]', value):
         escaped = value.replace('"', '\\"')
@@ -313,9 +452,11 @@ def generate_quarto_yml(chunks: list[SectionChunk], section_files: list[Path]) -
         "project:",
         "  type: book",
         "  output-dir: _book",
+        "  post-render: scripts/seo_postrender.py",
         "",
         "book:",
         '  title: "The Little Book of Semaphores"',
+        f"  site-url: {SITE_URL}",
         '  author: "Allen B. Downey"',
         "  date: today",
         "  page-navigation: true",
@@ -333,9 +474,13 @@ def generate_quarto_yml(chunks: list[SectionChunk], section_files: list[Path]) -
             out.append("      chapters:")
             current_part = chunk.chapter_title
         out.append(f"        - {rel}")
+    if BOOK_BIB.exists():
+        out.append("    - references.qmd")
 
     out.extend(
         [
+            "",
+            "bibliography: ../book/book.bib",
             "",
             "filters:",
             "  - filters/sync.lua",
@@ -349,13 +494,13 @@ def generate_quarto_yml(chunks: list[SectionChunk], section_files: list[Path]) -
             "    theme: cosmo",
             "    toc: true",
             "    number-sections: true",
+            "    canonical-url: true",
             "    css:",
             "      - styles.css",
             "      - assets/sync/sync_embed.css",
             "    include-in-header:",
             "      - text: |",
             '          <script type="module" src="assets/sync/sync_embed.js"></script>',
-            "    site-url: https://allendowney.github.io/LittleBookOfSemaphores/",
             "",
             "execute:",
             "  freeze: auto",
@@ -409,19 +554,41 @@ def main() -> int:
         for old in SECTIONS_DIR.glob("*.qmd"):
             old.unlink()
 
-    section_files: list[Path] = []
+    markdowns: list[str] = []
     for i, chunk in enumerate(chunks, 1):
         print(f"  [{i}/{len(chunks)}] {chunk.chapter_title} → {chunk.section_title}")
-        md = pandoc_chunk(chunk.body_tex, resource_paths)
-        path = write_qmd(chunk, md)
-        section_files.append(path)
+        markdowns.append(pandoc_chunk(chunk.body_tex, resource_paths))
 
-    # Drop duplicate preface from sections list if copied to index.qmd
-    filtered: list[tuple[SectionChunk, Path]] = []
-    for chunk, path in zip(chunks, section_files):
+    # Pages in the book, in order: the preface intro goes to index.qmd, stubs are left out
+    def in_book(chunk: SectionChunk) -> bool:
         if chunk.is_chapter_intro and chunk.slug == "preface":
-            continue
-        filtered.append((chunk, path))
+            return False
+        return chunk.slug not in SKIP_SLUGS
+
+    # Quarto's chapter numbers: every page counts, index.qmd as 1, including the ones
+    # whose number is hidden (number-sections: false), so the first numbered page is 3
+    numbers: dict[str, int] = {}
+    page = 1
+    for chunk in chunks:
+        if in_book(chunk):
+            page += 1
+            if not chunk.unnumbered:
+                numbers[chunk.slug] = page
+
+    markdowns = resolve_refs(chunks, markdowns, tex, numbers)
+    markdowns = [number_code_blocks(md) for md in markdowns]
+    if BOOK_BIB.exists():
+        keys = {k.lower(): k for k in re.findall(r"^@\w+\{([^,\s]+),", BOOK_BIB.read_text(), re.M)}
+        markdowns = [fix_citation_keys(md, keys) for md in markdowns]
+        (QUARTO_DIR / "references.qmd").write_text(
+            "# References {.unnumbered}\n\n::: {#refs}\n:::\n", encoding="utf-8"
+        )
+
+    section_files = [write_qmd(chunk, md) for chunk, md in zip(chunks, markdowns)]
+    filtered = [(c, p) for c, p in zip(chunks, section_files) if in_book(c)]
+    for chunk, path in zip(chunks, section_files):
+        if chunk.slug in SKIP_SLUGS:
+            path.unlink()
 
     update_index_qmd()
     generate_quarto_yml([c for c, _ in filtered], [p for _, p in filtered])

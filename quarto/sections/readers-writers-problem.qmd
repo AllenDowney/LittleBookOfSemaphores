@@ -19,7 +19,7 @@ Puzzle: Use semaphores to enforce these constraints, while allowing readers and 
 
 Here is a set of variables that is sufficient to solve the problem.
 
-``` {title="Readers-writers initialization"}
+``` {.numberLines title="Readers-writers initialization"}
 int readers = 0
 mutex = Semaphore(1)
 roomEmpty = Semaphore(1)
@@ -33,7 +33,7 @@ The counter `readers` keeps track of how many readers are in the room. `mutex` p
 
 The code for writers is simple. If the critical section is empty, a writer may enter, but entering has the effect of excluding all other threads:
 
-``` {title="Writers solution"}
+``` {.numberLines title="Writers solution"}
 roomEmpty.wait()
     critical section for writers
 roomEmpty.signal()
@@ -47,7 +47,7 @@ The first reader that arrives has to wait for `roomEmpty`. If the room is empty,
 
 If a reader arrives while there is a writer in the room, it waits on `roomEmpty`. Since it holds the mutex, any subsequent readers queue on `mutex`.
 
-``` {title="Readers solution"}
+``` {.numberLines title="Readers solution"}
 mutex.wait()
     readers += 1
     if readers == 1:
@@ -75,7 +75,7 @@ Patterns similar to this reader code are common: the first thread into a section
 
 The name of the pattern is **Lightswitch**, by analogy with the pattern where the first person into a room turns on the light (locks the mutex) and the last one out turns it off (unlocks the mutex). Here is a class definition for a Lightswitch:
 
-``` {title="Lightswitch definition"}
+``` {.numberLines title="Lightswitch definition"}
 class Lightswitch:
     def __init__(self):
         self.counter = 0
@@ -104,14 +104,14 @@ If the semaphore is initially unlocked, the first thread locks it and all subseq
 
 Using these functions, we can rewrite the reader code more simply:
 
-``` {title="Readers-writers initialization"}
+``` {.numberLines title="Readers-writers initialization"}
 readLightswitch = Lightswitch()
 roomEmpty = Semaphore(1)
 ```
 
 `readLightswitch` is a shared `Lightswitch` object whose counter is initially zero.
 
-``` {title="Readers-writers solution (reader)"}
+``` {.numberLines title="Readers-writers solution (reader)"}
 readLightswitch.lock(roomEmpty)
 # critical section
 readLightswitch.unlock(roomEmpty)
@@ -137,7 +137,7 @@ Puzzle: Extend this solution so that when a writer arrives, the existing readers
 
 Here's a hint. You can add a turnstile for the readers and allow writers to lock it. The writers have to pass through the same turnstile, but they should check the `roomEmpty` semaphore while they are inside the turnstile. If a writer gets stuck in the turnstile it has the effect of forcing the readers to queue at the turnstile. Then when the last reader leaves the critical section, we are guaranteed that at least one writer enters next (before any of the queued readers can proceed).
 
-``` {title="No-starve readers-writers initialization"}
+``` {.numberLines title="No-starve readers-writers initialization"}
 readSwitch = Lightswitch()
 roomEmpty = Semaphore(1)
 turnstile = Semaphore(1)
@@ -151,18 +151,18 @@ turnstile = Semaphore(1)
 
 Here is the writer code:
 
-``` {title="No-starve writer solution"}
+``` {.numberLines title="No-starve writer solution"}
 turnstile.wait()
-    roomEmpty.wait()           (* \label{stuck} *)
+    roomEmpty.wait()
     # critical section for writers
 turnstile.signal()
 
 roomEmpty.signal()
 ```
 
-If a writer arrives while there are readers in the room, it will block at Line [\[stuck\]](#stuck){reference-type="ref" reference="stuck"}, which means that the turnstile will be locked. This will bar readers from entering while a writer is queued. Here is the reader code:
+If a writer arrives while there are readers in the room, it will block at Line 2, which means that the turnstile will be locked. This will bar readers from entering while a writer is queued. Here is the reader code:
 
-``` {title="No-starve reader solution"}
+``` {.numberLines title="No-starve reader solution"}
 turnstile.wait()
 turnstile.signal()
 
@@ -187,7 +187,7 @@ Puzzle: Write a solution to the readers-writers problem that gives priority to w
 
 As usual, the hint is in the form of variables used in the solution.
 
-``` {title="Writer-priority readers-writers initialization"}
+``` {.numberLines title="Writer-priority readers-writers initialization"}
 readSwitch = Lightswitch()
 writeSwitch = Lightswitch()
 noReaders = Semaphore(1)
@@ -198,7 +198,7 @@ noWriters = Semaphore(1)
 
 Here is the reader code:
 
-``` {title="Writer-priority reader solution"}
+``` {.numberLines title="Writer-priority reader solution"}
 noReaders.wait()
     readSwitch.lock(noWriters)
 noReaders.signal()
@@ -214,7 +214,7 @@ When the last reader exits, it signals `noWriters`, allowing any queued writers 
 
 The writer code:
 
-``` {title="Writer-priority writer solution"}
+``` {.numberLines title="Writer-priority writer solution"}
 writeSwitch.lock(noReaders)
     noWriters.wait()
         # critical section for writers

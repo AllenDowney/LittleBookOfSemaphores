@@ -7,7 +7,7 @@ Most of the time, most variables in most threads are **local**, meaning that the
 
 But usually some variables are **shared** among two or more threads; this is one of the ways threads interact with each other. For example, one way to communicate information between threads is for one thread to read a value written by another thread.
 
-If the threads are unsynchronized, then we cannot tell by looking at the program whether the reader will see the value the writer writes or an old value that was already there. Thus many applications enforce the constraint that the reader should not read until after the writer writes. This is exactly the serialization problem in Section [\[serialization\]](#serialization){reference-type="ref" reference="serialization"}.
+If the threads are unsynchronized, then we cannot tell by looking at the program whether the reader will see the value the writer writes or an old value that was already there. Thus many applications enforce the constraint that the reader should not read until after the writer writes. This is exactly the serialization problem in Section [5](serialization-with-messages.qmd).
 
 Other ways that threads interact are concurrent writes (two or more writers) and concurrent updates (two or more threads performing a read followed by a write). The next two sections deal with these interactions. The other possible use of a shared variable, concurrent reads, does not generally create a synchronization problem.
 
@@ -15,12 +15,12 @@ Other ways that threads interact are concurrent writes (two or more writers) and
 
 In the following example, `x` is a shared variable accessed by two writers.
 
-``` {title="Thread A"}
+``` {.numberLines title="Thread A"}
 x = 5
 print x
 ```
 
-``` {title="Thread B"}
+``` {.numberLines title="Thread B"}
 x = 7
 ```
 
@@ -38,11 +38,11 @@ Answering questions like these is an important part of concurrent programming: W
 
 An update is an operation that reads the value of a variable, computes a new value based on the old value, and writes the new value. The most common kind of update is an increment, in which the new value is the old value plus one. The following example shows a shared variable, `count`, being updated concurrently by two threads.
 
-``` {title="Thread A"}
+``` {.numberLines title="Thread A"}
 count = count + 1
 ```
 
-``` {title="Thread B"}
+``` {.numberLines title="Thread B"}
 count = count + 1
 ```
 
@@ -50,12 +50,12 @@ At first glance, it is not obvious that there is a synchronization problem here.
 
 The problem is that these operations are translated into machine language before execution, and in machine language the update takes two steps, a read and a write. The problem is more obvious if we rewrite the code with a temporary variable, `temp`.
 
-``` {title="Thread A"}
+``` {.numberLines title="Thread A"}
 temp = count
 count = temp + 1
 ```
 
-``` {title="Thread B"}
+``` {.numberLines title="Thread B"}
 temp = count
 count = temp + 1
 ```
@@ -72,7 +72,7 @@ So how can we write concurrent programs if we don't know which operations are at
 
 The most common alternative is to make the conservative assumption that all updates and all writes are not atomic, and to use synchronization constraints to control concurrent access to shared variables.
 
-The most common constraint is mutual exclusion, or mutex, which I mentioned in Section [\[synch\]](#synch){reference-type="ref" reference="synch"}. Mutual exclusion guarantees that only one thread accesses a shared variable at a time, eliminating the kinds of synchronization errors in this section.
+The most common constraint is mutual exclusion, or mutex, which I mentioned in Section [3](synchronization.qmd). Mutual exclusion guarantees that only one thread accesses a shared variable at a time, eliminating the kinds of synchronization errors in this section.
 
 Puzzle: Suppose that 100 threads run the following program concurrently (if you are not familiar with Python, the `for` loop runs the update 100 times.):
 

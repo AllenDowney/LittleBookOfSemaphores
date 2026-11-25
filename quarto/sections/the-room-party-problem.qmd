@@ -19,7 +19,7 @@ Puzzle: write synchronization code for students and for the Dean of Students tha
 
 ## Room party hint
 
-``` {title="Room party hint"}
+``` {.numberLines title="Room party hint"}
 students = 0                
 dean = 'not here'           
 mutex = Semaphore(1)
@@ -40,14 +40,14 @@ This problem is hard. I worked through a lot of versions before I got to this on
 
 Matt Tesch wrote a solution that spared this humiliation, but the result was complicated enough that we had a hard time convincing ourselves that it was correct. But that solution led me to this one, which is a bit more readable.
 
-``` {title="Room party solution (dean)"}
+``` {.numberLines title="Room party solution (dean)"}
 mutex.wait()
     if students > 0 and students < 50:
         dean = 'waiting'
     mutex.signal()
     lieIn.wait()     # and get mutex from the student.
 
-    # students must be 0 or >= 50     (*\label{roomparty1}*)
+    # students must be 0 or >= 50
 
     if students >= 50:
         dean = 'in the room'
@@ -68,7 +68,7 @@ When the Dean arrives, there are three cases: if there are students in the room,
 
 In the first two cases, the Dean has to wait for a rendezvous with a student, so he has to give up `mutex` to avoid a deadlock. When the Dean wakes up, he has to modify the scoreboard, so he needs to get the mutex back. This is similar to the situation we saw in the Sushi Bar problem. The solution I chose is the "Pass the baton" pattern.
 
-``` {title="Room party solution (student)"}
+``` {.numberLines title="Room party solution (student)"}
 mutex.wait()
     if dean == 'in the room':
         mutex.signal()
@@ -98,4 +98,4 @@ mutex.wait()
 
 There are three cases where a student might have to signal the Dean. If the Dean is waiting, then the 50th student in or the last one out has to signal `lieIn`. If the Dean is in the room (waiting for all the students to leave), the last student out signals `clear`. In all three cases, it is understood that the mutex passes from the student to the Dean.
 
-One part of this solution that may not be obvious is how we know at Line [\[roomparty1\]](#roomparty1){reference-type="ref" reference="roomparty1"} of the Dean's code that `students` must be 0 or not less than 50. The key is to realize that there are only two ways to get to this point: either the first conditional was false, which means that `students` is either 0 or not less than 50; or the Dean was waiting on `lieIn` when a student signaled, which means, again, that `students` is either 0 or not less than 50.
+One part of this solution that may not be obvious is how we know at Line 7 of the Dean's code that `students` must be 0 or not less than 50. The key is to realize that there are only two ways to get to this point: either the first conditional was false, which means that `students` is either 0 or not less than 50; or the Dean was waiting on `lieIn` when a student signaled, which means, again, that `students` is either 0 or not less than 50.

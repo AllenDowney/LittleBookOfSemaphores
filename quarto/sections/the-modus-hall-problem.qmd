@@ -17,7 +17,7 @@ Puzzle: write code that implements categorical exclusion with majority rule.
 
 Here are the variables I used in my solution.
 
-``` {title="Modus problem hint"}
+``` {.numberLines title="Modus problem hint"}
 heathens = 0
 prudes = 0
 status = 'neutral'
@@ -38,10 +38,10 @@ prudeQueue = Semaphore(0)
 
 Here is the code for heathens:
 
-``` {title="Modus problem solution"}
+``` {.numberLines title="Modus problem solution"}
 heathenTurn.wait()
 heathenTurn.signal()
-(*\label{silentmajority}*)
+
 mutex.wait()
 heathens++
 
@@ -104,7 +104,7 @@ Similarly, as each student checks out, she has to consider several cases.
 
 -   If she is not the last heathen to check out, she still has to check the possibility that her departure will tip the balance. In that case, she closes the heathen turnstile and starts the transition.
 
-One potential difficulty of this solution is that any number of threads could be interrupted at Line [\[silentmajority\]](#silentmajority){reference-type="ref" reference="silentmajority"}, where they would have passed the turnstile but not yet checked in. Until they check in, they are not counted, so the balance of power may not reflect the number of threads that have passed the turnstile. Also, a transition ends when all the threads that have checked in have also checked out. At that point, there may be threads (of both types) that have passed the turnstile.
+One potential difficulty of this solution is that any number of threads could be interrupted at Line 3, where they would have passed the turnstile but not yet checked in. Until they check in, they are not counted, so the balance of power may not reflect the number of threads that have passed the turnstile. Also, a transition ends when all the threads that have checked in have also checked out. At that point, there may be threads (of both types) that have passed the turnstile.
 
 These behaviors may affect efficiency---this solution does not guarantee maximum concurrency---but they don't affect correctness, if you accept that "majority rule" only applies to threads that have registered to vote.
 

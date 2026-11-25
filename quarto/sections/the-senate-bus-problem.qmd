@@ -11,7 +11,7 @@ Puzzle: Write synchronization code that enforces all of these constraints.
 
 Here are the variables I used in my solution:
 
-``` {title="Bus problem hint"}
+``` {.numberLines title="Bus problem hint"}
 riders = 0
 mutex = Semaphore(1)
 multiplex = Semaphore(50)
@@ -27,7 +27,7 @@ Riders wait on `bus`, which gets signaled when the bus arrives. The bus waits on
 
 Here is the code for the bus. Again, we are using the "Pass the baton" pattern.
 
-``` {title="Bus problem solution (bus)"}
+``` {.numberLines title="Bus problem solution (bus)"}
 mutex.wait()
 if riders > 0:
     bus.signal()        # and pass the mutex
@@ -41,7 +41,7 @@ When the bus arrives, it gets `mutex`, which prevents late arrivals from enterin
 
 Here is the code for the riders:
 
-``` {title="Bus problem solution (riders)"}
+``` {.numberLines title="Bus problem solution (riders)"}
 multiplex.wait()
     mutex.wait()
         riders += 1
@@ -71,7 +71,7 @@ Puzzle: can you find a solution to this problem using the "I'll do it for you" p
 
 Grant Hutchins came up with this solution, which uses fewer variables than the previous one, and doesn't involve passing around any mutexes. Here are the variables:
 
-``` {title="Bus problem solution \\#2 (initialization)"}
+``` {.numberLines title="Bus problem solution \\#2 (initialization)"}
 waiting = 0
 mutex = Semaphore(1)
 bus = Semaphore(0)
@@ -82,7 +82,7 @@ boarded = Semaphore(0)
 
 Here is the code for the bus.
 
-``` {title="Bus problem solution (bus)"}
+``` {.numberLines title="Bus problem solution (bus)"}
 mutex.wait()
 n = min(waiting, 50)
 for i in range(n):
@@ -101,7 +101,7 @@ When all the riders have boarded, the bus updates ` waiting`, which is an exampl
 
 The code for the riders uses two simple patterns: a mutex and a rendezvous.
 
-``` {title="Bus problem solution (riders)"}
+``` {.numberLines title="Bus problem solution (riders)"}
 mutex.wait()
      waiting += 1
 mutex.signal()

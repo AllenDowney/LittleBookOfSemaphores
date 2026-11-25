@@ -21,7 +21,7 @@ Puzzle: Write code for the passengers and car that enforces these constraints.
 
 ## Roller Coaster hint
 
-``` {title="Roller Coaster hint"}
+``` {.numberLines title="Roller Coaster hint"}
 mutex = Semaphore(1)
 mutex2 = Semaphore(1)
 boarders = 0
@@ -40,7 +40,7 @@ Passengers wait on `boardQueue` before boarding and `unboardQueue` before unboar
 
 Here is my code for the car thread:
 
-``` {title="Roller Coaster solution (car)"}
+``` {.numberLines title="Roller Coaster solution (car)"}
 load()
 boardQueue.signal(C)
 allAboard.wait()
@@ -54,7 +54,7 @@ allAshore.wait()
 
 When the car arrives, it signals $C$ passengers, then waits for the last one to signal `allAboard`. After it departs, it allows $C$ passengers to disembark, then waits for `allAshore`.
 
-``` {title="Roller Coaster solution (passenger)"}
+``` {.numberLines title="Roller Coaster solution (passenger)"}
 boardQueue.wait()
 board()
 

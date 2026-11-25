@@ -5,7 +5,7 @@ Diligent students of synchronization will notice that the children make unsynchr
 
 To detect errors, it is often necessary to automate the search. In this case, we can detect errors by keeping track of the values of `counter`.
 
-``` {title=""}
+``` {.numberLines title=""}
 class Shared:
     def __init__(self, end=10):
         self.counter = 0
@@ -34,7 +34,7 @@ which is disappointingly correct. If we increase the size of the array, we might
 
 We can automate the checker by making a histogram of the results in the array:
 
-``` {title=""}
+``` {.numberLines title=""}
 class Histogram(dict):
     def __init__(self, seq=[]):
         for item in seq:
@@ -58,13 +58,13 @@ Oops! When `end` is big enough that there are a lot of context switches between 
 
 This example demonstrates one of the dangers of synchronization errors, which is that they may be rare, but they are not random. If an error occurs one time in a million, that doesn't mean it won't happen a million times in a row.
 
-Puzzle: add synchronization code to this program to enforce exclusive access to the shared variables. You can download the code in this section from [greenteapress.com/semaphores/counter.py](http://greenteapress.com/semaphores/counter.py){.uri}
+Puzzle: add synchronization code to this program to enforce exclusive access to the shared variables. You can download the code in this section from
 
 ## Mutex checker hint
 
 Here is the version of `Shared` I used:
 
-``` {title=""}
+``` {.numberLines title=""}
 class Shared:
     def __init__(self, end=10):
         self.counter = 0
@@ -79,7 +79,7 @@ The only change is the Semaphore named `mutex`, which should come as no surprise
 
 Here is my solution:
 
-``` {title=""}
+``` {.numberLines title=""}
 def child_code(shared):
     while True:
         shared.mutex.wait()

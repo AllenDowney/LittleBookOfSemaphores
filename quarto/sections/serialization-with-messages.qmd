@@ -5,14 +5,14 @@ title: Serialization with messages
 
 One solution is to instruct Bob not to eat lunch until you call. Then, make sure you don't call until after lunch. This approach may seem trivial, but the underlying idea, message passing, is a real solution for many synchronization problems. At the risk of belaboring the obvious, consider this timeline.
 
-``` {title="Thread A (You)"}
+``` {.numberLines title="Thread A (You)"}
 Eat breakfast 
 Work          
 Eat lunch     
 Call Bob
 ```
 
-``` {title="Thread B (Bob)"}
+``` {.numberLines title="Thread B (Bob)"}
 Eat breakfast
 Wait for a call
 Eat lunch

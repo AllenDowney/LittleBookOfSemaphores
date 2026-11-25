@@ -3,7 +3,7 @@ title: Joining threads
 ---
 When one thread wants to wait for another thread to complete, it invokes `pthread_join`. Here is my wrapper for `pthread_join`:
 
-``` {title=""}
+``` {.numberLines title=""}
 void join_thread (pthread_t thread)
 {
   int ret = pthread_join (thread, NULL);

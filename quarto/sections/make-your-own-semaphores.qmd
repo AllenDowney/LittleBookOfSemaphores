@@ -9,7 +9,7 @@ Puzzle: read about mutexes and condition variables, and then use them to write a
 
 You might want to use the following utility code in your solutions. Here is my wrapper for Pthreads mutexes:
 
-``` {title=""}
+``` {.numberLines title=""}
 typedef pthread_mutex_t Mutex;
 
 Mutex *make_mutex ()
@@ -35,7 +35,7 @@ void mutex_unlock (Mutex *mutex)
 
 And my wrapper for Pthread condition variables:
 
-``` {title=""}
+``` {.numberLines title=""}
 typedef pthread_cond_t Cond;
 
 Cond *make_cond ()
@@ -63,7 +63,7 @@ void cond_signal (Cond *cond)
 
 Here is the structure definition I used for my semaphores:
 
-``` {title=""}
+``` {.numberLines title=""}
 typedef struct {
   int value, wakeups;
   Mutex *mutex;
@@ -71,13 +71,13 @@ typedef struct {
 } Semaphore;
 ```
 
-`value` is the value of the semaphore. `wakeups` counts the number of pending signals; that is, the number of threads that have been woken but have not yet resumed execution. The reason for wakeups is to make sure that our semaphores have Property 3, described in Section [\[props\]](#props){reference-type="ref" reference="props"}.
+`value` is the value of the semaphore. `wakeups` counts the number of pending signals; that is, the number of threads that have been woken but have not yet resumed execution. The reason for wakeups is to make sure that our semaphores have Property 3, described in Section [24](no-starve-mutex.qmd).
 
 `mutex` provides exclusive access to `value` and `wakeups`; `cond` is the condition variable threads wait on if they wait on the semaphore.
 
 Here is the initialization code for this structure:
 
-``` {title=""}
+``` {.numberLines title=""}
 Semaphore *make_semaphore (int value)
 {
   Semaphore *semaphore = check_malloc (sizeof(Semaphore));
@@ -93,14 +93,14 @@ Semaphore *make_semaphore (int value)
 
 Here is my implementation of semaphores using Pthread's mutexes and condition variables:
 
-``` {title=""}
+``` {.numberLines title=""}
 void sem_wait (Semaphore *semaphore)
 {
-  mutex_lock (semaphore->mutex);                 (*\label{sementer}*)
+  mutex_lock (semaphore->mutex);
   semaphore->value--;
 
   if (semaphore->value < 0) {
-    do {                                                (*\label{dowhile}*)
+    do {
       cond_wait (semaphore->cond, semaphore->mutex);
     } while (semaphore->wakeups < 1);
     semaphore->wakeups--;
@@ -121,7 +121,7 @@ void sem_signal (Semaphore *semaphore)
 }
 ```
 
-Most of this is straightforward; the only thing that might be tricky is the `do...while` loop at Line [\[dowhile\]](#dowhile){reference-type="ref" reference="dowhile"}. This is an unusual way to use a condition variable, but in this case it is necessary.
+Most of this is straightforward; the only thing that might be tricky is the `do...while` loop at Line 7. This is an unusual way to use a condition variable, but in this case it is necessary.
 
 Puzzle: why can't we replace this `do...while` loop with a `while` loop?
 
@@ -129,6 +129,6 @@ Puzzle: why can't we replace this `do...while` loop with a `while` loop?
 
 With a `while` loop, this implementation would not have Property 3. It would be possible for a thread to signal and then run around and catch its own signal.
 
-With the `do...while` loop, it is guaranteed[^1] that when a thread signals, one of the waiting threads will get the signal, even if another thread gets the mutex at Line [\[sementer\]](#sementer){reference-type="ref" reference="sementer"} before one of the waiting threads resumes.
+With the `do...while` loop, it is guaranteed[^1] that when a thread signals, one of the waiting threads will get the signal, even if another thread gets the mutex at Line 3 before one of the waiting threads resumes.
 
-[^1]: Well, almost. It turns out that a well-timed spurious wakeup (see <http://en.wikipedia.org/wiki/Spurious_wakeup>) can violate this guarantee.
+[^1]: Well, almost. It turns out that a well-timed spurious wakeup (see ) can violate this guarantee.

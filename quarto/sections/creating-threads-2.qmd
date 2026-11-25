@@ -3,7 +3,7 @@ title: Creating threads
 ---
 I've done the same thing with the Pthread functions I'm going to use; here's my wrapper for `pthread_create`.
 
-``` {title="" escapeinside=""}
+``` {.numberLines title="" escapeinside=""}
 pthread_t make_thread(void *(*entry)(void *), Shared *shared)
 {
   int n;
@@ -24,7 +24,7 @@ If `pthread_create` succeeds, it returns 0 and my function returns the handle of
 
 The parameters of `pthread_create` take some explaining. Starting with the second, `Shared` is a user-defined structure that contains shared variables. The following `typedef` statement creates the new type:
 
-``` {title=""}
+``` {.numberLines title=""}
 typedef struct {
   int counter;
 } Shared;
@@ -32,7 +32,7 @@ typedef struct {
 
 In this case, the only shared variable is `counter`. `make_shared` allocates space for a `Shared` structure and initializes the contents:
 
-``` {title=""}
+``` {.numberLines title=""}
 Shared *make_shared ()
 {
   int i;
@@ -44,7 +44,7 @@ Shared *make_shared ()
 
 Now that we have a shared data structure, let's get back to `pthread_create`. The first parameter is a pointer to a function that takes a `void` pointer and returns a `void` pointer. If the syntax for declaring this type makes your eyes bleed, you are not alone. Anyway, the purpose of this parameter is to specify the function where the execution of the new thread will begin. By convention, this function is named `entry`:
 
-``` {title=""}
+``` {.numberLines title=""}
 void *entry (void *arg)
 {
   Shared *shared = (Shared *) arg;

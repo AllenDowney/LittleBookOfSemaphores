@@ -15,7 +15,7 @@ Puzzle: write code that enforces these constraints.
 
 Here are the variables I used in my solution:
 
-``` {title="Extended Dining Hall problem hint"}
+``` {.numberLines title="Extended Dining Hall problem hint"}
 readyToEat = 0
 eating = 0
 readyToLeave = 0
@@ -34,7 +34,7 @@ I also used a per-thread variable named `hasMutex` to help keep track of whether
 
 Again, if we analyze the constraints, we realize that there is only one situation where a student who is ready to eat has to wait, if there is no one eating and no one else ready to eat. And the only way out is if someone else arrives who is ready to eat.
 
-``` {title="Extended Dining Hall problem solution"}
+``` {.numberLines title="Extended Dining Hall problem solution"}
 getFood()
 
 mutex.wait()

@@ -5,7 +5,7 @@ In most programming environments, an implementation of semaphores is available a
 
 In this book I will use a simple pseudo-language to demonstrate how semaphores work. The syntax for creating a new semaphore and initializing it is
 
-``` {title="Semaphore initialization syntax"}
+``` {.numberLines title="Semaphore initialization syntax"}
 fred = Semaphore(1)
 ```
 
@@ -13,21 +13,21 @@ The function `Semaphore` is a constructor; it creates and returns a new Semaphor
 
 The semaphore operations go by different names in different environments. The most common alternatives are
 
-``` {title="Semaphore operations"}
+``` {.numberLines title="Semaphore operations"}
 fred.increment()
 fred.decrement()    
 ```
 
 and
 
-``` {title="Semaphore operations"}
+``` {.numberLines title="Semaphore operations"}
 fred.signal()
 fred.wait() 
 ```
 
 and
 
-``` {title="Semaphore operations"}
+``` {.numberLines title="Semaphore operations"}
 fred.V()
 fred.P()    
 ```
@@ -38,7 +38,7 @@ I consider the other pairs misleading because `increment` and ` decrement` negle
 
 If you insist on meaningful names, then I would suggest these:
 
-``` {title="Semaphore operations"}
+``` {.numberLines title="Semaphore operations"}
 fred.increment_and_wake_a_waiting_process_if_any()
 fred.decrement_and_block_if_the_result_is_negative()    
 ```

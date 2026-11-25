@@ -9,7 +9,7 @@ In the kernel of the operating system, though, there are limits on available spa
 
 Assume that we know the size of the buffer. Call it `bufferSize`. Since we have a semaphore that is keeping track of the number of items, it is tempting to write something like
 
-``` {title="Broken finite buffer solution"}
+``` {.numberLines title="Broken finite buffer solution"}
 if items >= bufferSize:
     block()
 ```
@@ -22,7 +22,7 @@ Puzzle: write producer-consumer code that handles the finite-buffer constraint.
 
 Add a second semaphore to keep track of the number of available spaces in the buffer.
 
-``` {title="Finite-buffer producer-consumer initialization"}
+``` {.numberLines title="Finite-buffer producer-consumer initialization"}
 mutex = Semaphore(1)
 items = Semaphore(0)
 spaces = Semaphore(buffer.size())
@@ -34,7 +34,7 @@ When a consumer removes an item it should signal `spaces`. When a producer arriv
 
 Here is a solution.
 
-``` {title="Finite buffer consumer solution"}
+``` {.numberLines title="Finite buffer consumer solution"}
 items.wait()
 mutex.wait()
     event = buffer.get()
@@ -46,7 +46,7 @@ event.process()
 
 The producer code is symmetric, in a way:
 
-``` {title="Finite buffer producer solution"}
+``` {.numberLines title="Finite buffer producer solution"}
 event = waitForEvent()
 
 spaces.wait()

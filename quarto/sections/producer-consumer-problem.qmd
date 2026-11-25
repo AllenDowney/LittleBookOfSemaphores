@@ -15,14 +15,14 @@ There are several synchronization constraints that we need to enforce to make th
 
 Assume that producers perform the following operations over and over:
 
-``` {title="Basic producer code"}
+``` {.numberLines title="Basic producer code"}
 event = waitForEvent()
 buffer.add(event)
 ```
 
 Also, assume that consumers perform the following operations:
 
-``` {title="Basic consumer code"}
+``` {.numberLines title="Basic consumer code"}
 event = buffer.get()
 event.process()
 ```
@@ -35,7 +35,7 @@ Puzzle: Add synchronization statements to the producer and consumer code to enfo
 
 Here are the variables you might want to use:
 
-``` {title="Producer-consumer initialization"}
+``` {.numberLines title="Producer-consumer initialization"}
 mutex = Semaphore(1)
 items = Semaphore(0)
 local event
@@ -59,7 +59,7 @@ In most programs, most variables are local unless declared otherwise, but in thi
 
 Here is the producer code from my solution.
 
-``` {title="Producer solution"}
+``` {.numberLines title="Producer solution"}
 event = waitForEvent()
 mutex.wait()
     buffer.add(event)
@@ -73,7 +73,7 @@ The `items` semaphore keeps track of the number of items in the buffer. Each tim
 
 The consumer code is similar.
 
-``` {title="Consumer solution"}
+``` {.numberLines title="Consumer solution"}
 items.wait()
 mutex.wait()
     event = buffer.get()
@@ -87,7 +87,7 @@ Although this solution is correct, there is an opportunity to make one small imp
 
 Blocking and waking up are moderately expensive operations; performing them unnecessarily can impair the performance of a program. So it would probably be better to rearrange the producer like this:
 
-``` {title="Improved producer solution"}
+``` {.numberLines title="Improved producer solution"}
 event = waitForEvent()
 mutex.wait()
     buffer.add(event)
@@ -101,7 +101,7 @@ There's one other thing about this solution that might bother a stickler. In the
 
 We might try to address that by checking the buffer inside the mutex:
 
-``` {title="Broken consumer solution"}
+``` {.numberLines title="Broken consumer solution"}
 mutex.wait()
     items.wait()
     event = buffer.get()
@@ -117,7 +117,7 @@ Puzzle: why?
 
 If the consumer is running this code
 
-``` {title="Broken consumer solution"}
+``` {.numberLines title="Broken consumer solution"}
 mutex.wait()
     items.wait()
     event = buffer.get()

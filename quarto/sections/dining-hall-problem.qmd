@@ -11,7 +11,7 @@ Puzzle: write code that enforces this constraint.
 
 ## Dining Hall problem hint
 
-``` {title="Dining Hall problem hint"}
+``` {.numberLines title="Dining Hall problem hint"}
 eating = 0
 readyToLeave = 0
 mutex = Semaphore(1)
@@ -28,7 +28,7 @@ If you analyze the constraints, you will realize that there is only one situatio
 
 In either case, the student who signals the waiting student updates the counters, so the waiting student doesn't have to get the mutex back. This is another example of the the "I'll do it for you" pattern.
 
-``` {title="Dining Hall problem solution"}
+``` {.numberLines title="Dining Hall problem solution"}
 getFood()
 
 mutex.wait()

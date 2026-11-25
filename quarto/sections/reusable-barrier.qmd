@@ -11,14 +11,14 @@ Puzzle: Rewrite the barrier solution so that after all the threads have passed t
 
 Once again, we will start with a simple attempt at a solution and gradually improve it:
 
-``` {title="Reusable barrier non-solution"}
+``` {.numberLines title="Reusable barrier non-solution"}
 rendezvous
 
 mutex.wait()
     count += 1
 mutex.signal()
 
-if count == n: turnstile.signal()       (*\label{problem}*)
+if count == n: turnstile.signal()
 
 turnstile.wait()
 turnstile.signal()
@@ -29,7 +29,7 @@ mutex.wait()
     count -= 1
 mutex.signal()
 
-if count == 0: turnstile.wait()         (*\label{problem2}*)
+if count == 0: turnstile.wait()
 ```
 
 Notice that the code after the turnstile is pretty much the same as the code before it. Again, we have to use the mutex to protect access to the shared variable `count`. Tragically, though, this code is not quite correct.
@@ -38,11 +38,11 @@ Puzzle: What is the problem?
 
 ## Reusable barrier problem #1
 
-There is a problem spot at Line [\[problem\]](#problem){reference-type="ref" reference="problem"} of the previous code.
+There is a problem spot at Line 7 of the previous code.
 
 If the $n-1$th thread is interrupted at this point, and then the $n$th thread comes through the mutex, both threads will find that `count==n` and both threads will signal the turnstile. In fact, it is even possible that *all* the threads will signal the turnstile.
 
-Similarly, at Line [\[problem2\]](#problem2){reference-type="ref" reference="problem2"} it is possible for multiple threads to `wait`, which will cause a deadlock.
+Similarly, at Line 18 it is possible for multiple threads to `wait`, which will cause a deadlock.
 
 Puzzle: Fix the problem.
 
@@ -50,7 +50,7 @@ Puzzle: Fix the problem.
 
 This attempt fixes the previous error, but a subtle problem remains.
 
-``` {title="Reusable barrier non-solution"}
+``` {.numberLines title="Reusable barrier non-solution"}
 rendezvous
 
 mutex.wait()
@@ -81,7 +81,7 @@ As it is currently written, this code allows a precocious thread to pass through
 
 To solve this problem we can use two turnstiles.
 
-``` {title="Reusable barrier hint"}
+``` {.numberLines title="Reusable barrier hint"}
 turnstile = Semaphore(0)
 turnstile2 = Semaphore(1)
 mutex = Semaphore(1)
@@ -91,7 +91,7 @@ Initially the first is locked and the second is open. When all the threads arriv
 
 ## Reusable barrier solution
 
-``` {title="Reusable barrier solution"}
+``` {.numberLines title="Reusable barrier solution"}
 # rendezvous
 
 mutex.wait()
@@ -141,7 +141,7 @@ In the reusable barrier solution, we can simplify the solution if the thread tha
 
 The syntax I am using here assumes that `signal` can take a parameter that specifies the number of signals. This is a non-standard feature, but it would be easy to implement with a loop. The only thing to keep in mind is that the multiple signals are not atomic; that is, the signaling thread might be interrupted in the loop. But in this case that is not a problem.
 
-``` {title="Reusable barrier solution"}
+``` {.numberLines title="Reusable barrier solution"}
 # rendezvous
 
 mutex.wait()
@@ -171,7 +171,7 @@ The same thing happens at the second turnstile, which is unlocked when the last 
 
 It is natural to encapsulate a barrier in an object. I will borrow the Python syntax for defining a class:
 
-``` {title="Barrier class"}
+``` {.numberLines title="Barrier class"}
 class Barrier:
     def __init__(self, n):
         self.n = n
@@ -207,7 +207,7 @@ The variable `self` refers to the object the method is operating on. Since each 
 
 Here is an example that creates a `Barrier` object and waits on it:
 
-``` {title="Barrier interface"}
+``` {.numberLines title="Barrier interface"}
 barrier = Barrier(n)        # initialize a new barrier
 barrier.wait()              # wait at a barrier
 ```

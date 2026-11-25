@@ -21,7 +21,7 @@ To make these requirements more specific, let's give the threads some functions 
 
 ## Faneuil Hall Problem Hint
 
-``` {title="Faneuil Hall problem hint"}
+``` {.numberLines title="Faneuil Hall problem hint"}
 noJudge = Semaphore(1)
 entered = 0
 checked = 0
@@ -37,7 +37,7 @@ confirmed = Semaphore(0)
 
 Here is the code for immigrants:
 
-``` {title="Faneuil Hall problem solution (immigrant)"}
+``` {.numberLines title="Faneuil Hall problem solution (immigrant)"}
 noJudge.wait()
 enter()
 entered++
@@ -69,7 +69,7 @@ After entering, immigrants have to get `mutex` to check in and update `checked`.
 
 Here is the code for the judge:
 
-``` {title="Faneuil Hall problem solution (judge)"}
+``` {.numberLines title="Faneuil Hall problem solution (judge)"}
 noJudge.wait()
 mutex.wait()
 
@@ -101,7 +101,7 @@ After the judge signals `confirmed`, immigrants invoke `swear` and `getCertifica
 
 The code for spectators is easy; the only constraint they have to obey is the `noJudge` turnstile.
 
-``` {title="Faneuil Hall problem solution (spectator)"}
+``` {.numberLines title="Faneuil Hall problem solution (spectator)"}
 noJudge.wait()
 enter()
 noJudge.signal()
@@ -119,7 +119,7 @@ Puzzle: modify this solution to handle the additional constraint that after the 
 
 My solution uses the following additional variables:
 
-``` {title="Faneuil Hall problem hint"}
+``` {.numberLines title="Faneuil Hall problem hint"}
 exit = Semaphore(0)
 allGone = Semaphore(0)
 ```
@@ -130,9 +130,9 @@ One other hint: I found it useful to use the "pass the baton" pattern again.
 
 ## Extended Faneuil Hall problem solution
 
-The top half of this solution is the same as before. The difference starts at Line [\[fanexit\]](#fanexit){reference-type="ref" reference="fanexit"}. Immigrants wait here for the judge to leave.
+The top half of this solution is the same as before. The difference starts at Line 21. Immigrants wait here for the judge to leave.
 
-``` {title="Faneuil Hall problem solution (immigrant)"}
+``` {.numberLines title="Faneuil Hall problem solution (immigrant)"}
 noJudge.wait()
 enter()
 entered++
@@ -153,7 +153,7 @@ confirmed.wait()
 swear()
 getCertificate()
 
-exit.wait()                          # and get the mutex(*\label{fanexit}*)
+exit.wait()                          # and get the mutex
 leave()
 checked--
 if checked == 0:
@@ -162,11 +162,11 @@ else:
     exit.signal()                    # and pass the mutex
 ```
 
-For the judge, the difference starts at Line [\[fanjudge\]](#fanjudge){reference-type="ref" reference="fanjudge"}. When the judge is ready to leave, she can't release `noJudge`, because that would allow more immigrants, and possibly another judge, to enter. Instead, she signals `exit`, which allows one immigrant to leave, and passes `mutex`.
+For the judge, the difference starts at Line 18. When the judge is ready to leave, she can't release `noJudge`, because that would allow more immigrants, and possibly another judge, to enter. Instead, she signals `exit`, which allows one immigrant to leave, and passes `mutex`.
 
 The immigrant that gets the signal decrements `checked` and then passes the baton to the next immigrant. The last immigrant to leave signals `allGone` and passes the mutex back to the judge. This pass-back is not strictly necessary, but it has the nice feature that the judge releases both `mutex` and `noJudge` to end the phase cleanly.
 
-``` {title="Faneuil Hall problem solution (judge)"}
+``` {.numberLines title="Faneuil Hall problem solution (judge)"}
 noJudge.wait()
 mutex.wait()
 
@@ -184,7 +184,7 @@ entered = 0
 leave()
 judge = 0
 
-exit.signal()                       # and pass the mutex(*\label{fanjudge}*)
+exit.signal()                       # and pass the mutex
 allGone.wait()                      # and get it back
 mutex.signal()
 noJudge.signal()

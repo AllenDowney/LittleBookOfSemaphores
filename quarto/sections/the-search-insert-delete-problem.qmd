@@ -9,7 +9,7 @@ Puzzle: write code for searchers, inserters and deleters that enforces this kind
 
 ## Search-Insert-Delete hint
 
-``` {title="Search-Insert-Delete hint"}
+``` {.numberLines title="Search-Insert-Delete hint"}
 insertMutex = Semaphore(1)
 noSearcher = Semaphore(1)
 noInserter = Semaphore(1)
@@ -25,7 +25,7 @@ insertSwitch = Lightswitch()
 
 Here is my solution:
 
-``` {title="Search-Insert-Delete solution (searcher)"}
+``` {.numberLines title="Search-Insert-Delete solution (searcher)"}
 searchSwitch.wait(noSearcher)
 # critical section
 searchSwitch.signal(noSearcher)
@@ -33,7 +33,7 @@ searchSwitch.signal(noSearcher)
 
 The only thing a searcher needs to worry about is a deleter. The first searcher in takes `noSearcher`; the last one out releases it.
 
-``` {title="Search-Insert-Delete solution (inserter)"}
+``` {.numberLines title="Search-Insert-Delete solution (inserter)"}
 insertSwitch.wait(noInserter)
 insertMutex.wait()
 # critical section
@@ -43,7 +43,7 @@ insertSwitch.signal(noInserter)
 
 Similarly, the first inserter takes `noInserter` and the last one out releases it. Since searchers and inserters compete for different semaphores, they can be in their critical section concurrently. But `insertMutex` ensures that only one inserter is in the room at a time.
 
-``` {title="Search-Insert-Delete solution (deleter)"}
+``` {.numberLines title="Search-Insert-Delete solution (deleter)"}
 noSearcher.wait()
 noInserter.wait()
 # critical section

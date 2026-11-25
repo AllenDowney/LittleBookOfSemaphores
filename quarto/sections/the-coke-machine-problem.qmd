@@ -3,7 +3,7 @@ title: The coke machine problem
 ---
 The following program simulates producers and consumers adding and removing cokes from a coke machine:
 
-``` {title=""}
+``` {.numberLines title=""}
 import random
 
 class Shared:
@@ -46,13 +46,13 @@ Puzzle: add code to this program to enforce the following synchronization constr
 
 -   If the number of cokes is 10, producers should block until a coke is removed.
 
-You can download the program from [greenteapress.com/semaphores/coke.py](http://greenteapress.com/semaphores/coke.py){.uri}
+You can download the program from
 
 ## Coke machine hint
 
 Here are the shared variables I used in my solution:
 
-``` {title=""}
+``` {.numberLines title=""}
 class Shared:
     def __init__(self, start=5, capacity=10):
         self.cokes = Semaphore(start)
@@ -70,7 +70,7 @@ Ahem.
 
 If you've read the rest of this book, you should have had no trouble coming up with something at least as good as this:
 
-``` {title=""}
+``` {.numberLines title=""}
 def consume(shared):
     shared.cokes.wait()
     shared.mutex.wait()

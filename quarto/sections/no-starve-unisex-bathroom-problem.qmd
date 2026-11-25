@@ -9,7 +9,7 @@ Puzzle: fix the problem.
 
 As we have seen before, we can use a turnstile to allow one kind of thread to stop the flow of the other kind of thread. This time we'll look at the male code:
 
-``` {title="No-starve unisex bathroom solution (male)"}
+``` {.numberLines title="No-starve unisex bathroom solution (male)"}
 turnstile.wait()
     maleSwitch.lock(empty)
 turnstile.signal()

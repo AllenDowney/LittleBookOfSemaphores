@@ -1,11 +1,11 @@
 ---
 title: Barrier
 ---
-Consider again the Rendezvous problem from Section [\[rendezvous\]](#rendezvous){reference-type="ref" reference="rendezvous"}. A limitation of the solution we presented is that it does not work with more than two threads.
+Consider again the Rendezvous problem from Section [14](rendezvous.qmd). A limitation of the solution we presented is that it does not work with more than two threads.
 
 Puzzle: Generalize the rendezvous solution. Every thread should run the following code:
 
-``` {title="Barrier code"}
+``` {.numberLines title="Barrier code"}
 rendezvous
 critical point
 ```
@@ -20,7 +20,7 @@ When the first $n-1$ threads arrive they should block until the $n$th thread arr
 
 For many of the problems in this book I will provide hints by presenting the variables I used in my solution and explaining their roles.
 
-``` {title="Barrier hint"}
+``` {.numberLines title="Barrier hint"}
 n = the number of threads
 count = 0
 mutex = Semaphore(1)
@@ -35,7 +35,7 @@ barrier = Semaphore(0)
 
 First I will present a solution that is not quite right, because it is useful to examine incorrect solutions and figure out what is wrong.
 
-``` {title="Barrier non-solution"}
+``` {.numberLines title="Barrier non-solution"}
 rendezvous
 
 mutex.wait()
@@ -71,7 +71,7 @@ Puzzle: Fix the problem.
 
 Finally, here is a working barrier:
 
-``` {title="Barrier solution"}
+``` {.numberLines title="Barrier solution"}
 rendezvous
 
 mutex.wait()
@@ -98,7 +98,7 @@ It might seem dangerous to read the value of `count` outside the mutex. In this 
 
 Since only one thread at a time can pass through the mutex, and only one thread at a time can pass through the turnstile, it might seem reasonable to put the turnstile inside the mutex, like this:
 
-``` {title="Bad barrier solution"}
+``` {.numberLines title="Bad barrier solution"}
 rendezvous
 
 mutex.wait()

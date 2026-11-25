@@ -17,7 +17,7 @@ Of course the solution should avoid deadlock. For now, though, don't worry about
 
 Here are the variables I used in my solution:
 
-``` {title="Unisex bathroom hint"}
+``` {.numberLines title="Unisex bathroom hint"}
 empty = Semaphore(1)
 maleSwitch = Lightswitch()
 femaleSwitch = Lightswitch()
@@ -35,7 +35,7 @@ femaleMultiplex = Semaphore(3)
 
 Here is the female code:
 
-``` {title="Unisex bathroom solution (female)"}
+``` {.numberLines title="Unisex bathroom solution (female)"}
 femaleSwitch.lock(empty)
     femaleMultiplex.wait()
         # bathroom code here

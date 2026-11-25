@@ -5,12 +5,12 @@ title: Rendezvous
 
 Puzzle: Generalize the signal pattern so that it works both ways. Thread A has to wait for Thread B and vice versa. In other words, given this code
 
-``` {title="Thread A"}
+``` {.numberLines title="Thread A"}
 statement a1
 statement a2
 ```
 
-``` {title="Thread B"}
+``` {.numberLines title="Thread B"}
 statement b1
 statement b2
 ```
@@ -31,14 +31,14 @@ As the names suggest, `aArrived` indicates whether Thread A has arrived at the r
 
 Here is my solution, based on the previous hint:
 
-``` {title="Thread A"}
+``` {.numberLines title="Thread A"}
 statement a1
 aArrived.signal()
 bArrived.wait()
 statement a2
 ```
 
-``` {title="Thread B"}
+``` {.numberLines title="Thread B"}
 statement b1
 bArrived.signal()
 aArrived.wait()
@@ -47,14 +47,14 @@ statement b2
 
 While working on the previous problem, you might have tried something like this:
 
-``` {title="Thread A"}
+``` {.numberLines title="Thread A"}
 statement a1
 bArrived.wait()
 aArrived.signal()
 statement a2
 ```
 
-``` {title="Thread B"}
+``` {.numberLines title="Thread B"}
 statement b1
 bArrived.signal()
 aArrived.wait()
@@ -71,14 +71,14 @@ Think about the other possible paths through this code and convince yourself tha
 
 Again, while working on the previous problem, you might have tried something like this:
 
-``` {title="Thread A"}
+``` {.numberLines title="Thread A"}
 statement a1
 bArrived.wait()
 aArrived.signal()
 statement a2
 ```
 
-``` {title="Thread B"}
+``` {.numberLines title="Thread B"}
 statement b1
 aArrived.wait()
 bArrived.signal()

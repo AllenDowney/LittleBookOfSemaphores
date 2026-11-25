@@ -3,7 +3,7 @@ title: Creating threads
 ---
 The other feature of the `threading` module that annoys me is the interface for creating and starting threads. The usual way requires keyword arguments and two steps:
 
-``` {title="Thread example (standard way)"}
+``` {.numberLines title="Thread example (standard way)"}
 import threading
 
 def function(x, y, z):
@@ -17,7 +17,7 @@ In this example, creating the thread has no immediate effect. But when you invok
 
 Fortunately, we can solve both of these problems with four lines of code.
 
-``` {title="Cleaned-up Thread class"}
+``` {.numberLines title="Cleaned-up Thread class"}
 class Thread(threading.Thread):
     def __init__(self, t, *args):
         threading.Thread.__init__(self, target=t, args=args)
@@ -26,12 +26,12 @@ class Thread(threading.Thread):
 
 Now we can create threads with a nicer interface, and they start automatically:
 
-``` {title="Thread example (my way)"}
+``` {.numberLines title="Thread example (my way)"}
 thread = Thread(function, 1, 2, 3)
 ```
 
 This also lends itself to an idiom I like, which is to create multiple Threads with a list comprehension:
 
-``` {title="Multiple thread example"}
+``` {.numberLines title="Multiple thread example"}
 threads = [Thread(function, i, i, i) for i in range(10)]
 ```

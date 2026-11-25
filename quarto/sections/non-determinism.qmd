@@ -3,11 +3,11 @@ title: Non-determinism
 ---
 Concurrent programs are often **non-deterministic**, which means it is not possible to tell, by looking at the program, what will happen when it executes. Here is a simple example of a non-deterministic program:
 
-``` {title="Thread A"}
+``` {.numberLines title="Thread A"}
 print "yes"
 ```
 
-``` {title="Thread B"}
+``` {.numberLines title="Thread B"}
 print "no"
 ```
 

@@ -31,7 +31,7 @@ This requirement may seem obvious, but it is not trivial. It has the effect of b
 
 With Property 3, it becomes possible to avoid starvation, but even for something as simple as a mutex, it is not easy. For example, imagine three threads running the following code:
 
-``` {title="Mutex loop"}
+``` {.numberLines title="Mutex loop"}
 while True:
     mutex.wait()
     # critical section 
@@ -50,19 +50,19 @@ For example, if the semaphore maintains a first-in-first-out queue, then Propert
 
 A semaphore that has Property 4 is sometimes called a **strong semaphore**; one that has only Property 3 is called a **weak semaphore**. We have shown that with weak semaphores, the simple mutex solution is vulnerable to starvation. In fact, Dijkstra conjectured that it is not possible to solve the mutex problem without starvation using only weak semaphores.
 
-In 1979, J.M. Morris refuted the conjecture by solving the problem, assuming that the number of threads is finite [@morris]. If you are interested in this problem, the next section presents his solution. If this is not your idea of fun, you can just assume that semaphores have Property 4 and go on to Section [\[dining\]](#dining){reference-type="ref" reference="dining"}.
+In 1979, J.M. Morris refuted the conjecture by solving the problem, assuming that the number of threads is finite [@morris]. If you are interested in this problem, the next section presents his solution. If this is not your idea of fun, you can just assume that semaphores have Property 4 and go on to Section [25](dining-philosophers.qmd).
 
 Puzzle: write a solution to the mutual exclusion problem using weak semaphores. Your solution should provide the following guarantee: once a thread arrives and attempts to enter the mutex, there is a bound on the number of threads that can proceed ahead of it. You can assume that the total number of threads is finite.
 
 ## No-starve mutex hint {#morris}
 
-Morris's solution is similar to the reusable barrier in Section [\[rebar\]](#rebar){reference-type="ref" reference="rebar"}. It uses two turnstiles to create two waiting rooms before the critical section. The mechanism works in two phases. During the first phase, the first turnstile is open and the second is closed, so threads accumulate in the second room. During the second phase, the first turnstile is closed, so no new threads can enter, and the second is open, so the existing threads can get to the critical section.
+Morris's solution is similar to the reusable barrier in Section [18](reusable-barrier.qmd). It uses two turnstiles to create two waiting rooms before the critical section. The mechanism works in two phases. During the first phase, the first turnstile is open and the second is closed, so threads accumulate in the second room. During the second phase, the first turnstile is closed, so no new threads can enter, and the second is open, so the existing threads can get to the critical section.
 
 Although there may be an arbitrary number of threads in the waiting room, each one is guaranteed to enter the critical section before any future arrivals.
 
 Here are the variables I used in the solution (I changed the names Morris used, trying to make the structure clearer).
 
-``` {title="No-starve mutex hint"}
+``` {.numberLines title="No-starve mutex hint"}
 room1 = room2 = 0
 mutex = Semaphore(1)
 t1 = Semaphore(1)
@@ -75,15 +75,15 @@ t2 = Semaphore(0)
 
 Here is Morris's solution.
 
-``` {title="Morris's algorithm"}
+``` {.numberLines title="Morris's algorithm"}
 mutex.wait()
-    room1 += 1            (*\label{room1begin}*)
+    room1 += 1
 mutex.signal()
                            
-t1.wait()                 (*\label{wait1}*)
-    room2 += 1            (*\label{room2begin}*)
+t1.wait()
+    room2 += 1
     mutex.wait()
-    room1 -= 1            (*\label{room1end}*)
+    room1 -= 1
 
     if room1 == 0: 
         mutex.signal()
@@ -92,8 +92,8 @@ t1.wait()                 (*\label{wait1}*)
         mutex.signal()
     t1.signal()
 
-t2.wait()                  (*\label{wait2}*)
-    room2 -= 1             (*\label{room2end}*)
+t2.wait()
+    room2 -= 1
 
     # critical section
 
@@ -103,15 +103,15 @@ t2.wait()                  (*\label{wait2}*)
         t2.signal()
 ```
 
-Before entering the critical section, a thread has to pass two turnstiles. These turnstiles divide the code into three "rooms". Room 1 is Lines [\[room1begin\]](#room1begin){reference-type="ref" reference="room1begin"}-- [\[room1end\]](#room1end){reference-type="ref" reference="room1end"}. Room 2 is Lines [\[room2begin\]](#room2begin){reference-type="ref" reference="room2begin"}-- [\[room2end\]](#room2end){reference-type="ref" reference="room2end"}. Room 3 is the rest. Speaking loosely, the counters `room1` and `room2` keep track of the number of threads in each room.
+Before entering the critical section, a thread has to pass two turnstiles. These turnstiles divide the code into three "rooms". Room 1 is Lines 2--8. Room 2 is Lines 6--18. Room 3 is the rest. Speaking loosely, the counters `room1` and `room2` keep track of the number of threads in each room.
 
 The counter `room1` is protected by `mutex` in the usual way, but guard duty for `room2` is split between `t1` and `t2`. Similarly, responsibility for exclusive access to the critical section involves both `t1` and `t2`. In order to enter the critical section, a thread has to hold one or the other, but not both. Then, before exiting, it gives up whichever one it has.
 
-To understand how this solution works, start by following a single thread all the way through. When it gets to Line [\[room1end\]](#room1end){reference-type="ref" reference="room1end"}, it holds `mutex` and `t1`. Once it checks `room1`, which is 0, it can release `mutex` and then open the second turnstile, ` t2`. As a result, it doesn't wait at Line [\[wait2\]](#wait2){reference-type="ref" reference="wait2"} and it can safely decrement `room2` and enter the critical section, because any following threads have to be queued on `t1`. Leaving the critical section, it finds `room2 = 0` and releases `t1`, which brings us back to the starting state.
+To understand how this solution works, start by following a single thread all the way through. When it gets to Line 8, it holds `mutex` and `t1`. Once it checks `room1`, which is 0, it can release `mutex` and then open the second turnstile, ` t2`. As a result, it doesn't wait at Line 17 and it can safely decrement `room2` and enter the critical section, because any following threads have to be queued on `t1`. Leaving the critical section, it finds `room2 = 0` and releases `t1`, which brings us back to the starting state.
 
-Of course, the situation is more interesting if there is more than one thread. In that case, it is possible that when the lead thread gets to Line [\[room1end\]](#room1end){reference-type="ref" reference="room1end"}, other threads have entered the waiting room and queued on `t1`. Since `room1 > 0`, the lead thread leaves `t2` locked and instead signals `t1` to allow a following thread to enter Room 2. Since `t2` is still locked, neither thread can enter Room 3.
+Of course, the situation is more interesting if there is more than one thread. In that case, it is possible that when the lead thread gets to Line 8, other threads have entered the waiting room and queued on `t1`. Since `room1 > 0`, the lead thread leaves `t2` locked and instead signals `t1` to allow a following thread to enter Room 2. Since `t2` is still locked, neither thread can enter Room 3.
 
-Eventually (because there are a finite number of threads), a thread will get to Line [\[room1end\]](#room1end){reference-type="ref" reference="room1end"} before another thread enters Room 1, in which case it will open `t2`, allowing any threads there to move into Room 3. The thread that opens `t2` continues to hold `t1`, so if any of the lead threads loop around, they will block at Line [\[wait1\]](#wait1){reference-type="ref" reference="wait1"}.
+Eventually (because there are a finite number of threads), a thread will get to Line 8 before another thread enters Room 1, in which case it will open `t2`, allowing any threads there to move into Room 3. The thread that opens `t2` continues to hold `t1`, so if any of the lead threads loop around, they will block at Line 5.
 
 As each thread leaves Room 3, it signals `t2`, allowing another thread to leave Room 2. When the last thread leaves Room 2, it leaves `t2` locked and opens `t1`, which brings us back to the starting state.
 

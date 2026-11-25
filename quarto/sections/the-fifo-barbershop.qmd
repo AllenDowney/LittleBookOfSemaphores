@@ -11,7 +11,7 @@ Hint: you can refer to the current thread as `self`, so if you write `self.sem =
 
 My solution uses a list of semaphores named `queue`.
 
-``` {title="FIFO barbershop hint"}
+``` {.numberLines title="FIFO barbershop hint"}
 n = 4
 customers = 0
 mutex = Semaphore(1)
@@ -29,14 +29,14 @@ Instead of waiting on `barber`, each thread waits on its own semaphore. When the
 
 Here is the modified code for customers:
 
-``` {.troff mandoc title="FIFO barbershop solution (customer)"}
+``` {.numberLines .troff mandoc title="FIFO barbershop solution (customer)"}
 ```
 
 And the code for barbers:
 
-``` {.troff mandoc title="FIFO barbershop solution (barber)"}
+``` {.numberLines .troff mandoc title="FIFO barbershop solution (barber)"}
 ```
 
 Notice that the barber has to get `mutex` to access the queue.
 
-This solution is in `sync_code/barber2.py` (see [\[sync.py\]](#sync.py){reference-type="ref" reference="sync.py"}).
+This solution is in [`sync_code/barber2.py`](https://github.com/AllenDowney/LittleBookOfSemaphores/blob/master/code/sync_code/barber2.py).

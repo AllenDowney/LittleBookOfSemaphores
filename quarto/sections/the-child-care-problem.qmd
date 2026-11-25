@@ -9,7 +9,7 @@ Puzzle: Write code for child threads and adult threads that enforces this constr
 
 Hailperin suggests that you can *almost* solve this problem with one semaphore.
 
-``` {title="Child care hint"}
+``` {.numberLines title="Child care hint"}
 multiplex = Semaphore(0)
 ```
 
@@ -21,7 +21,7 @@ Puzzle: what is the problem?
 
 Here is what the adult code looks like in Hailperin's non-solution:
 
-``` {title="Child care non-solution (adult)"}
+``` {.numberLines title="Child care non-solution (adult)"}
 multiplex.signal(3)
 
 # critical section
@@ -39,7 +39,7 @@ Puzzle: solve this problem with a minimal change.
 
 Adding a mutex solves the problem:
 
-``` {title="Child care solution (adult)"}
+``` {.numberLines title="Child care solution (adult)"}
 multiplex.signal(3)
 
 # critical section
@@ -61,13 +61,13 @@ Imagine that there are 4 children and two adults, so the value of the multiplex 
 
 Puzzle: write a solution to this problem that avoids unnecessary waiting.
 
-Hint: think about the dancers in Section [\[dancers\]](#dancers){reference-type="ref" reference="dancers"}.
+Hint: think about the dancers in Section [19](queue.qmd).
 
 ## Extended child care hint
 
 Here are the variables I used in my solution:
 
-``` {title="Extended child care hint"}
+``` {.numberLines title="Extended child care hint"}
 children = adults = waiting = leaving = 0
 mutex = Semaphore(1)
 childQueue = Semaphore(0)
@@ -84,7 +84,7 @@ This solution is more complicated than Hailperin's elegant solution, but it is m
 
 Here is the child code:
 
-``` {title="Extended child care solution (child)"}
+``` {.numberLines title="Extended child care solution (child)"}
 mutex.wait()
     if children < 3 * adults:
         children++
@@ -109,7 +109,7 @@ As children enter, they check whether there are enough adults and either (1) inc
 
 Here is the code for adults:
 
-``` {title="Extended child care solution (adult)"}
+``` {.numberLines title="Extended child care solution (adult)"}
 mutex.wait()
     adults++
     if waiting:

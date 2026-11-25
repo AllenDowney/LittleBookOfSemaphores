@@ -17,7 +17,7 @@ Puzzle: modify the previous solution to handle the additional constraints. You c
 
 I used two lists of semaphores to keep the cars in order. One represents the loading area and one represents the unloading area. Each list contains one semaphore for each car. At any time, only one semaphore in each list is unlocked, so that enforces the order threads can load and unload. Initially, only the semaphores for Car 0 are unlocked. As each car enters the loading (or unloading) it waits on its own semaphore; as it leaves it signals the next car in line.
 
-``` {title="Multi-car Roller Coaster hint"}
+``` {.numberLines title="Multi-car Roller Coaster hint"}
 loadingArea = [Semaphore(0) for i in range(m)]
 loadingArea[0].signal()
 unloadingArea = [Semaphore(0) for i in range(m)]
@@ -26,7 +26,7 @@ unloadingArea[0].signal()
 
 The function `next` computes the identifier of the next car in the sequence (wrapping around from $m-1$ to 0):
 
-``` {title="Implementation of {\\tt next}"}
+``` {.numberLines title="Implementation of {\\tt next}"}
 def next(i):
     return (i + 1) % m
 ```
@@ -35,7 +35,7 @@ def next(i):
 
 Here is the modified code for the cars:
 
-``` {title="Multi-car Roller Coaster solution (car)"}
+``` {.numberLines title="Multi-car Roller Coaster solution (car)"}
 loadingArea[i].wait()
 load()
 boardQueue.signal(C)

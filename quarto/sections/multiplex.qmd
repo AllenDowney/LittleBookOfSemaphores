@@ -17,7 +17,7 @@ At any time, the value of the semaphore represents the number of additional thre
 
 Since the solution is symmetric, it's conventional to show only one copy of the code, but you should imagine multiple copies of the code running concurrently in multiple threads.
 
-``` {title="Multiplex solution"}
+``` {.numberLines title="Multiplex solution"}
 multiplex.wait()
     critical section 
 multiplex.signal()      

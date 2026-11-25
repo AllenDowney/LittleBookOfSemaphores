@@ -15,7 +15,7 @@ Don't worry about the direction of travel. Assume we are only interested in traf
 
 Here are the variables I used in my solution:
 
-``` {title="River crossing hint"}
+``` {.numberLines title="River crossing hint"}
 barrier = Barrier(4)
 mutex = Semaphore(1)
 hackers = 0
@@ -37,7 +37,7 @@ The basic idea of this solution is that each arrival updates one of the counters
 
 I'll present the code for hackers; the serf code is symmetric (except, of course, that it is 1000 times bigger, full of bugs, and it contains an embedded web browser):
 
-``` {title="River crossing solution"}
+``` {.numberLines title="River crossing solution"}
 mutex.wait()
     hackers += 1
     if hackers == 4:

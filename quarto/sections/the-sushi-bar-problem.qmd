@@ -9,7 +9,7 @@ Puzzle: write code for customers entering and leaving the sushi bar that enforce
 
 Here are the variables I used:
 
-``` {title="Sushi bar hint"}
+``` {.numberLines title="Sushi bar hint"}
 eating = waiting = 0
 mutex = Semaphore(1)
 block = Semaphore(0)
@@ -22,14 +22,14 @@ must_wait = False
 
 Here is an incorrect solution Reek uses to illustrate one of the difficulties of this problem.
 
-``` {title="Sushi bar non-solution"}
+``` {.numberLines title="Sushi bar non-solution"}
 mutex.wait()
 if must_wait:
     waiting += 1
     mutex.signal()
     block.wait()
 
-    mutex.wait()      # reacquire mutex (*\label{sushi1}*)
+    mutex.wait()      # reacquire mutex
     waiting -= 1
 
 eating += 1
@@ -51,7 +51,7 @@ Puzzle: what's wrong with this solution?
 
 ## Sushi bar non-solution
 
-The problem is at Line [\[sushi1\]](#sushi1){reference-type="ref" reference="sushi1"}. If a customer arrives while the bar is full, he has to give up the mutex while he waits so that other customers can leave. When the last customer leaves, she signals `block`, which wakes up at least some of the waiting customers, and clears `must_wait`.
+The problem is at Line 7. If a customer arrives while the bar is full, he has to give up the mutex while he waits so that other customers can leave. When the last customer leaves, she signals `block`, which wakes up at least some of the waiting customers, and clears `must_wait`.
 
 But when the customers wake up, they have to get the mutex back, and that means they have to compete with incoming new threads. If new threads arrive and get the mutex first, they could take all the seats before the waiting threads. This is not just a question of injustice; it is possible for more than 5 threads to be in the critical section concurrently, which violates the synchronization constraints.
 
@@ -65,7 +65,7 @@ Hint: neither solution uses any additional variables.
 
 The only reason a waiting customer has to reacquire the mutex is to update the state of `eating` and `waiting`, so one way to solve the problem is to make the departing customer, who already has the mutex, do the updating.
 
-``` {title="Sushi bar solution \\#1"}
+``` {.numberLines title="Sushi bar solution \\#1"}
 mutex.wait()
 if must_wait:
     waiting += 1
@@ -97,7 +97,7 @@ A drawback of this approach is that it is a little more difficult to confirm tha
 
 Reek's alternative solution is based on the counterintuitive notion that we can transfer a mutex from one thread to another! In other words, one thread can acquire a lock and then another thread can release it. As long as both threads understand that the lock has been transferred, there is nothing wrong with this.
 
-``` {title="Sushi bar solution \\#2"}
+``` {.numberLines title="Sushi bar solution \\#2"}
 mutex.wait()
 if must_wait:
     waiting += 1

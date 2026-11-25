@@ -9,7 +9,7 @@ Puzzle: modify the previous solution to deal with this variation.
 
 If the agents don't wait for the smokers, ingredients might accumulate on the table. Instead of using boolean values to keep track of ingredients, we need integers to count them.
 
-``` {title="Generalized Smokers problem hint"}
+``` {.numberLines title="Generalized Smokers problem hint"}
 numTobacco = numPaper = numMatch = 0
 ```
 
@@ -17,7 +17,7 @@ numTobacco = numPaper = numMatch = 0
 
 Here is the modified code for Pusher A:
 
-``` {title="Pusher A"}
+``` {.numberLines title="Pusher A"}
 tobacco.wait()
 mutex.wait()
     if numPaper:

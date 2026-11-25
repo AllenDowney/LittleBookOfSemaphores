@@ -23,7 +23,7 @@ Puzzle: Write synchronization code for oxygen and hydrogen molecules that enforc
 
 Here are the variables I used in my solution:
 
-``` {title="Water building hint"}
+``` {.numberLines title="Water building hint"}
 mutex = Semaphore(1)
 oxygen = 0
 hydrogen = 0
@@ -40,7 +40,7 @@ hydroQueue = Semaphore(0)
 
 Initially `hydroQueue` and `oxyQueue` are locked. When an oxygen thread arrives it signals `hydroQueue` twice, allowing two hydrogens to proceed. Then the oxygen thread waits for the hydrogen threads to arrive.
 
-``` {title="Oxygen code"}
+``` {.numberLines title="Oxygen code"}
 mutex.wait()
 oxygen += 1
 if hydrogen >= 2:
@@ -64,7 +64,7 @@ After bonding, threads wait at the barrier until all three threads have bonded, 
 
 The code for hydrogen is similar:
 
-``` {title="Hydrogen code"}
+``` {.numberLines title="Hydrogen code"}
 mutex.wait()
 hydrogen += 1
 if hydrogen >= 2 and oxygen >= 1:

@@ -17,7 +17,7 @@ Santa should run in a loop so he can help many sets of elves. We can assume that
 
 ## Santa problem hint
 
-``` {title="Santa problem hint"}
+``` {.numberLines title="Santa problem hint"}
 elves = 0
 reindeer = 0
 santaSem = Semaphore(0)
@@ -38,7 +38,7 @@ The elves use `elfTex` to prevent additional elves from entering while three elv
 
 Santa's code is pretty straightforward. Remember that it runs in a loop.
 
-``` {title="Santa problem solution (Santa)"}
+``` {.numberLines title="Santa problem solution (Santa)"}
 santaSem.wait()
 mutex.wait()
     if reindeer >= 9:
@@ -56,7 +56,7 @@ Santa doesn't have to decrement the `elves` counter because the elves do it on t
 
 Here is the code for reindeer:
 
-``` {title="Santa problem solution (reindeer)"}
+``` {.numberLines title="Santa problem solution (reindeer)"}
 mutex.wait()
     reindeer += 1
     if reindeer == 9:
@@ -71,7 +71,7 @@ The ninth reindeer signals Santa and then joins the other reindeer waiting on `r
 
 The elf code is similar, except that when the third elf arrives it has to bar subsequent arrivals until the first three have executed `getHelp`.
 
-``` {title="Santa problem solution (elves)"}
+``` {.numberLines title="Santa problem solution (elves)"}
 elfTex.wait()
 mutex.wait()
     elves += 1

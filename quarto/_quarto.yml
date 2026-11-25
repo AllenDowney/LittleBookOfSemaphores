@@ -33,7 +33,6 @@ book:
       chapters:
         - sections/basic-synchronization-patterns.qmd
         - sections/signaling.qmd
-        - sections/sync-py.qmd
         - sections/rendezvous.qmd
         - sections/mutex.qmd
         - sections/multiplex.qmd
@@ -100,6 +99,9 @@ book:
         - sections/creating-threads-2.qmd
         - sections/joining-threads.qmd
         - sections/semaphores-2.qmd
+    - references.qmd
+
+bibliography: ../book/book.bib
 
 filters:
   - filters/sync.lua
@@ -113,13 +115,13 @@ format:
     theme: cosmo
     toc: true
     number-sections: true
+    canonical-url: true
     css:
       - styles.css
       - assets/sync/sync_embed.css
     include-in-header:
       - text: |
           <script type="module" src="assets/sync/sync_embed.js"></script>
-    canonical-url: true
 
 execute:
   freeze: auto

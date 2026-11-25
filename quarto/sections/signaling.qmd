@@ -7,12 +7,12 @@ Signaling makes it possible to guarantee that a section of code in one thread wi
 
 Assume that we have a semaphore named `sem` with initial value 0, and that Threads A and B have shared access to it.
 
-``` {title="Thread A"}
+``` {.numberLines title="Thread A"}
 statement a1
 sem.signal()
 ```
 
-``` {title="Thread B"}
+``` {.numberLines title="Thread B"}
 sem.wait()
 statement b1
 ```

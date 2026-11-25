@@ -9,7 +9,7 @@ This problem is from Andrews's *Concurrent Programming* [@andrews].
 
 Any number of savage threads run the following code:
 
-``` {title="Unsynchronized savage code"}
+``` {.numberLines title="Unsynchronized savage code"}
 while True:
     getServingFromPot()
     eat()
@@ -17,7 +17,7 @@ while True:
 
 And one cook thread runs this code:
 
-``` {title="Unsynchronized cook code"}
+``` {.numberLines title="Unsynchronized cook code"}
 while True:
     putServingsInPot(M)
 ```
@@ -36,7 +36,7 @@ It is tempting to use a semaphore to keep track of the number of servings, as in
 
 An alternative is to use a scoreboard to keep track of the number of servings. If a savage finds the counter at zero, he wakes the cook and waits for a signal that the pot is full. Here are the variables I used:
 
-``` {title="Dining Savages hint"}
+``` {.numberLines title="Dining Savages hint"}
 servings = 0
 mutex = Semaphore(1)
 emptyPot = Semaphore(0)
@@ -49,7 +49,7 @@ Not surprisingly, `emptyPot` indicates that the pot is empty and `fullPot` indic
 
 My solution is a combination of the scoreboard pattern with a rendezvous. Here is the code for the cook:
 
-``` {title="Dining Savages solution (cook)"}
+``` {.numberLines title="Dining Savages solution (cook)"}
 while True:
     emptyPot.wait()
     putServingsInPot(M)
@@ -58,7 +58,7 @@ while True:
 
 The code for the savages is only a little more complicated. As each savage passes through the mutex, he checks the pot. If it is empty, he signals the cook and waits. Otherwise, he decrements `servings` and gets a serving from the pot.
 
-``` {title="Dining Savages solution (savage)"}
+``` {.numberLines title="Dining Savages solution (savage)"}
 while True:
     mutex.wait()
         if servings == 0:

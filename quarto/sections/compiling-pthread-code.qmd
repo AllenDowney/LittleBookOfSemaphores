@@ -11,7 +11,7 @@ Using Pthreads is like using most C libraries:
 
 For my examples, I include the following headers:
 
-``` {title="Headers"}
+``` {.numberLines title="Headers"}
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
@@ -20,7 +20,7 @@ For my examples, I include the following headers:
 
 The first two are standard; the third is for Pthreads and the fourth is for semaphores. To compile with the Pthread library in `gcc`, you can use the `-l` option on the command line:
 
-``` {title=""}
+``` {.numberLines title=""}
 gcc -g -O2 -o array array.c -lpthread
 ```
 
@@ -28,7 +28,7 @@ This compiles `array.c` with debugging info and optimization, links with the Pth
 
 If you are used to a language like Python that provides exception handling, you will probably be annoyed with languages like C that require you to check for error conditions explicitly. I often mitigate this hassle by wrapping library function calls together with their error-checking code inside my own functions. For example, here is a version of `malloc` that checks the return value.
 
-``` {title=""}
+``` {.numberLines title=""}
 void *check_malloc(int size)
 {
   void *p = malloc (size);

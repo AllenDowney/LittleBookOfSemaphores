@@ -3,7 +3,7 @@ title: Mutual exclusion
 ---
 We'll start by defining a structure that contains shared variables:
 
-``` {title=""}
+``` {.numberLines title=""}
 typedef struct {
   int counter;
   int end;
@@ -32,7 +32,7 @@ Shared *make_shared (int end)
 
 Here is the code the parent thread uses to create threads and wait for them to complete:
 
-``` {title=""}
+``` {.numberLines title=""}
 int main ()
 {
   int i;
@@ -53,13 +53,13 @@ int main ()
 }
 ```
 
-The first loop creates the child threads; the second loop waits for them to complete. When the last child has finished, the parent invokes `check_array` to check for errors. `make_thread` and `join_thread` are defined in Appendix [\[ccleanup\]](#ccleanup){reference-type="ref" reference="ccleanup"}.
+The first loop creates the child threads; the second loop waits for them to complete. When the last child has finished, the parent invokes `check_array` to check for errors. `make_thread` and `join_thread` are defined in Appendix [Cleaning up POSIX threads](cleaning-up-posix-threads.qmd).
 
 ## Child code
 
 Here is the code that is executed by each of the children:
 
-``` {title=""}
+``` {.numberLines title=""}
 void child_code (Shared *shared)
 {
   while (1) {
@@ -78,7 +78,7 @@ Each time through the loop, the child threads use `counter` as an index into `ar
 
 If everything works correctly, each element of the array should be incremented once. So to check for errors, we can just count the number of elements that are not 1:
 
-``` {title=""}
+``` {.numberLines title=""}
 void check_array (Shared *shared)
 {
   int i, errors=0;
@@ -90,7 +90,7 @@ void check_array (Shared *shared)
 }
 ```
 
-You can download this program (including the cleanup code) from [greenteapress.com/semaphores/counter.c](http://greenteapress.com/semaphores/counter.c){.uri}
+You can download this program (including the cleanup code) from
 
 If you compile and run the program, you should see output like this:
 
@@ -120,12 +120,12 @@ Puzzle: use semaphores to enforce exclusive access to the shared variables and r
 
 Here is the version of `Shared` I used in my solution:
 
-``` {title=""}
+``` {.numberLines title=""}
 typedef struct {
   int counter;
   int end;
   int *array;
-  Semaphore *mutex;  (*\label{declaremutex}*)
+  Semaphore *mutex;
 } Shared;
 
 Shared *make_shared (int end)
@@ -140,18 +140,18 @@ Shared *make_shared (int end)
   for (i=0; i<shared->end; i++) {
     shared->array[i] = 0;
   }
-  shared->mutex = make_semaphore(1);  (*\label{initmutex}*)
+  shared->mutex = make_semaphore(1);
   return shared;
 }
 ```
 
-Line [\[declaremutex\]](#declaremutex){reference-type="ref" reference="declaremutex"} declares `mutex` as a Semaphore; Line [\[initmutex\]](#initmutex){reference-type="ref" reference="initmutex"} initializes the mutex with the value 1.
+Line 5 declares `mutex` as a Semaphore; Line 20 initializes the mutex with the value 1.
 
 ## Mutual exclusion solution
 
 Here is the synchronized version of the child code:
 
-``` {title=""}
+``` {.numberLines title=""}
 void child_code (Shared *shared)
 {
   while (1) {
@@ -170,4 +170,4 @@ void child_code (Shared *shared)
 
 There is nothing too surprising here; the only tricky thing is to remember to release the mutex before the `return` statement.
 
-You can download this solution from [greenteapress.com/semaphores/counter_mutex.c](http://greenteapress.com/semaphores/counter_mutex.c){.uri}
+You can download this solution from

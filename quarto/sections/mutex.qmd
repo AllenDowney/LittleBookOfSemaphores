@@ -9,11 +9,11 @@ Similarly, in order for a thread to access a shared variable, it has to "get" th
 
 Puzzle: Add semaphores to the following example to enforce mutual exclusion to the shared variable `count`.
 
-``` {title="Thread A"}
+``` {.numberLines title="Thread A"}
 count = count + 1
 ```
 
-``` {title="Thread B"}
+``` {.numberLines title="Thread B"}
 count = count + 1
 ```
 
@@ -25,14 +25,14 @@ Create a semaphore named `mutex` that is initialized to 1. A value of one means 
 
 Here is a solution:
 
-``` {title="Thread A"}
+``` {.numberLines title="Thread A"}
 mutex.wait()
     # critical section
     count = count + 1
 mutex.signal()
 ```
 
-``` {title="Thread B"}
+``` {.numberLines title="Thread B"}
 mutex.wait()
     # critical section
     count = count + 1
@@ -53,4 +53,4 @@ In an alternative metaphor, we think of the critical section as a room, and only
 
 Both metaphors are potentially useful and potentially misleading. As you work on the next problem, try out both ways of thinking and see which one leads you to a solution.
 
-[^1]: Although this metaphor is helpful for now, it can also be misleading, as you will see in Section [\[water\]](#water){reference-type="ref" reference="water"}
+[^1]: Although this metaphor is helpful for now, it can also be misleading, as you will see in Section [33](building-ho.qmd)
